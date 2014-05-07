@@ -1,0 +1,15 @@
+*.pyc
+LabRAD.ini
+Errors.log
+.project
+.pydevproject
+.recent.ini
+.DS_store
+.directory
+SWITCH_CONTROL_config.py
+DDS_CONTROL_config.py
+APT_config.py
+connection_config.py
+*~
+DacConfiguration.py
+.settings
