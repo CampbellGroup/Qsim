@@ -13,3 +13,4 @@ connection_config.py
 *~
 DacConfiguration.py
 .settings
+node_client.py
