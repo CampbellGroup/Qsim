@@ -5,6 +5,8 @@ from PyQt4 import QtGui
 from wlm_client_config import multiplexer_config
 
     
+SIGNALID1 = 445566
+    
 class wavemeterchannel(QtGui.QWidget):
 
     def __init__(self, reactor, parent = None):
@@ -20,8 +22,8 @@ class wavemeterchannel(QtGui.QWidget):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync('169.232.156.230')
         self.server = yield self.cxn.multiplexerserver
-        yield self.server.signal__frequency_changed(self.SIGNALID1)
-        yield self.server.addListener(listener = self.updateFrequency, source = None, ID = 123456) 
+        yield self.server.signal__frequency_changed(SIGNALID1)
+        yield self.server.addListener(listener = self.updateFrequency, source = None, ID = SIGNALID1) 
         self.initializeGUI()
         
     @inlineCallbacks
@@ -42,8 +44,8 @@ class wavemeterchannel(QtGui.QWidget):
             initvalue = yield self.server.get_exposure(port)
             widget.spinExp.setValue(initvalue)
             widget.spinFreq.valueChanged.connect(self.freqChanged)
-            self.d[chan] = widget
-            layout.addWidget(self.d[chan])
+            self.d[port] = widget
+            layout.addWidget(self.d[port])
         self.setLayout(layout)
         yield None
 
@@ -54,10 +56,9 @@ class wavemeterchannel(QtGui.QWidget):
         yield self.server.set_exposure_time(chan,exp)
     
     def updateFrequency(self , c , signal):        
-        print signal
         chan = signal[0]
         freq = signal[1]
-        self.d[chan].currentfrequency.setText(str(freq))
+        self.d[chan].currentfrequency.setText(str(freq)[0:10])
 
     def freqChanged(self,value ):
         print value
