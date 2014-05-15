@@ -2,7 +2,6 @@ from labrad.server import LabradServer, setting, Signal
 from twisted.internet.defer import returnValue
 from twisted.internet.threads import deferToThread
 from ctypes import c_long, c_double, c_buffer, c_float, c_int, c_bool, windll, pointer
-from Multiplexer_config import multiplexer_config
 from labrad.units import WithUnit
 
 """
@@ -64,12 +63,12 @@ class MultiplexerServer(LabradServer):
         #allocates c_types for dll functions
         
         self.listeners = set()
-            @setting(15, "Set Lock")
+
     @setting(1, "Check WLM Running")
-    def instance(self,c):    @setting(14, "")
+    def instance(self,c):
         instance = self.wmdll.Instantiate
         instance.restype = c_long
-        RFC = c_long(-1)    @setting(15, "Set Lock")
+        RFC = c_long(-1)    
         #RFC, reason for call, used to check if wavemeter is running (in wavemeter .h library
         status = yield instance(RFC,self.l,self.l,self.l)
         returnValue(status)
