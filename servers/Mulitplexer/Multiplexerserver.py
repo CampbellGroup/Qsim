@@ -3,6 +3,7 @@ from twisted.internet.defer import returnValue
 from twisted.internet.threads import deferToThread
 from ctypes import c_long, c_double, c_buffer, c_float, c_int, c_bool, windll, pointer
 from labrad.units import WithUnit
+from twisted.internet import reactor
 
 """
 ### BEGIN NODE INFO
@@ -104,7 +105,7 @@ class MultiplexerServer(LabradServer):
         
 
         
-
+from twisted.internet import reactor
 #####Set Functions
 
     @setting(20, "Get Amplitude", chan = 'i', returns = 'v')
@@ -150,6 +151,13 @@ class MultiplexerServer(LabradServer):
         show_c = c_long(0)
         yield self.wmdll.GetSwitcherSignalStates(chan_c, pointer(use_c), pointer(show_c))
         returnValue(use_c)
+        
+    @inlineCallbacks    
+    def measureChan(self):
+        reactor.callLater(.5, self.measureChan)       
+        self.getFrequency(5)
+        self.getFrequency(6)
+        self.getFrequency(7)
         
 if __name__ == "__main__":
     from labrad import util
