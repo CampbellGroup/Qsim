@@ -23,7 +23,7 @@ class RGBconverter():
 		elif w >= 580 and w < 645:
 			R = 1.0
 			G = -(w - 645.) / (645. - 580.)
-			B = 0.0
+			B = 0.0#labelsQCustomFreqPower
 		elif w >= 645 and w <= 780:
 			R = 1.0
 			G = 0.0
