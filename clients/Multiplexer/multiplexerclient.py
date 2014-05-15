@@ -19,6 +19,7 @@ class wavemeterchannel(QtGui.QWidget):
     def connect(self):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync('169.232.156.230')
+
         self.server = yield self.cxn.multiplexerserver
         self.initializeGUI()
         
