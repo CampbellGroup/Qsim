@@ -78,85 +78,78 @@ class MultiplexerServer(LabradServer):
 #####Main program functions        
 
          
-    @setting(12, "Set Exposure Time", chan = 'i', ms = 'i')
+    @setting(10, "Set Exposure Time", chan = 'i', ms = 'i')
     def setExposureTime(self,c,chan,ms):
         self.expchanged(chan, ms)
-        ms = c_long(ms)
-        chan = c_long(chan)
-        yield self.wmdll.SetExposureNum(chan,1,  ms)
+        ms_c = c_long(ms)
+        chan_c = c_long(chan)
+        yield self.wmdll.SetExposureNum(chan_c, 1,  ms_c)
 
         
-    @setting(15, "Set Lock State", state = 'b')
+    @setting(11, "Set Lock State", state = 'b')
     def setLockState(self,c,state):
-        state = c_bool(state)
-        yield self.wmdll.SetDeviationMode(state)
-               
-    @setting(11, "Set Output Voltage", mV = ['v'])
-    def setOutputVoltage(self,c,mV):
-        yield self.wmdll.SetDeviationSignalNum(self.chanNum, mV)       
+        state_c = c_bool(state)
+        yield self.wmdll.SetDeviationMode(state_c)       
         
-    @setting(14, "Set Switcher Mode", mode = 'b')
+    @setting(12, "Set Switcher Mode", mode = 'b')
     def setSwitcherMode(self, c, mode):
-        mode = c_long(mode)
-        yield self.wmdll.SetSwitcherMode(mode)      
+        mode_c = c_long(mode)
+        yield self.wmdll.SetSwitcherMode(mode_c)      
         
     @setting(13, "Set Switcher Signal State", chan = 'i', state = 'b')
     def setSwitcherState(self, c, chan, state):
-        chan = c_long(chan)
-        state = c_long(state)
-        yield self.wmdll.SetSwitcherSignalStates(chan, state, self.l)
+        chan_c = c_long(chan)
+        state_c = c_long(state)
+        yield self.wmdll.SetSwitcherSignalStates(chan_c, state_c, self.l)
         
 
         
 
 #####Set Functions
 
-    @setting(26, "Get Amplitude", chan = 'i', returns = 'v')
-    def getExp(self, c, chan): 
-        chan = c_long(chan)
-        amp = yield self.wmdll.GetAmplitudeNum(chan, c_long(2), self.l) 
+    @setting(20, "Get Amplitude", chan = 'i', returns = 'v')
+    def getAmp(self, c, chan): 
+        chan_c = c_long(chan)
+        amp = yield self.wmdll.GetAmplitudeNum(chan_c, c_long(2), self.l) 
         returnValue(amp)
 
-    @setting(23, "Get Exposure", chan = 'i', returns = 'i')
+    @setting(21, "Get Exposure", chan = 'i', returns = 'i')
     def getExp(self, c, chan): 
-        chan = c_long(chan)
-        exp = yield self.wmdll.GetExposureNum(chan ,1,self.l) 
+        chan_c = c_long(chan)
+        exp = yield self.wmdll.GetExposureNum(chan_c ,1,self.l) 
         returnValue(exp)
 
-    @setting(20,"Get Frequency", chan = 'i', returns = 'v')
+    @setting(22,"Get Frequency", chan = 'i', returns = 'v')
     def getFrequency(self, c, chan):
-        chan = c_long(chan)
-        freq = yield self.wmdll.GetFrequencyNum(chan,self.d)
-        self.freqSignal = freq
-        self.freqchanged(int(chan),freq)
+        chan_c = c_long(chan)
+        freq = yield self.wmdll.GetFrequencyNum(chan_c,self.d)
+        self.freqchanged(chan,freq)
+        #notifies listeners of changed frequency
         returnValue(freq)
         
-    @setting(24, "Get Lock State")
+    @setting(23, "Get Lock State")
     def getLockState(self):
         state = self.wmdll.GetDeviationMode(self.b)
         returnValue(state)
         
-    @setting(21,"Get Output Voltage", chan = 'i', returns = 'v')
+    @setting(24,"Get Output Voltage", chan = 'i', returns = 'v')
     def getOutputVoltage(self, c, chan):
-        chan = c_long(chan)
-        volts = yield self.wmdll.GetDeviationSignalNum(chan,self.d)
+        chan_c = c_long(chan)
+        volts = yield self.wmdll.GetDeviationSignalNum(chan_c,self.d)
         returnValue(volts)  
         
-    @setting(27, "Get Switcher Mode", returns = 'b')
+    @setting(25, "Get Switcher Mode", returns = 'b')
     def getSwitcherMode(self, c):
         state = self.wmdll.GetSwitcherMode(self.l)
         returnValue(state)
     
-    @setting(25, "Get Switcher Signal State", chan = 'i', returns = 'b')
+    @setting(26, "Get Switcher Signal State", chan = 'i', returns = 'b')
     def getSwitcherState(self, c, chan):
-        chan = c_long(chan)
-        use = c_long(0)
-        state = self.wmdll.GetSwitcherSignalStates(chan, pointer(use), pointer(show))
-        returnValue(use)
-        
-
-    
-
+        chan_c = c_long(chan)
+        use_c = c_long(0)
+        show_c = c_long(0)
+        yield self.wmdll.GetSwitcherSignalStates(chan_c, pointer(use_c), pointer(show_c))
+        returnValue(use_c)
         
 if __name__ == "__main__":
     from labrad import util
