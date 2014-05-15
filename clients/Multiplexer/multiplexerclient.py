@@ -19,8 +19,9 @@ class wavemeterchannel(QtGui.QWidget):
     def connect(self):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync('169.232.156.230')
-
         self.server = yield self.cxn.multiplexerserver
+        yield self.server.signal__frequency_changed(self.SIGNALID1)
+        yield self.server.addListener(listener = self.updateFrequency, source = None, ID = 123456) 
         self.initializeGUI()
         
     @inlineCallbacks
@@ -51,15 +52,15 @@ class wavemeterchannel(QtGui.QWidget):
     def expChanged(self, exp, chan):
         exp = int(exp)       
         yield self.server.set_exposure_time(chan,exp)
-        
-    @inlineCallbacks
-    def freqChanged(self, freq):
-        yield self.server.set_freq(self.chan,freq)
-        
-    @inlineCallbacks
-    def getFreq(self):
-        freq = yield self.server.get_frequency(self.chan)
-        returnValue(freq) 
+    
+    def updateFrequency(self , c , signal):        
+        print signal
+        chan = signal[0]
+        freq = signal[1]
+        self.d[chan].currentfrequency.setText(str(freq))
+
+    def freqChanged(self,value ):
+        print value
 
     def closeEvent(self, x):
         self.reactor.stop()
