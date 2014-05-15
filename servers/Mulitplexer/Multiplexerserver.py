@@ -123,7 +123,7 @@ class MultiplexerServer(LabradServer):
     def getFrequency(self, c, chan):
         chan_c = c_long(chan)
         freq = yield self.wmdll.GetFrequencyNum(chan_c,self.d)
-        self.freqchanged(chan,freq)
+        self.freqchanged((chan,freq))
         #notifies listeners of changed frequency
         returnValue(freq)
         
