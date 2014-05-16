@@ -1,5 +1,5 @@
 from labrad.server import LabradServer, setting, Signal
-from twisted.internet.defer import returnValue
+from twisted.internet.defer import returnValue, inlineCallbacks
 from twisted.internet.threads import deferToThread
 from ctypes import c_long, c_double, c_buffer, c_float, c_int, c_bool, windll, pointer
 from labrad.units import WithUnit
@@ -61,6 +61,8 @@ class MultiplexerServer(LabradServer):
         self.wmdll.SetSwitcherSignalStates.restype = c_long        
         self.wmdll.SetSwitcherMode.restype         = c_long
         
+        self.measureChan()
+        
         #allocates c_types for dll functions
         
         self.listeners = set()
@@ -103,9 +105,6 @@ class MultiplexerServer(LabradServer):
         state_c = c_long(state)
         yield self.wmdll.SetSwitcherSignalStates(chan_c, state_c, self.l)
         
-
-        
-from twisted.internet import reactor
 #####Set Functions
 
     @setting(20, "Get Amplitude", chan = 'i', returns = 'v')
@@ -125,7 +124,6 @@ from twisted.internet import reactor
         chan_c = c_long(chan)
         freq = yield self.wmdll.GetFrequencyNum(chan_c,self.d)
         self.freqchanged((chan,freq))
-        #notifies listeners of changed frequency
         returnValue(freq)
         
     @setting(23, "Get Lock State")
@@ -151,13 +149,12 @@ from twisted.internet import reactor
         show_c = c_long(0)
         yield self.wmdll.GetSwitcherSignalStates(chan_c, pointer(use_c), pointer(show_c))
         returnValue(use_c)
-        
-    @inlineCallbacks    
+            
     def measureChan(self):
-        reactor.callLater(.5, self.measureChan)       
-        self.getFrequency(5)
-        self.getFrequency(6)
-        self.getFrequency(7)
+        reactor.callLater(0.1, self.measureChan)
+        for chan in range(8):
+            if self.getSwitcherState(self, chan + 1):
+                self.getFrequency(self, chan + 1)     
         
 if __name__ == "__main__":
     from labrad import util
