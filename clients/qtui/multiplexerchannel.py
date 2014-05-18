@@ -63,10 +63,10 @@ class QCustomWavemeterChannel(QtGui.QFrame):
         self.spinExp.setKeyboardTracking(False)
         layout.addWidget(self.spinFreq,     3, 0)
         layout.addWidget(self.spinExp,    3, 1)
-        self.expSwitch = TextChangingButton()
+        self.measSwitch = TextChangingButton()
         self.lockSwitch = TextChangingButton()
         layout.addWidget(self.lockSwitch, 2,2)
-        layout.addWidget(self.expSwitch, 3, 2)
+        layout.addWidget(self.measSwitch, 3, 2)
             
         self.setLayout(layout)
     
