@@ -23,7 +23,7 @@ timeout = 20
 ### END NODE INFO
 """
 
-UPDATEEXP = 122487
+UPDATEEXP = 122387
 CHANSIGNAL = 122485
 FREQSIGNAL = 122456
 
@@ -35,7 +35,7 @@ class MultiplexerServer(LabradServer):
     
     measuredchanged = Signal(CHANSIGNAL, 'signal: selected channels changed', '(ib)')
     freqchanged = Signal(FREQSIGNAL, 'signal: frequency changed', '(iv)')
-    updateexp = Signal(UPDATEEXP, 'signal: update exp', '(2i)')
+    updateexp = Signal(UPDATEEXP, 'signal: update exp', '(ii)')
     #Set up signals to be sent to listeners
     
     def initServer(self):
@@ -88,9 +88,8 @@ class MultiplexerServer(LabradServer):
 
         ms_c = c_long(ms)
         chan_c = c_long(chan)
-        print 'Exposure Changed'
-        self.updateexp = (chan,ms)
         yield self.wmdll.SetExposureNum(chan_c, 1,  ms_c)
+        self.updateexp((chan,ms))
 
         
     @setting(11, "Set Lock State", state = 'b')
