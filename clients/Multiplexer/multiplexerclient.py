@@ -115,8 +115,7 @@ class wavemeterchannel(QtGui.QWidget):
         value = signal[1]
         if chan in self.d :
             self.d[chan].spinExp.setValue(value)
-        print 'in update exp'
-                
+
     @inlineCallbacks
     def changeState(self, state, chan):
         yield self.server.set_switcher_signal_state(chan, state)
