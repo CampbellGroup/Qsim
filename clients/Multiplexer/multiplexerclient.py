@@ -35,6 +35,7 @@ class wavemeterchannel(QtGui.QWidget):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync('169.232.156.230')
         self.server = yield self.cxn.multiplexerserver
+        
         yield self.server.signal__frequency_changed(SIGNALID1)
         yield self.server.signal__selected_channels_changed(SIGNALID2)
         yield self.server.signal__update_exp(SIGNALID3)
@@ -112,7 +113,8 @@ class wavemeterchannel(QtGui.QWidget):
     def updateexp(self,c, signal):
         chan = signal[0]
         value = signal[1]
-        self.d[chan].spinExp.setValue(value)
+        if chan in self.d :
+            self.d[chan].spinExp.setValue(value)
         print 'in update exp'
                 
     @inlineCallbacks
