@@ -33,7 +33,7 @@ class MultiplexerServer(LabradServer):
     name = 'Multiplexerserver'
     
     expchanged  = Signal(SIGNALID1, 'signal: exposure changed', '(2i)')
-    freqchanged = Signal(SIGNALID2, 'signal: frequency changed', '(iv)')
+    measuredchanged = Signal(SIGNALID2, 'signal: selected channels changed', '(iv)')
     #Set up signals to be sent to listeners
     
     def initServer(self):
@@ -103,7 +103,8 @@ class MultiplexerServer(LabradServer):
     def setSwitcherState(self, c, chan, state):
         chan_c = c_long(chan)
         state_c = c_long(state)
-        yield self.wmdll.SetSwitcherSignalStates(chan_c, state_c, self.l)
+        yield self.wmdll.SetSwitcherSignalStates(chan_c, state_c, self.l)       
+        self.measuredchanged((chan,state))
         
 #####Set Functions
 
