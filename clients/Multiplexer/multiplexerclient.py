@@ -37,7 +37,7 @@ class wavemeterchannel(QtGui.QWidget):
         self.server = yield self.cxn.multiplexerserver
         yield self.server.signal__frequency_changed(SIGNALID1)
         yield self.server.signal__selected_channels_changed(SIGNALID2)
-        yield self.server.signal__update_exposure(SIGNALID3)
+        yield self.server.signal__update_exp(SIGNALID3)
         
         yield self.server.addListener(listener = self.updateFrequency, source = None, ID = SIGNALID1) 
         yield self.server.addListener(listener = self.toggleMeas, source = None, ID = SIGNALID2)
