@@ -106,7 +106,7 @@ class MultiplexerServer(LabradServer):
     @setting(13, "Set Switcher Signal State", chan = 'i', state = 'b')
     def setSwitcherState(self, c, chan, state):
         chan_c = c_long(chan)        
-        state_c = c_long(state)4
+        state_c = c_long(state)
         yield self.wmdll.SetSwitcherSignalStates(chan_c, state_c, self.l)       
         self.measuredchanged((chan,state))
         
