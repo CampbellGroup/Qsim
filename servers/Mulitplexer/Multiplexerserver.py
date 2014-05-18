@@ -23,7 +23,6 @@ timeout = 20
 ### END NODE INFO
 """
 
-EXPSIGNAL = 122484
 UPDATEEXP = 122487
 CHANSIGNAL = 122485
 FREQSIGNAL = 122456
@@ -34,7 +33,6 @@ class MultiplexerServer(LabradServer):
     """
     name = 'Multiplexerserver'
     
-    expchanged  = Signal(EXPSIGNAL, 'signal: exposure changed', '(2i)')
     measuredchanged = Signal(CHANSIGNAL, 'signal: selected channels changed', '(ib)')
     freqchanged = Signal(FREQSIGNAL, 'signal: frequency changed', '(iv)')
     updateexp = Signal(UPDATEEXP, 'signal: update exp', '(2i)')
@@ -87,11 +85,11 @@ class MultiplexerServer(LabradServer):
          
     @setting(10, "Set Exposure Time", chan = 'i', ms = 'i')
     def setExposureTime(self,c,chan,ms):
-#        self.expchanged(chan, ms)
+
         ms_c = c_long(ms)
         chan_c = c_long(chan)
         self.updateexp = (chan,ms)
-        yield self.wmdll.SetExposureNum(chan_c, 1spinExp.setValue(initvalue),  ms_c)
+        yield self.wmdll.SetExposureNum(chan_c, 1,  ms_c)
 
         
     @setting(11, "Set Lock State", state = 'b')
@@ -106,7 +104,7 @@ class MultiplexerServer(LabradServer):
         
     @setting(13, "Set Switcher Signal State", chan = 'i', state = 'b')
     def setSwitcherState(self, c, chan, state):
-        chan_c = c_long(chan)        yield self.server.signal__frequency_changed(SIGNALID1)
+        chan_c = c_long(chan)        
         state_c = c_long(state)
         yield self.wmdll.SetSwitcherSignalStates(chan_c, state_c, self.l)       
         self.measuredchanged((chan,state))
@@ -115,7 +113,7 @@ class MultiplexerServer(LabradServer):
 
     @setting(20, "Get Amplitude", chan = 'i', returns = 'v')
     def getAmp(self, c, chan): 
-        chan_c = c_long(chan)        yield self.server.signal__frequency_changed(SIGNALID1)
+        chan_c = c_long(chan)        
         amp = yield self.wmdll.GetAmplitudeNum(chan_c, c_long(2), self.l) 
         returnValue(amp)
 
