@@ -23,8 +23,9 @@ timeout = 20
 ### END NODE INFO
 """
 
-SIGNALID1 = 122484
-SIGNALID2 = 122485
+EXPSIGNAL = 122484
+CHANSIGNAL = 122485
+FREQSIGNAL = 122456
 
 class MultiplexerServer(LabradServer):
     """
@@ -32,8 +33,9 @@ class MultiplexerServer(LabradServer):
     """
     name = 'Multiplexerserver'
     
-    expchanged  = Signal(SIGNALID1, 'signal: exposure changed', '(2i)')
-    measuredchanged = Signal(SIGNALID2, 'signal: selected channels changed', '(iv)')
+    expchanged  = Signal(EXPSIGNAL, 'signal: exposure changed', '(2i)')
+    measuredchanged = Signal(CHANSIGNAL, 'signal: selected channels changed', '(ib)')
+    freqchanged = Signal(FREQSIGNAL, 'signal: frequency changed', '(iv)')
     #Set up signals to be sent to listeners
     
     def initServer(self):
@@ -83,7 +85,7 @@ class MultiplexerServer(LabradServer):
          
     @setting(10, "Set Exposure Time", chan = 'i', ms = 'i')
     def setExposureTime(self,c,chan,ms):
-        self.expchanged(chan, ms)
+#        self.expchanged(chan, ms)
         ms_c = c_long(ms)
         chan_c = c_long(chan)
         yield self.wmdll.SetExposureNum(chan_c, 1,  ms_c)
@@ -149,7 +151,8 @@ class MultiplexerServer(LabradServer):
         use_c = c_long(0)
         show_c = c_long(0)
         yield self.wmdll.GetSwitcherSignalStates(chan_c, pointer(use_c), pointer(show_c))
-        returnValue(use_c)
+        use = bool(use_c)
+        returnValue(use)
             
     def measureChan(self):
         reactor.callLater(0.1, self.measureChan)
