@@ -88,6 +88,7 @@ class MultiplexerServer(LabradServer):
 
         ms_c = c_long(ms)
         chan_c = c_long(chan)
+        print 'Exposure Changed'
         self.updateexp = (chan,ms)
         yield self.wmdll.SetExposureNum(chan_c, 1,  ms_c)
 
@@ -105,7 +106,7 @@ class MultiplexerServer(LabradServer):
     @setting(13, "Set Switcher Signal State", chan = 'i', state = 'b')
     def setSwitcherState(self, c, chan, state):
         chan_c = c_long(chan)        
-        state_c = c_long(state)
+        state_c = c_long(state)4
         yield self.wmdll.SetSwitcherSignalStates(chan_c, state_c, self.l)       
         self.measuredchanged((chan,state))
         

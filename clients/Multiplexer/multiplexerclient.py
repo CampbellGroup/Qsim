@@ -113,6 +113,7 @@ class wavemeterchannel(QtGui.QWidget):
         chan = signal[0]
         value = signal[1]
         self.d[chan].spinExp.setValue(value)
+        print 'in update exp'
                 
     @inlineCallbacks
     def changeState(self, state, chan):
