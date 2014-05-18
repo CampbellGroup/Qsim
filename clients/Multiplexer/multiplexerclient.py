@@ -41,14 +41,13 @@ class wavemeterchannel(QtGui.QWidget):
         
     @inlineCallbacks
     def initializeGUI(self):  
-        
+    
         layout = QtGui.QGridLayout()
         for chan in self.chaninfo:
             port = self.chaninfo[chan][0]
             hint = self.chaninfo[chan][1]
             
-            widget = QCustomWavemeterChannel(chan, hint) 
-
+            widget = QCustomWavemeterChannel(chan, hint)  
             import RGBconverter as RGB  
             RGB = RGB.RGBconverter()
             color = int(2.998e8/(float(hint)*1e3))
@@ -63,7 +62,6 @@ class wavemeterchannel(QtGui.QWidget):
             initvalue = yield self.server.get_exposure(port)
             widget.spinExp.setValue(initvalue)
             
-
             initmeas = yield self.server.get_switcher_signal_state(port)
             initmeas = initmeas
             widget.measSwitch.setChecked(bool(initmeas))
@@ -75,6 +73,7 @@ class wavemeterchannel(QtGui.QWidget):
             layout.addWidget(self.d[port])
         self.setLayout(layout)
         yield None
+
 
     
     @inlineCallbacks
