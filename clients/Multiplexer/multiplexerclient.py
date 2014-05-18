@@ -7,6 +7,8 @@ from wlm_client_config import multiplexer_config
     
 SIGNALID1 = 445566
 SIGNALID2 = 143533
+SIGNALID3 = 111221
+
 #this is the signal for the updated frequencys
     
 class wavemeterchannel(QtGui.QWidget):
@@ -35,8 +37,12 @@ class wavemeterchannel(QtGui.QWidget):
         self.server = yield self.cxn.multiplexerserver
         yield self.server.signal__frequency_changed(SIGNALID1)
         yield self.server.signal__selected_channels_changed(SIGNALID2)
+        yield self.server.signal__update_exposure(SIGNALID3)
+        
         yield self.server.addListener(listener = self.updateFrequency, source = None, ID = SIGNALID1) 
         yield self.server.addListener(listener = self.toggleMeas, source = None, ID = SIGNALID2)
+        yield self.server.addListener(listener = self.updateexp, source = None, ID = SIGNALID3)
+        
         self.initializeGUI()
         
     @inlineCallbacks
@@ -99,9 +105,14 @@ class wavemeterchannel(QtGui.QWidget):
                 
     def toggleMeas(self, c, signal):
         chan = signal[0]
-        value = bool(signal[1])
+        value = signal[1]
         if chan in self.d :
             self.d[chan].measSwitch.setChecked(value)
+            
+    def updateexp(self,c, signal):
+        chan = signal[0]
+        value = signal[1]
+        self.d[chan].spinExp.setValue(value)
                 
     @inlineCallbacks
     def changeState(self, state, chan):
