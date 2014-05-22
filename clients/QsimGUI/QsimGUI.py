@@ -24,7 +24,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         control = self.makeControlWidget(reactor, cxn)
         self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
-	self.tabWidget.addTab(control       , '&Control')
+        self.tabWidget.addTab(control, '&Control')
         
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
