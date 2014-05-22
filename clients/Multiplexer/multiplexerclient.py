@@ -5,21 +5,23 @@ from PyQt4 import QtGui
 from wlm_client_config import multiplexer_config
 
     
+
 SIGNALID1 = 445566
 SIGNALID2 = 143533
 SIGNALID3 = 111221
-
 #this is the signal for the updated frequencys
     
-class wavemeterchannel(QtGui.QWidget):
+class wavemeterclient(QtGui.QWidget):
+    
+
 
     def __init__(self, reactor, parent = None):
-        """initializes the GUI creates the reactor 
+        """initializels the GUI creates the reactor 
             and empty dictionary for channel widgets to 
             be stored for iteration. also grabs chan info
             from wlm_client_config file 
         """ 
-        super(wavemeterchannel, self).__init__()
+        super(wavemeterclient, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor     
         self.d = {} 
@@ -134,6 +136,6 @@ if __name__=="__main__":
     import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
-    wavemeterWidget = wavemeterchannel(reactor)
+    wavemeterWidget = wavemeterclient(reactor)
     wavemeterWidget.show()
     reactor.run()

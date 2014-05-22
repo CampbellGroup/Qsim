@@ -20,10 +20,10 @@ class QSIM_GUI(QtGui.QMainWindow):
 
         centralWidget = QtGui.QWidget()
         layout = QtGui.QHBoxLayout() 
-        script_scanner = self.makeScriptControlWidget(reactor, cxn)
+#        script_scanner = self.makeScriptControlWidget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
         self.tabWidget = QtGui.QTabWidget()
-        self.tabWidget.addTab(script_scanner, '&Script Scanner')
+#        self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')
         
         layout.addWidget(self.tabWidget)
@@ -31,22 +31,24 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.setCentralWidget(centralWidget)
         self.setWindowTitle('Qsim GUI')
 
-    def makeScriptControlWidget(self, reactor, cxn):
-        widget = QtGui.QWidget()
+#    def makeScriptControlWidget(self, reactor, cxn):
+#        widget = QtGui.QWidget()
         
-        from clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
-        gridLayout = QtGui.QGridLayout()
+#        from clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
+#        gridLayout = QtGui.QGridLayout()
        
-        gridLayout.addWidget(script_scanner_gui(reactor))
+#        gridLayout.addWidget(script_scanner_gui(reactor))
         
-        widget.setLayout(gridLayout)
-        return widget
+#        widget.setLayout(gridLayout)
+#        return widget
     
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from clients.PMT_CONTROL import pmtWidget
+        from clients.Multiplexer.multiplexerclient import wavemeterclient
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(pmtWidget(reactor),                1,1,1,1)
+        gridLayout.addWidget(wavemeterclient(reactor),          1,0)
         widget.setLayout(gridLayout)
         return widget
 

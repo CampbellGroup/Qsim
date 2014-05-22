@@ -49,9 +49,9 @@ class pmtWidget(QtGui.QWidget):
     @inlineCallbacks
     def on_toggled(self,value):
         if value:
-            self.pushButton.setText('On')
+            self.pushButton.setText('I')
         else: 
-            self.pushButton.setText('Off')
+            self.pushButton.setText('O')
         yield self.server.toggle_counting(value)
     
     def closeEvent(self, x):
