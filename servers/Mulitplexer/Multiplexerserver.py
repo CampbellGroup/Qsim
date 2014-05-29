@@ -1,7 +1,7 @@
 from labrad.server import LabradServer, setting, Signal
 from twisted.internet.defer import returnValue, inlineCallbacks
 from twisted.internet.threads import deferToThread
-from ctypes import c_long, c_double, c_buffer, c_float, c_int, c_bool, windll, pointer
+from ctypes import c_long, c_double, c_buffer, c_float, c_int, c_bool, c_char_p, windll, pointer
 from labrad.units import WithUnit
 from twisted.internet import reactor
 
@@ -14,11 +14,11 @@ description =
 instancename = Multiplexer Server
 
 [startup]
-cmdline = %PYTHON% %FILE%
+cmdline = %PYTHON% %FILE%self.wmdll.SetPIDCourseNum
 timeout = 20
 
 [shutdown]
-message = 987654321
+message = 987654321self.wmdll.SetPIDCourseNum
 timeout = 20
 ### END NODE INFO
 """
@@ -86,7 +86,7 @@ class MultiplexerServer(LabradServer):
     @setting(10, "Set Exposure Time", chan = 'i', ms = 'i')
     def setExposureTime(self,c,chan,ms):
 
-        ms_c = c_long(ms)
+        ms_c = c_long(ms)self.wmdll.SetPIDCourseNum
         chan_c = c_long(chan)
         yield self.wmdll.SetExposureNum(chan_c, 1,  ms_c)
         self.updateexp((chan,ms))
@@ -108,6 +108,13 @@ class MultiplexerServer(LabradServer):
         state_c = c_long(state)
         yield self.wmdll.SetSwitcherSignalStates(chan_c, state_c, c_long(1))       
         self.measuredchanged((chan,state))
+
+    @setting(14, "Set PID Course", chan = 'i', course = 'v')
+    def setPIDCourse(self, c, chan, course):
+        chan_c = c_long(chan)
+        course_c = c_char_p('=' + str(course))
+        yield self.wmdll.SetPIDCourseNum(chan_c, course_c)
+        
         
 #####Set Functions
 
