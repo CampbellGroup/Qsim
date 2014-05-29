@@ -86,7 +86,7 @@ class MultiplexerServer(LabradServer):
     @setting(10, "Set Exposure Time", chan = 'i', ms = 'i')
     def setExposureTime(self,c,chan,ms):
 
-        ms_c = c_long(ms)self.wmdll.SetPIDCourseNum
+        ms_c = c_long(ms)
         chan_c = c_long(chan)
         yield self.wmdll.SetExposureNum(chan_c, 1,  ms_c)
         self.updateexp((chan,ms))

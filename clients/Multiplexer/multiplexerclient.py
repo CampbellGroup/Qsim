@@ -70,7 +70,7 @@ class wavemeterclient(QtGui.QWidget):
             widget.spinExp.valueChanged.connect(lambda exp = widget.spinExp.value(), port = port : self.expChanged(exp, port))
             initvalue = yield self.server.get_exposure(port)
             widget.spinExp.setValue(initvalue)
-            
+            Home
             initmeas = yield self.server.get_switcher_signal_state(port)
             initmeas = initmeas
             widget.measSwitch.setChecked(bool(initmeas))
