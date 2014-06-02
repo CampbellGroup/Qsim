@@ -70,13 +70,11 @@ class wavemeterclient(QtGui.QWidget):
             widget.spinExp.valueChanged.connect(lambda exp = widget.spinExp.value(), port = port : self.expChanged(exp, port))
             initvalue = yield self.server.get_exposure(port)
             widget.spinExp.setValue(initvalue)
-            Home
             initmeas = yield self.server.get_switcher_signal_state(port)
             initmeas = initmeas
             widget.measSwitch.setChecked(bool(initmeas))
-            widget.measSwitch.toggled.connect(lambda state = widget.measSwitch.isDown(), port = port  : self.changeState(state, port))
-            
-            widget.spinFreq.valueChanged.connect(self.freqChanged)
+            widget.measSwitch.toggled.connect(lambda state = widget.measSwitch.isDown(), port = port  : self.changeState(state, port))         
+            widget.spinFreq.valueChanged.connect(lambda freq = widget.spinFreq.value(), port = port : self.freqChanged(freq, port))
 
             self.d[port] = widget
             layout.addWidget(self.d[port])
@@ -122,9 +120,10 @@ class wavemeterclient(QtGui.QWidget):
     def changeState(self, state, chan):
         yield self.server.set_switcher_signal_state(chan, state)
         if state == False:  self.d[chan].currentfrequency.setText('Not Measured') 
-        
-    def freqChanged(self,value):
-        print value
+     
+    @inlineCallbacks   
+    def freqChanged(self,freq, port):
+        yield self.server.set_pid_course(port, freq)
 
     def closeEvent(self, x):
         self.reactor.stop()
