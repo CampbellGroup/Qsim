@@ -10,7 +10,7 @@ class QSIM_GUI(QtGui.QMainWindow):
 
     @inlineCallbacks
     def connect_labrad(self):
-        from clients.connection import connection
+        from common.clients.connection import connection
         cxn = connection()
         yield cxn.connect()
         self.create_layout(cxn)
@@ -44,8 +44,8 @@ class QSIM_GUI(QtGui.QMainWindow):
     
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
-        from clients.PMT_CONTROL import pmtWidget
-        from clients.Multiplexer.multiplexerclient import wavemeterclient
+        from Qsim.clients.PMT_CONTROL import pmtWidget
+        from common.clients.Multiplexer.multiplexerclient import wavemeterclient
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(pmtWidget(reactor),                1,1,1,1)
         gridLayout.addWidget(wavemeterclient(reactor),          1,0)
@@ -95,7 +95,7 @@ class QSIM_GUI(QtGui.QMainWindow):
 if __name__=="__main__":
     a = QtGui.QApplication( [] )
     clipboard = a.clipboard()
-    import clients.qt4reactor as qt4reactor
+    import common.clients.qt4reactor as qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
     QsimGUI = QSIM_GUI(reactor, clipboard)
