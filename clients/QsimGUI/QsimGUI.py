@@ -71,7 +71,6 @@ class QSIM_GUI(QtGui.QMainWindow):
 #        pmt_readout = readout_histogram(reactor, cxn)
 #        histograms_tab.addTab(pmt_readout, "PMT")
 #        return histograms_tab
-    
 #    def makeControlWidget(self, reactor, cxn):
 #        widget = QtGui.QWidget()
 
@@ -100,5 +99,7 @@ if __name__=="__main__":
     from twisted.internet import reactor
     QsimGUI = QSIM_GUI(reactor, clipboard)
     QsimGUI.setWindowTitle('Qsim GUI')
+    QsimGUI.setWindowIcon(QtGui.QIcon('/home/qsimexpcontrol/Pictures/icons/6ions.jpg'))
+
     QsimGUI.show()
     reactor.run()
