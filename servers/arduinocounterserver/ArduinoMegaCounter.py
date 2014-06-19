@@ -44,6 +44,7 @@ class ArduinoCounter( SerialDeviceServer ):
     serNode = 'qsimexpcontrol'
     timeout = T.Value(TIMEOUT,'s')
     on = False
+    currentreading = 0.0
     
     updatereading = Signal(UPDATEREADINGID, 'signal: new count', 'v')
     
@@ -99,6 +100,7 @@ class ArduinoCounter( SerialDeviceServer ):
             #plots reading to data vault
                 try:
                     yield self.dv.add(time.time() - self.start, float(reading)/100)
+                    self.currentreading = float(reading)/100
                     self.updatereading(float(reading)/100)
                 except:
                     yield None
@@ -125,9 +127,11 @@ class ArduinoCounter( SerialDeviceServer ):
         yield self.dv.add_parameter('Window', window_name)
         yield self.dv.add_parameter('plotLive', True)
         self.start = time.time()
-#        self.getCounts()
         returnValue( filename[1] )
         
+    @setting(3, "Get Current Counts")
+    def getCurrentReading(self, c):
+        returnValue( self.currentreading )
     
     
 if __name__ == "__main__":
