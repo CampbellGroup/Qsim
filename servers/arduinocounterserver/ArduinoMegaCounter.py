@@ -23,7 +23,7 @@ Created on May 17, 2014
 @author: anthonyransford
 '''
 
-from serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
+from common.servers.serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
 from labrad.types import Error
 from twisted.internet import reactor
 from twisted.internet.defer import returnValue
@@ -106,6 +106,7 @@ class ArduinoCounter( SerialDeviceServer ):
                     yield None
             else: yield None
         else: yield None
+        
     @inlineCallbacks   
     def StopServer(self):
         yield self.ser.flushinput()

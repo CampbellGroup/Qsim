@@ -1,7 +1,7 @@
 from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks
 from scripting_widget import scripting_widget
-from clients.connection import connection
+from common.clients.connection import connection
 from tree_view.Controllers import ParametersEditor
 
 class script_scanner_gui(QtGui.QWidget):
@@ -345,7 +345,7 @@ class script_scanner_gui(QtGui.QWidget):
 
 if __name__=="__main__":
     a = QtGui.QApplication( ["Script Scanner"] )
-    from clients import qt4reactor
+    from common.clients import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
     gui = script_scanner_gui(reactor)

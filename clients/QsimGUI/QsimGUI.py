@@ -20,32 +20,32 @@ class QSIM_GUI(QtGui.QMainWindow):
 
         centralWidget = QtGui.QWidget()
         layout = QtGui.QHBoxLayout() 
-#        script_scanner = self.makeScriptControlWidget(reactor, cxn)
+        script_scanner = self.makeScriptControlWidget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
         self.tabWidget = QtGui.QTabWidget()
-#        self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')
+        self.tabWidget.addTab(script_scanner, '&Script Scanner')
         
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
         self.setCentralWidget(centralWidget)
         self.setWindowTitle('Qsim GUI')
 
-#    def makeScriptControlWidget(self, reactor, cxn):
-#        widget = QtGui.QWidget()
+    def makeScriptControlWidget(self, reactor, cxn):
+        widget = QtGui.QWidget()
         
-#        from clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
-#        gridLayout = QtGui.QGridLayout()
-       
-#        gridLayout.addWidget(script_scanner_gui(reactor))
+        from Qsim.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
+        gridLayout = QtGui.QGridLayout()
+      
+        gridLayout.addWidget(script_scanner_gui(reactor))
         
-#        widget.setLayout(gridLayout)
-#        return widget
+        widget.setLayout(gridLayout)
+        return widget
     
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from Qsim.clients.PMT_CONTROL import pmtWidget
-        from Qsim.clients.switchclient.switchclient import switchclient
+        from common.clients.switchclient.switchclient import switchclient
         from common.clients.Multiplexer.multiplexerclient import wavemeterclient
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(pmtWidget(reactor),                0,1,1,1)
