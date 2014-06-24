@@ -6,7 +6,7 @@ class arduino_test(experiment):
     
     name = 'test experiment'
     
-    required_parameters =[]#('light show', 'speed')] 
+    required_parameters =[('light show', 'speed')] 
     
     def initialize(self, cxn, context, ident):
         self.ident = ident

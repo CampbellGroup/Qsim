@@ -23,7 +23,7 @@ Created on May 17, 2014
 @author: anthonyransford
 '''
 
-from common.servers.serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
+from common.lib.servers.serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
 from labrad.types import Error
 from twisted.internet import reactor
 from twisted.internet.defer import returnValue
@@ -95,12 +95,13 @@ class ArduinoCounter( SerialDeviceServer ):
             yield reactor.callLater(reactorlooptime, self.getCounts)  
             reading = yield self.ser.readline()
             yield self.ser.flushinput()
-            #reads arduino serial line output
+            #reads arduino serial line ou['Hz']tput
             if reading:        
             #plots reading to data vault
                 try:
                     yield self.dv.add(time.time() - self.start, float(reading)/100)
                     self.currentreading = float(reading)/100
+                    print self.currentreading
                     self.updatereading(float(reading)/100)
                 except:
                     yield None
@@ -132,6 +133,7 @@ class ArduinoCounter( SerialDeviceServer ):
         
     @setting(3, "Get Current Counts")
     def getCurrentReading(self, c):
+        yield None
         returnValue( self.currentreading )
     
     
