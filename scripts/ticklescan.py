@@ -7,13 +7,13 @@ pmt = cxn.arduinocounter
 dv = cxn.data_vault
 rg = cxn2.rigol_dg1022_server
 
-span = [127000, 133000] #hz
+span = [123000, 126000] #hz
 amp = .8 #volts
 resolution = 100 # hz
 chan = 1
 waveform = 'sine'
 offset = 0.0
-average = 2
+average = 5
 
 xvalues = range(span[0],span[1],resolution)
 
@@ -30,8 +30,7 @@ rg.set_output(True)
 for i, freq in enumerate(xvalues):
 	rg.apply_wave_form(chan, waveform, freq, amp, offset)
 	counts = 0
-	for j in range(average):
-		print j		
+	for j in range(average):	
 		counts = pmt.get_current_counts() + counts
 		time.sleep(0.1)
 	counts = counts/average
