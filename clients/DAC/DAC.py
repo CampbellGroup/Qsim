@@ -40,7 +40,7 @@ class DACclient(QtGui.QWidget):
             port = self.chaninfo[chan][0]
             position = self.chaninfo[chan][1]
             
-            widget = QCustomSpinBox(chan)  
+            widget = QCustomSpinBox(chan, (-10.0, 10.0))  
 
             #connect things here
             widget.spinLevel.valueChanged.connect(lambda value = widget.spinLevel.value(), port = port  : self.changeValue(value, port))         
@@ -51,7 +51,9 @@ class DACclient(QtGui.QWidget):
         
     @inlineCallbacks
     def changeValue(self, value, chan):
-        yield self.server.wlm_dac_output(chan, value)
+        print chan, value
+        yield None
+        #yield self.server.wlm_dac_output(chan, value)
 
     def closeEvent(self, x):
         self.reactor.stop()

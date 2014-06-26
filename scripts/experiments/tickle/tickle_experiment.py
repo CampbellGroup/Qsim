@@ -19,7 +19,6 @@ class ticklescan(experiment):
         self.pv = self.cxn.parametervault
         self.pmt = cxn.arduinocounter
         self.chan = 1
-        print "done intializing"
     
     def run(self, cxn, context):
         
