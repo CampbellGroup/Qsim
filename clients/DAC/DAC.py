@@ -2,7 +2,7 @@ from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
 from DAC_client_config import DAC_config
-
+import socket
 
 class DACclient(QtGui.QWidget):
     
@@ -27,7 +27,7 @@ class DACclient(QtGui.QWidget):
         
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('169.232.156.230', name = "DAC client")
+        self.cxn = yield connectAsync('169.232.156.230', name = + socket.gethostname() + " DAC client")
         self.server = yield self.cxn.multiplexerserver
         
         self.initializeGUI()
