@@ -63,6 +63,7 @@ class ticklescan(experiment):
         
     def finalize(self, cxn, context):
         self.cxn.disconnect()
+        self.cxnwlm.disconnect()
         
         
 if __name__ == '__main__':
