@@ -27,7 +27,7 @@ class DACclient(QtGui.QWidget):
         
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('169.232.156.230', name = + socket.gethostname() + " DAC client")
+        self.cxn = yield connectAsync('169.232.156.230', name = socket.gethostname() + " DAC client")
         self.server = yield self.cxn.multiplexerserver
         
         self.initializeGUI()
@@ -40,7 +40,7 @@ class DACclient(QtGui.QWidget):
             port = self.chaninfo[chan][0]
             position = self.chaninfo[chan][1]
             
-            widget = QCustomSpinBox(chan, (-10.0, 10.0))  
+            widget = QCustomSpinBox(chan, (-10000.0, 10000.0))  
 
             #connect things here
             widget.spinLevel.valueChanged.connect(lambda value = widget.spinLevel.value(), port = port  : self.changeValue(value, port))         
@@ -51,9 +51,7 @@ class DACclient(QtGui.QWidget):
         
     @inlineCallbacks
     def changeValue(self, value, chan):
-        print chan, value
-        yield None
-        #yield self.server.wlm_dac_output(chan, value)
+        yield self.server.set_dac_voltage(chan, value)
 
     def closeEvent(self, x):
         self.reactor.stop()
