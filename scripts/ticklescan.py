@@ -7,13 +7,13 @@ pmt = cxn.arduinocounter
 dv = cxn.data_vault
 rg = cxn2.rigol_dg1022_server
 
-span = [123000, 126000] #hz
-amp = .8 #volts
+span = [120000, 140000] #hz
+amp = 5 #volts
 resolution = 100 # hz
 chan = 1
 waveform = 'sine'
 offset = 0.0
-average = 5
+average = 4
 
 xvalues = range(span[0],span[1],resolution)
 

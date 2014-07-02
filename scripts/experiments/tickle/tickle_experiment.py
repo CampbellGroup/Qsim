@@ -1,6 +1,5 @@
 import labrad
 from Qsim.abstractdevices.script_scanner.scan_methods import experiment
-from twisted.internet import task
 from twisted.internet.defer import returnValue
 import time
 
@@ -8,7 +7,7 @@ class ticklescan(experiment):
     
     name = 'Tickle Scan'
     
-    required_parameters =[('ticklescan', 'amplitude'), ('ticklescan', 'frequency'), ('ticklescan', 'amplitude'), ('ticklescan', 'offset')]
+    required_parameters =[('ticklescan', 'amplitude'), ('ticklescan', 'frequency'), ('ticklescan', 'average'), ('ticklescan', 'offset')]
     
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -25,6 +24,7 @@ class ticklescan(experiment):
         amplitude = self.pv.get_parameter('ticklescan', 'amplitude')
         frequency = self.pv.get_parameter('ticklescan','frequency')                
         offset = self.pv.get_parameter('ticklescan', 'offset')
+        average = int(self.pv.get_parameter('ticklescan', 'average'))
         minval = int(frequency[0]['Hz'])
         maxval = int(frequency[1]['Hz'])
         numberofsteps = int(frequency[2])
@@ -41,27 +41,29 @@ class ticklescan(experiment):
         self.dv.add_parameter('amplitude', amplitude)
         self.dv.add_parameter('frequency', frequency)
         self.dv.add_parameter('offset', offset)
+        self.dv.add_parameter('average', average)
         xvalues = range(minval,maxval + 1,stepsize)
         self.rg.query_device
         self.rg.set_output(True)
- #       from twisted.internet import reactor
         for i, freq in enumerate(xvalues):
                 should_stop = self.pause_or_stop()
                 if should_stop: break
                 self.rg.apply_wave_form(self.chan, 'sine', freq, amplitude, offset)
-                counts = self.pmt.get_current_counts()    
-                time.sleep(.1)
-#                counts = yield task.deferLater(0.1, self.getcounts, self)
+                counts = 0   
+                for j in range(average):    
+                    counts = self.pmt.get_current_counts() + counts
+                    time.sleep(0.1)
+                counts = counts/average
                 self.dv.add(freq, counts)
                 progress = 100*float(i)/numberofsteps
                 self.sc.script_set_progress(self.ident, progress)
-        self.rg.set_output(False)
         
     def getcounts(self):
         counts = self.pmt.get_current_counts()
         returnValue(counts)
         
     def finalize(self, cxn, context):
+        self.rg.set_output(False)
         self.cxn.disconnect()
         self.cxnwlm.disconnect()
         
