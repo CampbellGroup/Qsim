@@ -4,17 +4,17 @@ from Qsim.abstractdevices.script_scanner.scan_methods import experiment
 from twisted.internet import reactor
 from twisted.internet.defer import inlineCallbacks
 import time
-class wavemeter_linescan_369(experiment):
+class wavemeter_linescan_935(experiment):
     
-    name = 'Wavemeter Line Scan'
+    name = 'Wavemeter Line Scan 935'
     
-    required_parameters = [('linescan369', 'frequency')]
+    required_parameters = [('scan935', 'frequency')]
     
     def initialize(self, cxn, context, ident):
         self.ident = ident
-        self.laserport = 5
-        self.cxn = labrad.connect(name = '369 Wavemeter Line Scan')
-        self.cxnwlm = labrad.connect('169.232.156.230', name = 'Tickle Scan')
+        self.laserport = 6
+        self.cxn = labrad.connect(name = '935 Wavemeter Line Scan')
+        self.cxnwlm = labrad.connect('10.97.112.2', name = 'Tickle Scan')
         self.wm = self.cxnwlm.multiplexerserver  
         self.dv = self.cxn.data_vault      
         self.pv = self.cxn.parametervault
@@ -22,14 +22,14 @@ class wavemeter_linescan_369(experiment):
         
     def run(self, cxn, context):
         
-        frequency = self.pv.get_parameter('scan369','frequency')                
+        frequency = self.pv.get_parameter('scan935','frequency')                
 
         self.minval = frequency[0]
         self.maxval = frequency[1]
 
         
-        self.dv.cd('369 Wavemeter Line Scan', True)
-        self.dv.new('369 Wavemeter Line Scan',[('freq', 'Hz')], [('', 'Amplitude','kilocounts/sec')])
+        self.dv.cd('935 Wavemeter Line Scan', True)
+        self.dv.new('935 Wavemeter Line Scan',[('freq', 'Hz')], [('', 'Amplitude','kilocounts/sec')])
         window_name = 'G'
 
         self.dv.add_parameter('Window', window_name)
@@ -42,12 +42,16 @@ class wavemeter_linescan_369(experiment):
         self.timeout = 0
         self.waitforstart()
         if self.timeout != "too long":
+            tempdata = []
             self.wm.set_pid_course(self.laserport, self.maxval['THz'])
             while self.currentfreq != self.maxval:
                 counts = self.pmt.get_current_counts()
                 self.currentfrequency()
                 if self.currentfreq and counts:
-                    self.dv.add(self.currentfreq, counts)
+                    tempdata.append([self.currentfreq['Hz'], counts])
+            tempdata.sort()
+            self.dv.add(tempdata)
+            
             
             
     def currentfrequency(self):
@@ -68,12 +72,11 @@ class wavemeter_linescan_369(experiment):
     def finalize(self, cxn, context):
         self.cxn.disconnect()
         self.cxnwlm.disconnect()
-            
 
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = wavemeter_linescan_369(cxn = cxn)
+    exprt = wavemeter_linescan_935(cxn = cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)
 
