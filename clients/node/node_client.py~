@@ -6,8 +6,11 @@ nodeDict = {
             'node_qsimexpcontrol':[
                                 'Serial Server',
                                 'Data Vault',
+                                'ParameterVault',
                                 'ArduinoMegaFreqCounter',
-				'arduinoTTL'
+                                'ScriptScanner',
+				'ArduinoTTL',
+				'WikiServer'
                                 ],
             }
 #connect to LabRAD

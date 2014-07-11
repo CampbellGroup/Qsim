@@ -29,7 +29,8 @@ class plotwikidata(QtGui.QWidget):
         self.ws = yield self.cxn.wikiserver
         yield self.cxn.registry.cd(['','Servers', 'wikiserver'])
         self.maindir = yield self.cxn.registry.get('wikipath')
-        self.maindir = self.maindir[0] + '/'
+#        self.maindir = self.maindir[0] + '/'
+        print self.maindir
         yield os.chdir(self.maindir)
         self.setupWidget()
         
@@ -98,11 +99,11 @@ class plotwikidata(QtGui.QWidget):
             plt.xlim(self.xlims)
         if self.ylims != None:
             plt.ylim(self.ylims)
+        print os.getcwd()
         plt.savefig(self.timetag)
         plt.show()
         yield self.ws.add_line_to_file( self.comments)
-        print 'sent comments'
-        yield self.ws.add_line_to_file( self.timetag + '[[' + self.timetag + '.png]]')
+        yield self.ws.add_line_to_file( "##" + self.timetag + '[[' + self.timetag + '.png]]')
         yield self.ws.update_wiki()
         self.close()
 #         if dirofcurrentday does not exist:
@@ -119,5 +120,9 @@ class plotwikidata(QtGui.QWidget):
 #         self.ax.plot(dataarray)
  #       self.ax.set_xlabel(self.xlabel + ' (' + self.xunits +')')
  #       self.ax.set_ylabel(self.ylabel + ' (' + self.yunits +')')
+ 
+    def closeEvent(self, x):
+        self.cxn.disconnect()
+#        self.reactor.stop()
         
         
