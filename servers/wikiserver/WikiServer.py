@@ -4,7 +4,7 @@
 name = Wiki Server
 version = 1.0
 description = 
-instancename = WikiServer
+instancename = Wiki Server
 
 [startup]
 cmdline = %PYTHON% %FILE%
@@ -27,7 +27,7 @@ class WikiServer(LabradServer):
     """
     WikiServer for pushing data to wiki
     """
-    name = 'WikiServer'
+    name = 'Wiki Server'
     
     @inlineCallbacks
     def initServer(self):

@@ -1,10 +1,10 @@
 """
 ### BEGIN NODE INFO
 [info]
-name = ArduinoMegaFreqCounter
+name = Arduino Counter
 version = 1.0
 description = 
-instancename = ArduinoMegaFreqCounter
+instancename = Arduino Counter
 
 [startup]
 cmdline = %PYTHON% %FILE%
@@ -32,7 +32,7 @@ from labrad import types as T
 from twisted.internet.task import LoopingCall
 import time as time
 
-SERVERNAME = 'ArduinoCounter'
+SERVERNAME = 'Arduino Counter'
 TIMEOUT = 1.0
 BAUDRATE = 57600
 UPDATEREADINGID = 142879
