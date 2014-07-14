@@ -7,10 +7,10 @@ nodeDict = {
                                 'Serial Server',
                                 'Data Vault',
                                 'ParameterVault',
-                                'arduinocounter',
+                                'Arduino Counter',
                                 'ScriptScanner',
-				'ArduinoTTL',
-				'Wiki Server'
+				                'ArduinoTTL',
+				                'Wiki Server'
                                 ],
             }
 #connect to LabRAD
@@ -32,7 +32,7 @@ else:
             #if node server is up, start all possible servers on it that are not already running
             running_servers = np.array(cxn.servers[node].running_servers().asarray)
             for server in nodeDict[node]:
-                if server in cxn.servers: 
+                if server in running_servers:#cxn.servers: 
                     print server + ' is already running'
                 else:
                     print 'starting ' + server

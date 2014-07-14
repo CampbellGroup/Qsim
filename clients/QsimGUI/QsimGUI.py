@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks
+import sys
 
 class QSIM_GUI(QtGui.QMainWindow):
     def __init__(self, reactor, clipboard, parent=None):
@@ -61,13 +62,13 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.reactor.stop()
 
 if __name__=="__main__":
-    a = QtGui.QApplication( [] )
+    a = QtGui.QApplication( sys.argv )
     clipboard = a.clipboard()
     import common.lib.clients.qt4reactor as qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
     QsimGUI = QSIM_GUI(reactor, clipboard)
-    QsimGUI.setWindowTitle('Qsim GUI')
     QsimGUI.setWindowIcon(QtGui.QIcon('/home/qsimexpcontrol/Pictures/icons/6ions.jpg'))
+    QsimGUI.setWindowTitle('Qsim GUI')
     QsimGUI.show()
     reactor.run()

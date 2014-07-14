@@ -12,11 +12,11 @@ class ticklescan(experiment):
     def initialize(self, cxn, context, ident):
         self.ident = ident
         self.cxn = labrad.connect(name = 'Tickle Scan')
-        self.cxnwlm = labrad.connect('169.232.156.230', name = 'Tickle Scan')
+        self.cxnwlm = labrad.connect('10.97.112.2', name = 'Tickle Scan')
         self.dv = self.cxn.data_vault
         self.rg = self.cxnwlm.rigol_dg1022_server      
         self.pv = self.cxn.parametervault
-        self.pmt = cxn.arduinocounter
+        self.pmt = cxn.arduino_counter
         self.chan = 1
     
     def run(self, cxn, context):
@@ -33,7 +33,7 @@ class ticklescan(experiment):
         
         self.dv.cd('Tickle Scan', True)
         self.dv.new('Tickle Scan',[('freq', 'num')], [('kilocounts/sec','','num')])
-        window_name = 'V'
+        window_name = ['Tickle']
         
         self.dv.add_parameter('Window', window_name)
         self.dv.add_parameter('plotLive', True)

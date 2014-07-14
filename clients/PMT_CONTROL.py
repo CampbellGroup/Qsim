@@ -21,7 +21,7 @@ class pmtWidget(QtGui.QWidget):
         cxn = yield connectAsync()
         try:
             #connect to data vault and navigate to the directory boolean True to plot live
-            self.server = yield cxn.arduinocounter   
+            self.server = yield cxn.arduino_counter   
         except AttributeError:
             self.server = None
             print 'Not Connected: Arduino ServerTypeError: unsupported operand ty' 

@@ -125,7 +125,7 @@ class ArduinoCounter( SerialDeviceServer ):
     @setting(2, "New Data Set", returns = 's')
     def newDataSet(self, c):
         filename = yield self.dv.new('PMT COUNTS',[('t', 'num')], [('kilocounts/sec','','num')])
-        window_name = 'q'
+        window_name = ['PMT Counts']
         yield self.dv.add_parameter('Window', window_name)
         yield self.dv.add_parameter('plotLive', True)
         self.start = time.time()

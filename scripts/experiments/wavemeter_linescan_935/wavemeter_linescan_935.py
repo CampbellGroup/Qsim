@@ -30,7 +30,7 @@ class wavemeter_linescan_935(experiment):
         
         self.dv.cd('935 Wavemeter Line Scan', True)
         self.dv.new('935 Wavemeter Line Scan',[('freq', 'Hz')], [('', 'Amplitude','kilocounts/sec')])
-        window_name = 'G'
+        window_name = ['935 Line Scan']
 
         self.dv.add_parameter('Window', window_name)
         self.dv.add_parameter('plotLive', True)
