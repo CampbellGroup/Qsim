@@ -27,9 +27,9 @@ class DACclient(QtGui.QWidget):
         
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('169.232.156.230', name = socket.gethostname() + " DAC client")
-        self.server = yield self.cxn.multiplexerserver
-        
+        self.cxn = yield connectAsync('10.97.112.2', name = socket.gethostname() + " DAC client")
+        self.dac1 = yield self.cxn.rigol_dg1022_dac_1_server
+        self.dac2 = yield self.cxn.rigol_dg1022_dac_2_server
         self.initializeGUI()
         
     @inlineCallbacks
@@ -40,18 +40,21 @@ class DACclient(QtGui.QWidget):
             port = self.chaninfo[chan][0]
             position = self.chaninfo[chan][1]
             
-            widget = QCustomSpinBox(chan, (-10000.0, 10000.0))  
+            widget = QCustomSpinBox(chan, (-5.000, 5.000))  
 
             #connect things here
-            widget.spinLevel.valueChanged.connect(lambda value = widget.spinLevel.value(), port = port  : self.changeValue(value, port))         
+            widget.spinLevel.valueChanged.connect(lambda value = widget.spinLevel.value(), port = port   : self.changeValue(value, port))         
             self.d[port] = widget
             layout.addWidget(self.d[port])
         self.setLayout(layout)
         yield None
         
     @inlineCallbacks
-    def changeValue(self, value, chan):
-        yield self.server.set_dac_voltage(chan, value)
+    def changeValue(self, value, port):
+        if port[0] == 1:
+            yield self.dac1.apply_dc(port[1], value)
+        else:
+            yield self.dac2.apply_dc(port[1], value)
 
     def closeEvent(self, x):
         self.reactor.stop()

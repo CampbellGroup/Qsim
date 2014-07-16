@@ -46,14 +46,14 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from Qsim.clients.PMT_CONTROL import pmtWidget 
-#        from Qsim.clients.DAC.DAC import DACclient
+        from Qsim.clients.DAC.DAC import DACclient
         from common.lib.clients.switchclient.switchclient import switchclient
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(pmtWidget(reactor),                0,1,1,1)
         gridLayout.addWidget(wavemeterclient(reactor),          0,0,3,1)
         gridLayout.addWidget(switchclient(reactor),             1,1)
-#        gridLayout.addWidget(DACclient(reactor),                2,1)
+        gridLayout.addWidget(DACclient(reactor),                2,1)
         widget.setLayout(gridLayout)
         return widget
 
