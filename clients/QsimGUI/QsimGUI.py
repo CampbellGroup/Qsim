@@ -12,7 +12,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     @inlineCallbacks
     def connect_labrad(self):
         from common.lib.clients.connection import connection
-        cxn = connection()
+        cxn = connection(name = 'GUI Client')
         yield cxn.connect()
         self.create_layout(cxn)
     
@@ -45,7 +45,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
-        from Qsim.clients.PMT_CONTROL import pmtWidget
+        from Qsim.clients.PMT_CONTROL import pmtWidget 
 #        from Qsim.clients.DAC.DAC import DACclient
         from common.lib.clients.switchclient.switchclient import switchclient
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
