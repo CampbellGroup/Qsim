@@ -1,6 +1,6 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
-from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
+from twisted.internet.defer import inlineCallbacks
 from DAC_client_config import DAC_config
 import socket
 
@@ -28,44 +28,55 @@ class DACclient(QtGui.QWidget):
         """
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync('10.97.112.2', name = socket.gethostname() + " DAC client")
-        self.dac1 = yield self.cxn.rigol_dg1022_dac_1_server
-        self.dac2 = yield self.cxn.rigol_dg1022_dac_2_server
+        self.server = yield self.cxn.rigol_dg1022a_server
+        for device in self.chaninfo: #Iterate over config file
+            dacctx = yield self.server.context() # grab contexts for N rigols
+            deviceID = self.chaninfo[device][0] 
+            self.chaninfo[device][4] = dacctx # stores context for later use
+            yield self.server.select_device(deviceID, context = dacctx) #select device for given context
+            for i in range(2):
+                yield self.server.wave_function(i + 1, 'DC', context = dacctx)  #Sets Rigols to DC and Output on        
+                yield self.server.output(i + 1, True, context = dacctx)
         self.initializeGUI()
         
-    @inlineCallbacks
     def initializeGUI(self):  
     
         layout = QtGui.QGridLayout()
-        for chan in self.chaninfo:
-            port = self.chaninfo[chan][0]
-            position = self.chaninfo[chan][1]
-            
-            widget = QCustomSpinBox(chan, (-5.000, 5.000))  
-
-            #connect things here
-            widget.spinLevel.valueChanged.connect(lambda value = widget.spinLevel.value(), port = port   : self.changeValue(value, port))         
-            self.d[port] = widget
-            layout.addWidget(self.d[port])
+        for device in self.chaninfo:
+            for i in range(2): 
+                name = self.chaninfo[device][1][i]       
+                position = self.chaninfo[device][i + 2]    
+                widget = QCustomSpinBox(name, (-5.000, 5.000))  
+                widget.spinLevel.valueChanged.connect(lambda value = widget.spinLevel.value(), port = (device, i + 1)   : self.changeValue(value, port))         
+                self.d[name] = widget
+                layout.addWidget(self.d[name])
         self.setLayout(layout)
-        yield None
         
     @inlineCallbacks
     def changeValue(self, value, port):
-        if port[0] == 1:
-            yield self.dac1.apply_dc(port[1], value)
-        else:
-            yield self.dac2.apply_dc(port[1], value)
+        device = port[0]
+        channel = port[1]
+        from labrad.units import WithUnit
+        value = WithUnit(value, 'V')
+        ctx = self.chaninfo[device][4]
+        yield self.server.offset(channel, value, context = ctx)  
 
     def closeEvent(self, x):
+        for device in self.chaninfo:
+            ctx = self.chaninfo[device][4]
+            self.server.release_device(context = ctx)
         self.reactor.stop()
-        
-        
-        
+                
 if __name__=="__main__":
     a = QtGui.QApplication( [] )
-    from common.lib.clients import qt4reactor
+    from Qsim.clients import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
     DACWidget = DACclient(reactor)
     DACWidget.show()
     reactor.run()
+    
+    
+
+        
+        
