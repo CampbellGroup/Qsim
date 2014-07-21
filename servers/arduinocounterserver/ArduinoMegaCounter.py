@@ -45,6 +45,7 @@ class ArduinoCounter( SerialDeviceServer ):
     timeout = T.Value(TIMEOUT,'s')
     on = False
     currentreading = 0.0
+    reactorlooptime = 0.1
     
     updatereading = Signal(UPDATEREADINGID, 'signal: new count', 'v')
     
@@ -69,6 +70,8 @@ class ArduinoCounter( SerialDeviceServer ):
             else: raise
         self.saveFolder = ['','PMT Counts']
 #            self.dataSetName = 'PMT Counts'
+        self.on = False
+        self.getCounts()
         yield self.connect_data_vault()
 
                     
@@ -87,12 +90,12 @@ class ArduinoCounter( SerialDeviceServer ):
             
     @inlineCallbacks
     def getCounts(self):
-
+        
+        print "in loop"
         if self.on:    
+            print "in loop and on"
             #recursively loop with reactor (kind of a hack better way with reactor looping call?)
-            reactorlooptime = 0.1
             #not sure if loop can even run this fast, but must be faster than arduino 100ms PMT average , seems to work though
-            yield reactor.callLater(reactorlooptime, self.getCounts)  
             reading = yield self.ser.readline()
             yield self.ser.flushinput()
             #reads arduino serial line ou['Hz']tput
@@ -107,6 +110,7 @@ class ArduinoCounter( SerialDeviceServer ):
                     yield None
             else: yield None
         else: yield None
+        yield reactor.callLater(self.reactorlooptime, self.getCounts) 
         
     @inlineCallbacks   
     def StopServer(self):
@@ -118,7 +122,6 @@ class ArduinoCounter( SerialDeviceServer ):
 
         if value == True: 
             self.on = True
-            self.getCounts()
         else:
             self.on = False
             
@@ -131,7 +134,7 @@ class ArduinoCounter( SerialDeviceServer ):
         self.start = time.time()
         returnValue( filename[1] )
         
-    @setting(3, "Get Current Counts")
+    @setting(3, "Get Current Counts", returns = 'v' )
     def getCurrentReading(self, c):
         yield None
         returnValue( self.currentreading )
