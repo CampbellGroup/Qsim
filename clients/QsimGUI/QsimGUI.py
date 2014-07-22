@@ -1,5 +1,5 @@
 from PyQt4 import QtGui
-from twisted.internet.defer import inlineCallbacks
+from twisted.internet.defer import inlineCallbacks, returnValue
 import sys
 
 class QSIM_GUI(QtGui.QMainWindow):
@@ -27,6 +27,8 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         
+        self.createGrapherTab()
+        
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
         self.setCentralWidget(centralWidget)
@@ -43,6 +45,25 @@ class QSIM_GUI(QtGui.QMainWindow):
         widget.setLayout(gridLayout)
         return widget
     
+    @inlineCallbacks
+    def createGrapherTab(self):
+        grapherTab = yield self.makeGrapherWidget(reactor)
+        self.tabWidget.addTab(grapherTab, '&Grapher')
+    
+    @inlineCallbacks
+    def makeGrapherWidget(self, reactor):
+        widget = QtGui.QWidget()
+        from Qsim.clients.pygrapherlive.connections import CONNECTIONS
+        vboxlayout = QtGui.QVBoxLayout()
+        Connections = CONNECTIONS(reactor)
+        @inlineCallbacks
+        def widgetReady():
+            window = yield Connections.introWindow
+            vboxlayout.addWidget(window)
+            widget.setLayout(vboxlayout)
+        yield Connections.communicate.connectionReady.connect(widgetReady)
+        returnValue(widget)
+    
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from Qsim.clients.PMT_CONTROL import pmtWidget 
@@ -50,10 +71,11 @@ class QSIM_GUI(QtGui.QMainWindow):
         from common.lib.clients.switchclient.switchclient import switchclient
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
         gridLayout = QtGui.QGridLayout()
-        gridLayout.addWidget(pmtWidget(reactor),                0,1,1,1)
-        gridLayout.addWidget(wavemeterclient(reactor),          0,0,3,1)
-        gridLayout.addWidget(switchclient(reactor),             1,1)
-        gridLayout.addWidget(DACclient(reactor),                2,1)
+        gridLayout.addWidget(pmtWidget(reactor),                0,1, 1,1)
+        gridLayout.addWidget(wavemeterclient(reactor),          0,0, 3,1)
+        gridLayout.addWidget(switchclient(reactor),             1,1, 1,1)
+        gridLayout.addWidget(DACclient(reactor),                2,1, 1,1)
+#        gridLayout.addWidget(self.makeGrapherWidget(reactor),     0,2, 1,1)
         widget.setLayout(gridLayout)
         return widget
 
