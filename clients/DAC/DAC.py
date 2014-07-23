@@ -42,14 +42,21 @@ class DACclient(QtGui.QWidget):
     def initializeGUI(self):  
     
         layout = QtGui.QGridLayout()
+        
+        qBox = QtGui.QGroupBox('Rod Voltages')
+        subLayout = QtGui.QGridLayout()
+        qBox.setLayout(subLayout)
+        layout.addWidget(qBox, 0, 0)
+
         for device in self.chaninfo:
             for i in range(2): 
                 name = self.chaninfo[device][1][i]       
                 position = self.chaninfo[device][i + 2]    
-                widget = QCustomSpinBox(name, (-5.000, 5.000))  
+                widget = QCustomSpinBox(name + ' (V)', (-5.000, 5.000))  
                 widget.spinLevel.valueChanged.connect(lambda value = widget.spinLevel.value(), port = (device, i + 1)   : self.changeValue(value, port))         
                 self.d[name] = widget
-                layout.addWidget(self.d[name])
+                subLayout.addWidget(self.d[name])
+                
         self.setLayout(layout)
         
     @inlineCallbacks

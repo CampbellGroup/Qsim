@@ -79,9 +79,10 @@ class QSIM_GUI(QtGui.QMainWindow):
         grapherWindow = FirstWindow(None, cxn.context, reactor)
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(pmtWidget(reactor),                0,1, 1,1)
-        gridLayout.addWidget(wavemeterclient(reactor),          0,0, 2,1)
+        gridLayout.addWidget(wavemeterclient(reactor),          0,0, 3,1)
         gridLayout.addWidget(switchclient(reactor),             1,1, 1,1)
         gridLayout.addWidget(DACclient(reactor),                2,1, 1,1)
+ #       gridLayout.setVerticalSpacing(.01)
         widget.setLayout(gridLayout)
         return widget
 
