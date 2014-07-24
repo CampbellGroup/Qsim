@@ -67,7 +67,7 @@ class DACclient(QtGui.QWidget):
         from labrad.units import WithUnit
         value = WithUnit(value, 'V')
         ctx = self.chaninfo[device][4]
-        yield self.server.offset(channel, value, context = ctx)  
+        yield self.server.apply_dc(channel, value, context = ctx)  
 
     def closeEvent(self, x):
         for device in self.chaninfo:
