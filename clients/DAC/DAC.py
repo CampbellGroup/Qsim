@@ -33,6 +33,7 @@ class DACclient(QtGui.QWidget):
             dacctx = yield self.server.context() # grab contexts for N rigols
             deviceID = self.chaninfo[device][0] 
             self.chaninfo[device][4] = dacctx # stores context for later use
+            print "gonna select device!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
             yield self.server.select_device(deviceID, context = dacctx) #select device for given context
             for i in range(2):
                 yield self.server.wave_function(i + 1, 'DC', context = dacctx)  #Sets Rigols to DC and Output on        
