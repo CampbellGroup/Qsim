@@ -18,7 +18,7 @@ class wavemeter_linescan_935(experiment):
         self.wm = self.cxnwlm.multiplexerserver  
         self.dv = self.cxn.data_vault      
         self.pv = self.cxn.parametervault
-        self.pmt = self.cxn.arduinocounter
+        self.pmt = self.cxn.arduino_counter
         
     def run(self, cxn, context):
         

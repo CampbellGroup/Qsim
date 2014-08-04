@@ -18,7 +18,7 @@ class wavemeter_linescan_369(experiment):
         self.wm = self.cxnwlm.multiplexerserver  
         self.dv = self.cxn.data_vault      
         self.pv = self.cxn.parametervault
-        self.pmt = self.cxn.arduinocounter
+        self.pmt = self.cxn.arduino_counter
         
     def run(self, cxn, context):
         
@@ -48,7 +48,7 @@ class wavemeter_linescan_369(experiment):
                 counts = self.pmt.get_current_counts()
                 self.currentfrequency()
                 if self.currentfreq and counts:
-                    tempdata.append([self.currentfreq, counts])
+                    tempdata.append([self.currentfreq['THz'], counts])
             tempdata.sort()
             self.dv.add(tempdata)
             
