@@ -62,7 +62,6 @@ class ticklescan(experiment):
         for i, freq in enumerate(self.xvalues):
                 should_stop = self.pause_or_stop()
                 if should_stop: break
-                print freq
                 self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))
                 counts = 0   
                 for j in range(self.average):    
