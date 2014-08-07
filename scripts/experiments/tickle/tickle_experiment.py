@@ -1,5 +1,5 @@
 import labrad
-from Qsim.abstractdevices.script_scanner.scan_methods import experiment
+from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
 from twisted.internet.defer import returnValue
 from labrad.units import WithUnit
 import time

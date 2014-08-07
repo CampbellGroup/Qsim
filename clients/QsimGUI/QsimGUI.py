@@ -45,7 +45,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     @inlineCallbacks
     def makeGrapherWidget(self, reactor):
         widget = QtGui.QWidget()
-        from Qsim.clients.pygrapherlive.connections import CONNECTIONS
+        from common.lib.clients.pygrapherlive.connections import CONNECTIONS
         vboxlayout = QtGui.QVBoxLayout()
         Connections = CONNECTIONS(reactor)
         @inlineCallbacks
@@ -59,7 +59,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeScriptControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         
-        from Qsim.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
+        from common.lib.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
         gridLayout = QtGui.QGridLayout()
       
         gridLayout.addWidget(script_scanner_gui(reactor))
@@ -70,13 +70,13 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
 
-        from Qsim.clients.PMT_CONTROL import pmtWidget 
+        from Qsim.clients.PMT.PMT_CONTROL import pmtWidget 
         from Qsim.clients.DAC.DAC import DACclient
         from common.lib.clients.switchclient.switchclient import switchclient
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
-        from Qsim.clients.pygrapherlive.grapherwindow import FirstWindow
+        from common.lib.clients.pygrapherlive.grapherwindow import FirstWindow
 
-        grapherWindow = FirstWindow(None, cxn.context, reactor)
+#        grapherWindow = FirstWindow(None, cxn.context, reactor)
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(pmtWidget(reactor),                0,1, 1,1)
         gridLayout.addWidget(wavemeterclient(reactor),          0,0, 3,1)

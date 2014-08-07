@@ -1,7 +1,7 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks
-from DAC_client_config import DAC_config
+from config.DAC_client_config import DAC_config
 import socket
 
 class DACclient(QtGui.QWidget):

@@ -9,7 +9,7 @@ class pmtWidget(QtGui.QWidget):
         super(pmtWidget, self).__init__(parent)
         self.reactor = reactor
         basepath =  os.path.dirname(__file__)
-        path = os.path.join(basepath,"qtui", "pmtfrontend.ui")
+        path = os.path.join(basepath, "pmtfrontend.ui")
         uic.loadUi(path,self)
         self.connect()
         
@@ -59,7 +59,7 @@ class pmtWidget(QtGui.QWidget):
 
 if __name__=="__main__":
     a = QtGui.QApplication( [] )
-    import qt4reactor
+    from Qsim.clients import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
     pmtWidget = pmtWidget(reactor)

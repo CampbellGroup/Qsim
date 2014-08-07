@@ -1,7 +1,6 @@
 import labrad
 from labrad.units import WithUnit
-from Qsim.abstractdevices.script_scanner.scan_methods import experiment
-from twisted.internet import reactor
+from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
 from twisted.internet.defer import inlineCallbacks
 import time
 class wavemeter_linescan_935(experiment):
