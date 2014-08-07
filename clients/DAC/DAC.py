@@ -28,6 +28,11 @@ class DACclient(QtGui.QWidget):
         """
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync('10.97.112.2', name = socket.gethostname() + " DAC client")
+        self.cxn2 = yield connectAsync(name = socket.gethostname() + " DAC client")
+        self.reg = self.cxn2.registry
+        yield self.reg.cd('settings')
+        self.settings = yield self.reg.dir()
+        self.settings = self.settings[1]
         self.server = yield self.cxn.rigol_dg1022a_server
         for device in self.chaninfo: #Iterate over config file
             dacctx = yield self.server.context() # grab contexts for N rigols
@@ -38,9 +43,9 @@ class DACclient(QtGui.QWidget):
                 yield self.server.wave_function(i + 1, 'DC', context = dacctx)  #Sets Rigols to DC and Output on        
                 yield self.server.output(i + 1, True, context = dacctx)
         self.initializeGUI()
-        
-    def initializeGUI(self):  
     
+    @inlineCallbacks    
+    def initializeGUI(self):  
         layout = QtGui.QGridLayout()
         
         qBox = QtGui.QGroupBox('Rod Voltages')
@@ -52,7 +57,10 @@ class DACclient(QtGui.QWidget):
             for i in range(2): 
                 name = self.chaninfo[device][1][i]       
                 position = self.chaninfo[device][i + 2]    
-                widget = QCustomSpinBox(name + ' (V)', (-5.000, 5.000))  
+                widget = QCustomSpinBox(name + ' (V)', (-5.000, 5.000))
+                if name in self.settings:
+                    value = yield self.reg.get(name)
+                    widget.spinLevel.setValue(value)
                 widget.spinLevel.valueChanged.connect(lambda value = widget.spinLevel.value(), port = (device, i + 1)   : self.changeValue(value, port))         
                 self.d[name] = widget
                 subLayout.addWidget(self.d[name])
@@ -63,15 +71,19 @@ class DACclient(QtGui.QWidget):
     def changeValue(self, value, port):
         device = port[0]
         channel = port[1]
+        name = self.chaninfo[device][1][channel - 1]
+        ctx = self.chaninfo[device][4]
         from labrad.units import WithUnit
         value = WithUnit(value, 'V')
-        ctx = self.chaninfo[device][4]
-        yield self.server.apply_dc(channel, value, context = ctx)  
 
+        yield self.server.apply_dc(channel, value, context = ctx)  
+        yield self.reg.set(name, value)
+    
     def closeEvent(self, x):
-        for device in self.chaninfo:
-            ctx = self.chaninfo[device][4]
-            self.server.release_device(context = ctx)
+#        for device in self.chaninfo:
+            ###TODO: release device not working
+#            ctx = self.chaninfo[device][4]
+#            yield self.server.release_device(context = ctx)
         self.reactor.stop()
                 
 if __name__=="__main__":
