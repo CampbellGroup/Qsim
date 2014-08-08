@@ -72,16 +72,18 @@ class QSIM_GUI(QtGui.QMainWindow):
 
         from Qsim.clients.PMT.PMT_CONTROL import pmtWidget 
         from Qsim.clients.DAC.DAC import DACclient
+        from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import switchclient
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
         from common.lib.clients.pygrapherlive.grapherwindow import FirstWindow
 
 #        grapherWindow = FirstWindow(None, cxn.context, reactor)
         gridLayout = QtGui.QGridLayout()
-        gridLayout.addWidget(pmtWidget(reactor),                0,1, 1,1)
-        gridLayout.addWidget(wavemeterclient(reactor),          0,0, 3,1)
-        gridLayout.addWidget(switchclient(reactor),             1,1, 1,1)
-        gridLayout.addWidget(DACclient(reactor),                2,1, 1,1)
+        gridLayout.addWidget(pmtWidget(reactor),                1,1, 1,1)
+        gridLayout.addWidget(cameraswitch(reactor),             0,1, 1,1)
+        gridLayout.addWidget(wavemeterclient(reactor),          0,0, 4,1)
+        gridLayout.addWidget(switchclient(reactor),             2,1, 1,1)
+        gridLayout.addWidget(DACclient(reactor),                3,1, 1,1)
  #       gridLayout.setVerticalSpacing(.01)
         widget.setLayout(gridLayout)
         return widget
