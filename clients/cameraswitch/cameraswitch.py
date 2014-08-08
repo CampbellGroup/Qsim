@@ -45,8 +45,12 @@ class cameraswitch(QtGui.QWidget):
         
     @inlineCallbacks
     def toggle(self, state):
+        '''
+        Sends TTL pulse to switch camera and PMT
+        '''
         yield self.server.ttl_output(8, True)
         yield self.server.ttl_output(8, False)
+        yield self.server.ttl_read(8)#releases channel so manual control of cameraswitch is possible
         if 'cameraswitch' in self.settings:
             yield self.reg.set('cameraswitch', state)
         
