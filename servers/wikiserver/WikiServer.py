@@ -80,7 +80,7 @@ class WikiServer(LabradServer):
             self.prepend(self.monthfile, line)
             
         elif os.path.isfile(self.yearfile):
-            self.prepend(self.yearfile, '[[' + self.month + ']]')
+            self.prepend(self.yearfile, '[[' + self.monthfile + ']]')
             yield open(self.monthfile, 'a').close()
             self.prepend(self.monthfile, line)
             
