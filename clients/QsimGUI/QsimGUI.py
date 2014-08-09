@@ -23,10 +23,12 @@ class QSIM_GUI(QtGui.QMainWindow):
         layout = QtGui.QHBoxLayout() 
         script_scanner = self.makeScriptControlWidget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
+        from Qsim.clients.analysis.analysis import analysis
+        
         self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
-        
+        self.tabWidget.addTab(analysis(reactor, cxn), '&Analysis')
         self.createGrapherTab()
         
         layout.addWidget(self.tabWidget)
@@ -87,7 +89,6 @@ class QSIM_GUI(QtGui.QMainWindow):
  #       gridLayout.setVerticalSpacing(.01)
         widget.setLayout(gridLayout)
         return widget
-
 
     def closeEvent(self, x):
         self.reactor.stop()
