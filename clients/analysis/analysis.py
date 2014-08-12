@@ -74,10 +74,6 @@ class analysis(QtGui.QWidget):
         self.textbox.setPlainText('')
         self.wikipage.load(QtCore.QUrl("http://localhost:4567/" + self.month + '-' + self.year))
         
-    def createWindow(self, webWindowType):
-        return self
-        
-        
     def closeEvent(self, x):
         self.reactor.stop()
         
