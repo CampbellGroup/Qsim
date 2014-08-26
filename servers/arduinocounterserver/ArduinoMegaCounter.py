@@ -90,13 +90,13 @@ class ArduinoCounter( SerialDeviceServer ):
             
     @inlineCallbacks
     def getCounts(self):
-        
-        print "in loop"
         if self.on:    
-            print "in loop and on"
             #recursively loop with reactor (kind of a hack better way with reactor looping call?)
             #not sure if loop can even run this fast, but must be faster than arduino 100ms PMT average , seems to work though
-            reading = yield self.ser.readline()
+            try:
+                reading = yield self.ser.readline()
+            except:
+                reading = None
             yield self.ser.flushinput()
             #reads arduino serial line ou['Hz']tput
             if reading:        
@@ -104,7 +104,6 @@ class ArduinoCounter( SerialDeviceServer ):
                 try:
                     yield self.dv.add(time.time() - self.start, float(reading)/100)
                     self.currentreading = float(reading)/100
-                    print self.currentreading
                     self.updatereading(float(reading)/100)
                 except:
                     yield None

@@ -10,7 +10,7 @@ void setup() {
 void loop() {
   if (FreqCount.available()) {
     unsigned long count = FreqCount.read();
-    Serial.write(count);
+    Serial.println(count, DEC);
   }
 }
 
