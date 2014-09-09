@@ -30,14 +30,13 @@ class pmtWidget(QtGui.QWidget):
         self.pushButton.setText('Off')
         self.pushButton.toggled.connect(self.on_toggled)
         self.newSet.clicked.connect(self.onNewSet)
-#        self.doubleSpinBox.valueChanged.connect(self.onNewDuration)
+        self.doubleSpinBox.valueChanged.connect(self.onNewDuration)
 #        self.comboBox.currentIndexChanged.connect(self.onNewMode)
     
     @inlineCallbacks
     def setupListeners(self):
-        yield self.server.signal__new_count(SIGNALID)
-        yield self.server.addListener(listener = self.followSignal, source = None, ID = SIGNALID)
-
+         yield self.server.signal__new_count(SIGNALID)
+         yield self.server.addListener(listener = self.followSignal, source = None, ID = SIGNALID)
     def followSignal(self,signal,value):
         self.lcdNumber.display(value)
         
@@ -53,13 +52,17 @@ class pmtWidget(QtGui.QWidget):
         else: 
             self.pushButton.setText('O')
         yield self.server.toggle_counting(value)
+
+    @inlineCallbacks
+    def onNewDuration(self, value):
+        yield self.server.set_update_time(self.T.Value(value, 's'))
     
     def closeEvent(self, x):
-        self.reactor.stop()   
+        self.reactor.stop()
 
 if __name__=="__main__":
     a = QtGui.QApplication( [] )
-    from Qsim.clients import qt4reactor
+    from common.lib.clients import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
     pmtWidget = pmtWidget(reactor)

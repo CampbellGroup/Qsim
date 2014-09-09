@@ -34,18 +34,19 @@ import time as time
 
 SERVERNAME = 'Arduino Counter'
 TIMEOUT = 1.0
-BAUDRATE = 57600
+BAUDRATE = 115200
 UPDATEREADINGID = 142879
 
 class ArduinoCounter( SerialDeviceServer ):
     name = SERVERNAME
     regKey = 'ArduinoCounter'
     port = None
-    serNode = 'qsimexpcontrol'
+    serNode = 'coach_k'
     timeout = T.Value(TIMEOUT,'s')
     on = False
     currentreading = 0.0
     reactorlooptime = 0.1
+    updatetime = T.Value(100, 's')
     
     updatereading = Signal(UPDATEREADINGID, 'signal: new count', 'v')
     
@@ -90,7 +91,7 @@ class ArduinoCounter( SerialDeviceServer ):
             
     @inlineCallbacks
     def getCounts(self):
-        if self.on:    
+        if self.on:  
             #recursively loop with reactor (kind of a hack better way with reactor looping call?)
             #not sure if loop can even run this fast, but must be faster than arduino 100ms PMT average , seems to work though
             try:
@@ -101,10 +102,12 @@ class ArduinoCounter( SerialDeviceServer ):
             #reads arduino serial line ou['Hz']tput
             if reading:        
             #plots reading to data vault
+                reading = float(reading)
+                rate = reading/100.0
                 try:
-                    yield self.dv.add(time.time() - self.start, float(reading)/100)
-                    self.currentreading = float(reading)/100
-                    self.updatereading(float(reading)/100)
+                    yield self.dv.add(time.time() - self.start, rate)
+                    self.currentreading = rate
+                    self.updatereading(rate)
                 except:
                     yield None
             else: yield None
@@ -118,7 +121,6 @@ class ArduinoCounter( SerialDeviceServer ):
         
     @setting(1, "toggle counting", value = 'b')
     def toggleCounting(self,c,value):
-
         if value == True: 
             self.on = True
         else:
@@ -137,7 +139,15 @@ class ArduinoCounter( SerialDeviceServer ):
     def getCurrentReading(self, c):
         yield None
         returnValue( self.currentreading )
-    
+
+    @setting(4, "Set Update Time", value = 'v[s]')
+    def set_update_time(self, c, value):
+        if value['s'] >= 60.0: value = T.Value(60.0, 's')
+        if value['s'] <= 0.01: value = T.Value(0.01, 's')
+        self.updatetime = value
+        value = long(value)
+        yield self.ser.write(str(value))
+        self.reactorlooptime = self.updatetime['s']
     
 if __name__ == "__main__":
     from labrad import util
