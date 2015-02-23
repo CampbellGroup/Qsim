@@ -72,7 +72,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
 
-        from Qsim.clients.PMT.PMT_CONTROL import pmtWidget 
+        from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget 
         from Qsim.clients.DAC.DAC import DACclient
         from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import switchclient
