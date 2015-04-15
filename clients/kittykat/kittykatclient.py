@@ -19,7 +19,7 @@ class kittykatclient(QtGui.QWidget):
         from labrad.wrappers import connectAsync
         self.kittykat = False
         self.oldstate = False
-        self.delay = 0.5
+        self.delay = 500 # in ms this is half the total period (1s delay)
         self.cxn = yield connectAsync(name = "kitty kat client")
         self.server = yield self.cxn.arduinottl  
         self.reg = yield self.cxn.registry 
@@ -27,9 +27,16 @@ class kittykatclient(QtGui.QWidget):
        
     def initializeGUI(self):  
         layout = QtGui.QGridLayout()
-        widget = QCustomSwitchChannel('Kitty Kat')       
-        widget.TTLswitch.toggled.connect(self.toggle) 
-        layout.addWidget(widget)
+        switchwidget = QCustomSwitchChannel('Kitty Kat')   
+        delaywidget = QtGui.QSpinBox()
+        delaywidget.setRange(100, 2000)
+        delaywidget.setValue(1000)
+        delaywidget.valueChanged.connect(self.delaychanged) 
+        delaylabel = QtGui.QLabel('delay (ms)')   
+        switchwidget.TTLswitch.toggled.connect(self.toggle) 
+        layout.addWidget(delaylabel, 1,1)
+        layout.addWidget(switchwidget, 0,0)
+        layout.addWidget(delaywidget, 1,0)
         self.setLayout(layout)
         from twisted.internet.reactor import callLater
         self.kittyloop()
@@ -40,11 +47,13 @@ class kittykatclient(QtGui.QWidget):
         '''
         
         self.kittykat = state
-#         yield self.server.ttl_output(8, True)
-#         yield self.server.ttl_output(8, False)
-#         yield self.server.ttl_read(8)#releases channel so manual control of cameraswitch is possible
-#         if 'cameraswitch' in self.settings:
-#             yield self.reg.set('cameraswitch', state)
+        
+    def delaychanged(self, delay):
+        '''
+        Sets Delay Time
+        '''
+        
+        self.delay = delay/2.0
 
     @inlineCallbacks
     def kittyloop(self):
@@ -52,9 +61,9 @@ class kittykatclient(QtGui.QWidget):
             newstate = not self.oldstate
             yield self.server.ttl_output(10, newstate)
             self.oldstate = newstate
-            self.reactor.callLater(self.delay, self.kittyloop)
+            self.reactor.callLater(self.delay /1000.0, self.kittyloop)
         else:
-            self.reactor.callLater(self.delay, self.kittyloop)
+            self.reactor.callLater(self.delay / 1000.0, self.kittyloop)
             
         
     def closeEvent(self, x):
