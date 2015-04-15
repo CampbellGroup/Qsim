@@ -24,8 +24,7 @@ class kittykatclient(QtGui.QWidget):
         self.server = yield self.cxn.arduinottl  
         self.reg = yield self.cxn.registry 
         self.initializeGUI()
-    
-    @inlineCallbacks    
+       
     def initializeGUI(self):  
         layout = QtGui.QGridLayout()
         widget = QCustomSwitchChannel('Kitty Kat')       
@@ -33,7 +32,7 @@ class kittykatclient(QtGui.QWidget):
         layout.addWidget(widget)
         self.setLayout(layout)
         from twisted.internet.reactor import callLater
-        yield self.kittyloop()
+        self.kittyloop()
         
     def toggle(self, state):
         '''
@@ -53,9 +52,9 @@ class kittykatclient(QtGui.QWidget):
             newstate = not self.oldstate
             yield self.server.ttl_output(10, newstate)
             self.oldstate = newstate
-            reactor.callLater(self.delay, self.kittyloop)
+            self.reactor.callLater(self.delay, self.kittyloop)
         else:
-            reactor.callLater(self.delay, self.kittyloop)
+            self.reactor.callLater(self.delay, self.kittyloop)
             
         
     def closeEvent(self, x):
