@@ -15,10 +15,11 @@ class myWebView(QtWebKit.QWebView):
         super(myWebView, self).__init__(parent)
         self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled, True)
         self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanOpenWindows, True)
+        self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanAccessClipboard, True)
 
         self.page().setNetworkAccessManager(networkAccessManager)
 
-        self.load(QtCore.QUrl("http://10.97.112.16"))
+        self.load(QtCore.QUrl("http://10.97.112.16/control.htm"))
 
     @classmethod
     def _removeWindow(cls, window):
