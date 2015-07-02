@@ -41,7 +41,7 @@ class ArduinoCounter( SerialDeviceServer ):
     name = SERVERNAME
     regKey = 'ArduinoCounter'
     port = None
-    serNode = 'coach_k'
+    serNode = 'qsimexpcontrol'
     timeout = T.Value(TIMEOUT,'s')
     on = False
     currentreading = 0.0
