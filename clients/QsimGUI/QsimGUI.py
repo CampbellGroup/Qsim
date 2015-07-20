@@ -21,12 +21,14 @@ class QSIM_GUI(QtGui.QMainWindow):
 
         centralWidget = QtGui.QWidget()
         layout = QtGui.QHBoxLayout() 
-        script_scanner = self.makeScriptControlWidget(reactor, cxn)
-        control = self.makeControlWidget(reactor, cxn)
+        script_scanner = self.makeScriptScannerWidget(reactor, cxn)
+        lasers = self.makeLaserWidget(reactor, cxn)
+        controls = self.makeControlWidget(reactor, cxn)
         from Qsim.clients.analysis.analysis import analysis
         
         self.tabWidget = QtGui.QTabWidget()
-        self.tabWidget.addTab(control, '&Control')
+        self.tabWidget.addTab(lasers, '&Lasers')
+        self.tabWidget.addTab(controls, '&Control')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(analysis(reactor, cxn), '&Analysis')
         self.createGrapherTab()
@@ -58,7 +60,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         yield Connections.communicate.connectionReady.connect(widgetReady)
         returnValue(widget)
 
-    def makeScriptControlWidget(self, reactor, cxn):
+    def makeScriptScannerWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         
         from common.lib.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
@@ -69,7 +71,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         widget.setLayout(gridLayout)
         return widget
     
-    def makeControlWidget(self, reactor, cxn):
+    def makeLaserWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
 
         from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget 
@@ -81,12 +83,25 @@ class QSIM_GUI(QtGui.QMainWindow):
 
 #        grapherWindow = FirstWindow(None, cxn.context, reactor)
         gridLayout = QtGui.QGridLayout()
-        gridLayout.addWidget(kittykatclient(reactor),           3,1, 1,1)
-        gridLayout.addWidget(pmtWidget(reactor),                1,1, 1,1)
-        gridLayout.addWidget(cameraswitch(reactor),             0,1, 1,1)
-        gridLayout.addWidget(wavemeterclient(reactor),          0,0, 4,1)
-        gridLayout.addWidget(switchclient(reactor),             2,1, 1,1)
- #       gridLayout.setVerticalSpacing(.01)
+        gridLayout.addWidget(wavemeterclient(reactor),          0,0, 3,1)
+        widget.setLayout(gridLayout)
+        return widget
+    
+    def makeControlWidget(self, reactor, cxn):
+        widget = QtGui.QWidget()
+        from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget 
+        from Qsim.clients.kittykat.kittykatclient import kittykatclient
+        from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
+        from common.lib.clients.switchclient.switchclient import switchclient
+        from Qsim.clients.ArduinoDAC.arduinodacclient import dacclient
+        
+        gridLayout = QtGui.QGridLayout()
+        gridLayout.addWidget(dacclient(reactor),                0,1, 4,2)
+        gridLayout.addWidget(kittykatclient(reactor),           3,0, 1,1)
+        gridLayout.addWidget(pmtWidget(reactor),                1,0, 1,1)
+        gridLayout.addWidget(cameraswitch(reactor),             0,0, 1,1)
+        gridLayout.addWidget(switchclient(reactor),             2,0, 1,1)
+        gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget
 
