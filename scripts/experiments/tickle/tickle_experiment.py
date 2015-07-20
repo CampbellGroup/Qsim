@@ -19,7 +19,7 @@ class ticklescan(experiment):
         self.dv = self.cxn.data_vault
         self.rg = self.cxnwlm.rigol_dg1022a_server      
         self.pv = self.cxn.parametervault
-        self.pmt = cxn.arduino_counter
+        self.pmt = self.cxn.normalpmtflow
         self.chan = 1
 
         '''
@@ -62,21 +62,14 @@ class ticklescan(experiment):
         for i, freq in enumerate(self.xvalues):
                 should_stop = self.pause_or_stop()
                 if should_stop: break
-                self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))
-                counts = 0   
-                for j in range(self.average):    
-                    counts = self.pmt.get_current_counts() + counts
-                    time.sleep(0.1)
-                counts = counts/self.average
+                self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))  
+                counts = self.pmt.get_next_counts('ON', self.average, True)
+                time.sleep(0.1)
                 self.dv.add(freq, counts)
                 progress = 100*float(i)/self.numberofsteps
                 self.sc.script_set_progress(self.ident, progress)
         self.rg.output(self.chan, False)
         self.rg.frequency(self.chan, self.frequency[0])
-        
-    def getcounts(self):
-        counts = self.pmt.get_current_counts()
-        returnValue(counts)
         
     def finalize(self, cxn, context):
         self.cxn.disconnect()

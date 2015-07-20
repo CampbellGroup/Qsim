@@ -17,7 +17,7 @@ class wavemeter_linescan_935(experiment):
         self.wm = self.cxnwlm.multiplexerserver  
         self.dv = self.cxn.data_vault      
         self.pv = self.cxn.parametervault
-        self.pmt = self.cxn.arduino_counter
+        self.pmt = self.cxn.normalpmtflow
         
     def run(self, cxn, context):
         
@@ -44,7 +44,7 @@ class wavemeter_linescan_935(experiment):
             tempdata = []
             self.wm.set_pid_course(self.laserport, self.maxval['THz'])
             while self.currentfreq != self.maxval:
-                counts = self.pmt.get_current_counts()
+                counts = self.pmt.get_next_counts('ON', 1, False)
                 self.currentfrequency()
                 if self.currentfreq and counts:
                     tempdata.append([self.currentfreq['Hz'], counts])
