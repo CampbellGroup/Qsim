@@ -8,9 +8,18 @@ import socket
 class ticklescan(experiment):
     
     name = 'Tickle Scan'
-    
-    required_parameters =[('ticklescan', 'amplitude'), ('ticklescan', 'frequency'), ('ticklescan', 'average'), ('ticklescan', 'offset')]
-    
+
+    exp_parameters = []
+    exp_parameters.append(('ticklescan', 'amplitude'))
+    exp_parameters.append(('ticklescan', 'frequency'))
+    exp_parameters.append(('ticklescan', 'average'))
+    exp_parameters.append(('ticklescan', 'offset'))
+    exp_parameters.append(('ticklescan', 'waveform'))
+
+    @classmethod
+    def all_required_parameters(cls):
+        return cls.exp_parameters
+
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
@@ -18,25 +27,53 @@ class ticklescan(experiment):
         self.cxnwlm = labrad.connect('10.97.112.2', name = socket.gethostname() + " Tickle Scan")
         self.dv = self.cxn.data_vault
         self.rg = self.cxnwlm.rigol_dg1022a_server      
-        self.pv = self.cxn.parametervault
         self.pmt = self.cxn.normalpmtflow
+	self.p = self.parameters
         self.chan = 1
-
-        '''
-        Sets up data vault and parameter vault
-        '''
         self.rg.select_device(0)   
-        self.amplitude = self.pv.get_parameter('ticklescan', 'amplitude')
-        self.frequency = self.pv.get_parameter('ticklescan','frequency')  
-             
-        self.offset = self.pv.get_parameter('ticklescan', 'offset')
-        self.average = int(self.pv.get_parameter('ticklescan', 'average'))
-        self.minval = int(self.frequency[0]['Hz'])
-        self.maxval = int(self.frequency[1]['Hz'])
-        self.numberofsteps = int(self.frequency[2])
-        self.stepsize = int((float(self.maxval) - self.minval)/(self.numberofsteps- 1))   
-        self.rg.apply_waveform('sine', self.frequency[0], self.amplitude, self.offset, self.chan)
+    
+    def run(self, cxn, context):
         
+        '''
+        Main loop 
+        '''
+	self.set_scannable_parameters()
+	self.setup_datavault()
+        self.rg.output(self.chan, True)
+	time.sleep(0.1)
+        self.rg.apply_waveform(self.p.ticklescan.waveform, self.frequency[0], self.amplitude, self.offset, self.chan)
+	time.sleep(1)
+        for i, freq in enumerate(self.xvalues):
+                should_stop = self.pause_or_stop()
+                if should_stop: break
+                self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))  
+		time.sleep(0.1)
+                counts = self.pmt.get_next_counts('ON', self.average, True)
+                time.sleep(0.1)
+                self.dv.add(freq, counts)
+                progress = 100*float(i)/self.numberofsteps
+                self.sc.script_set_progress(self.ident, progress)
+        self.rg.output(self.chan, False)
+        self.rg.frequency(self.chan, self.frequency[0])
+
+    def set_scannable_parameters(self):
+
+	'''
+	gets parameters, called in run so scan works
+	'''
+
+        self.amplitude = self.p.ticklescan.amplitude
+        self.frequency = self.p.ticklescan.frequency  
+        self.offset = self.p.ticklescan.offset 
+        self.average = int(self.p.ticklescan.average)
+        self.minval = self.p.ticklescan.frequency[0]['Hz']
+        self.maxval = self.p.ticklescan.frequency[1]['Hz']
+        self.numberofsteps = int(self.p.ticklescan.frequency[2])
+        self.stepsize = int((float(self.maxval) - self.minval)/(self.numberofsteps- 1))   
+        self.xvalues = range(int(self.minval), int(self.maxval + 1),self.stepsize)
+
+    def setup_datavault(self):
+
         '''
         Adds parameters to datavault and parameter vault
         '''
@@ -50,26 +87,6 @@ class ticklescan(experiment):
         self.dv.add_parameter('frequency', self.frequency)
         self.dv.add_parameter('offset', self.offset)
         self.dv.add_parameter('average', self.average)
-        self.xvalues = range(self.minval, self.maxval + 1,self.stepsize)
-
-    
-    def run(self, cxn, context):
-        
-        '''
-        Main loop 
-        '''
-        self.rg.output(self.chan, True)
-        for i, freq in enumerate(self.xvalues):
-                should_stop = self.pause_or_stop()
-                if should_stop: break
-                self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))  
-                counts = self.pmt.get_next_counts('ON', self.average, True)
-                time.sleep(0.1)
-                self.dv.add(freq, counts)
-                progress = 100*float(i)/self.numberofsteps
-                self.sc.script_set_progress(self.ident, progress)
-        self.rg.output(self.chan, False)
-        self.rg.frequency(self.chan, self.frequency[0])
         
     def finalize(self, cxn, context):
         self.cxn.disconnect()
