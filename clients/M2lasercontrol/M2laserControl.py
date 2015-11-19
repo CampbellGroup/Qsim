@@ -2,6 +2,10 @@
 #-*- coding:utf-8 -*-
 
 from PyQt4 import QtGui, QtCore, QtWebKit, QtNetwork
+from twisted.internet.defer import inlineCallbacks, returnValue
+import socket
+
+SIGNALID1 = 445567
 
 cookieJar = QtNetwork.QNetworkCookieJar()
 
@@ -16,10 +20,12 @@ class myWebView(QtWebKit.QWebView):
         self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled, True)
         self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanOpenWindows, True)
         self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanAccessClipboard, True)
-
         self.page().setNetworkAccessManager(networkAccessManager)
 
-        self.load(QtCore.QUrl("http://10.97.112.16/control.htm"))
+	url = QtCore.QUrl("http://10.97.112.16/control.htm")
+	url.setUserName("main")
+	url.setPassword("main")
+	self.load(url)
 
     @classmethod
     def _removeWindow(cls, window):
@@ -45,28 +51,58 @@ class myWebView(QtWebKit.QWebView):
 
         return window
 
-class myWindow(QtGui.QMainWindow):
-    def __init__(self, parent=None):
-        super(myWindow, self).__init__(parent)
+class M2Window(QtGui.QWidget):
+    def __init__(self, reactor, parent=None):
+        super(M2Window, self).__init__(parent)
+        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.reactor = reactor
+        self.connect()
 
+    @inlineCallbacks
+    def connect(self):
+        """Creates an Asynchronous connection to the wavemeter computer and
+        connects incoming signals to relavent functions
+        """
+        from labrad.wrappers import connectAsync
+        self.cxn = yield connectAsync('10.97.112.2', name = socket.gethostname() + ' M2 Client')
+        self.server = yield self.cxn.multiplexerserver
+        yield self.server.signal__frequency_changed(SIGNALID1)
+        yield self.server.addListener(listener = self.updateFrequency, source = None, ID = SIGNALID1)
+
+        self.initializeGUI()
+
+	
+    def initializeGUI(self):
+
+        layout = QtGui.QGridLayout()
+
+        self.setWindowTitle('Ti-Saph Control')
+        qBox = QtGui.QGroupBox('Wave Length and Lock settings')
+        subLayout = QtGui.QGridLayout()
+        qBox.setLayout(subLayout)
+        layout.addWidget(qBox, 0, 0)
         self.centralwidget = QtGui.QWidget(self)
-
         self.webView = myWebView(self.centralwidget)
+	self.wavelength = QtGui.QLabel('freq')
+	self.wavelength.setFont(QtGui.QFont('MS Shell Dlg 2',pointSize=50))
+	self.wavelength.setAlignment(QtCore.Qt.AlignCenter)
+	self.setStyleSheet('color: maroon')
+	subLayout.addWidget(self.webView, 0,0)
+	subLayout.addWidget(self.wavelength, 1,0)
 
-        self.pushButton = QtGui.QPushButton(self.centralwidget)
-        self.pushButton.setText("New Window")
-        self.pushButton.clicked.connect(lambda: self.webView.createWindow(QtWebKit.QWebPage.WebBrowserWindow))
+        self.setLayout(layout)
 
-        self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
-        self.verticalLayout.addWidget(self.pushButton)
-        self.verticalLayout.addWidget(self.webView)
-
-        self.setCentralWidget(self.centralwidget)
+    def updateFrequency(self, c, signal):
+	#self.wavelength.setText(signal)
+	if signal[0] == 5:
+		self.wavelength.setText(str(signal[1])[0:10])
 
 if __name__ == "__main__":
-    import  sys
+    a = QtGui.QApplication( [] )
+    from common.lib.clients import qt4reactor
+    qt4reactor.install()
+    from twisted.internet import reactor
+    M2WindowWidget = M2Window(reactor)
+    M2WindowWidget.show()
+    reactor.run()
 
-    app  = QtGui.QApplication(sys.argv)
-    main = myWindow()
-    main.show()
-    sys.exit(app.exec_())

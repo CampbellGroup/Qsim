@@ -24,6 +24,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         lasers = self.makeLaserWidget(reactor, cxn)
         controls = self.makeControlWidget(reactor, cxn)
+	M2 = self.makeM2controlwidget()
         from Qsim.clients.analysis.analysis import analysis
         
         self.tabWidget = QtGui.QTabWidget()
@@ -31,6 +32,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(controls, '&Control')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(analysis(reactor, cxn), '&Analysis')
+        self.tabWidget.addTab(M2, '&M2')
         self.createGrapherTab()
         
         layout.addWidget(self.tabWidget)
@@ -74,18 +76,21 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeLaserWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
 
-        from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget 
-        from Qsim.clients.kittykat.kittykatclient import kittykatclient
-        from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
-        from common.lib.clients.switchclient.switchclient import switchclient
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
-        from common.lib.clients.pygrapherlive.grapherwindow import FirstWindow
 
-#        grapherWindow = FirstWindow(None, cxn.context, reactor)
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(wavemeterclient(reactor),          0,0, 3,1)
         widget.setLayout(gridLayout)
         return widget
+
+    def makeM2controlwidget(self):
+	widget = QtGui.QWidget()
+	from Qsim.clients.M2lasercontrol.M2laserControl import M2Window
+	gridLayout = QtGui.QGridLayout()
+	gridLayout.addWidget(M2Window(reactor),   0,0,3,1)
+        widget.setLayout(gridLayout)
+        return widget
+
     
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
