@@ -1,5 +1,8 @@
 from twisted.internet.defer import inlineCallbacks
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
+
+SIGNALID1 = 441956
+SIGNALID2 = 446296
 
 class PumpClient(QtGui.QWidget):
     
@@ -18,19 +21,54 @@ class PumpClient(QtGui.QWidget):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync(name = "Pump client")
         self.server = yield self.cxn.laserquantumpumpserver 
+
+        yield self.server.signal__current_changed(SIGNALID1)
+        yield self.server.signal__power_changed(SIGNALID2)
+
+        yield self.server.addListener(listener = self.updateCurrent, source = None, ID = SIGNALID1)
+        yield self.server.addListener(listener = self.updatePower, source = None, ID = SIGNALID2)
+
         self.initializeGUI()
        
     def initializeGUI(self):  
         layout = QtGui.QGridLayout() 
-        label = QtGui.QLabel('empty label')   
-	progbar = QtGui.QProgressBar()
-	progbar.setGeometry(30, 40, 200, 25)
-	progbar.setValue(12.0)
-        layout.addWidget(label, 0,0)
-        layout.addWidget(progbar, 0,0)
+	font = QtGui.QFont()
+	font.setBold(True)
+	font.setPointSize(30)
+	self.title = QtGui.QLabel('Laser Quantum Pump Laser')
+	self.title.setFont(font)
+	self.title.setAlignment(QtCore.Qt.AlignCenter)
+	self.currentlabel = QtGui.QLabel('Current')
+	self.powerlabel = QtGui.QLabel('Power')
+
+	self.currentprogbar = QtGui.QProgressBar()
+	self.currentprogbar.setGeometry(30, 40, 200, 25)
+
+	self.powerprogbar = QtGui.QProgressBar()
+	self.powerprogbar.setGeometry(30, 40, 200, 25)
+	self.powerprogbar.setMaximum(100)
+	self.powerprogbar.setMinimum(0)
+
+	layout.addWidget(self.title,0,0)
+        layout.addWidget(self.currentprogbar, 2,0)
+        layout.addWidget(self.powerprogbar, 4,0)
+        layout.addWidget(self.currentlabel, 1,0)
+        layout.addWidget(self.powerlabel, 3,0)
+
+
         self.setLayout(layout)
         from twisted.internet.reactor import callLater
-        
+
+    def updateCurrent(self,c,  current):
+	self.currentprogbar.setValue(current)
+
+    def updatePower(self, c, power):
+	powerperc = power['W']*100/8.0
+	self.powerprogbar.setValue(powerperc)
+	self.powerprogbar.setFormat(str(power['W']) + 'W')
+	#self.powerprogbar.setFormat('23')
+
+
     def closeEvent(self, x):
         self.reactor.stop()
         

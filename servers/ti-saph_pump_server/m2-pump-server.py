@@ -20,6 +20,9 @@ Created on Nov 19, 2015
 @author: anthonyransford
 '''
 
+UPDATECURR = 120377
+UPDATEPOW = 118377
+
 from common.lib.servers.serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
 from labrad.types import Error
 from twisted.internet import reactor
@@ -41,7 +44,9 @@ class M2pump( SerialDeviceServer ):
     port = None
     serNode = getNodeName()
     timeout = T.Value(TIMEOUT,'s')
-    
+
+    currentchanged = Signal(UPDATECURR, 'signal: current changed', 'v')
+    powerchanged = Signal(UPDATEPOW, 'signal: power changed', 'v')
     
     @inlineCallbacks
     def initServer( self ):
@@ -61,6 +66,7 @@ class M2pump( SerialDeviceServer ):
                 print 'Error opening serial connection'
                 print 'Check set up and restart serial server'
             else: raise
+	self.measurePump()
     
     @setting(1, 'Read Power')
     def readPower(self, c):
@@ -75,7 +81,7 @@ class M2pump( SerialDeviceServer ):
         yield self.ser.write_line('Current?')
 	time.sleep(0.1)
 	current = yield self.ser.read()
-	current = float(current[1:6])
+	current = float(current[1:5])
 	returnValue(current)
 
     @setting(3, 'Status')
@@ -160,7 +166,14 @@ class M2pump( SerialDeviceServer ):
 	else:
 		yield None
 
-    
+    @inlineCallbacks
+    def measurePump(self):
+        reactor.callLater(0.2, self.measurePump)
+        current = yield self.readCurrent(self)
+	power = yield self.readPower(self)
+        self.currentchanged(current)
+        self.powerchanged(power) 
+   
 if __name__ == "__main__":
     from labrad import util
     util.runServer( M2pump() )

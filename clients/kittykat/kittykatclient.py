@@ -29,7 +29,7 @@ class kittykatclient(QtGui.QWidget):
         layout = QtGui.QGridLayout()
         switchwidget = QCustomSwitchChannel('Kitty Kat')   
         delaywidget = QtGui.QSpinBox()
-        delaywidget.setRange(100, 2000)
+        delaywidget.setRange(100, 10000)
         delaywidget.setValue(1000)
         delaywidget.valueChanged.connect(self.delaychanged) 
         delaylabel = QtGui.QLabel('delay (ms)')   
