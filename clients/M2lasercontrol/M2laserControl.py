@@ -53,7 +53,7 @@ class myWebView(QtWebKit.QWebView):
 
 class M2Window(QtGui.QWidget):
     def __init__(self, reactor, parent=None):
-        super(M2Window, self).__init__(parent)
+        super(M2Window, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor
         self.connect()

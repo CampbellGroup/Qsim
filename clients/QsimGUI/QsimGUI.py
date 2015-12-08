@@ -12,7 +12,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     @inlineCallbacks
     def connect_labrad(self):
         from common.lib.clients.connection import connection
-        cxn = connection(name = 'GUI Client')
+        cxn = connection(name = 'Qsim GUI Client')
         yield cxn.connect()
         self.create_layout(cxn)
     
