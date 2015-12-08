@@ -30,11 +30,9 @@ class analysis(QtGui.QWidget):
         self.initializeGUI()     
 
     def initializeGUI(self):      
-        layout = QtGui.QGridLayout()
-        self.tabwidget = QtGui.QTabWidget()        
+        layout = QtGui.QGridLayout()     
         notebookwidget = self.makenotebookwidget()
-        self.tabwidget.addTab(notebookwidget, "&Ipython Notebook")
-        layout.addWidget(self.tabwidget)
+        layout.addWidget(notebookwidget)
         self.setLayout(layout)
     
     def makenotebookwidget(self):

@@ -24,8 +24,8 @@ class QSIM_GUI(QtGui.QMainWindow):
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         lasers = self.makeLaserWidget(reactor, cxn)
         controls = self.makeControlWidget(reactor, cxn)
+	analysis = self.makeAnalysisWidget(reactor, cxn)
 	M2 = self.makeM2controlwidget()
-        from Qsim.clients.analysis.analysis import analysis
         
         self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.addTab(lasers, '&Lasers')
@@ -60,6 +60,7 @@ class QSIM_GUI(QtGui.QMainWindow):
             vboxlayout.addWidget(window)
             widget.setLayout(vboxlayout)
         yield Connections.communicate.connectionReady.connect(widgetReady)
+	widget.resize(100,100)
         returnValue(widget)
 
     def makeScriptScannerWidget(self, reactor, cxn):
@@ -90,6 +91,14 @@ class QSIM_GUI(QtGui.QMainWindow):
 	gridLayout = QtGui.QGridLayout()
 	gridLayout.addWidget(M2Window(reactor),   0,0,3,1)
 	gridLayout.addWidget(PumpClient(reactor),   4,0,3,1)
+        widget.setLayout(gridLayout)
+        return widget
+
+    def makeAnalysisWidget(self, reactor, cxn):
+	widget = QtGui.QWidget()
+	from Qsim.clients.analysis.analysis import analysis
+        gridLayout = QtGui.QGridLayout()
+        gridLayout.addWidget(analysis(reactor, cxn),          0,0, 3,1)
         widget.setLayout(gridLayout)
         return widget
 
