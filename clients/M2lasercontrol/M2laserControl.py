@@ -71,7 +71,6 @@ class M2Window(QtGui.QWidget):
 
         self.initializeGUI()
 
-	
     def initializeGUI(self):
 
         layout = QtGui.QGridLayout()

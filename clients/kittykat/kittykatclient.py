@@ -4,9 +4,10 @@ from PyQt4 import QtGui
 
 class kittykatclient(QtGui.QWidget):
     
-    def __init__(self, reactor, parent = None):
+    def __init__(self, reactor, cxn = None):
         super(kittykatclient, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+	self.cxn = cxn
         self.reactor = reactor         
         self.connect()
         
@@ -20,9 +21,11 @@ class kittykatclient(QtGui.QWidget):
         self.kittykat = False
         self.oldstate = False
         self.delay = 500 # in ms this is half the total period (1s delay)
-        self.cxn = yield connectAsync(name = "kitty kat client")
-        self.server = yield self.cxn.arduinottl  
-        self.reg = yield self.cxn.registry 
+        if self.cxn is None:
+            self.cxn = connection("kitty kat client")
+            yield self.cxn.connect()
+	self.server = yield self.cxn.get_server('arduinottl')  
+        self.reg = yield self.cxn.get_server('registry') 
         self.initializeGUI()
        
     def initializeGUI(self):  

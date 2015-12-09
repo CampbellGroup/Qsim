@@ -4,10 +4,11 @@ from PyQt4 import QtGui
 
 class cameraswitch(QtGui.QWidget):
     
-    def __init__(self, reactor, parent = None):
+    def __init__(self, reactor, cxn = None):
         super(cameraswitch, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        self.reactor = reactor         
+        self.reactor = reactor    
+	self.cxn = cxn     
         self.connect()
         
     @inlineCallbacks
@@ -17,9 +18,11 @@ class cameraswitch(QtGui.QWidget):
         
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync(name = "camera switch client")
-        self.server = yield self.cxn.arduinottl  
-        self.reg = yield self.cxn.registry 
+        if self.cxn is None:
+            self.cxn = connection("Camera Switch")
+            yield self.cxn.connect()
+	self.server = yield self.cxn.get_server('arduinottl')
+        self.reg = yield self.cxn.get_server('registry') 
         
         try:
             yield self.reg.cd('settings')

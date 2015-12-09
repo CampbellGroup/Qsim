@@ -1,4 +1,5 @@
 from twisted.internet.defer import inlineCallbacks
+from common.lib.clients.connection import connection
 from PyQt4 import QtGui, QtCore
 
 SIGNALID1 = 441956
@@ -6,9 +7,10 @@ SIGNALID2 = 446296
 
 class PumpClient(QtGui.QWidget):
     
-    def __init__(self, reactor, parent = None):
+    def __init__(self, reactor, cxn = None):
         super(PumpClient, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+	self.cxn = cxn
         self.reactor = reactor         
         self.connect()
         
@@ -19,8 +21,11 @@ class PumpClient(QtGui.QWidget):
         
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync(name = "Pump client")
-        self.server = yield self.cxn.laserquantumpumpserver 
+	if self.cxn is None:
+            self.cxn = connection(name='Pump Client')
+            yield self.cxn.connect()
+	self.server = yield self.cxn.get_server('laserquantumpumpserver')
+        #self.server = yield self.cxn.laserquantumpumpserver 
 
         yield self.server.signal__current_changed(SIGNALID1)
         yield self.server.signal__power_changed(SIGNALID2)
@@ -72,7 +77,7 @@ class PumpClient(QtGui.QWidget):
     def closeEvent(self, x):
         self.reactor.stop()
         
-if __name__=="__main__":
+if __name__ == "__main__":
     a = QtGui.QApplication( [] )
     from common.lib.clients import qt4reactor
     qt4reactor.install()

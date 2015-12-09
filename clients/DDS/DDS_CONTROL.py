@@ -109,7 +109,7 @@ class DDS_CONTROL(QtGui.QFrame):
     @inlineCallbacks
     def setupDDS(self):
         if self.cxn is None:
-            self.cxn = connection()
+            self.cxn = connection(name='DDS Client')
             yield self.cxn.connect()
         self.context = yield self.cxn.context()
         try:
