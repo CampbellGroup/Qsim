@@ -192,6 +192,6 @@ if __name__=="__main__":
     from twisted.internet import reactor
     dacWidget = dacclient(reactor)
     dacWidget.show()
-    reactor.run()
+    reactor.run()  # @UndefinedVariable
         
         
