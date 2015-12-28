@@ -7,7 +7,7 @@ class kittykatclient(QtGui.QWidget):
     def __init__(self, reactor, cxn = None):
         super(kittykatclient, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-	self.cxn = cxn
+        self.cxn = cxn
         self.reactor = reactor         
         self.connect()
         

@@ -1,10 +1,10 @@
 """
 ### BEGIN NODE INFO
 [info]
-name = ArduinoTTL
+name = M2pump
 version = 1.0
 description = 
-instancename = ArduinoTTL
+instancename = M2pump
 [startup]
 cmdline = %PYTHON% %FILE%
 timeout = 20
@@ -34,7 +34,7 @@ from labrad.support import getNodeName
 from labrad.units import WithUnit as U
 import time
 
-SERVERNAME = 'LaserQuantumPumpServer'
+SERVERNAME = 'M2pump'
 TIMEOUT = 1.0
 BAUDRATE = 19200
 
@@ -70,19 +70,34 @@ class M2pump( SerialDeviceServer ):
     
     @setting(1, 'Read Power')
     def readPower(self, c):
+	yield None
+	returnValue(self.power)
+
+    @inlineCallbacks
+    def _readPower(self):
         yield self.ser.write_line('POWER?')
 	time.sleep(0.1)
 	power = yield self.ser.read()
-	power = U(float(power[1:7]),'W')
-	returnValue(power)
+	if power >=3:	
+		self.power = U(float(power[0:-3]),'W')
+	else:
+		print 'bad data'
 
-    @setting(2, 'Read Current')
+    @setting(2, "Read Current", returns = 'v')
     def readCurrent(self, c):
+	yield None
+	returnValue(self.current)
+
+    @inlineCallbacks
+    def _readCurrent(self):
         yield self.ser.write_line('Current?')
 	time.sleep(0.1)
 	current = yield self.ser.read()
-	current = float(current[1:5])
-	returnValue(current)
+	if len(current) >= 3:
+		self.current = float(current[0:-3])	
+	else:
+		print 'bad data'
+
 
     @setting(3, 'Status')
     def status(self, c):
@@ -169,10 +184,10 @@ class M2pump( SerialDeviceServer ):
     @inlineCallbacks
     def measurePump(self):
         reactor.callLater(0.2, self.measurePump)
-        current = yield self.readCurrent(self)
-	power = yield self.readPower(self)
-        self.currentchanged(current)
-        self.powerchanged(power) 
+	yield self._readCurrent()
+	yield self._readPower()
+        self.currentchanged(self.current)
+        self.powerchanged(self.power) 
    
 if __name__ == "__main__":
     from labrad import util

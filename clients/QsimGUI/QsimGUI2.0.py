@@ -18,29 +18,25 @@ class QSIM_GUI(QtGui.QMainWindow):
 
     #Highest level adds tabs to big GUI
     def create_layout(self, cxn):
-	#creates central layout
+	    #creates central layout
         centralWidget = QtGui.QWidget()
         layout = QtGui.QHBoxLayout() 
 
-	#create subwidgets to be added to tabs
+	    #create subwidgets to be added to tabs
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
-	wavemeter = self.makeWavemeterWidget(reactor, cxn)
-	M2 = self.makeM2Widget(reactor, cxn)
-	M2pump = self.makeM2PumpWidget(reactor, cxn)
-	control = self.makeControlWidget(reactor, cxn)
-	grapher = self.makeGrapherWidget(reactor)
-	analysis = self.makeAnalysisWidget(reactor, cxn)
+        wavemeter = self.makeWavemeterWidget(reactor, cxn)
+        M2 = self.makeM2Widget(reactor, cxn)
+        control = self.makeControlWidget(reactor, cxn)
+        analysis = self.makeAnalysisWidget(reactor, cxn)
 
-	# add tabs
+        # add tabs
         self.tabWidget = QtGui.QTabWidget()
-
-	self.tabWidget.addTab(wavemeter, '&Wavemeter')
-	self.tabWidget.addTab(M2, '&M2')
-	self.tabWidget.addTab(M2pump, '&Pump M2')
+        self.tabWidget.addTab(wavemeter, '&Wavemeter')
+        self.tabWidget.addTab(M2, '&M2')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
-	self.tabWidget.addTab(control, '&Control')
-	self.tabWidget.addTab(analysis, '&Analysis')
-	self.createGrapherTab(self)
+        self.tabWidget.addTab(control, '&Control')
+        self.tabWidget.addTab(analysis, '&Analysis')
+        self.createGrapherTab(self)
 	
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
@@ -72,26 +68,30 @@ class QSIM_GUI(QtGui.QMainWindow):
 
     def makeScriptScannerWidget(self, reactor, cxn):
         from common.lib.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
-	scriptscanner = script_scanner_gui(reactor, cxn = cxn)
+        scriptscanner = script_scanner_gui(reactor, cxn = cxn)
         return scriptscanner
 
     def makeWavemeterWidget(self, reactor, cxn):
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
-	wavemeter = wavemeterclient(reactor, cxn)
+        wavemeter = wavemeterclient(reactor, cxn)
         return wavemeter
 
     def makeM2Widget(self, reactor, cxn):
-	from Qsim.clients.M2lasercontrol.M2laserControl import M2Window
-	M2 = M2Window(reactor, cxn)
-	return M2
-
-    def makeM2PumpWidget(self, reactor, cxn):
-	from Qsim.clients.laserquantumpump.pumpclient import PumpClient
-	pump = PumpClient(reactor, cxn)
-	return pump
+        widget = QtGui.QWidget()
+        from Qsim.clients.M2lasercontrol.M2laserControl import M2Window
+        from Qsim.clients.laserquantumpump.pumpclient import PumpClient
+        gridLayout = QtGui.QGridLayout()
+        pump = PumpClient(reactor, cxn)
+        pump.setMaximumWidth(200)
+        pump.setMinimumHeight(600)
+        gridLayout.addWidget(M2Window(reactor, cxn),                  0,0,5,5)
+        gridLayout.addWidget(pump,                0,5, 5,1)
+        gridLayout.setSpacing(10)
+        widget.setLayout(gridLayout)
+        return widget
 
     def makeAnalysisWidget(self, reactor, cxn):
-	from Qsim.clients.analysis.analysis import analysis
+        from Qsim.clients.analysis.analysis import analysis
         analysis = analysis(reactor, cxn)
         return analysis
 
@@ -125,7 +125,7 @@ class QSIM_GUI(QtGui.QMainWindow):
             vboxlayout.addWidget(window)
             widget.setLayout(vboxlayout)
         yield Connections.communicate.connectionReady.connect(widgetReady)
-	widget.resize(100,100)
+        widget.resize(100,100)
         returnValue(widget)
 
     @inlineCallbacks

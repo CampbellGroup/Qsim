@@ -22,10 +22,10 @@ class myWebView(QtWebKit.QWebView):
         self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanAccessClipboard, True)
         self.page().setNetworkAccessManager(networkAccessManager)
 
-	url = QtCore.QUrl("http://10.97.112.16/control.htm")
-	url.setUserName("main")
-	url.setPassword("main")
-	self.load(url)
+        url = QtCore.QUrl("http://10.97.112.16/control.htm")
+        url.setUserName("main")
+        url.setPassword("main")
+        self.load(url)
 
     @classmethod
     def _removeWindow(cls, window):
@@ -74,34 +74,34 @@ class M2Window(QtGui.QWidget):
     def initializeGUI(self):
 
         layout = QtGui.QGridLayout()
-
+        from common.lib.clients.connection import connection
         self.setWindowTitle('Ti-Saph Control')
         qBox = QtGui.QGroupBox('Wave Length and Lock settings')
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
-        layout.addWidget(qBox, 0, 0)
+        layout.addWidget(qBox, 0, 0), returnValue
         self.centralwidget = QtGui.QWidget(self)
         self.webView = myWebView(self.centralwidget)
-	font = QtGui.QFont()
-	font.setBold(True)
-	font.setPointSize(30)
-	self.title = QtGui.QLabel('M Squared Ti-Saph Laser')
-	self.title.setFont(font)
-	self.title.setAlignment(QtCore.Qt.AlignCenter)
-	self.wavelength = QtGui.QLabel('freq')
-	self.wavelength.setFont(QtGui.QFont('MS Shell Dlg 2',pointSize=50))
-	self.wavelength.setAlignment(QtCore.Qt.AlignCenter)
-	self.wavelength.setStyleSheet('color: maroon')
-	subLayout.addWidget(self.title, 0,0)
-	subLayout.addWidget(self.webView, 1,0)
-	subLayout.addWidget(self.wavelength, 2,0)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setPointSize(30)
+        self.title = QtGui.QLabel('M Squared Ti-Saph Laser')
+        self.title.setFont(font)
+        self.title.setAlignment(QtCore.Qt.AlignCenter)
+        self.wavelength = QtGui.QLabel('freq')
+        self.wavelength.setFont(QtGui.QFont('MS Shell Dlg 2',pointSize=50))
+        self.wavelength.setAlignment(QtCore.Qt.AlignCenter)
+        self.wavelength.setStyleSheet('color: maroon')
+        subLayout.addWidget(self.title, 0,0)
+        subLayout.addWidget(self.webView, 1,0)
+        subLayout.addWidget(self.wavelength, 2,0)
 
         self.setLayout(layout)
 
     def updateFrequency(self, c, signal):
-	#self.wavelength.setText(signal)
-	if signal[0] == 5:
-		self.wavelength.setText(str(signal[1])[0:10])
+        #self.wavelength.setText(signal)
+        if signal[0] == 5:
+            self.wavelength.setText(str(signal[1])[0:10])
 
 if __name__ == "__main__":
     a = QtGui.QApplication( [] )

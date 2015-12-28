@@ -23,7 +23,7 @@ class PumpClient(QtGui.QWidget):
         if self.cxn is None:
             self.cxn = connection(name='Pump Client')
             yield self.cxn.connect()
-        self.server = yield self.cxn.get_server('laserquantumpumpserver')
+        self.server = yield self.cxn.get_server('M2pump')
         #self.server = yield self.cxn.laserquantumpumpserver 
 
         yield self.server.signal__current_changed(SIGNALID1)
@@ -38,26 +38,30 @@ class PumpClient(QtGui.QWidget):
         layout = QtGui.QGridLayout() 
         font = QtGui.QFont()
         font.setBold(True)
-        font.setPointSize(30)
-        self.title = QtGui.QLabel('Laser Quantum Pump Laser')
+        font.setPointSize(18)
+        self.title = QtGui.QLabel('M2 Pump Laser')
+        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        #self.setGeometry(20,30,100,500)
         self.title.setFont(font)
         self.title.setAlignment(QtCore.Qt.AlignCenter)
         self.currentlabel = QtGui.QLabel('Current')
         self.powerlabel = QtGui.QLabel('Power')
 
         self.currentprogbar = QtGui.QProgressBar()
-        self.currentprogbar.setGeometry(30, 40, 200, 25)
+        self.currentprogbar.setOrientation(QtCore.Qt.Vertical)
+        #self.currentprogbar.setGeometry(30, 40, 25, 200)
 
         self.powerprogbar = QtGui.QProgressBar()
-        self.powerprogbar.setGeometry(30, 40, 200, 25)
+        self.powerprogbar.setOrientation(QtCore.Qt.Vertical)
+        #self.powerprogbar.setGeometry(30, 40, 25, 200)
         self.powerprogbar.setMaximum(100)
         self.powerprogbar.setMinimum(0)
 
-        layout.addWidget(self.title,0,0)
-        layout.addWidget(self.currentprogbar, 2,0)
-        layout.addWidget(self.powerprogbar, 4,0)
-        layout.addWidget(self.currentlabel, 1,0)
-        layout.addWidget(self.powerlabel, 3,0)
+        layout.addWidget(self.title,0,0,1,2)
+        layout.addWidget(self.currentprogbar, 2,0,8,1)
+        layout.addWidget(self.powerprogbar, 2,1,8,1)
+        layout.addWidget(self.currentlabel, 1,0,1,1)
+        layout.addWidget(self.powerlabel, 1,1,1,1)
 
         self.setLayout(layout)
 
@@ -81,5 +85,5 @@ if __name__ == "__main__":
     from twisted.internet import reactor
     PumpWidget = PumpClient(reactor)
     PumpWidget.show()
-    reactor.run()
+    run = reactor.run()  # @UndefinedVariable
         
