@@ -99,7 +99,7 @@ class ArduinoCounter( SerialDeviceServer ):
             except:
                 reading = None
             yield self.ser.flushinput()
-            #reads arduino serial line ou['Hz']tput
+            #reads arduino serial line output
             if reading:        
             #plots reading to data vault
                 reading = float(reading)
@@ -112,7 +112,7 @@ class ArduinoCounter( SerialDeviceServer ):
                     yield None
             else: yield None
         else: yield None
-        yield reactor.callLater(self.reactorlooptime, self.getCounts) 
+        yield reactor.callLater(self.reactorlooptime, self.getCounts)  # @UndefinedVariable
         
     @inlineCallbacks   
     def StopServer(self):

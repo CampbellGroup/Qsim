@@ -22,6 +22,7 @@ Created on Nov 19, 2015
 
 UPDATECURR = 120377
 UPDATEPOW = 118377
+UPDATETMP = 156472
 
 from common.lib.servers.serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
 from labrad.types import Error
@@ -32,7 +33,7 @@ from twisted.internet.task import LoopingCall
 from twisted.internet.defer import returnValue
 from labrad.support import getNodeName
 from labrad.units import WithUnit as U
-import time
+from labrad.util import wakeupCall
 
 SERVERNAME = 'M2pump'
 TIMEOUT = 1.0
@@ -44,16 +45,20 @@ class M2pump( SerialDeviceServer ):
     port = None
     serNode = getNodeName()
     timeout = T.Value(TIMEOUT,'s')
+    temperature = None
+    power = None
+    current = None
 
     currentchanged = Signal(UPDATECURR, 'signal: current changed', 'v')
     powerchanged = Signal(UPDATEPOW, 'signal: power changed', 'v')
+    temperaturechanged = Signal(UPDATETMP, 'signal: temp changed', 'v')
     
     @inlineCallbacks
     def initServer( self ):
         if not self.regKey or not self.serNode: raise SerialDeviceError( 'Must define regKey and serNode attributes' )
         port = yield self.getPortFromReg( self.regKey )
         self.port = port
-	print port
+        print port
         try:
             serStr = yield self.findSerial( self.serNode )
             self.initSerial( serStr, port, baudrate = BAUDRATE )
@@ -66,128 +71,128 @@ class M2pump( SerialDeviceServer ):
                 print 'Error opening serial connection'
                 print 'Check set up and restart serial server'
             else: raise
-	self.measurePump()
+        self.measurePump()
     
     @setting(1, 'Read Power')
     def readPower(self, c):
-	yield None
-	returnValue(self.power)
-
+        yield None
+        returnValue(self.power)
+ 
     @inlineCallbacks
     def _readPower(self):
         yield self.ser.write_line('POWER?')
-	time.sleep(0.1)
-	power = yield self.ser.read()
-	if power >=3:	
-		self.power = U(float(power[0:-3]),'W')
-	else:
-		print 'bad data'
-
+        power = yield self.ser.read_line()
+        if power >=3:	
+            self.power = U(float(power[0:-1]),'W')
+        else:
+            print 'bad data'
+ 
     @setting(2, "Read Current", returns = 'v')
     def readCurrent(self, c):
-	yield None
-	returnValue(self.current)
-
+        yield None
+        returnValue(self.current)
+ 
     @inlineCallbacks
     def _readCurrent(self):
         yield self.ser.write_line('Current?')
-	time.sleep(0.1)
-	current = yield self.ser.read()
-	if len(current) >= 3:
-		self.current = float(current[0:-3])	
-	else:
-		print 'bad data'
-
-
+        current = yield self.ser.read_line()
+        if len(current) >= 3:
+            self.current = float(current[0:-3])	
+        else:
+            print 'bad data'
+ 
+ 
     @setting(3, 'Status')
     def status(self, c):
         yield self.ser.write_line('STATUS?')
-	time.sleep(0.1)
-	status = yield self.ser.read()
-	returnValue(status)
-
+        status = yield self.ser.read_line()
+        returnValue(status)
+ 
     @setting(4, 'Get Shutter Status')
     def shutterstatus(self, c):
         yield self.ser.write_line('SHUTTER?')
-	time.sleep(0.1)
-	shutter = yield self.ser.read()
-	if shutter[0:14] == 'SHUTTER CLOSED':
-		val = False
-	elif shutter[0:12] == 'SHUTTER OPEN':
-		val = True
-	else: val = ''
-	returnValue(val)
-
+        shutter = yield self.ser.read_line()
+        if shutter[0:14] == 'SHUTTER CLOSED':
+            val = False9
+        elif shutter[0:12] == 'SHUTTER OPEN':
+            val = True
+        else: val = ''
+        returnValue(val)
+ 
     @setting(5, 'Get Interlock Status')
     def interlockstatus(self, c):
         yield self.ser.write_line('INTERLOCK?')
-	time.sleep(0.1)
-	interlock = yield self.ser.read()
-	if interlock[0:7] == 'ENABLED':
-		lock = True
-	elif interlock[0:8] == 'DISABLED':
-		lock = False
-	else: lock = ''
-	returnValue(lock)
-
+        interlock = yield self.ser.read_line()
+        if interlock[0:7] == 'ENABLED':
+            lock = True
+        elif interlock[0:8] == 'DISABLED':
+            lock = False
+        else: lock = ''
+        returnValue(lock)
+ 
     @setting(6, 'Get laser Temp')
     def lasertempstatus(self, c):
+        yield None
+        returnValue(self.temperature)
+ 
+    @inlineCallbacks
+    def _readTemperature(self):
         yield self.ser.write_line('HTEMP?')
-	time.sleep(0.1)
-	temp = yield self.ser.read()
-	temp = U(float(temp[1:7]),'degC')
-	returnValue(temp)
-
+        temp = yield self.ser.read_line()
+        if len(temp) >= 2:
+            self.temperature = U(float(temp[0:-1]),'degC')
+        else:
+            print 'bad data'
+ 
     @setting(7, 'Get FPU Temp')
     def FPUtempstatus(self, c):
         yield self.ser.write_line('PSUTEMP?')
-	time.sleep(0.1)
-	temp = yield self.ser.read()
-	temp = U(float(temp[1:7]),'degC')
-	returnValue(temp)
-
+        temp = yield self.ser.read()
+        #temp = U(float(temp[1:2]),'degC')
+        returnValue(temp)
+ 
     @setting(8, 'Get Laser Serial Number')
     def serialnumber(self, c):
         yield self.ser.write_line('SERIAL?')
-	time.sleep(0.1)
-	serial = yield self.ser.read()
-	serial = serial[0:4]
-	returnValue(serial)
-
+        serial = yield self.ser.read()
+        serial = serial[0:4]
+        returnValue(serial)
+ 
     @setting(9, 'Set Laser Power', value = ['v[W]'])
     def laserpower(self, c, value):
-	if (7 >= value['W'] >= 0):
-		value = round(value['W'],3)
-		output = 'POWER=' + str(value)
-		yield self.ser.write_line(output)
-	else:
-		yield None
-
+        if (7 >= value['W'] >= 0):
+            value = round(value['W'],3)
+            output = 'POWER=' + str(value)
+        else:
+            yield None
+ 
     @setting(10, 'Laser On', value = 'b')
     def togglelaser(self, c, value):
-	if value==True:
-		yield self.ser.write_line('LASER=ON')
-	elif value ==False:
-		yield self.ser.write_line('LASER=OFF')
-	else:
-		yield None
-
+        if value==True:
+            yield self.ser.write_line('LASER=ON')
+        elif value ==False:
+            yield self.ser.write_line('LASER=OFF')
+        else:
+            yield None
+ 
     @setting(11, 'Shutter Open', value = 'b')
     def toggleshutter(self, c, value):
-	if value==True:
-		yield self.ser.write_line('SHUTTER OPEN')
-	elif value ==False:
-		yield self.ser.write_line('SHUTTER CLOSED')
-	else:
-		yield None
+        if value==True:
+            yield self.ser.write_line('SHUTTER OPEN')
+        elif value ==False:
+            yield self.ser.write_line('SHUTTER CLOSED')
+        else:
+            yield None
 
     @inlineCallbacks
     def measurePump(self):
-        reactor.callLater(0.2, self.measurePump)
-	yield self._readCurrent()
-	yield self._readPower()
+        reactor.callLater(.1, self.measurePump)
+        yield self._readPower()
+        yield self._readCurrent()
+        yield self._readTemperature()
         self.currentchanged(self.current)
         self.powerchanged(self.power) 
+        self.temperaturechanged(self.temperature)
    
 if __name__ == "__main__":
     from labrad import util

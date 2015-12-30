@@ -22,7 +22,7 @@ class myWebView(QtWebKit.QWebView):
         self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanAccessClipboard, True)
         self.page().setNetworkAccessManager(networkAccessManager)
 
-        url = QtCore.QUrl("http://10.97.112.16/control.htm")
+        url = url = QtCore.QUrl("http://10.97.112.16/control.htm")
         url.setUserName("main")
         url.setPassword("main")
         self.load(url)
@@ -74,7 +74,6 @@ class M2Window(QtGui.QWidget):
     def initializeGUI(self):
 
         layout = QtGui.QGridLayout()
-        from common.lib.clients.connection import connection
         self.setWindowTitle('Ti-Saph Control')
         qBox = QtGui.QGroupBox('Wave Length and Lock settings')
         subLayout = QtGui.QGridLayout()
@@ -110,5 +109,5 @@ if __name__ == "__main__":
     from twisted.internet import reactor
     M2WindowWidget = M2Window(reactor)
     M2WindowWidget.show()
-    reactor.run()
+    reactor.run()  # @UndefinedVariable
 
