@@ -106,7 +106,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(DDS_CONTROL(reactor, cxn),                  0,1, 4,2)
         gridLayout.addWidget(kittykatclient(reactor, cxn),               3,0, 1,1)
-        gridLayout.addWidget(pmtWidget(reactor, cxn),                   1,0, 1,1)
+        gridLayout.addWidget(pmtWidget(reactor),                   1,0, 1,1)
         gridLayout.addWidget(cameraswitch(reactor, cxn),                0,0, 1,1)
         gridLayout.addWidget(switchclient(reactor, cxn),                2,0, 1,1)
         gridLayout.setSpacing(10)

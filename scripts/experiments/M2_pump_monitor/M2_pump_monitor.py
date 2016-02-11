@@ -1,9 +1,6 @@
 import labrad
 from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
-from twisted.internet.defer import returnValue
-from labrad.units import WithUnit
 import time
-import socket
 
 class M2pumpmonitor(experiment):
     
@@ -22,10 +19,11 @@ class M2pumpmonitor(experiment):
 
         self.ident = ident
         self.cxn = labrad.connect(name = 'M2 Pump Monitor')
-	self.pmp = self.cxn.laserquantumpumpserver
+        self.grapher = self.cxn.Grapher
+        self.pmp = self.cxn.m2pump
         self.dv = self.cxn.data_vault
-	self.p = self.parameters
-	self.inittime = time.time()
+        self.p = self.parameters
+        self.inittime = time.time()
 
     def run(self, cxn, context):
         
@@ -33,21 +31,20 @@ class M2pumpmonitor(experiment):
         Main loop 
         '''
 
-	self.setup_datavault()
-	while (time.time() - self.inittime) <= self.p.M2pumpmonitor.measuretime['s']:
-		should_stop = self.pause_or_stop()
-                if should_stop: break
-		if self.p.M2pumpmonitor.reading == 'current':
-			current = self.pmp.read_current()
-			self.dv.add(time.time() - self.inittime, current)
-		elif self.p.M2pumpmonitor.reading == 'power':
-			power = self.pmp.read_power()
-			self.dv.add(time.time() - self.inittime, power['W'])
-                progress = 100*float(time.time() - self.inittime)/self.p.M2pumpmonitor.measuretime['s']
-		if progress >= 100.0: progress = 100.0
-                self.sc.script_set_progress(self.ident, progress)
-		time.sleep(self.p.M2pumpmonitor.sampletime['s'])
-		
+        self.setup_datavault()
+        while (time.time() - self.inittime) <= self.p.M2pumpmonitor.measuretime['s']:
+            should_stop = self.pause_or_stop()
+            if should_stop: break
+            if self.p.M2pumpmonitor.reading == 'current':
+                current = self.pmp.read_current()
+                self.dv.add(time.time() - self.inittime, current)
+            elif self.p.M2pumpmonitor.reading == 'power':
+                power = self.pmp.read_power()
+                self.dv.add(time.time() - self.inittime, power['W'])
+            progress = 100*float(time.time() - self.inittime)/self.p.M2pumpmonitor.measuretime['s']
+            if progress >= 100.0: progress = 100.0
+            self.sc.script_set_progress(self.ident, progress)
+            time.sleep(self.p.M2pumpmonitor.sampletime['s'])
 
     def setup_datavault(self):
 
@@ -56,11 +53,12 @@ class M2pumpmonitor(experiment):
         '''
         
         self.dv.cd('M2 Pump Monitor', True)
-        self.dv.new('M2 Pump Monitor',[('time', 's')], [(self.p.M2pumpmonitor.reading,'','num')])
+        name = self.dv.new('M2 Pump Monitor',[('time', 's')], [(self.p.M2pumpmonitor.reading,'','num')])
         window_name = ['M2 Pump Monitor']
         self.dv.add_parameter('Window', window_name)
         self.dv.add_parameter('plotLive', True)
         self.dv.add_parameter('reading type', self.p.M2pumpmonitor.reading)
+        self.grapher.plot(name,'Pump Monitor',False)
 
     def finalize(self, cxn, context):
         self.cxn.disconnect() 

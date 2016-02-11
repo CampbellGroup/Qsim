@@ -1,6 +1,7 @@
 from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
+from common.lib.clients.connection import connection
 
 class kittykatclient(QtGui.QWidget):
     
@@ -17,14 +18,14 @@ class kittykatclient(QtGui.QWidget):
         connects incoming signals to relavent functions
         
         """
-        from labrad.wrappers import connectAsync
+        
         self.kittykat = False
         self.oldstate = False
         self.delay = 500 # in ms this is half the total period (1s delay)
         if self.cxn is None:
-            self.cxn = connection("kitty kat client")
+            self.cxn = connection()
             yield self.cxn.connect()
-	self.server = yield self.cxn.get_server('arduinottl')  
+        self.server = yield self.cxn.get_server('arduinottl')  
         self.reg = yield self.cxn.get_server('registry') 
         self.initializeGUI()
        

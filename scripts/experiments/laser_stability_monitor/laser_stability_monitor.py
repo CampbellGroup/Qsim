@@ -22,6 +22,7 @@ class lasermonitor(experiment):
         self.ident = ident
         self.cxn = labrad.connect(name = 'Laser Monitor')
         self.cxnwlm = labrad.connect('10.97.112.2', name = socket.gethostname() + " Laser Monitor")
+        self.grapher = self.cxn.grapher
 	self.wlm = self.cxnwlm.multiplexerserver
         self.dv = self.cxn.data_vault
 	self.p = self.parameters
@@ -51,11 +52,12 @@ class lasermonitor(experiment):
         '''
         
         self.dv.cd('Laser Monitor', True)
-        self.dv.new('Laser Monitor',[('time', 's')], [('freq','','num')])
+        name = self.dv.new('Laser Monitor',[('time', 's')], [('freq','','num')])
         window_name = ['Laser Monitor']
         self.dv.add_parameter('Window', window_name)
         self.dv.add_parameter('plotLive', True)
         self.dv.add_parameter('lasers', self.p.lasermonitor.lasers)
+        self.grapher.plot(name, 'Laser Monitor', False)
 
     def finalize(self, cxn, context):
         self.cxn.disconnect()
