@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import constants
-from settings import get_trap_paramters
+from settings import get_trap_parameters
 
 def get_potential_coefficient():
-    tp = get_trap_paramters()
+    tp = get_trap_parameters()
     omegaRF = 2 * np.pi * tp[2]
     A = constants.q**2 * tp[1]**2/(tp[3] * omegaRF**2 * tp[0]**4)
     return A

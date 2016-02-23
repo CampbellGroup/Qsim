@@ -28,7 +28,7 @@ def load_default():
         config.write(f)
 
     
-def print_trap_paramters():
+def print_trap_parameters():
     config = SafeConfigParser()
     config.read('crystal_config.ini')
 
@@ -38,7 +38,7 @@ def print_trap_paramters():
     print config.get('trap_parameters', 'mass')
     print config.get('trap_parameters', 'assymetry')
         
-def get_trap_paramters():
+def get_trap_parameters():
     config = SafeConfigParser()
     config.read('crystal_config.ini')
 

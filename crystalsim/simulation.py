@@ -2,7 +2,7 @@ from objects import ion
 from utility import total_energy
 from progressbar import ProgressBar
 from crystalconfigurations import symmetric_6
-from settings import get_trap_paramters
+from settings import get_trap_parameters
 from settings import get_simulation_parameters
 
 import numpy as np
@@ -18,7 +18,7 @@ def make_crystal(N_ions = 6, starting_ions = None, constant_ion = None, progress
     '''
     
     A = utility.get_potential_coefficient()
-    tp = get_trap_paramters()
+    tp = get_trap_parameters()
     sp = get_simulation_parameters()
     
     if assymetry:
