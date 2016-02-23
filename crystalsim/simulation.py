@@ -2,18 +2,33 @@ from objects import ion
 from utility import total_energy
 from progressbar import ProgressBar
 from crystalconfigurations import symmetric_6
+from settings import get_trap_paramters
+from settings import get_simulation_parameters
 
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 import datetime
+import utility
 
-def make_crystal(N_ions = 6, pos_spread = 20e-6, iterations = 800, 
-                 step_size = 1e-6, starting_ions = None, assy = 1, constant_ion = None, progress = True):
+def make_crystal(N_ions = 6, starting_ions = None, constant_ion = None, progress = True, assymetry = None):
     '''
     This function iterates random steps in postion and recalculates the energy of the configuration of N ions,
     if the energy is decreased it accepts the move and repeats
     '''
+    
+    A = utility.get_potential_coefficient()
+    tp = get_trap_paramters()
+    sp = get_simulation_parameters()
+    
+    if assymetry:
+        assy = assymetry
+    else:
+        assy = tp[4]
+    pos_spread = sp[2]
+    iterations = sp[1]
+    step_size = sp[0]
+    
     if progress == True:
         p = ProgressBar(iterations)
     N = N_ions
@@ -44,7 +59,7 @@ def make_crystal(N_ions = 6, pos_spread = 20e-6, iterations = 800,
                 particle.x = particle.x + (np.random.rand() - 0.5)*step_size
                 particle.lasty = particle.y
                 particle.y = particle.y + (np.random.rand() - 0.5)*step_size
-                tot_E = total_energy(ions, assy)
+                tot_E = total_energy(ions, assy, A)
                 if tot_E < last_E: # Check to take the position step or not
                     E.append(tot_E)
                     last_E = tot_E
@@ -73,16 +88,15 @@ def squeeze_crystal(starting_ions = None, max_assy = 1.3, N_ions = 6):
     y = []
     color = []
     
-    for ion in starting_ions:
-        color.append(ion.color)
+    _E, ions = make_crystal(N_ions = N_ions, starting_ions = prev_ions, progress = False)
     
-    _E, ions = make_crystal(N_ions = N_ions, starting_ions = prev_ions,assy = 1,
-                            iterations = 2000, progress = False)
+    for ion in ions:
+        color.append(ion.color)
+        
     prev_ions = ions
     for i in range(100):
         assymetry = 1 + i*assy_step
-        _E, ions = make_crystal(N_ions = N_ions, starting_ions = prev_ions,assy = assymetry,
-                               iterations =  600, progress = False)
+        _E, ions = make_crystal(N_ions = N_ions, starting_ions = prev_ions, progress = False, assymetry = assymetry)
         prev_ions = ions
         x=[]
         y=[]
@@ -100,8 +114,7 @@ def squeeze_crystal(starting_ions = None, max_assy = 1.3, N_ions = 6):
 
     for i in range(101):
         assymetry = max_assy - i*assy_step
-        _E, ions = make_crystal(N_ions = 6, starting_ions = prev_ions,assy = assymetry, 
-                               iterations = 600, progress = False)
+        _E, ions = make_crystal(N_ions = N_ions, starting_ions = prev_ions, progress = False, assymetry = assymetry)
         prev_ions = ions
         x=[]
         y=[]
@@ -119,7 +132,7 @@ def squeeze_crystal(starting_ions = None, max_assy = 1.3, N_ions = 6):
     return ions
 
 def drag_ion(crystal = symmetric_6(6e-6), pinned_ions = [0], initpos = [(0,0)], finalpos = [(0,6e-6)], 
-             steps = 200, iters = 500):
+             steps = 200):
 
     plt.ion()
     xlims = [-40,40]
@@ -148,8 +161,7 @@ def drag_ion(crystal = symmetric_6(6e-6), pinned_ions = [0], initpos = [(0,0)], 
         for j in range(len(pinned_ions)):
             crystal[j].x = xsteps[j][i]
             crystal[j].y = ysteps[j][i]
-        E, ions = make_crystal(N_ions = N, starting_ions = crystal, 
-                               iterations = iters, constant_ion=pinned_ions, progress = False)
+        E, ions = make_crystal(N_ions = N, starting_ions = crystal, constant_ion=pinned_ions, progress = False)
         Eprofile.append(E)
         x=[]
         y=[]
