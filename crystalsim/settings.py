@@ -66,6 +66,13 @@ def set_voltage(volts):
     with open('crystal_config.ini', 'w') as f:
         config.write(f)
         
+def set_length_scale(rnot):
+    config = SafeConfigParser()
+    config.read('crystal_config.ini')
+    config.set('trap_parameters', 'rnot', str(rnot))
+    with open('crystal_config.ini', 'w') as f:
+        config.write(f)
+        
 def set_RF_frequency(freq):
     config = SafeConfigParser()
     config.read('crystal_config.ini')
