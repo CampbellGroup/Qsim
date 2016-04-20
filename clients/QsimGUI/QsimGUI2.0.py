@@ -86,9 +86,9 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeM2Widget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from Qsim.clients.M2lasercontrol.M2laserControl import M2Window
-        from Qsim.clients.laserquantumpump.pumpclient import PumpClient
+        from Qsim.clients.M2pump.M2pumpclient import M2PumpClient
         gridLayout = QtGui.QGridLayout()
-        pump = PumpClient(reactor, cxn)
+        pump = M2PumpClient(reactor, cxn)
         pump.setMaximumWidth(200)
         pump.setMinimumHeight(600)
         gridLayout.addWidget(M2Window(reactor, cxn),                  0,0,5,5)

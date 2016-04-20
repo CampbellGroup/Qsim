@@ -17,7 +17,7 @@ class M2PumpClient(QtGui.QWidget):
         
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connection to pumpserver and
+        """Creates an Asynchronous connection to pumpserver andLaser_Quantum_
         connects incoming signals to relavent functions
         
         """
