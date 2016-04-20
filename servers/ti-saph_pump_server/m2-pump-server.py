@@ -4,7 +4,7 @@
 name = M2pump
 version = 1.0
 description = 
-instancename = M2pump
+instancename = M2Pump
 [startup]
 cmdline = %PYTHON% %FILE%
 timeout = 20

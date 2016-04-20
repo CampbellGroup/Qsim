@@ -6,10 +6,10 @@ SIGNALID1 = 441956
 SIGNALID2 = 446296
 SIGNALID3 = 124462
 
-class PumpClient(QtGui.QWidget):
+class M2PumpClient(QtGui.QWidget):
     
     def __init__(self, reactor, cxn = None):
-        super(PumpClient, self).__init__()
+        super(M2PumpClient, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.cxn = cxn
         self.reactor = reactor         
@@ -22,9 +22,9 @@ class PumpClient(QtGui.QWidget):
         
         """
         if self.cxn is None:
-            self.cxn = connection(name='Pump Client')
+            self.cxn = connection(name='M2 Pump Client')
             yield self.cxn.connect()
-        self.server = yield self.cxn.get_server('M2pump')
+        self.server = yield self.cxn.get_server('M2Pump')
 
         yield self.server.signal__current_changed(SIGNALID1)
         yield self.server.signal__power_changed(SIGNALID2)
@@ -73,7 +73,7 @@ class PumpClient(QtGui.QWidget):
         self.setLayout(layout)
 
     def updateCurrent(self,c,  current):
-        self.currentprogbar.setValue(current)
+        self.currentprogbar.setValue(current['A'])
 
     def updatePower(self, c, power):
         powerperc = power['W']*100/8.0
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     from common.lib.clients import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
-    PumpWidget = PumpClient(reactor)
+    PumpWidget = M2PumpClient(reactor)
     PumpWidget.show()
     run = reactor.run()  # @UndefinedVariable
         

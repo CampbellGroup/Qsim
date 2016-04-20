@@ -23,7 +23,7 @@ class kittykatclient(QtGui.QWidget):
         self.oldstate = False
         self.delay = 500 # in ms this is half the total period (1s delay)
         if self.cxn is None:
-            self.cxn = connection()
+            self.cxn = connection(name = 'kitty kat')
             yield self.cxn.connect()
         self.server = yield self.cxn.get_server('arduinottl')  
         self.reg = yield self.cxn.get_server('registry') 

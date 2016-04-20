@@ -28,6 +28,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         M2 = self.makeM2Widget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
         analysis = self.makeAnalysisWidget(reactor, cxn)
+        Tsunami = self.makeTsunamiWidget(reactor, cxn)
 
         # add tabs
         self.tabWidget = QtGui.QTabWidget()
@@ -36,6 +37,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(analysis, '&Analysis')
+        self.tabWidget.addTab(Tsunami, '&Tsunami')
         self.createGrapherTab(self)
 	
         layout.addWidget(self.tabWidget)
@@ -65,6 +67,11 @@ class QSIM_GUI(QtGui.QMainWindow):
 #	return subtabWidget
 	
 ######create widgets with shared connection######
+
+    def makeTsunamiWidget(self, reactor, cxn):
+        from common.lib.clients.evPump.evPumpClient import eVPumpClient
+        evpump = eVPumpClient(reactor)
+        return evpump
 
     def makeScriptScannerWidget(self, reactor, cxn):
         from common.lib.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
@@ -106,7 +113,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(DDS_CONTROL(reactor, cxn),                  0,1, 4,2)
         gridLayout.addWidget(kittykatclient(reactor, cxn),               3,0, 1,1)
-        gridLayout.addWidget(pmtWidget(reactor),                   1,0, 1,1)
+        gridLayout.addWidget(pmtWidget(reactor, cxn),                   1,0, 1,1)
         gridLayout.addWidget(cameraswitch(reactor, cxn),                0,0, 1,1)
         gridLayout.addWidget(switchclient(reactor, cxn),                2,0, 1,1)
         gridLayout.setSpacing(10)
