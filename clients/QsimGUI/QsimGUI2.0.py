@@ -38,7 +38,6 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(analysis, '&Analysis')
         self.tabWidget.addTab(Tsunami, '&Tsunami')
-        self.createGrapherTab(self)
 	
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
@@ -119,26 +118,6 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget
-
-    @inlineCallbacks
-    def makeGrapherWidget(self, reactor):
-        widget = QtGui.QWidget()
-        from common.lib.clients.pygrapherlive.connections import CONNECTIONS
-        vboxlayout = QtGui.QVBoxLayout()
-        Connections = CONNECTIONS(reactor)
-        @inlineCallbacks
-        def widgetReady():
-            window = yield Connections.introWindow
-            vboxlayout.addWidget(window)
-            widget.setLayout(vboxlayout)
-        yield Connections.communicate.connectionReady.connect(widgetReady)
-        widget.resize(100,100)
-        returnValue(widget)
-
-    @inlineCallbacks
-    def createGrapherTab(self, reactor):
-        grapherTab = yield self.makeGrapherWidget(reactor)
-        self.tabWidget.addTab(grapherTab, '&Grapher')
 
     def closeEvent(self, x):
         self.reactor.stop()
