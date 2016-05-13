@@ -25,7 +25,7 @@ class QSIM_GUI(QtGui.QMainWindow):
 	    #create subwidgets to be added to tabs
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         wavemeter = self.makeWavemeterWidget(reactor, cxn)
-        M2 = self.makeM2Widget(reactor, cxn)
+        #M2 = self.makeM2Widget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
         analysis = self.makeAnalysisWidget(reactor, cxn)
         Tsunami = self.makeTsunamiWidget(reactor, cxn)
@@ -33,7 +33,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         # add tabs
         self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.addTab(wavemeter, '&Wavemeter')
-        self.tabWidget.addTab(M2, '&M2')
+        #self.tabWidget.addTab(M2, '&M2')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(analysis, '&Analysis')
