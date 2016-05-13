@@ -22,12 +22,12 @@ class lasermonitor(experiment):
         self.ident = ident
         self.cxn = labrad.connect(name = 'Laser Monitor')
         self.cxnwlm = labrad.connect('10.97.112.2', name = socket.gethostname() + " Laser Monitor")
-        self.grapher = self.cxn.grapher
-	self.wlm = self.cxnwlm.multiplexerserver
+        #self.grapher = self.cxn.grapher
+        self.wlm = self.cxnwlm.multiplexerserver
         self.dv = self.cxn.data_vault
-	self.p = self.parameters
-	self.inittime = time.time()
-	self.initfreq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
+        self.p = self.parameters
+        self.inittime = time.time()
+        self.initfreq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
 
     def run(self, cxn, context):
         
@@ -35,15 +35,16 @@ class lasermonitor(experiment):
         Main loop 
         '''
 
-	self.setup_datavault()
-	while (time.time() - self.inittime) <= self.p.lasermonitor.measuretime['s']:
-		should_stop = self.pause_or_stop()
-                if should_stop: break
-		freq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
-		self.dv.add(time.time() - self.inittime, 1e6*(self.initfreq - freq))
-                progress = 100*float(time.time() - self.inittime)/self.p.lasermonitor.measuretime['s']
-                self.sc.script_set_progress(self.ident, progress)
-		
+        self.setup_datavault()
+        while (time.time() - self.inittime) <= self.p.lasermonitor.measuretime['s']:
+            should_stop = self.pause_or_stop()
+            if should_stop: break
+            freq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
+            print freq
+            self.dv.add(time.time() - self.inittime, 1e6*(self.initfreq - freq))
+            progress = 100*float(time.time() - self.inittime)/self.p.lasermonitor.measuretime['s']
+            self.sc.script_set_progress(self.ident, progress)
+
 
     def setup_datavault(self):
 
@@ -57,7 +58,7 @@ class lasermonitor(experiment):
         self.dv.add_parameter('Window', window_name)
         self.dv.add_parameter('plotLive', True)
         self.dv.add_parameter('lasers', self.p.lasermonitor.lasers)
-        self.grapher.plot(name, 'Laser Monitor', False)
+        #self.grapher.plot(name, 'Laser Monitor', False)
 
     def finalize(self, cxn, context):
         self.cxn.disconnect()
