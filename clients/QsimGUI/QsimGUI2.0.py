@@ -146,7 +146,7 @@ class QSIM_GUI(QtGui.QMainWindow):
 if __name__=="__main__":
     a = QtGui.QApplication( sys.argv )
     clipboard = a.clipboard()
-    import common.lib.clients.qt4reactor as qt4reactor
+    import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
     QsimGUI = QSIM_GUI(reactor, clipboard)
