@@ -104,7 +104,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget 
-        from Qsim.clients.kittykat.kittykatclient import kittykatclient
+        from Qsim.clients.kittykat.kittykatPulser import kittykatclient
         from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import switchclient
         from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
