@@ -120,12 +120,12 @@ class DDS_CONTROL(QtGui.QFrame):
             print e
             print 'DDS CONTROL: Pulser not available'
             self.setDisabled(True)
-        self.cxn.add_on_connect('Pulser 2', self.reinitialize)
-        self.cxn.add_on_disconnect('Pulser 2', self.disable)
+        self.cxn.add_on_connect('Pulser', self.reinitialize)
+        self.cxn.add_on_disconnect('Pulser', self.disable)
      
     @inlineCallbacks
     def initialize(self):
-        server = yield self.cxn.get_server('Pulser 2')
+        server = yield self.cxn.get_server('Pulser')
         yield server.signal__new_dds_parameter(self.SIGNALID, context = self.context)
         yield server.addListener(listener = self.followSignal, source = None, ID = self.SIGNALID, context = self.context)
         self.display_channels, self.widgets_per_row = yield self.get_displayed_channels()
@@ -139,7 +139,7 @@ class DDS_CONTROL(QtGui.QFrame):
         get a list of all available channels from the pulser. only show the ones
         listed in the registry. If there is no listing, will display all channels.
         '''
-        server = yield self.cxn.get_server('Pulser 2')
+        server = yield self.cxn.get_server('Pulser')
         all_channels = yield server.get_dds_channels(context = self.context)
         channels_to_display, widgets_per_row = yield self.registry_load_displayed(all_channels, 1)
         if channels_to_display is None:
