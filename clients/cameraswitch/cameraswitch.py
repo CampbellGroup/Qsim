@@ -1,5 +1,6 @@
 from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from twisted.internet.defer import inlineCallbacks
+from common.lib.clients.connection import connection
 from PyQt4 import QtGui
 
 class cameraswitch(QtGui.QWidget):
@@ -19,7 +20,7 @@ class cameraswitch(QtGui.QWidget):
         """
         from labrad.wrappers import connectAsync
         if self.cxn is None:
-            self.cxn = connection("Camera Switch")
+            self.cxn = connection(name="Camera Switch")
             yield self.cxn.connect()
 	self.server = yield self.cxn.get_server('arduinottl')
         self.reg = yield self.cxn.get_server('registry') 
@@ -38,6 +39,7 @@ class cameraswitch(QtGui.QWidget):
         widget = QCustomSwitchChannel('Camera/PMT Toggle', ('PMT', 'Camera'))
         if 'cameraswitch' in self.settings:
             value = yield self.reg.get('cameraswitch')
+            value = bool(value)
             widget.TTLswitch.setChecked(value)
         else:
             widget.TTLswitch.setChecked(False)
