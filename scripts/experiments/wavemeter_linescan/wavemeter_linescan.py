@@ -87,7 +87,3 @@ if __name__ == '__main__':
     exprt = wavemeter_linescan(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)
-
-
-
-

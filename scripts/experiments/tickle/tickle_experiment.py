@@ -1,12 +1,12 @@
 import labrad
 from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
-from twisted.internet.defer import returnValue
 from labrad.units import WithUnit
 import time
 import socket
 
+
 class ticklescan(experiment):
-    
+
     name = 'Tickle Scan'
 
     exp_parameters = []
@@ -23,32 +23,40 @@ class ticklescan(experiment):
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
-        self.cxn = labrad.connect(name = 'Tickle Scan')
-        self.cxnwlm = labrad.connect('10.97.112.2', name = socket.gethostname() + " Tickle Scan")
+        self.cxn = labrad.connect(name='Tickle Scan')
+        self.cxnwlm = labrad.connect('10.97.112.2',
+                                     name=socket.gethostname() + " Tickle Scan", password = 'lab')
         self.dv = self.cxn.data_vault
-        self.rg = self.cxnwlm.rigol_dg1022a_server      
+        self.grapher = self.cxn.grapher
+        self.rg = self.cxnwlm.rigol_dg1022_server
         self.pmt = self.cxn.normalpmtflow
-	self.p = self.parameters
+        self.p = self.parameters
         self.chan = 1
-        self.rg.select_device(0)   
-    
+        self.rg.select_device(0)
+
     def run(self, cxn, context):
-        
+
         '''
-        Main loop 
+        Main loop
         '''
-	self.set_scannable_parameters()
-	self.setup_datavault()
+        self.set_scannable_parameters()
+        self.setup_datavault()
+        print 'past datavault'
         self.rg.output(self.chan, True)
-	time.sleep(0.1)
-        self.rg.apply_waveform(self.p.ticklescan.waveform, self.frequency[0], self.amplitude, self.offset, self.chan)
-	time.sleep(1)
+        time.sleep(0.1)
+        self.rg.apply_waveform(self.p.ticklescan.waveform, self.frequency[0],
+                               self.amplitude, self.offset, self.chan)
+        time.sleep(1)
         for i, freq in enumerate(self.xvalues):
                 should_stop = self.pause_or_stop()
-                if should_stop: break
-                self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))  
-		time.sleep(0.1)
+                if should_stop:
+                    break
+                print self.chan, freq
+                self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))
+                time.sleep(0.1)
+                print 'before counts'
                 counts = self.pmt.get_next_counts('ON', self.average, True)
+                print counts
                 time.sleep(0.1)
                 self.dv.add(freq, counts)
                 progress = 100*float(i)/self.numberofsteps
@@ -58,18 +66,18 @@ class ticklescan(experiment):
 
     def set_scannable_parameters(self):
 
-	'''
-	gets parameters, called in run so scan works
-	'''
+        '''
+        gets parameters, called in run so scan works
+        '''
 
         self.amplitude = self.p.ticklescan.amplitude
-        self.frequency = self.p.ticklescan.frequency  
-        self.offset = self.p.ticklescan.offset 
+        self.frequency = self.p.ticklescan.frequency
+        self.offset = self.p.ticklescan.offset
         self.average = int(self.p.ticklescan.average)
         self.minval = self.p.ticklescan.frequency[0]['Hz']
         self.maxval = self.p.ticklescan.frequency[1]['Hz']
         self.numberofsteps = int(self.p.ticklescan.frequency[2])
-        self.stepsize = int((float(self.maxval) - self.minval)/(self.numberofsteps- 1))   
+        self.stepsize = int((float(self.maxval) - self.minval)/(self.numberofsteps- 1))
         self.xvalues = range(int(self.minval), int(self.maxval + 1),self.stepsize)
 
     def setup_datavault(self):
@@ -77,9 +85,11 @@ class ticklescan(experiment):
         '''
         Adds parameters to datavault and parameter vault
         '''
-        
+
         self.dv.cd('Tickle Scan', True)
-        self.dv.new('Tickle Scan',[('freq', 'num')], [('kilocounts/sec','','num')])
+        dataset = self.dv.new('Tickle Scan', [('freq', 'num')],
+                    [('kilocounts/sec', '', 'num')])
+        self.grapher.plot(dataset, 'tickle', False)
         window_name = ['Tickle']
         self.dv.add_parameter('Window', window_name)
         self.dv.add_parameter('plotLive', True)
@@ -87,15 +97,15 @@ class ticklescan(experiment):
         self.dv.add_parameter('frequency', self.frequency)
         self.dv.add_parameter('offset', self.offset)
         self.dv.add_parameter('average', self.average)
-        
+
     def finalize(self, cxn, context):
         self.cxn.disconnect()
         self.cxnwlm.disconnect()
-        
-        
+
+
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = ticklescan(cxn = cxn)
+    exprt = ticklescan(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)
