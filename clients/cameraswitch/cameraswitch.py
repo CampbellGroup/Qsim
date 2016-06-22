@@ -37,14 +37,17 @@ class cameraswitch(QtGui.QWidget):
     def initializeGUI(self):  
         layout = QtGui.QGridLayout()
         widget = QCustomSwitchChannel('Camera/PMT Toggle', ('PMT', 'Camera'))
+        RFwidget = QCustomSwitchChannel('RF Drive Switch', ('RF On', 'RF Off'))
         if 'cameraswitch' in self.settings:
             value = yield self.reg.get('cameraswitch')
             value = bool(value)
             widget.TTLswitch.setChecked(value)
         else:
             widget.TTLswitch.setChecked(False)
-            
-        widget.TTLswitch.toggled.connect(self.toggle) 
+
+        widget.TTLswitch.toggled.connect(self.toggle)
+        RFwidget.TTLswitch.toggled.connect(self.toggleRF)
+        layout.addWidget(RFwidget)
         layout.addWidget(widget)
         self.setLayout(layout)
         
@@ -58,6 +61,14 @@ class cameraswitch(QtGui.QWidget):
         yield self.server.ttl_read(8)#releases channel so manual control of cameraswitch is possible
         if 'cameraswitch' in self.settings:
             yield self.reg.set('cameraswitch', state)
+            
+    @inlineCallbacks
+    def toggleRF(self, state):
+        '''
+        Toggles RF
+        '''
+        yield self.server.ttl_output(7, not state)
+
         
     def closeEvent(self, x):
         self.reactor.stop()
