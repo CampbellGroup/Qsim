@@ -40,7 +40,7 @@ BAUDRATE = 57600
 
 class ArduinoDAC( SerialDeviceServer ):
     name = SERVERNAME
-    regKey = 'arduinoDAC'
+    regKey = 'arduinodac_server'
     port = None
     serNode = getNodeName()
     timeout = T.Value(TIMEOUT,'s')
@@ -64,8 +64,16 @@ class ArduinoDAC( SerialDeviceServer ):
                 print 'Check set up and restart serial server'
             else: raise
     
-    @setting(1, chan = 'i', value = 'i')
+    @setting(1, chan='i', value='i')
     def DACOutput(self, c, chan, value):
+        """
+        Output voltage value (in bits from 0 to 255) on chan.
+
+        Parameters
+        ----------
+        chan: int, DAC channel, valid from ....
+        value: int, 0 to 255, sets the voltage output
+        """
         if value > 255:
             value = 255
         elif value < 0:
