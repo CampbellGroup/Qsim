@@ -40,7 +40,7 @@ except:
 
         self.U = U
         self.cxn = yield connectAsync(name="dac client")
-        self.server = yield self.cxn.arduinodac
+        self.server = yield self.cxn.arduinodac_server
         self.reg = yield self.cxn.registry
 
         try:
