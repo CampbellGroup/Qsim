@@ -40,7 +40,7 @@ BAUDRATE = 57600
 
 class ArduinoDAC( SerialDeviceServer ):
     name = SERVERNAME
-    regKey = 'arduinoDAC'
+    regKey = 'arduinodac_server'
     port = None
     serNode = getNodeName()
     timeout = T.Value(TIMEOUT,'s')
