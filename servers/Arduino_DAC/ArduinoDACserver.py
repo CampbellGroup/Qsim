@@ -34,7 +34,7 @@ from twisted.internet.defer import returnValue
 from labrad.support import getNodeName
 import time
 
-SERVERNAME = 'ArduinoDAC'
+SERVERNAME = 'ArduinoDAC Server'
 TIMEOUT = 1.0
 BAUDRATE = 57600
 
