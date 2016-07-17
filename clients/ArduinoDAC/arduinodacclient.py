@@ -112,79 +112,93 @@ except:
     @inlineCallbacks
     def ezup(self, isheld):
         for name, dacchan in self.topelectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
-            self.setvalue(currentvalue + 1, [name, dacchan])
+            yield self.setvalue(currentvalue + 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue + 1)
+
+        for name, dacchan in self.bottomelectrodes.iteritems():
+            currentvalue = yield self.reg.get(name)
+            if currentvalue <= 0:
+                break
+            yield self.setvalue(currentvalue -1, [name, dacchan])
+            self.d[dacchan].spinLevel.setValue(currentvalue - 1)
 
     @inlineCallbacks
     def ezdown(self, isheld):
+        for name, dacchan in self.bottomelectrodes.iteritems():
+            currentvalue = yield self.reg.get(name)
+            if currentvalue >= 255:
+                break
+            yield self.setvalue(currentvalue + 1, [name, dacchan])
+            self.d[dacchan].spinLevel.setValue(currentvalue + 1)
+
         for name, dacchan in self.topelectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
-            self.setvalue(currentvalue - 1, [name, dacchan])
+            yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
 
     @inlineCallbacks
     def exup(self, isheld):
         for name, dacchan in self.xpluselectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
-            self.setvalue(currentvalue - 1, [name, dacchan])
+            yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
         for name, dacchan in self.xminuselectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
-            self.setvalue(currentvalue + 1, [name, dacchan])
+            yield self.setvalue(currentvalue + 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue + 1)
 
     @inlineCallbacks
     def exdown(self, isheld):
         for name, dacchan in self.xminuselectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
-            self.setvalue(currentvalue - 1, [name, dacchan])
+            yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
         for name, dacchan in self.xpluselectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
-            self.setvalue(currentvalue + 1, [name, dacchan])
+            yield self.setvalue(currentvalue + 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue + 1)
 
     @inlineCallbacks
     def eyup(self, isheld):
         for name, dacchan in self.ypluselectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
-            self.setvalue(currentvalue - 1, [name, dacchan])
+            yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
         for name, dacchan in self.yminuselectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
-            self.setvalue(currentvalue + 1, [name, dacchan])
+            yield self.setvalue(currentvalue + 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue + 1)
 
     @inlineCallbacks
     def eydown(self, isheld):
         for name, dacchan in self.yminuselectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
-            self.setvalue(currentvalue - 1, [name, dacchan])
+            yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
         for name, dacchan in self.ypluselectrodes.iteritems():
-            currentvalue = yield self.reg.get(name + ' dac')
+            currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
-            self.setvalue(currentvalue + 1, [name, dacchan])
+            yield self.setvalue(currentvalue + 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue + 1)
 
     @inlineCallbacks
@@ -195,7 +209,7 @@ except:
         yield self.server.dacoutput(chan, value)
         voltage = (0.10896*value - 13.89777)
         self.e[chan].setText(str(voltage))
-        yield self.reg.set(name + ' dac', value)
+        yield self.reg.set(name, value)
 
     def closeEvent(self, x):
         self.reactor.stop()
