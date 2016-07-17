@@ -96,6 +96,7 @@ except:
         self.eyupwidget = QPushButton('Ey increase')
         self.eydownwidget = QPushButton('Ey decrease')
 	self.dipole_res = QCustomSpinBox('Dipole Res', (0,1000))
+        self.dipole_res.spinLevel.setValue(10)
         self.dipole_res.setStepSize(1)
         self.dipole_res.spinLevel.setDecimals(0)
 
