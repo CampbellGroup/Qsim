@@ -29,6 +29,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         control = self.makeControlWidget(reactor, cxn)
         analysis = self.makeAnalysisWidget(reactor, cxn)
         Tsunami = self.makeTsunamiWidget(reactor, cxn)
+	Pulser = self.makePulserWidget(reactor, cxn)
 
         # add tabs
         self.tabWidget = QtGui.QTabWidget()
@@ -38,7 +39,8 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(analysis, '&Analysis')
         self.tabWidget.addTab(Tsunami, '&Tsunami')
-	
+	self.tabWidget.addTab(Pulser, '&Pulser')
+
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
         self.setCentralWidget(centralWidget)
@@ -49,7 +51,7 @@ class QSIM_GUI(QtGui.QMainWindow):
 ######sub tab layout example#############
 #    def makeLaserSubTab(self, reactor, cxn):
 #        centralWidget = QtGui.QWidget()
-#        layout = QtGui.QHBoxLayout() 
+#        layout = QtGui.QHBoxLayout()
 
 #	wavemeter = self.makeWavemeterWidget(reactor, cxn)
 #	M2 = self.makeM2Widget(reactor, cxn)
@@ -64,8 +66,13 @@ class QSIM_GUI(QtGui.QMainWindow):
 #       self.setCentralWidget(centralWidget)
 #        self.setWindowTitle('Lasers')
 #	return subtabWidget
-	
+
 ######create widgets with shared connection######
+
+    def makePulserWidget(self, reactor, cxn):
+        from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
+        DDS = DDS_CONTROL(reactor, cxn)
+        return DDS
 
     def makeTsunamiWidget(self, reactor, cxn):
         from common.lib.clients.evPump.evPumpClient import eVPumpClient
@@ -103,18 +110,18 @@ class QSIM_GUI(QtGui.QMainWindow):
 
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
-        from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget 
+        from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget
         from Qsim.clients.kittykat.kittykatPulser import kittykatclient
         from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import switchclient
-        from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
-        
+	from Qsim.clients.dac8718.dac8718client import dacclient
+
         gridLayout = QtGui.QGridLayout()
-        gridLayout.addWidget(DDS_CONTROL(reactor, cxn),                  0,1, 4,2)
-        gridLayout.addWidget(kittykatclient(reactor, cxn),               3,0, 1,1)
-        gridLayout.addWidget(pmtWidget(reactor, cxn),                   1,0, 1,1)
-        gridLayout.addWidget(cameraswitch(reactor, cxn),                0,0, 1,1)
-        gridLayout.addWidget(switchclient(reactor, cxn),                2,0, 1,1)
+	gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 4, 1)
+        gridLayout.addWidget(kittykatclient(reactor, cxn), 3, 0, 1, 1)
+        gridLayout.addWidget(pmtWidget(reactor, cxn),      1, 0, 1, 1)
+        gridLayout.addWidget(cameraswitch(reactor, cxn),   0, 0, 1, 1)
+        gridLayout.addWidget(switchclient(reactor, cxn),   2, 0, 1, 1)
         gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget
