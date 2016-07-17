@@ -71,8 +71,8 @@ except:
             widget = QCustomSpinBox(name, (0, 255))
             widget.title.setFixedWidth(120)
             label = QtGui.QLabel('0 V')
-            if name + ' dac' in self.settings:
-                value = yield self.reg.get(name + ' dac')
+            if name in self.settings:
+                value = yield self.reg.get(name)
                 widget.spinLevel.setValue(value)
                 self.setvalue(value, [name, dacchan])
             else:
