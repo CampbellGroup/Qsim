@@ -20,7 +20,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     def create_layout(self, cxn):
 	    #creates central layout
         centralWidget = QtGui.QWidget()
-        layout = QtGui.QHBoxLayout() 
+        layout = QtGui.QHBoxLayout()
 
 	    #create subwidgets to be added to tabs
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
