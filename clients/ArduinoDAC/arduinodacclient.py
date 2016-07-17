@@ -21,11 +21,12 @@ class dacclient(QtGui.QWidget):
         self.reactor = reactor
         self.d = {}
         self.e = {}
-        self.topelectrodes = {'Black': 1, 'Blue': 2, 'White': 7, 'Brown': 5}
-        self.xminuselectrodes = {'White': 7, 'Mustard Yellow': 2}
-        self.xpluselectrodes = {'Black': 1, 'Red': 4}
-        self.yminuselectrodes = {}
-        self.ypluselectrodes = {'Brown': 5, 'Orange': 3}
+        self.topelectrodes = {'Pin 1': 1,  'Pin 2': 2,  'Pin 4': 3, 'Pin 5':4}
+        self.bottomelectrodes = {'Pin 6':5, 'Pin 7':6, 'Pin 11':7,'Pin 12': 8}
+        self.xminuselectrodes = {'Pin 4':3, 'Pin 7':6}
+        self.xpluselectrodes = {'Pin 1':1, 'Pin 12':8}
+        self.yminuselectrodes = {'Pin 2':2, 'Pin 11':7}
+        self.ypluselectrodes = {'Pin 5':4,'Pin 6': 5}
         self.connect()
 
     @inlineCallbacks
