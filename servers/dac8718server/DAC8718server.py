@@ -23,13 +23,12 @@ Created on July 16, 2015
 @author: anthonyransford
 
 '''
-from common.lib.servers.serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
+from common.lib.servers.serialdeviceserver import SerialDeviceServer, \
+    setting, inlineCallbacks, SerialDeviceError, SerialConnectionError
+
 from labrad.types import Error
 from twisted.internet import reactor
-from labrad.server import Signal
 from labrad import types as T
-from twisted.internet.task import LoopingCall
-from twisted.internet.defer import returnValue
 from labrad.support import getNodeName
 
 
