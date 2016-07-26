@@ -92,6 +92,7 @@ except:
         self.exdownwidget = QPushButton('Ex decrease')
         self.eyupwidget = QPushButton('Ey increase')
         self.eydownwidget = QPushButton('Ey decrease')
+        self.save_widget = QPushButton('Save current values to Registry')
         self.dipole_res = QCustomSpinBox('Dipole Res', (0, 1000))
         self.dipole_res.spinLevel.setValue(10)
         self.dipole_res.setStepSize(1)
@@ -104,6 +105,7 @@ except:
         self.eyupwidget.clicked.connect(self.eyup)
         self.eydownwidget.clicked.connect(self.eydown)
         self.dipole_res.spinLevel.valueChanged.connect(self.update_dipole_res)
+        self.save_widget.clicked.connect(self.save_to_registry)
 
         subLayout.addWidget(self.ezupwidget,   0, 5)
         subLayout.addWidget(self.ezdownwidget, 1, 5)
@@ -112,6 +114,7 @@ except:
         subLayout.addWidget(self.eyupwidget,   2, 5)
         subLayout.addWidget(self.eydownwidget, 4, 5)
         subLayout.addWidget(self.dipole_res,   3, 5)
+        subLayout.addWidget(self.save_widget, 5, 5)
 
         self.setLayout(layout)
 
@@ -229,6 +232,7 @@ except:
         self.save_to_registry()
         print 'Saved.'
         self.reactor.stop()
+
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])
