@@ -3,7 +3,6 @@ int SCLK = 9;
 int SDO = 10;
 int LDAC = 11;
 
-
 int CLR = 2;
 int RESET = 3;
 
@@ -14,12 +13,15 @@ int WAKEUP = 5;
 int GPIO0 = 6;
 int GPIO1 = 1;
 
-
 byte chanByte = 0; 
 word value = 0; 
 
+
 void setup() {
-  
+
+  Serial.begin(9600);
+
+  // Set all pins to output mode.
   pinMode(CS, OUTPUT);  
   pinMode(SCLK, OUTPUT);
   pinMode(SDO, OUTPUT);
@@ -36,6 +38,7 @@ void setup() {
   pinMode(GPIO1, OUTPUT);
 
 
+  // Initialize pin values.
   digitalWrite(CS, LOW);
   digitalWrite(SCLK, LOW);
   digitalWrite(SDO, HIGH);
@@ -53,8 +56,14 @@ void setup() {
 
 }
 
+
+// Write to the DACs register where the address is given
+// as a byte and the data to be written is given as a 
+// word.  See the table in the DACs manual for details.
 void writeRegister(byte address, word data){
 
+  // Chip select must be low for the device 
+  // to recieve data.
   digitalWrite(CS, LOW);
   
   for (int j=0; j<8; j++) 
@@ -66,7 +75,7 @@ void writeRegister(byte address, word data){
      digitalWrite(SCLK, LOW);
    }
      /*
-     this next loop writes to the dac channel the output voltage from min (0b00000000) to max (0b11111111)
+     Loop writes to the DAC channel the output voltage from min (0b00000000) to max (0b11111111)
      */
   for (int i = 0; i<16; i++) // hard coded output 0b11111111 (max voltage)
    {
@@ -77,20 +86,19 @@ void writeRegister(byte address, word data){
     digitalWrite(SCLK, LOW); 
     
    }
+  // Set chip select high to prevent further data
+  // being written.
   digitalWrite(CS, HIGH);
 }
 
 
 void loop()
 {
-  
-  chanByte = 0b00001001;
-  value = 0x0;
-
-   writeRegister(chanByte, value);
-   delay(1000);
-   value = 0xFFFF;
-   writeRegister(chanByte, value);
-   delay(1000);
-   
+  while(Serial.available() < 3);
+  chanByte = Serial.read();
+  int value1 = Serial.read();
+  int value2 = Serial.read();
+  value = word(value1, value2);
+  writeRegister(chanByte, value);
  }
+ 
