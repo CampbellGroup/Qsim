@@ -48,7 +48,7 @@ except:
         except:
             self.settings = []
 
-        self.dacinfo = dac_8718_config.info
+        self.config = dac_8718_config
         self.initializeGUI()
 
     @inlineCallbacks
@@ -63,9 +63,9 @@ except:
         self.multipole_step = 10
         self.currentvalues = {}
 
-        for v, dac in enumerate(self.dacinfo):
-            name = self.dacinfo[dac][0]
-            dacchan = self.dacinfo[dac][1]
+        for channel_key in self.config.channels:
+            name = self.config.channels[channel_key].name
+            chan_number = self.config.channels[channel_key].number
 
             widget = QCustomSpinBox(name, (0, 2**16 - 1))
             widget.title.setFixedWidth(120)
@@ -74,17 +74,17 @@ except:
                 value = yield self.reg.get(name)
                 widget.spinLevel.setValue(value)
                 self.currentvalues.update({name: value})
-                self.setvalue(value, [name, dacchan])
+                self.setvalue(value, [name, chan_number])
             else:
                 widget.spinLevel.setValue(0.0)
             widget.setStepSize(1)
             widget.spinLevel.setDecimals(0)
             widget.spinLevel.valueChanged.connect(lambda value=widget.spinLevel.value(),
-                                                  ident=[name, dacchan]: self.setvalue(value, ident))
-            self.d[dacchan] = widget
-            self.e[dacchan] = label
-            subLayout.addWidget(self.d[dacchan],  v, 1)
-            subLayout.addWidget(self.e[dacchan], v, 2)
+                                                  ident=[name, chan_number]: self.setvalue(value, ident))
+            self.d[chan_number] = widget
+            self.e[chan_number] = label
+            subLayout.addWidget(self.d[chan_number],  chan_number, 1)
+            subLayout.addWidget(self.e[chan_number], chan_number, 2)
 
         self.ezupwidget = QPushButton('Ez increase')
         self.ezdownwidget = QPushButton('Ez decrease')
