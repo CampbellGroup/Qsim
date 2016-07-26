@@ -114,10 +114,10 @@ class QSIM_GUI(QtGui.QMainWindow):
         from Qsim.clients.kittykat.kittykatPulser import kittykatclient
         from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import switchclient
-	from Qsim.clients.dac8718.dac8718client import dacclient
+        from Qsim.clients.dac8718.dac8718client import dacclient
 
         gridLayout = QtGui.QGridLayout()
-	gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 4, 1)
+        gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 4, 1)
         gridLayout.addWidget(kittykatclient(reactor, cxn), 3, 0, 1, 1)
         gridLayout.addWidget(pmtWidget(reactor, cxn),      1, 0, 1, 1)
         gridLayout.addWidget(cameraswitch(reactor, cxn),   0, 0, 1, 1)
