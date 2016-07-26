@@ -2,10 +2,7 @@ from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
 from PyQt4.Qt import QPushButton
-try:
-    from config.dac_8718_config import dac_8718_config
-except:
-    from common.lib.config.arduino_dac_config import arduino_dac_config
+from config.dac_8718_config import dac_8718_config
 
 
 class dacclient(QtGui.QWidget):
@@ -21,12 +18,12 @@ class dacclient(QtGui.QWidget):
         self.reactor = reactor
         self.d = {}
         self.e = {}
-        self.topelectrodes = {'DAC 0': 0,  'DAC 1': 1,  'DAC 2': 2, 'DAC 3':3}
-        self.bottomelectrodes = {'DAC 4': 4,  'DAC 5': 5,  'DAC 6': 6, 'DAC 7':7}
-        self.xminuselectrodes = {'DAC 0':0, 'DAC 1':1}
-        self.xpluselectrodes = {'DAC 2':2, 'DAC 3':3}
-        self.yminuselectrodes = {'DAC 4':4, 'DAC 5':5}
-        self.ypluselectrodes = {'DAC 6':6, 'DAC 7':7}
+        self.topelectrodes = {'DAC 0': 0, 'DAC 1': 1, 'DAC 2': 2, 'DAC 3': 3}
+        self.bottomelectrodes = {'DAC 4': 4,  'DAC 5': 5,  'DAC 6': 6, 'DAC 7': 7}
+        self.xminuselectrodes = {'DAC 2': 2, 'DAC 6': 6}
+        self.xpluselectrodes = {'DAC 0': 0, 'DAC 4': 4}
+        self.yminuselectrodes = {'DAC 1': 1, 'DAC 5': 5}
+        self.ypluselectrodes = {'DAC 3': 3, 'DAC 7': 7}
         self.connect()
 
     @inlineCallbacks
@@ -218,7 +215,7 @@ except:
         yield self.server.dacoutput(chan, value)
         voltage = (2.2888e-4*value - 7.5)
         self.e[chan].setText(str(voltage))
-        self.currentvalues[name] = value 
+        self.currentvalues[name] = value
 
     def update_dipole_res(self, value):
         self.multipole_step = value
@@ -226,7 +223,7 @@ except:
     def savetoregistry(self):
         for chan in self.currentvalues:
             self.reg.set(chan, self.currentvalues[chan])
-	
+
 
     def closeEvent(self, x):
 	print 'Saving DAC values to regisry...'
