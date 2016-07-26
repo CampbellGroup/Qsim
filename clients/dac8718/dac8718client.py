@@ -220,13 +220,13 @@ except:
     def update_dipole_res(self, value):
         self.multipole_step = value
 
-    def savetoregistry(self):
+    def save_to_registry(self):
         for chan in self.currentvalues:
             self.reg.set(chan, self.currentvalues[chan])
 
     def closeEvent(self, x):
         print 'Saving DAC values to regisry...'
-        self.savetoregistry()
+        self.save_to_registry()
         print 'Saved.'
         self.reactor.stop()
 
