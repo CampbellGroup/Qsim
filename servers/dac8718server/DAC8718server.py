@@ -3,7 +3,7 @@
 [info]
 name = DAC8718 Server
 version = 1.0
-description = 
+description =
 instancename = DAC8718 Server
 
 [startup]
@@ -23,7 +23,6 @@ Created on July 16, 2015
 @author: anthonyransford
 
 '''
-
 from common.lib.servers.serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
 from labrad.types import Error
 from twisted.internet import reactor
@@ -32,28 +31,30 @@ from labrad import types as T
 from twisted.internet.task import LoopingCall
 from twisted.internet.defer import returnValue
 from labrad.support import getNodeName
-import time
+
 
 SERVERNAME = 'DAC8718 Server'
 TIMEOUT = 1.0
 BAUDRATE = 9600
 
-class ArduinoDAC( SerialDeviceServer ):
+
+class ArduinoDAC(SerialDeviceServer):
     name = SERVERNAME
     regKey = 'DAC8718'
     port = None
     serNode = getNodeName()
-    timeout = T.Value(TIMEOUT,'s')
-    
-    
+    timeout = T.Value(TIMEOUT, 's')
+
     @inlineCallbacks
-    def initServer( self ):
-        if not self.regKey or not self.serNode: raise SerialDeviceError( 'Must define regKey and serNode attributes' )
-        port = yield self.getPortFromReg( self.regKey )
+    def initServer(self):
+        if not self.regKey or not self.serNode:
+            error_message = 'Must define regKey and serNode attributes'
+            raise SerialDeviceError(error_message)
+        port = yield self.getPortFromReg(self.regKey)
         self.port = port
         try:
-            serStr = yield self.findSerial( self.serNode )
-            self.initSerial( serStr, port, baudrate = BAUDRATE )
+            serStr = yield self.findSerial(self.serNode)
+            self.initSerial(serStr, port, baudrate=BAUDRATE)
         except SerialConnectionError, e:
             self.ser = None
             if e.code == 0:
@@ -62,8 +63,9 @@ class ArduinoDAC( SerialDeviceServer ):
             elif e.code == 1:
                 print 'Error opening serial connection'
                 print 'Check set up and restart serial server'
-            else: raise
-    
+            else:
+                raise
+
     @setting(1, chan='i', value='i')
     def DACOutput(self, c, chan, value):
         """
@@ -73,27 +75,26 @@ class ArduinoDAC( SerialDeviceServer ):
         ----------
         chan: int, DAC channel, valid from 0-15
         """
-
-	chan  = chan + 8
+        chan = chan + 8
         if value > 2**16 - 1:
             value = 2**16 - 1
         elif value < 0:
             value = 0
 
-	value = bin(value)[2:]
+        value = bin(value)[2:]
 
-	if len(value) != 16:
-		buff = 16 - len(value)
-		value = '0'*buff + value
+        if len(value) != 16:
+            buff = 16 - len(value)
+            value = '0'*buff + value
 
-	value1 = value[0:8]
-	value1 = int('0b' + value1, 2)
-	value2 = value[8:]
-	value2 = int('0b' + value2, 2)
+        value1 = value[0:8]
+        value1 = int('0b' + value1, 2)
+        value2 = value[8:]
+        value2 = int('0b' + value2, 2)
         yield self.ser.write(chr(chan))
-        yield self.ser.write(chr(value1))   
-        yield self.ser.write(chr(value2))            
-    
+        yield self.ser.write(chr(value1))
+        yield self.ser.write(chr(value2))
+
 if __name__ == "__main__":
     from labrad import util
-    util.runServer( ArduinoDAC() )
+    util.runServer(ArduinoDAC())
