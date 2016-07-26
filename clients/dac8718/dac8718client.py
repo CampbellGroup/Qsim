@@ -2,10 +2,7 @@ from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
 from PyQt4.Qt import QPushButton
-try:
-    from config.dac_8718_config import dac_8718_config
-except:
-    from common.lib.config.arduino_dac_config import arduino_dac_config
+from config.dac_8718_config import dac_8718_config
 
 
 class dacclient(QtGui.QWidget):
@@ -21,12 +18,12 @@ class dacclient(QtGui.QWidget):
         self.reactor = reactor
         self.d = {}
         self.e = {}
-        self.topelectrodes = {'DAC 0': 0,  'DAC 1': 1,  'DAC 2': 2, 'DAC 3':3}
-        self.bottomelectrodes = {'DAC 4': 4,  'DAC 5': 5,  'DAC 6': 6, 'DAC 7':7}
-        self.xminuselectrodes = {'DAC 0':0, 'DAC 1':1}
-        self.xpluselectrodes = {'DAC 2':2, 'DAC 3':3}
-        self.yminuselectrodes = {'DAC 4':4, 'DAC 5':5}
-        self.ypluselectrodes = {'DAC 6':6, 'DAC 7':7}
+        self.topelectrodes = {'DAC 0': 0, 'DAC 1': 1, 'DAC 2': 2, 'DAC 3': 3}
+        self.bottomelectrodes = {'DAC 4': 4,  'DAC 5': 5,  'DAC 6': 6, 'DAC 7': 7}
+        self.xminuselectrodes = {'DAC 2': 2, 'DAC 6': 6}
+        self.xpluselectrodes = {'DAC 0': 0, 'DAC 4': 4}
+        self.yminuselectrodes = {'DAC 1': 1, 'DAC 5': 5}
+        self.ypluselectrodes = {'DAC 3': 3, 'DAC 7': 7}
         self.connect()
 
     @inlineCallbacks
@@ -51,7 +48,7 @@ except:
         except:
             self.settings = []
 
-        self.dacinfo = dac_8718_config.info
+        self.config = dac_8718_config
         self.initializeGUI()
 
     @inlineCallbacks
@@ -63,12 +60,12 @@ except:
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0)
-	self.multipole_step = 10
-	self.currentvalues = {}
+        self.multipole_step = 10
+        self.currentvalues = {}
 
-        for v, dac in enumerate(self.dacinfo):
-            name = self.dacinfo[dac][0]
-            dacchan = self.dacinfo[dac][1]
+        for channel_key in self.config.channels:
+            name = self.config.channels[channel_key].name
+            chan_number = self.config.channels[channel_key].number
 
             widget = QCustomSpinBox(name, (0, 2**16 - 1))
             widget.title.setFixedWidth(120)
@@ -76,18 +73,18 @@ except:
             if name in self.settings:
                 value = yield self.reg.get(name)
                 widget.spinLevel.setValue(value)
-		self.currentvalues.update({name: value})
-                self.setvalue(value, [name, dacchan])
+                self.currentvalues.update({name: value})
+                self.setvalue(value, [name, chan_number])
             else:
                 widget.spinLevel.setValue(0.0)
             widget.setStepSize(1)
             widget.spinLevel.setDecimals(0)
             widget.spinLevel.valueChanged.connect(lambda value=widget.spinLevel.value(),
-                                                  ident=[name, dacchan]: self.setvalue(value, ident))
-            self.d[dacchan] = widget
-            self.e[dacchan] = label
-            subLayout.addWidget(self.d[dacchan],  v, 1)
-            subLayout.addWidget(self.e[dacchan], v, 2)
+                                                  ident=[name, chan_number]: self.setvalue(value, ident))
+            self.d[chan_number] = widget
+            self.e[chan_number] = label
+            subLayout.addWidget(self.d[chan_number],  chan_number, 1)
+            subLayout.addWidget(self.e[chan_number], chan_number, 2)
 
         self.ezupwidget = QPushButton('Ez increase')
         self.ezdownwidget = QPushButton('Ez decrease')
@@ -95,7 +92,8 @@ except:
         self.exdownwidget = QPushButton('Ex decrease')
         self.eyupwidget = QPushButton('Ey increase')
         self.eydownwidget = QPushButton('Ey decrease')
-	self.dipole_res = QCustomSpinBox('Dipole Res', (0,1000))
+        self.save_widget = QPushButton('Save current values to Registry')
+        self.dipole_res = QCustomSpinBox('Dipole Res', (0, 1000))
         self.dipole_res.spinLevel.setValue(10)
         self.dipole_res.setStepSize(1)
         self.dipole_res.spinLevel.setDecimals(0)
@@ -106,7 +104,8 @@ except:
         self.exdownwidget.clicked.connect(self.exdown)
         self.eyupwidget.clicked.connect(self.eyup)
         self.eydownwidget.clicked.connect(self.eydown)
-	self.dipole_res.spinLevel.valueChanged.connect(self.update_dipole_res)
+        self.dipole_res.spinLevel.valueChanged.connect(self.update_dipole_res)
+        self.save_widget.clicked.connect(self.save_to_registry)
 
         subLayout.addWidget(self.ezupwidget,   0, 5)
         subLayout.addWidget(self.ezdownwidget, 1, 5)
@@ -114,7 +113,8 @@ except:
         subLayout.addWidget(self.exdownwidget, 3, 3)
         subLayout.addWidget(self.eyupwidget,   2, 5)
         subLayout.addWidget(self.eydownwidget, 4, 5)
-	subLayout.addWidget(self.dipole_res,   3, 5)
+        subLayout.addWidget(self.dipole_res,   3, 5)
+        subLayout.addWidget(self.save_widget, 5, 5)
 
         self.setLayout(layout)
 
@@ -122,7 +122,7 @@ except:
     def ezup(self, isheld):
         for name, dacchan in self.topelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 -1:
+            if currentvalue >= 2**16 - 1:
                 break
             yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
@@ -131,7 +131,7 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue -self.multipole_step, [name, dacchan])
+            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
 
     @inlineCallbacks
@@ -218,21 +218,21 @@ except:
         yield self.server.dacoutput(chan, value)
         voltage = (2.2888e-4*value - 7.5)
         self.e[chan].setText(str(voltage))
-        self.currentvalues[name] = value 
+        self.currentvalues[name] = value
 
     def update_dipole_res(self, value):
         self.multipole_step = value
 
-    def savetoregistry(self):
+    def save_to_registry(self):
         for chan in self.currentvalues:
             self.reg.set(chan, self.currentvalues[chan])
-	
 
     def closeEvent(self, x):
-	print 'Saving DAC values to regisry...'
-	self.savetoregistry()
-	print 'Saved.'
+        print 'Saving DAC values to regisry...'
+        self.save_to_registry()
+        print 'Saved.'
         self.reactor.stop()
+
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])
