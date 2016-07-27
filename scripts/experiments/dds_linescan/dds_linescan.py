@@ -34,19 +34,20 @@ class DDSLinescan(experiment):
         self.grapher = self.cxn.grapher
         self.pmt = self.cxn.normalpmtflow
         self.pulser = self.cxn.pulser
+        self.dds_channel = '369'
 
     def run(self, cxn, context):
         self._data_vault_and_grapher_setup()
         self._set_frequency_values()
+        self._get_initial_dds_frequency()
 
-        tempdata = []
         for kk, frequency in enumerate(self.frequency_values):
             if self.pause_or_stop():
                 break
 
             self._set_dds_frequency(frequency, context)
             # Wait for frequency to be set.
-            time.sleep(self.scan_speed)
+            time.sleep(self.scan_speed['s'])
 
             counts = self.pmt.get_next_counts('ON', 1, False)
             self.dv.add([frequency, counts])
@@ -54,13 +55,16 @@ class DDSLinescan(experiment):
             progress = 100*float(kk)/self.steps
             self.sc.script_set_progress(self.ident, progress)
 
+        self._set_dds_to_initial_frequency()
+
     def _set_dds_frequency(self, frequency, context):
         """
         Change the frequency on the 369 DDS pulser channel to frequency where
         frequency is in MHz.
         """
         unitful_frequency = WithUnit(frequency, 'MHz')
-        self.pulser.frequency('369', unitful_frequency, context=context)
+        self.pulser.frequency(self.dds_channel, unitful_frequency,
+                              context=context)
 
     def _set_frequency_values(self):
         frequency_scan = self.p.dds_linescan.cooling_frequency
@@ -68,6 +72,12 @@ class DDSLinescan(experiment):
         max_freq = frequency_scan[1]['MHz']
         self.steps = int(frequency_scan[2])
         self.frequency_values = np.linspace(min_freq, max_freq, self.steps)
+
+    def _get_initial_dds_frequency(self):
+        self._initial_frequency = self.pulser.frequency(self.dds_channel)
+
+    def _set_dds_to_initial_frequency(self):
+        self.pulser.frequency(self.dds_channel, self._initial_frequency)
 
     def _data_vault_and_grapher_setup(self):
         self.dv.cd('dds_linescan', True)
@@ -83,7 +93,6 @@ class DDSLinescan(experiment):
 
     def finalize(self, cxn, context):
         self.cxn.disconnect()
-        self.cxnwlm.disconnect()
 
 if __name__ == '__main__':
     cxn = labrad.connect()
