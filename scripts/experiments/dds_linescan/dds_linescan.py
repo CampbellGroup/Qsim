@@ -62,7 +62,6 @@ class DDSLinescan(experiment):
         unitful_frequency = WithUnit(frequency, 'MHz')
         self.pulser.frequency('369', unitful_frequency, context=context)
 
-
     def _set_frequency_values(self):
         frequency_scan = self.p.dds_linescan.cooling_frequency
         min_freq = frequency_scan[0]['MHz']
@@ -75,7 +74,7 @@ class DDSLinescan(experiment):
         dataset = self.dv.new('dds_line_scan', [('freq', 'Hz')],
                               [('', 'Amplitude', 'kilocounts/sec')])
 
-        self.grapher.plot(dataset, 'dds_linescan', False)
+        self.grapher.plot(dataset, 'spectrum', False)
 
         amplitude = self.p.dds.cooling_amplitude
         self.dv.add_parameter('cooling_amplitude', amplitude)
