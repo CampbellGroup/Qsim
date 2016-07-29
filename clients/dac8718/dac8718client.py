@@ -73,6 +73,8 @@ class Electrodes(object):
         """
         Set electrode value (float) given the electrode name (str).
         """
+        # print "set_electrode_value:", name
+        # print "\t value=", value
         self._electrode_dict[name].value = value
 
 
