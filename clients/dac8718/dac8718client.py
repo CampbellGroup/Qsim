@@ -47,6 +47,9 @@ class Electrodes(object):
         self._electrode_dict = {}
         self._populate_electrodes_dict()
 
+        # Repetition of electrode collections
+        self._set_electrode_collections()
+
     def _populate_electrodes_dict(self):
         # TODO: better way to populate this dictionary.
         electrode_0 = Electrode(name='DAC 0')
@@ -80,6 +83,55 @@ class Electrodes(object):
         # print "set_electrode_value:", name
         # print "\t value=", value
         self._electrode_dict[name].value = value
+
+    def _set_electrode_collections(self):
+        """
+        Set list collections of the different electrode names for accessing
+        various multipole moments of the electrodes.
+        """
+        self.top = ['DAC 0', 'DAC 1', 'DAC 2', 'DAC 3']
+        self.bottom = ['DAC 4',  'DAC 5', 'DAC 6', 'DAC 7']
+        self.x_minus = ['DAC 2', 'DAC 6']
+        self.x_plus = ['DAC 0', 'DAC 4']
+        self.y_minus = ['DAC 1', 'DAC 5']
+        self.y_plus = ['DAC 3', 'DAC 7']
+
+    @property
+    def x_dipole_moment(self):
+        return self._dipole_moment(self.x_plus, self.x_minus)
+
+    @property
+    def y_dipole_moment(self):
+        return self._dipole_moment(self.y_plus, self.y_minus)
+
+    @property
+    def z_dipole_moment(self):
+        # TODO: consider name changes for the z-electrode values
+        return self._dipole_moment(self.top, self.bottom)
+
+    def _dipole_moment(self, plus_electrodes, minus_electrodes):
+        """
+        Return the dipole moment between the plus and minus electrodes.
+
+        Parameters
+        ----------
+        plus_electrodes: list of strs, plus electrode names.
+        minus_electrodes: list of strs, minus electrode names.
+        """
+        plus_values = []
+        for name in plus_electrodes:
+            value = self.get_electrode_value(name=name)
+            plus_values.append(value)
+        plus_mean = np.mean(plus_values)
+
+        minus_values = []
+        for name in minus_electrodes:
+            value = self.get_electrode_value(name=name)
+            minus_values.append(value)
+        minus_mean = np.mean(minus_values)
+
+        dipole_moment = plus_mean - minus_mean
+        return dipole_moment
 
 
 class dacclient(QtGui.QWidget):
