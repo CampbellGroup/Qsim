@@ -10,7 +10,7 @@ import numpy as np
 class Electrode(object):
 
     def __init__(self, name):
-        self.name = None
+        self.name = name
         self._set_number()
         # Nominally the self.currentvalues value below.
         self.value = None
@@ -48,19 +48,19 @@ class Electrodes(object):
         electrode_0 = Electrode(name='DAC 0')
         self._electrode_dict[electrode_0.name] = electrode_0
         electrode_1 = Electrode(name='DAC 1')
-        self._electrode_dict[electrode_0.name] = electrode_1
+        self._electrode_dict[electrode_1.name] = electrode_1
         electrode_2 = Electrode(name='DAC 2')
-        self._electrode_dict[electrode_0.name] = electrode_2
+        self._electrode_dict[electrode_2.name] = electrode_2
         electrode_3 = Electrode(name='DAC 3')
-        self._electrode_dict[electrode_0.name] = electrode_3
+        self._electrode_dict[electrode_3.name] = electrode_3
         electrode_4 = Electrode(name='DAC 4')
-        self._electrode_dict[electrode_0.name] = electrode_4
+        self._electrode_dict[electrode_4.name] = electrode_4
         electrode_5 = Electrode(name='DAC 5')
-        self._electrode_dict[electrode_0.name] = electrode_5
+        self._electrode_dict[electrode_5.name] = electrode_5
         electrode_6 = Electrode(name='DAC 6')
-        self._electrode_dict[electrode_0.name] = electrode_6
+        self._electrode_dict[electrode_6.name] = electrode_6
         electrode_7 = Electrode(name='DAC 7')
-        self._electrode_dict[electrode_0.name] = electrode_7
+        self._electrode_dict[electrode_7.name] = electrode_7
 
     def get_electrode_value(self, name=None):
         """
@@ -150,14 +150,14 @@ except:
                 value = yield self.reg.get(name)
                 widget.spinLevel.setValue(value)
                 self.currentvalues.update({name: value})
-                self.set_value_no_widget(value, [name, chan_number])
+                self.set_value_no_widgets(value, [name, chan_number])
             else:
                 widget.spinLevel.setValue(0.0)
             widget.setStepSize(1)
             widget.spinLevel.setDecimals(0)
             widget.spinLevel.valueChanged.connect(lambda value=widget.spinLevel.value(),
                                                   ident=[name, chan_number]:
-                                                  self.set_value_no_widget(value, ident))
+                                                  self.set_value_no_widgets(value, ident))
 
             self.d[chan_number] = widget
             self.e[chan_number] = label
@@ -378,7 +378,7 @@ except:
         value: float?  - converted to an int
         ident: tuple, (name, chan) where name is a str and chan is an int
         """
-        self.set_value_no_widgets(value=value, ident=ident)
+        yield self.set_value_no_widgets(value=value, ident=ident)
         channel_number = ident[1]
         # change the GUI display value
         self.d[channel_number].spinLevel.setValue(value)
