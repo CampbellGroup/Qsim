@@ -499,6 +499,7 @@ except:
         self.e[channel_number].setText(str(voltage))
         self.currentvalues[name] = value
         self.set_dipole_labels()
+        self.set_squeeze_labels()
 
     def bit_to_volt(self, bit):
         voltage = (2.2888e-4*bit - 7.5)
@@ -525,8 +526,8 @@ except:
         z_squeeze = self.electrodes.z_squeeze_moment
 
         self.Ex_squeeze_label.setText('Ex squeeze = ' + str(x_squeeze))
-        self.Ex_squeeze_label.setText('Ey squeeze = ' + str(y_squeeze))
-        self.Ex_squeeze_label.setText('Ez squeeze = ' + str(z_squeeze))
+        self.Ey_squeeze_label.setText('Ey squeeze = ' + str(y_squeeze))
+        self.Ez_squeeze_label.setText('Ez squeeze = ' + str(z_squeeze))
 
     def update_dipole_res(self, value):
         self.multipole_step = value
