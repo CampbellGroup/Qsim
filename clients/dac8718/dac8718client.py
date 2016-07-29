@@ -35,6 +35,11 @@ class Electrode(object):
         else:
             self.number = None
 
+    def get_voltage(self):
+        bit = self.value
+        voltage = (2.2888e-4*bit - 7.5)
+        return voltage
+
 
 class Electrodes(object):
     def __init__(self):
@@ -139,6 +144,9 @@ except:
         self.Ex_label = QtGui.QLabel('E_x')
         self.Ey_label = QtGui.QLabel('E_y')
         self.Ez_label = QtGui.QLabel('E_z')
+        self.Ex_squeeze_label = QtGui.QLabel('E_x squeeze')
+        self.Ey_squeeze_label = QtGui.QLabel('E_y squeeze')
+        self.Ez_squeeze_label = QtGui.QLabel('E_z squeeze')
 
         for channel_key in self.config.channels:
             name = self.config.channels[channel_key].name
@@ -209,6 +217,9 @@ except:
         subLayout.addWidget(self.Ex_label,     6, 5)
         subLayout.addWidget(self.Ey_label,     7, 5)
         subLayout.addWidget(self.Ez_label,     8, 5)
+        subLayout.addWidget(self.Ex_squeeze_label, 9, 5)
+        subLayout.addWidget(self.Ey_squeeze_label, 10, 5)
+        subLayout.addWidget(self.Ez_squeeze_label, 11, 5)
 
         subLayout.addWidget(self.exsqueezeupwidget,   6, 6)
         subLayout.addWidget(self.exsqueezedownwidget, 6, 7)
@@ -257,6 +268,7 @@ except:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
+
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
@@ -272,6 +284,7 @@ except:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
+
         for name, dacchan in self.xpluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
@@ -287,6 +300,7 @@ except:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
+
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
@@ -302,6 +316,7 @@ except:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
+
         for name, dacchan in self.ypluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
@@ -317,6 +332,7 @@ except:
                 break
             new_value = currentvalue + self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
+
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
@@ -332,6 +348,7 @@ except:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
+
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
@@ -400,7 +417,7 @@ except:
         voltage = (2.2888e-4*value - 7.5)
         self.e[channel_number].setText(str(voltage))
         self.currentvalues[name] = value
-        self.setdipoles()
+        self.set_dipole_labels()
 
     def bit_to_volt(self, bit):
         voltage = (2.2888e-4*bit - 7.5)
@@ -412,7 +429,7 @@ except:
         """
         self.electrodes.set_electrode_value(name=name, value=value)
 
-    def setdipoles(self):
+    def set_dipole_labels(self):
 
         xpluskeys = self.xpluselectrodes.keys()
         xminuskeys = self.xminuselectrodes.keys()
@@ -450,6 +467,9 @@ except:
         self.Ex_label.setText('Ex = ' + str(xdipole))
         self.Ey_label.setText('Ey = ' + str(ydipole))
         self.Ez_label.setText('Ez = ' + str(zdipole))
+
+    def set_squeeze_labels(self):
+        pass
 
 
     def update_dipole_res(self, value):
