@@ -7,6 +7,75 @@ from config.dac_8718_config import dac_8718_config
 import numpy as np
 
 
+class Electrode(object):
+
+    def __init__(self, name):
+        self.name = None
+        self._set_number()
+        # Nominally the self.currentvalues value below.
+        self.value = None
+
+    def _set_number(self):
+        # TODO: more intelligently...
+        if self.name == 'DAC 0':
+            self.number = 0
+        elif self.name == 'DAC 1':
+            self.number = 1
+        elif self.name == 'DAC 2':
+            self.number = 2
+        elif self.name == 'DAC 3':
+            self.number = 3
+        elif self.name == 'DAC 4':
+            self.number = 4
+        elif self.name == 'DAC 5':
+            self.number = 5
+        elif self.name == 'DAC 6':
+            self.number = 6
+        elif self.name == 'DAC 7':
+            self.number = 7
+        else:
+            self.number = None
+
+
+class Electrodes(object):
+    def __init__(self):
+        # Access electrodes by name.
+        self._electrode_dict = {}
+        self._populate_electrodes_dict()
+
+    def _populate_electrodes_dict(self):
+        # TODO: better way to populate this dictionary.
+        electrode_0 = Electrode(name='DAC 0')
+        self._electrode_dict[electrode_0.name] = electrode_0
+        electrode_1 = Electrode(name='DAC 1')
+        self._electrode_dict[electrode_0.name] = electrode_1
+        electrode_2 = Electrode(name='DAC 2')
+        self._electrode_dict[electrode_0.name] = electrode_2
+        electrode_3 = Electrode(name='DAC 3')
+        self._electrode_dict[electrode_0.name] = electrode_3
+        electrode_4 = Electrode(name='DAC 4')
+        self._electrode_dict[electrode_0.name] = electrode_4
+        electrode_5 = Electrode(name='DAC 5')
+        self._electrode_dict[electrode_0.name] = electrode_5
+        electrode_6 = Electrode(name='DAC 6')
+        self._electrode_dict[electrode_0.name] = electrode_6
+        electrode_7 = Electrode(name='DAC 7')
+        self._electrode_dict[electrode_0.name] = electrode_7
+
+    def get_electrode_value(self, name=None):
+        """
+        Returns electrode value (float) given the electrode name (str).
+        """
+        electrode = self._electrode_dict[name]
+        return electrode.value
+
+    def set_electrode_value(self, name=None, value=None):
+        """
+        Set electrode value (float) given the electrode name (str).
+        """
+        self._electrode_dict[name].value = value
+
+
 class dacclient(QtGui.QWidget):
 
     def __init__(self, reactor, parent=None):
@@ -26,6 +95,7 @@ class dacclient(QtGui.QWidget):
         self.xpluselectrodes = {'DAC 0': 0, 'DAC 4': 4}
         self.yminuselectrodes = {'DAC 1': 1, 'DAC 5': 5}
         self.ypluselectrodes = {'DAC 3': 3, 'DAC 7': 7}
+        self.electrodes = Electrodes()
         self.connect()
 
     @inlineCallbacks
@@ -80,13 +150,15 @@ except:
                 value = yield self.reg.get(name)
                 widget.spinLevel.setValue(value)
                 self.currentvalues.update({name: value})
-                self.setvalue(value, [name, chan_number])
+                self.set_value_no_widget(value, [name, chan_number])
             else:
                 widget.spinLevel.setValue(0.0)
             widget.setStepSize(1)
             widget.spinLevel.setDecimals(0)
             widget.spinLevel.valueChanged.connect(lambda value=widget.spinLevel.value(),
-                                                  ident=[name, chan_number]: self.setvalue(value, ident))
+                                                  ident=[name, chan_number]:
+                                                  self.set_value_no_widget(value, ident))
+
             self.d[chan_number] = widget
             self.e[chan_number] = label
             subLayout.addWidget(self.d[chan_number],  chan_number, 1)
@@ -145,21 +217,20 @@ except:
         self.setLayout(layout)
 
     @inlineCallbacks
-
     def ezup(self, isheld):
         for name, dacchan in self.topelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.bottomelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def ezdown(self, isheld):
@@ -167,15 +238,15 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.topelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def exup(self, isheld):
@@ -183,14 +254,14 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def exdown(self, isheld):
@@ -198,14 +269,14 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
         for name, dacchan in self.xpluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def eyup(self, isheld):
@@ -213,14 +284,14 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def eydown(self, isheld):
@@ -228,14 +299,14 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
         for name, dacchan in self.ypluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def ey_squeeze_up(self, isheld):
@@ -243,14 +314,14 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def ey_squeeze_down(self, isheld):
@@ -258,14 +329,14 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def ex_squeeze_up(self, isheld):
@@ -273,14 +344,15 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
+
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= 2**16 - 1:
                 break
-            yield self.setvalue(currentvalue + self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue + self.multipole_step)
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def ex_squeeze_down(self, isheld):
@@ -288,31 +360,56 @@ except:
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
+
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= 0:
                 break
-            yield self.setvalue(currentvalue - self.multipole_step, [name, dacchan])
-            self.d[dacchan].spinLevel.setValue(currentvalue - self.multipole_step)
-
-
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def setvalue(self, value, ident):
+        """
+        Parameters
+        ----------
+        value: float?  - converted to an int
+        ident: tuple, (name, chan) where name is a str and chan is an int
+        """
+        self.set_value_no_widgets(value=value, ident=ident)
+        channel_number = ident[1]
+        # change the GUI display value
+        self.d[channel_number].spinLevel.setValue(value)
+
+    @inlineCallbacks
+    def set_value_no_widgets(self, value, ident):
+        """
+        Parameters
+        ----------
+        value: float?  - converted to an int
+        ident: tuple, (name, chan) where name is a str and chan is an int
+        """
         name = ident[0]
-        chan = ident[1]
+        channel_number = ident[1]
         value = int(value)
-        yield self.server.dacoutput(chan, value)
+        self._set_electrode_current_value(name, value)
+        yield self.server.dacoutput(channel_number, value)
         voltage = (2.2888e-4*value - 7.5)
-        self.e[chan].setText(str(voltage))
+        self.e[channel_number].setText(str(voltage))
         self.currentvalues[name] = value
         self.setdipoles()
 
     def bit_to_volt(self, bit):
         voltage = (2.2888e-4*bit - 7.5)
         return voltage
+
+    def _set_electrode_current_value(self, name=None, value=None):
+        """
+        Set electrode value in the Electrodes class.
+        """
+        self.electrodes.set_electrode_value(name=name, value=value)
 
     def setdipoles(self):
 
