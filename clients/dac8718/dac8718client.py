@@ -89,25 +89,25 @@ class Electrodes(object):
         Set list collections of the different electrode names for accessing
         various multipole moments of the electrodes.
         """
-        self.top = ['DAC 0', 'DAC 1', 'DAC 2', 'DAC 3']
-        self.bottom = ['DAC 4',  'DAC 5', 'DAC 6', 'DAC 7']
-        self.x_minus = ['DAC 2', 'DAC 6']
-        self.x_plus = ['DAC 0', 'DAC 4']
-        self.y_minus = ['DAC 1', 'DAC 5']
-        self.y_plus = ['DAC 3', 'DAC 7']
+        self._top = ['DAC 0', 'DAC 1', 'DAC 2', 'DAC 3']
+        self._bottom = ['DAC 4',  'DAC 5', 'DAC 6', 'DAC 7']
+        self._x_minus = ['DAC 2', 'DAC 6']
+        self._x_plus = ['DAC 0', 'DAC 4']
+        self._y_minus = ['DAC 1', 'DAC 5']
+        self._y_plus = ['DAC 3', 'DAC 7']
 
     @property
     def x_dipole_moment(self):
-        return self._dipole_moment(self.x_plus, self.x_minus)
+        return self._dipole_moment(self._x_plus, self._x_minus)
 
     @property
     def y_dipole_moment(self):
-        return self._dipole_moment(self.y_plus, self.y_minus)
+        return self._dipole_moment(self._y_plus, self._y_minus)
 
     @property
     def z_dipole_moment(self):
         # TODO: consider name changes for the z-electrode values
-        return self._dipole_moment(self.top, self.bottom)
+        return self._dipole_moment(self._top, self._bottom)
 
     def _dipole_moment(self, plus_electrodes, minus_electrodes):
         """
@@ -515,6 +515,10 @@ except:
         zplus = np.mean([zplustop, zplusbottom])
         zminus = np.mean([zminustop, zminusbottom])
         zdipole = (zplus - zminus)
+
+        print "Dipole moments from Electrodes class."
+        print "\t xdipole=", self.electrodes.x_dipole_moment
+        print "\t
 
         self.Ex_label.setText('Ex = ' + str(xdipole))
         self.Ey_label.setText('Ey = ' + str(ydipole))
