@@ -414,7 +414,7 @@ except:
         value = int(value)
         self._set_electrode_current_value(name, value)
         yield self.server.dacoutput(channel_number, value)
-        voltage = (2.2888e-4*value - 7.5)
+        voltage = self.bit_to_volt(bit=value)
         self.e[channel_number].setText(str(voltage))
         self.currentvalues[name] = value
         self.set_dipole_labels()
