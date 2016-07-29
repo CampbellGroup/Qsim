@@ -40,6 +40,10 @@ class Electrode(object):
         voltage = (2.2888e-4*bit - 7.5)
         return voltage
 
+    @property
+    def voltage(self):
+        return self.get_voltage()
+
 
 class Electrodes(object):
     def __init__(self):
@@ -71,10 +75,17 @@ class Electrodes(object):
 
     def get_electrode_value(self, name=None):
         """
-        Returns electrode value (float) given the electrode name (str).
+        Returns electrode bit value (float?) given the electrode name (str).
         """
         electrode = self._electrode_dict[name]
         return electrode.value
+
+    def get_electrode_voltage(self, name=None):
+        """
+        Returns float for electrode voltage value given the electrode name.
+        """
+        electrode = self._electrode_dict[name]
+        return electrode.voltage
 
     def set_electrode_value(self, name=None, value=None):
         """
@@ -120,13 +131,13 @@ class Electrodes(object):
         """
         plus_values = []
         for name in plus_electrodes:
-            value = self.get_electrode_value(name=name)
+            value = self.get_electrode_voltage(name=name)
             plus_values.append(value)
         plus_mean = np.mean(plus_values)
 
         minus_values = []
         for name in minus_electrodes:
-            value = self.get_electrode_value(name=name)
+            value = self.get_electrode_voltage(name=name)
             minus_values.append(value)
         minus_mean = np.mean(minus_values)
 
@@ -482,43 +493,9 @@ except:
         self.electrodes.set_electrode_value(name=name, value=value)
 
     def set_dipole_labels(self):
-
-        xpluskeys = self.xpluselectrodes.keys()
-        xminuskeys = self.xminuselectrodes.keys()
-        xplustop = self.bit_to_volt(self.currentvalues[xpluskeys[0]])
-        xplusbottom = self.bit_to_volt(self.currentvalues[xpluskeys[1]])
-        xminustop = self.bit_to_volt(self.currentvalues[xminuskeys[0]])
-        xminusbottom = self.bit_to_volt(self.currentvalues[xminuskeys[1]])
-
-        ypluskeys = self.ypluselectrodes.keys()
-        yminuskeys = self.yminuselectrodes.keys()
-        yplustop = self.bit_to_volt(self.currentvalues[ypluskeys[0]])
-        yplusbottom = self.bit_to_volt(self.currentvalues[ypluskeys[1]])
-        yminustop = self.bit_to_volt(self.currentvalues[yminuskeys[0]])
-        yminusbottom = self.bit_to_volt(self.currentvalues[yminuskeys[1]])
-
-        zpluskeys = self.topelectrodes.keys()
-        zminuskeys = self.bottomelectrodes.keys()
-        zplustop = self.bit_to_volt(self.currentvalues[zpluskeys[0]])
-        zplusbottom = self.bit_to_volt(self.currentvalues[zpluskeys[1]])
-        zminustop = self.bit_to_volt(self.currentvalues[zminuskeys[0]])
-        zminusbottom = self.bit_to_volt(self.currentvalues[zminuskeys[1]])
-
-        xplus = np.mean([xplustop, xplusbottom])
-        xminus = np.mean([xminustop, xminusbottom])
-        xdipole = (xplus - xminus)
-
-        yplus = np.mean([yplustop, yplusbottom])
-        yminus = np.mean([yminustop, yminusbottom])
-        ydipole = (yplus - yminus)
-
-        zplus = np.mean([zplustop, zplusbottom])
-        zminus = np.mean([zminustop, zminusbottom])
-        zdipole = (zplus - zminus)
-
-        print "Dipole moments from Electrodes class."
-        print "\t xdipole=", self.electrodes.x_dipole_moment
-        print "\t
+        xdipole = self.electrodes.x_dipole_moment
+        ydipole = self.electrodes.y_dipole_moment
+        zdipole = self.electrodes.z_dipole_moment
 
         self.Ex_label.setText('Ex = ' + str(xdipole))
         self.Ey_label.setText('Ey = ' + str(ydipole))
