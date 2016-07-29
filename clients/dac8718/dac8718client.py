@@ -93,6 +93,13 @@ class Electrodes(object):
         """
         self._electrode_dict[name].value = value
 
+    def get_electrode_number(self, name=None):
+        """
+        Returns int for electrode number.
+        """
+        electrode = self._electrode_dict[name]
+        return electrode.number
+
     def _set_electrode_collections(self):
         """
         Set list collections of the different electrode names for accessing
@@ -220,7 +227,7 @@ class dacclient(QtGui.QWidget):
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0)
-        self.multipole_step = 10
+        self.bit_step_size = 10
         self.currentvalues = {}
 
         self.Ex_label = QtGui.QLabel('E_x')
@@ -325,14 +332,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.bottomelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -341,14 +348,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.topelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -357,14 +364,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -373,14 +380,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.xpluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -389,14 +396,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -405,14 +412,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.ypluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -421,14 +428,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -437,14 +444,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -453,14 +460,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue >= self.max_bit_value:
                 break
-            new_value = currentvalue + self.multipole_step
+            new_value = currentvalue + self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -469,14 +476,14 @@ class dacclient(QtGui.QWidget):
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
             if currentvalue <= self.min_bit_value:
                 break
-            new_value = currentvalue - self.multipole_step
+            new_value = currentvalue - self.bit_step_size
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
@@ -486,16 +493,24 @@ class dacclient(QtGui.QWidget):
         """
         for name in self.electrodes.z_electrodes:
             bit_value = self.electrodes.get_electrode_value(name)
-            if bit_value >= self.max_bit_value
+            if bit_value >= self.max_bit_value:
                 break
-            new_value
+            new_value = bit_value + self.bit_step_size
+            dac_channel = self.electrodes.get_electrode_number(name)
+            yield self.setvalue(new_value, [name, dac_channel])
 
     @inlineCallbacks
     def z_squeeze_down(self, isheld):
         """
         Decrease the voltage on all electrodes.
         """
-        pass
+        for name in self.electrodes.z_electrodes:
+            bit_value = self.electrodes.get_electrode_value(name)
+            if bit_value <= self.min_bit_value:
+                break
+            new_value = bit_value - self.bit_step_size
+            dac_channel = self.electrodes.get_electrode_number(name)
+            yield self.setvalue(new_value, [name, dac_channel])
 
     @inlineCallbacks
     def setvalue(self, value, ident):
@@ -558,7 +573,7 @@ class dacclient(QtGui.QWidget):
         self.Ez_squeeze_label.setText('Ez squeeze = ' + str(z_squeeze))
 
     def update_dipole_res(self, value):
-        self.multipole_step = value
+        self.bit_step_size = value
 
     def save_to_registry(self):
         for chan in self.currentvalues:
