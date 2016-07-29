@@ -1,10 +1,9 @@
+import numpy as np
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
 from PyQt4.Qt import QPushButton
 from config.dac_8718_config import dac_8718_config
-
-import numpy as np
 
 
 class Electrode(object):
