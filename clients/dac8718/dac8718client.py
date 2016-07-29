@@ -129,20 +129,38 @@ class Electrodes(object):
         plus_electrodes: list of strs, plus electrode names.
         minus_electrodes: list of strs, minus electrode names.
         """
-        plus_values = []
-        for name in plus_electrodes:
-            value = self.get_electrode_voltage(name=name)
-            plus_values.append(value)
+        plus_values = [self.get_electrode_voltage(name) for name in
+                       plus_electrodes]
+
+        minus_values = [self.get_electrode_voltage(name) for name in
+                        minus_electrodes]
+
         plus_mean = np.mean(plus_values)
-
-        minus_values = []
-        for name in minus_electrodes:
-            value = self.get_electrode_voltage(name=name)
-            minus_values.append(value)
         minus_mean = np.mean(minus_values)
-
         dipole_moment = plus_mean - minus_mean
         return dipole_moment
+
+    @property
+    def x_squeeze_moment(self):
+        electrodes = self._x_plus + self._x_minus
+        print "x_squeeze_moment..."
+        print "\t electrodes:", electrodes
+        return self._squeeze_moment(electrodes)
+
+    @property
+    def y_squeeze_moment(self):
+        electrodes = self._y_plus + self._y_minus
+        return self._squeeze_moment(electrodes)
+
+    @property
+    def z_squeeze_moment(self):
+        electrodes = self._top + self._bottom
+        return self._squeeze_moment(electrodes)
+
+    def _squeeze_moment(self, electrodes):
+        values = [self.get_electrode_voltage(name) for name in electrodes]
+        squeeze_moment = np.mean(values)
+        return squeeze_moment
 
 
 class dacclient(QtGui.QWidget):
@@ -502,8 +520,13 @@ except:
         self.Ez_label.setText('Ez = ' + str(zdipole))
 
     def set_squeeze_labels(self):
-        pass
+        x_squeeze = self.electrodes.x_squeeze_moment
+        y_squeeze = self.electrodes.y_squeeze_moment
+        z_squeeze = self.electrodes.z_squeeze_moment
 
+        self.Ex_squeeze_label.setText('Ex squeeze = ' + str(x_squeeze))
+        self.Ex_squeeze_label.setText('Ey squeeze = ' + str(y_squeeze))
+        self.Ex_squeeze_label.setText('Ez squeeze = ' + str(z_squeeze))
 
     def update_dipole_res(self, value):
         self.multipole_step = value
