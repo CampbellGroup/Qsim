@@ -143,8 +143,6 @@ class Electrodes(object):
     @property
     def x_squeeze_moment(self):
         electrodes = self._x_plus + self._x_minus
-        print "x_squeeze_moment..."
-        print "\t electrodes:", electrodes
         return self._squeeze_moment(electrodes)
 
     @property
