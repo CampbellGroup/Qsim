@@ -89,10 +89,8 @@ class Electrodes(object):
 
     def set_electrode_value(self, name=None, value=None):
         """
-        Set electrode value (float) given the electrode name (str).
+        Set electrode bit value (float?) given the electrode name (str).
         """
-        # print "set_electrode_value:", name
-        # print "\t value=", value
         self._electrode_dict[name].value = value
 
     def _set_electrode_collections(self):
@@ -106,6 +104,14 @@ class Electrodes(object):
         self._x_plus = ['DAC 0', 'DAC 4']
         self._y_minus = ['DAC 1', 'DAC 5']
         self._y_plus = ['DAC 3', 'DAC 7']
+
+    @property
+    def z_electrodes(self):
+        """
+        List of all electrode names.
+        """
+        electrode_names = self._top + self._bottom
+        return electrode_names
 
     @property
     def x_dipole_moment(self):
@@ -168,8 +174,9 @@ class dacclient(QtGui.QWidget):
             and empty dictionary for channel widgets to
             be stored for iteration.
         """
-
         super(dacclient, self).__init__()
+        self.max_bit_value = 2**16 - 1
+        self.min_bit_value = 0
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor
         self.d = {}
@@ -185,11 +192,7 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connectiontry:
-    from config.arduino_dac_config import arduino_dac_config
-except:
-    from common.lib.config.arduino_dac_config import arduino_dac_config
-        """
+        """Creates an Asynchronous connection."""
         from labrad.wrappers import connectAsync
         from labrad.units import WithUnit as U
 
@@ -231,7 +234,9 @@ except:
             name = self.config.channels[channel_key].name
             chan_number = self.config.channels[channel_key].number
 
-            widget = QCustomSpinBox(name, (0, 2**16 - 1))
+            widget = QCustomSpinBox(name, (self.min_bit_value,
+                                           self.max_bit_value))
+
             widget.title.setFixedWidth(120)
             label = QtGui.QLabel('0 V')
             if name in self.settings:
@@ -256,6 +261,8 @@ except:
         self.exsqueezedownwidget = QPushButton('X Squeeze decrease')
         self.eysqueezeupwidget = QPushButton('Y Squeeze increase')
         self.eysqueezedownwidget = QPushButton('Y Squeeze decrease')
+        self.z_squeeze_up_widget = QPushButton('Z squeeze increase')
+        self.z_squeeze_down_widget = QPushButton('Z squeeze decrease')
 
         self.ezupwidget = QPushButton('Ez increase')
         self.ezdownwidget = QPushButton('Ez decrease')
@@ -263,18 +270,21 @@ except:
         self.exdownwidget = QPushButton('Ex decrease')
         self.eyupwidget = QPushButton('Ey increase')
         self.eydownwidget = QPushButton('Ey decrease')
+
         self.save_widget = QPushButton('Save current values to Registry')
 
-        self.dipole_res = QCustomSpinBox('Dipole Res', (0, 1000))
+        self.dipole_res = QCustomSpinBox('Bit step size', (0, 1000))
         self.dipole_res.spinLevel.setValue(10)
         self.dipole_res.setStepSize(1)
         self.dipole_res.spinLevel.setDecimals(0)
 
         self.exsqueezeupwidget.clicked.connect(self.ex_squeeze_up)
         self.eysqueezeupwidget.clicked.connect(self.ey_squeeze_up)
+        self.z_squeeze_up_widget.clicked.connect(self.z_squeeze_up)
 
         self.exsqueezedownwidget.clicked.connect(self.ex_squeeze_down)
         self.eysqueezedownwidget.clicked.connect(self.ey_squeeze_down)
+        self.z_squeeze_down_widget.clicked.connect(self.z_squeeze_down)
 
         self.ezupwidget.clicked.connect(self.ezup)
         self.ezdownwidget.clicked.connect(self.ezdown)
@@ -304,6 +314,8 @@ except:
         subLayout.addWidget(self.exsqueezedownwidget, 6, 7)
         subLayout.addWidget(self.eysqueezeupwidget,   7, 6)
         subLayout.addWidget(self.eysqueezedownwidget, 7, 7)
+        subLayout.addWidget(self.z_squeeze_up_widget, 8, 6)
+        subLayout.addWidget(self.z_squeeze_down_widget, 8, 7)
 
         self.setLayout(layout)
 
@@ -311,14 +323,14 @@ except:
     def ezup(self, isheld):
         for name, dacchan in self.topelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
+            if currentvalue >= self.max_bit_value:
                 break
             new_value = currentvalue + self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.bottomelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
+            if currentvalue <= self.min_bit_value:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
@@ -327,14 +339,14 @@ except:
     def ezdown(self, isheld):
         for name, dacchan in self.bottomelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
+            if currentvalue >= self.max_bit_value:
                 break
             new_value = currentvalue + self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.topelectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
+            if currentvalue <= self.min_bit_value:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
@@ -343,14 +355,14 @@ except:
     def exup(self, isheld):
         for name, dacchan in self.xpluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
+            if currentvalue <= self.min_bit_value:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
+            if currentvalue >= self.max_bit_value:
                 break
             new_value = currentvalue + self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
@@ -359,14 +371,14 @@ except:
     def exdown(self, isheld):
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
+            if currentvalue <= self.min_bit_value:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.xpluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
+            if currentvalue >= self.max_bit_value:
                 break
             new_value = currentvalue + self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
@@ -375,14 +387,14 @@ except:
     def eyup(self, isheld):
         for name, dacchan in self.ypluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
+            if currentvalue <= self.min_bit_value:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
+            if currentvalue >= self.max_bit_value:
                 break
             new_value = currentvalue + self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
@@ -391,62 +403,30 @@ except:
     def eydown(self, isheld):
         for name, dacchan in self.yminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
+            if currentvalue <= self.min_bit_value:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.ypluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
+            if currentvalue >= self.max_bit_value:
                 break
             new_value = currentvalue + self.multipole_step
-            yield self.setvalue(new_value, [name, dacchan])
-
-    @inlineCallbacks
-    def ey_squeeze_up(self, isheld):
-        for name, dacchan in self.ypluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
-                break
-            new_value = currentvalue + self.multipole_step
-            yield self.setvalue(new_value, [name, dacchan])
-
-        for name, dacchan in self.yminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
-                break
-            new_value = currentvalue + self.multipole_step
-            yield self.setvalue(new_value, [name, dacchan])
-
-    @inlineCallbacks
-    def ey_squeeze_down(self, isheld):
-        for name, dacchan in self.ypluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
-                break
-            new_value = currentvalue - self.multipole_step
-            yield self.setvalue(new_value, [name, dacchan])
-
-        for name, dacchan in self.yminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
-                break
-            new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
     @inlineCallbacks
     def ex_squeeze_up(self, isheld):
         for name, dacchan in self.xpluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
+            if currentvalue >= self.max_bit_value:
                 break
             new_value = currentvalue + self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue >= 2**16 - 1:
+            if currentvalue >= self.max_bit_value:
                 break
             new_value = currentvalue + self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
@@ -455,17 +435,67 @@ except:
     def ex_squeeze_down(self, isheld):
         for name, dacchan in self.xpluselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
+            if currentvalue <= self.min_bit_value:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
 
         for name, dacchan in self.xminuselectrodes.iteritems():
             currentvalue = self.currentvalues[name]
-            if currentvalue <= 0:
+            if currentvalue <= self.min_bit_value:
                 break
             new_value = currentvalue - self.multipole_step
             yield self.setvalue(new_value, [name, dacchan])
+
+    @inlineCallbacks
+    def ey_squeeze_up(self, isheld):
+        for name, dacchan in self.ypluselectrodes.iteritems():
+            currentvalue = self.currentvalues[name]
+            if currentvalue >= self.max_bit_value:
+                break
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
+
+        for name, dacchan in self.yminuselectrodes.iteritems():
+            currentvalue = self.currentvalues[name]
+            if currentvalue >= self.max_bit_value:
+                break
+            new_value = currentvalue + self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
+
+    @inlineCallbacks
+    def ey_squeeze_down(self, isheld):
+        for name, dacchan in self.ypluselectrodes.iteritems():
+            currentvalue = self.currentvalues[name]
+            if currentvalue <= self.min_bit_value:
+                break
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
+
+        for name, dacchan in self.yminuselectrodes.iteritems():
+            currentvalue = self.currentvalues[name]
+            if currentvalue <= self.min_bit_value:
+                break
+            new_value = currentvalue - self.multipole_step
+            yield self.setvalue(new_value, [name, dacchan])
+
+    @inlineCallbacks
+    def z_squeeze_up(self, isheld):
+        """
+        Increase the voltage on all electrodes.
+        """
+        for name in self.electrodes.z_electrodes:
+            bit_value = self.electrodes.get_electrode_value(name)
+            if bit_value >= self.max_bit_value
+                break
+            new_value
+
+    @inlineCallbacks
+    def z_squeeze_down(self, isheld):
+        """
+        Decrease the voltage on all electrodes.
+        """
+        pass
 
     @inlineCallbacks
     def setvalue(self, value, ident):
