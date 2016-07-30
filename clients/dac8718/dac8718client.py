@@ -15,7 +15,6 @@ class Electrode():
         self.pos = pos
         self.minval = minval
         self.maxval = maxval
-        self.current_voltage
         self.name = 'DAC: ' + str(dac)
         
         if ((pos[0] == 1) and (pos[1] == 1)):
