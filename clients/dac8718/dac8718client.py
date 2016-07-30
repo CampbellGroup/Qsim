@@ -250,6 +250,7 @@ class dacclient(QtGui.QWidget):
                 value = yield self.reg.get(name)
                 widget.spinLevel.setValue(value)
                 self.currentvalues.update({name: value})
+                self.electrodes.set_electrode_value(name=name, value=value)
                 self.set_value_no_widgets(value, [name, chan_number])
             else:
                 widget.spinLevel.setValue(0.0)
@@ -257,7 +258,7 @@ class dacclient(QtGui.QWidget):
             widget.spinLevel.setDecimals(0)
             widget.spinLevel.valueChanged.connect(lambda value=widget.spinLevel.value(),
                                                   ident=[name, chan_number]:
-                                                  self.set_value_no_widgets(value, ident))
+                                                  self.setvalue(value, ident))
 
             self.d[chan_number] = widget
             self.e[chan_number] = label
@@ -537,6 +538,10 @@ class dacclient(QtGui.QWidget):
         channel_number = ident[1]
         value = int(value)
         self._set_electrode_current_value(name, value)
+        print "set_value_no_widgets"
+        print "\t name:", name
+        print "\t channel_number:", channel_number
+        print "\t value:", value
         yield self.server.dacoutput(channel_number, value)
         voltage = self.bit_to_volt(bit=value)
         self.e[channel_number].setText(str(voltage))
