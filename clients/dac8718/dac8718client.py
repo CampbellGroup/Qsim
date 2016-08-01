@@ -1,6 +1,6 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from Qsim.clients.qtui.electrodewidget import ElectrodeIndicator 
-from twisted.internet.defer import inlineCallbacks
+from twisted.internet.defer import inlineCallbacks, returnValue
 from PyQt4 import QtGui
 from PyQt4.Qt import QPushButton
 from config.dac_8718_config import dac_8718_config
@@ -9,38 +9,25 @@ import numpy as np
 
 class Electrode():
     
-    def __init__(self, dac, pos, minval, maxval, settings):
+    def __init__(self, dac, octant, minval, maxval, settings):
         
         self.dac = dac
-        self.pos = pos
+        self.octant = octant
         self.minval = minval
         self.maxval = maxval
         self.name = 'DAC: ' + str(dac)
         
-        if ((pos[0] == 1) and (pos[1] == 1)):
+        if octant == 1:
             self.is_plus_x = True
-        else:
             self.is_plus_x = False
-            
-        if ((pos[0] == -1) and (pos[1] == -1)):
             self.is_minus_x = True
-        else:
             self.is_minus_x = False
-            
-        if ((pos[0] == 1) and (pos[1] == -1)):
             self.is_minus_y = True
-        else:
             self.is_minus_y = False
-            
-        if ((pos[0] == -1) and (pos[1] == 1)):
             self.is_plus_y = True
-        else:
             self.is_plus_y = False
-            
-        if pos[2] == 1:
             self.is_plus_z = True
             self.is_minus_z = False
-        else:
             self.is_plus_z = False
             self.is_minus_z = True
                     
@@ -51,9 +38,10 @@ class Electrode():
         self.spinBox = QCustomSpinBox(self.name, (self.minval, self.maxval))
         
         try:
-            value = settings[self.name] 
-            self.spinBox.spinLevel.setValue(value)
+            self.init_voltage = settings[self.name] 
+            self.spinBox.spinLevel.setValue(self.init_voltage)
         except:
+            self.init_voltage = 0.0
             self.spinBox.spinLevel.setValue(0.0)
 
         self.spinBox.setStepSize(0.001)
@@ -70,6 +58,7 @@ class dacclient(QtGui.QWidget):
         self.config = dac_8718_config()
         self.minval = self.config.minval
         self.maxval = self.config.maxval
+        self.step_size = 0.01
         self.connect()
 
     @inlineCallbacks
@@ -96,7 +85,6 @@ class dacclient(QtGui.QWidget):
             value = yield self.reg.get(key)
             self.settings[key] = value
 
-    @inlineCallbacks
     def initialize_GUI(self):
 
         layout = QtGui.QGridLayout()
@@ -114,70 +102,131 @@ class dacclient(QtGui.QWidget):
             spinbox = QCustomSpinBox(dipole, (-10, 10))
             spinbox.setStepSize(0.001)
             spinbox.spinLevel.setDecimals(3)
-            spinbox.spinLevel.valueChanged.connect(self.on_dipole_changed)
             layout.addWidget(spinbox, 3, i + 1, 1, 1)
             self.dipoles.append(spinbox)
+            
+        res_box = QCustomSpinBox('Step Size', (0.0001,3))
+        res_box.setStepSize(0.001)
+        res_box.spinLevel.setDecimals(3)
+        res_box.spinLevel.setValue(self.step_size)
+        res_box.spinLevel.valueChanged.connect(self.update_res)
+        
+        save_widget = QPushButton('Save current values to Registry')
+        save_widget.clicked.connect(self.save_to_registry)
+            
+        Ex_increase = QtGui.QPushButton('Ex Increase')
+        Ex_decrease = QtGui.QPushButton('Ex Decrease')
+ 
+        Ey_increase = QtGui.QPushButton('Ey Increase')
+        Ey_decrease = QtGui.QPushButton('Ey Decrease')
+        
+        Ez_increase = QtGui.QPushButton('Ez Increase')
+        Ez_decrease = QtGui.QPushButton('Ez Decrease') 
+        
+        Ex_increase.clicked.connect(lambda: self.change_dipole(Ex_increase))
+        Ey_increase.clicked.connect(lambda: self.change_dipole(Ey_increase))
+        Ez_increase.clicked.connect(lambda: self.change_dipole(Ez_increase))
+        
+        Ex_decrease.clicked.connect(lambda: self.change_dipole(Ex_decrease))
+        Ey_decrease.clicked.connect(lambda: self.change_dipole(Ey_decrease))
+        Ez_decrease.clicked.connect(lambda: self.change_dipole(Ez_decrease))
         
         layout.addWidget(self.electrodeind, 0, 1, 1,3)
+        layout.addWidget(Ex_increase, 5,3)
+        layout.addWidget(Ex_decrease, 5,1)
+        layout.addWidget(Ey_increase, 4,2)
+        layout.addWidget(Ey_decrease, 6,2)
 
+        layout.addWidget(Ez_increase, 4,0)
+        layout.addWidget(Ez_decrease, 5,0)
+        
+        layout.addWidget(res_box, 6,0)
+        layout.addWidget(save_widget, 7,0)
+        
         for channel in self.config.channels:
-            electrode = Electrode(channel.dac_chan, channel.elec_pos,
+            electrode = Electrode(channel.dac_chan, channel.octant,
                                   self.minval, self.maxval, self.settings)
+            self.update_dac(electrode.init_voltage, channel.dac_chan, channel.octant)
+            
             self.electrodes.append(electrode)
             subLayout.addWidget(electrode.spinBox)
-            electrode.spinBox.spinLevel.valueChanged.connect(self.on_dac_change)
-        yield None
+            electrode.spinBox.spinLevel.valueChanged.connect(lambda value = electrode.spinBox.spinLevel.value(),
+                                                             dac = channel.dac_chan,
+                                                             octant = channel.octant :self.update_dac(value, dac, octant))
 
         self.setLayout(layout)
-    
-    @inlineCallbacks    
-    def on_dac_change(self, value):
-
-        plusxvals = [] 
-        minusxvals = []
-        plusyvals = []
-        minusyvals = []
-        for electrode in self.electrodes:
-            voltage = electrode.spinBox.spinLevel.value()
-            bit = self.volt_to_bit(voltage)
-            
-            yield self.server.dacoutput(electrode.dac, bit)
-            
-            if electrode.is_plus_x:
-                plusxvals.append(voltage)
-            elif electrode.is_minus_x:
-                minusxvals.append(voltage)
-            elif electrode.is_plus_y:
-                plusyvals.append(voltage)
-            elif electrode.is_minus_y:
-                minusyvals.append(voltage)
-                
-        self.electrodeind.update_electrode(1,np.mean(plusxvals))
-        self.electrodeind.update_electrode(2,np.mean(plusyvals))
-        self.electrodeind.update_electrode(3,np.mean(minusxvals))
-        self.electrodeind.update_electrode(4,np.mean(minusyvals))
         
-    def on_dipole_changed(self, value):
-        for dipole in self.dipoles:
-            xvals = []
-            yvals = []
-            zvals = []
+    def change_dipole(self, button):
+        buttonname = button.text()
+        if 'Increase' in buttonname:
+            sign = 1
+        else:
+            sign = -1
             
-            if dipole.title.text() == 'Ex':
-                for electrode in self.electrodes:
-                    voltage = electrode.spinBox.spinLevel.value()
-                    if (electrode.is_plus_x or electrode.is_minus_x):
-                        xvals.append(voltage)
-                meanx = np.mean(xvals)
-                plusx = meanx - value
-                minusx = meanx + value
-                               
+        if 'Ex' in buttonname:
+            voltage1 = []
+            voltage2 = []
+            for electrode in self.electrodes:
+                voltage = electrode.spinBox.spinLevel.value()
+                if electrode.octant in [1,5]:
+                    voltage1.append(voltage - sign*self.step_size)
+                    electrode.spinBox.spinLevel.setValue(voltage - sign*self.step_size)
+                if electrode.octant in [3, 7]:
+                    voltage2.append(voltage + sign*self.step_size)
+                    electrode.spinBox.spinLevel.setValue(voltage + sign*self.step_size)
+            Ex = np.mean(voltage1) - np.mean(voltage2)
+            self.dipoles[0].spinLevel.setValue(-1*Ex)
+
+        if 'Ey' in buttonname:
+            voltage1 = []
+            voltage2 = []
+            for electrode in self.electrodes:
+                voltage = electrode.spinBox.spinLevel.value()
+                if electrode.octant in [2,6]:
+                    voltage1.append(voltage - sign*self.step_size)
+                    electrode.spinBox.spinLevel.setValue(voltage - sign*self.step_size)
+                if electrode.octant in [4,8]:
+                    voltage2.append(voltage + sign*self.step_size)
+                    electrode.spinBox.spinLevel.setValue(voltage + sign*self.step_size)
+            Ey = np.mean(voltage1) - np.mean(voltage2)
+            self.dipoles[1].spinLevel.setValue(-1*Ey)
+                    
+        if 'Ez' in buttonname:
+            voltagetop = []
+            voltagebottom = []
+            for electrode in self.electrodes:
+                voltage = electrode.spinBox.spinLevel.value()
+                if electrode.octant in [1,2,3,4]:
+                    voltagetop.append(voltage - sign*0.1)
+                    electrode.spinBox.spinLevel.setValue(voltage - sign*self.step_size)
+                if electrode.octant in [5,6,7,8]:
+                    voltagebottom.append(voltage + sign*0.1)
+                    electrode.spinBox.spinLevel.setValue(voltage + sign*self.step_size)
+            Ez = np.mean(voltagetop) - np.mean(voltagebottom)
+            self.dipoles[2].spinLevel.setValue(-1*Ez)
+
     def volt_to_bit(self, volt):
         m = (2**16 - 1)/(self.maxval - self.minval)
         b = -1 * self.minval * m
         bit = int(m*volt + b)
         return bit
-                                           
+
+    @inlineCallbacks     
+    def update_dac(self, voltage, dac, octant):
+
+        bit = self.volt_to_bit(voltage)    
+        yield self.server.dacoutput(dac, bit)
+        self.electrodeind.update_octant(octant, voltage)  
+        
+    def update_res(self, res):
+        self.step_size = res   
+
+    @inlineCallbacks
+    def save_to_registry(self, pressed):
+        for electrode in self.electrodes:
+            value = electrode.spinBox.spinLevel.value()
+            yield self.reg.set(electrode.name, value)
+                   
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
