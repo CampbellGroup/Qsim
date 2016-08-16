@@ -47,11 +47,12 @@ class ElectrodeWedgeGUI():
         self.spinBox.spinLevel.setDecimals(3)
 
 
-class dacclient(QtGui.QWidget):
+class DAC8718Client(QtGui.QWidget):
 
     def __init__(self, reactor, parent=None):
 
         super(dacclient, self).__init__()
+        self.electrodes = Electrodes()
         self.max_bit_value = 2**16 - 1
         self.min_bit_value = 0
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
@@ -89,7 +90,7 @@ class dacclient(QtGui.QWidget):
     def initialize_GUI(self):
 
         self.layout = QtGui.QGridLayout()
-        self.electrodes = []
+        self.electrode_guis = []
         qBox = QtGui.QGroupBox('DAC Channels')
 
         subLayout = QtGui.QGridLayout()
@@ -119,7 +120,7 @@ class dacclient(QtGui.QWidget):
             electrode = ElectrodeWedgeGUI(channel_config, self.settings)
             self.update_dac(electrode.init_voltage, channel_config.number, channel_config.number)
 
-            self.electrodes.append(electrode)
+            self.electrode_guis.append(electrode)
             subLayout.addWidget(electrode.spinBox)
             e_connect = electrode.spinBox.spinLevel.valueChanged.connect
             e_connect(lambda value=electrode.spinBox.spinLevel.value(),
@@ -170,16 +171,13 @@ class dacclient(QtGui.QWidget):
             self.layout.addWidget(down_button, 7, kk)
 
     def change_multipole_moment(self, button):
-        buttonname = button.text()
-        if 'up' in buttonname:
-            sign = 1
-        else:
-            sign = -1
+        button_name = button.text()
+        self._update_multipoles_from_button_name(button_name=button_name)
 
-        if 'Ex' in buttonname:
+        if 'Ex' in button_name:
             voltage1 = []
             voltage2 = []
-            for electrode in self.electrodes:
+            for electrode in self.electrode_guis:
                 voltage = electrode.spinBox.spinLevel.value()
                 if electrode.octant in [1,5]:
                     voltage1.append(voltage - sign*self.step_size)
@@ -190,10 +188,10 @@ class dacclient(QtGui.QWidget):
             Ex = np.mean(voltage1) - np.mean(voltage2)
             self.dipoles[0].spinLevel.setValue(-1*Ex)
 
-        if 'Ey' in buttonname:
+        if 'Ey' in button_name:
             voltage1 = []
             voltage2 = []
-            for electrode in self.electrodes:
+            for electrode in self.electrode_guis:
                 voltage = electrode.spinBox.spinLevel.value()
                 if electrode.octant in [2,6]:
                     voltage1.append(voltage - sign*self.step_size)
@@ -204,10 +202,10 @@ class dacclient(QtGui.QWidget):
             Ey = np.mean(voltage1) - np.mean(voltage2)
             self.dipoles[1].spinLevel.setValue(-1*Ey)
 
-        if 'Ez' in buttonname:
+        if 'Ez' in button_name:
             voltagetop = []
             voltagebottom = []
-            for electrode in self.electrodes:
+            for electrode in self.electrode_guis:
                 voltage = electrode.spinBox.spinLevel.value()
                 if electrode.octant in [1,2,3,4]:
                     voltagetop.append(voltage - sign*0.1)
@@ -217,6 +215,48 @@ class dacclient(QtGui.QWidget):
                     electrode.spinBox.spinLevel.setValue(voltage + sign*self.step_size)
             Ez = np.mean(voltagetop) - np.mean(voltagebottom)
             self.dipoles[2].spinLevel.setValue(-1*Ez)
+
+    def _update_multipoles_from_button_name(self, button_name):
+        if 'up' in button_name:
+            sign = 1
+        else:
+            sign = -1
+        delta_value = sign * self.step_size
+
+        multipole_name = self._multipole_name_from_button(button_name)
+
+        multipole_moments = self.electrodes.multipole_moments
+        current_value = multipole_moments.get_value(multipole_name)
+        new_value = current_value + delta_value
+        multipole_moments.set_value(name=multipole_name, value=new_value)
+
+        self.electrodes.update_voltages_from_multipole_moments()
+        self.update_all_dac_channels()
+
+    def update_all_dac_channels(self):
+        pass
+
+    def _multipole_name_from_button(button_name=None):
+        """
+        button_name: str
+        """
+        if button_name in ('Ex up', 'Ex down'):
+            multipole_name = 'M_1'
+        elif button_name in ('Ey up', 'Ey down'):
+            multipole_name = 'M_2'
+        elif button_name in ('Ez up', 'Ez down'):
+            multipole_name = 'M_3'
+        elif button_name in ('Exx_yy up', 'Exx_yy down'):
+            multipole_name = 'M_4'
+        elif button_name in ('Ezz_xx_yy up', 'Ezz_xx_yy down'):
+            multipole_name = 'M_5'
+        elif button_name in ('Exy up', 'Exy down'):
+            multipole_name = 'M_6'
+        elif button_name in ('Eyz up', 'Eyz down'):
+            multipole_name = 'M_7'
+        elif button_name in ('Ezx up', 'Ezx down'):
+            multipole_name = 'M_8'
+        return multipole_name
 
     def volt_to_bit(self, volt):
         m = (2**16 - 1)/(self.maxval - self.minval)
@@ -240,15 +280,15 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def save_to_registry(self, pressed):
-        for electrode in self.electrodes:
-            value = electrode.spinBox.spinLevel.value()
-            yield self.reg.set(electrode.name, value)
+        for electrode_gui in self.electrode_guis:
+            value = electrode_gui.spinBox.spinLevel.value()
+            yield self.reg.set(electrode_gui.name, value)
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
-    dacWidget = dacclient(reactor)
-    dacWidget.show()
+    dac_widget = DAC8718Client(reactor)
+    dac_widget.show()
     reactor.run()  # @UndefinedVariable
