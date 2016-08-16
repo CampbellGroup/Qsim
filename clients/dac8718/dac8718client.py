@@ -232,8 +232,7 @@ class DAC8718Client(QtGui.QWidget):
         electrode: Electrode class instance.
         """
         yield self.server.dacoutput(electrode.number, electrode.bit_value)
-        self.electrode_indicator.update_octant(electrode.octant,
-                                               electrode.voltage)
+        self.electrode_indicator.update_octant(electrode)
 
     def update_step_size(self, step_size):
         """

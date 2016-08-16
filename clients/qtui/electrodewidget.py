@@ -59,8 +59,8 @@ class ElectrodeIndicator(QtGui.QWidget):
         quad4 = ElectrodeWedge(starting_angle=270.0)
 
         self.quads = [quad1, quad2, quad3, quad4]
-        self.top_octants = [1, 2, 3, 4]
-        self.bottom_octants = [5, 6, 7, 8]
+        self.top_electrodes = ['DAC 0', 'DAC 1', 'DAC 2', 'DAC 3']
+        self.bottom_electrodes = ['DAC 4', 'DAC 5', 'DAC 6', 'DAC 7']
 
         self.setWindowTitle('Electrode Indicator')
         self.show()
@@ -115,25 +115,26 @@ class ElectrodeIndicator(QtGui.QWidget):
             path.lineTo(center)
             qp.drawPath(path)
 
-    def update_octant(self, octant, value):
+    def update_octant(self, electrode):
         """
         Set the mean values of the wedges and they will correspondingly change
         color.
 
         Parameters
         ----------
-        octant: int, 1-8 labelling the 8 electrodes/octants on the GUI.
-        value: float, voltage value of the octant.
+        electrode: Electrode instance.
         """
-        if octant in self.top_octants:
-            self.quads[octant - 1].top_voltage = value
-            value2 = self.quads[octant - 1].bottom_voltage
-            self.quads[octant - 1].change_color(np.mean([value, value2]))
+        if electrode.name in self.top_electrodes:
+            number = electrode.number
+            self.quads[number].top_voltage = electrode.voltage
+            value2 = self.quads[number].bottom_voltage
+            self.quads[number].change_color(np.mean([electrode.voltage, value2]))
 
-        if octant in self.bottom_octants:
-            self.quads[octant - 5].bottom_voltage = value
-            value2 = self.quads[octant - 5].top_voltage
-            self.quads[octant - 5].change_color(np.mean([value, value2]))
+        if electrode.name in self.bottom_electrodes:
+            number = electrode.number - 4
+            self.quads[number].bottom_voltage = electrode.voltage
+            value2 = self.quads[number].top_voltage
+            self.quads[number].change_color(np.mean([electrode.voltage, value2]))
         self.repaint()
 
 if __name__ == "__main__":
