@@ -77,6 +77,33 @@ class Electrodes(object):
 
         self.multipole_to_electrode_matrix = matrix
 
+        self._set_electrode_to_multipole_matrix()
+
+    def _set_electrode_to_multipole_matrix(self):
+        """
+        The inverse of the multipole_to_electrode_matrix
+        """
+        inverted_matrix = np.linalg.inv(self.multipole_to_electrode_matrix)
+        self.electrode_to_multipole_matrix = inverted_matrix
+
+    def initialize_multipole_values(self):
+        """
+        Set the multipole vector based on the electrode voltages.
+        """
+        voltage_vector = self._get_electrode_voltage_vector()
+        mp_vector = self.electrode_to_multipole_matrix * voltage_vector
+        self.multipole_moments.set_multipole_values_from_vector(mp_vector)
+
+    def _get_electrode_voltage_vector(self):
+        """
+        Returns a numpy array for matrix multiplication.
+        """
+        voltage_vector = []
+        for electrode in self.electrode_list:
+            voltage = electrode.voltage
+            voltage_vector.append(voltage)
+        return np.array(voltage_vector)
+
     def get_electrode(self, name=None):
         """
         Returns an electrode instance from the dict.
