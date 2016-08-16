@@ -10,25 +10,11 @@ class Electrode(object):
         self.value = None
 
     def _set_number(self):
-        # TODO: more intelligently...
-        if self.name == 'DAC 0':
-            self.number = 0
-        elif self.name == 'DAC 1':
-            self.number = 1
-        elif self.name == 'DAC 2':
-            self.number = 2
-        elif self.name == 'DAC 3':
-            self.number = 3
-        elif self.name == 'DAC 4':
-            self.number = 4
-        elif self.name == 'DAC 5':
-            self.number = 5
-        elif self.name == 'DAC 6':
-            self.number = 6
-        elif self.name == 'DAC 7':
-            self.number = 7
-        else:
-            self.number = None
+        """
+        Assumes self.name = 'DAC X' where X is a single digit number.
+        """
+        number = int(self.name[-1])
+        self.number = number
 
     def get_voltage(self):
         bit = self.value
