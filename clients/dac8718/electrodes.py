@@ -8,19 +8,21 @@ class Electrodes(object):
     def __init__(self):
         # Access electrodes by name.
         self._electrode_dict = _collections.OrderedDict()
-        self._populate_electrodes_dict()
+        self._populate_electrodes_dict_and_list()
 
         # Repetition of electrode collections
         self._set_electrode_collections()
         self.multipole_moments = MultipoleMoments()
         self._set_multipole_transfer_matrices()
 
-    def _populate_electrodes_dict(self):
+    def _populate_electrodes_dict_and_list(self):
         # TODO: better way to populate this dictionary.
+        self.electrode_list = []
         for channel_number in xrange(8):
             dac_name = 'DAC %s' % channel_number
             electrode = Electrode(name=dac_name)
             self._electrode_dict[electrode.name] = electrode
+            self.electrode_list.append(electrode)
 
     def _set_electrode_collections(self):
         """
