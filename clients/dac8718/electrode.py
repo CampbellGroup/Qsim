@@ -17,14 +17,6 @@ class Electrode(object):
         number = int(self.name[-1])
         self.number = number
 
-    def _get_voltage_from_bit_value(self):
-        voltage = 2.2888e-4*self._bit_value - 7.5
-        return voltage
-
-    def _get_bit_value_from_voltage(self):
-        bit_value = (self._voltage + 7.4)/2.2888e-4
-        return int(bit_value)
-
     @property
     def voltage(self):
         return self._voltage
@@ -43,3 +35,11 @@ class Electrode(object):
         self._bit_value = value
         new_voltage = self._get_voltage_from_bit_value()
         self._voltage = new_voltage
+
+    def _get_voltage_from_bit_value(self):
+        voltage = 2.2888e-4*self._bit_value - 7.5
+        return voltage
+
+    def _get_bit_value_from_voltage(self):
+        bit_value = (self._voltage + 7.4)/2.2888e-4
+        return int(bit_value)
