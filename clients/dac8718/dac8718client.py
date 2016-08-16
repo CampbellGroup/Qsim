@@ -134,11 +134,6 @@ class DAC8718Client(QtGui.QWidget):
 
             self.electrode_guis.append(electrode_gui)
             subLayout.addWidget(electrode_gui.spinBox)
-#            e_connect = electrode_gui.spinBox.spinLevel.valueChanged.connect
-#            e_connect(lambda value=electrode_gui.spinBox.spinLevel.value(),
-#                      dac=channel_config.number,
-#                      octant=channel_config.octant:
-#                          self.update_dac(value, dac, octant))
 
         self.setLayout(self.layout)
 
