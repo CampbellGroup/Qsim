@@ -48,7 +48,7 @@ class MultipoleMoments(object):
         """
         return self._multipole_dict[name]
 
-    def set_value(self, name=None, value):
+    def set_value(self, name=None, value=None):
         """
         Parameters
         ----------
@@ -66,3 +66,18 @@ class MultipoleMoments(object):
             multipole_moments.append(value)
 
         return np.array(multipole_moments)
+
+    def set_multipole_values_from_vector(self, multipole_vector):
+        """
+        multipole_vector: ordered list, starting with M_1, M_2, etc.
+
+        Exlcudes the monopole term.
+        """
+        self.M_1 = multipole_vector[0]
+        self.M_2 = multipole_vector[1]
+        self.M_3 = multipole_vector[2]
+        self.M_4 = multipole_vector[3]
+        self.M_5 = multipole_vector[4]
+        self.M_6 = multipole_vector[5]
+        self.M_7 = multipole_vector[6]
+        self.M_8 = multipole_vector[7]
