@@ -75,6 +75,12 @@ class Electrodes(object):
 
         self.multipole_to_electrode_matrix = matrix
 
+    def get_electrode(self, name=None):
+        """
+        Returns an electrode instance from the dict.
+        """
+        return self._electrode_dict[name]
+
     def get_electrode_value(self, name=None):
         """
         Returns electrode bit value (float?) given the electrode name (str).
