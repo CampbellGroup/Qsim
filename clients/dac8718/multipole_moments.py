@@ -1,3 +1,6 @@
+import collections as _collections
+import numpy as np
+
 
 class MultipoleMoments(object):
     """
@@ -5,12 +8,10 @@ class MultipoleMoments(object):
 
     The DAC will change these values independently, giving orthogonal control
     over the DC electric field.  Follows the German diploma thesis naming
-    convention.
+    convention.  We are dropping the monopole moment.
     """
 
     def __init__(self):
-        # Monpole moment
-        self.M_0 = None
         # Dipole moments
         self.M_1 = None
         self.M_2 = None
@@ -27,8 +28,7 @@ class MultipoleMoments(object):
         """
         Useful for getting and setting values by name.
         """
-        self._multipole_dict = {}
-        self._multipole_dict['M_0'] = self.M_0
+        self._multipole_dict = _collections.OrderedDict()
         self._multipole_dict['M_1'] = self.M_1
         self._multipole_dict['M_2'] = self.M_2
         self._multipole_dict['M_3'] = self.M_3
@@ -56,3 +56,13 @@ class MultipoleMoments(object):
         value: float, voltage value to set multiple moment to.
         """
         self._multipole_dict[name] = value
+
+    def get_multipole_vector_without_monopole(self):
+        """
+        Returns a numpy array of ordered multipoles starting with M_1.
+        """
+        multipole_moments = []
+        for key, value in self._multipole_dict.items():
+            multipole_moments.append(value)
+
+        return np.array(multipole_moments)
