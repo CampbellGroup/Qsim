@@ -10,12 +10,18 @@ from electrodes import Electrodes
 
 class ElectrodeWedgeGUI():
 
-    def __init__(self, channel_configuration, settings):
-        self.name = channel_configuration.name
-        self.dac_channel = channel_configuration.number
-        self.octant = channel_configuration.number
-        self.minval = channel_configuration.minval
-        self.maxval = channel_configuration.maxval
+    def __init__(self, electrode):
+        """
+        Parameters
+        ----------
+        electrode: Electrode instance.
+        """
+        self.electrode = electrode
+        self.name = electrode.name
+        self.dac_channel = electrode.number
+        self.octant = electrode.number
+        self.minval = 0
+        self.maxval = int(2**16) - 1
 
         if self.octant == 0:
             self.is_plus_x = True
@@ -31,27 +37,26 @@ class ElectrodeWedgeGUI():
             self.is_plus_z = False
             self.is_minus_z = True
 
-        self.setup_widget(settings)
+        self.setup_widget()
 
     def setup_widget(self, settings):
         self.spinBox = QCustomSpinBox(self.name, (self.minval, self.maxval))
 
         try:
-            self.init_voltage = settings[self.name]
-            self.spinBox.spinLevel.setValue(self.init_voltage)
+            self.initial_bit_value = self.electrode.bit_value
         except:
-            self.init_voltage = 0.0
-            self.spinBox.spinLevel.setValue(0.0)
+            self.initial_bit_value = int(2**15)
+        self.spinBox.spinLevel.setValue(self.initial_bit_value)
 
-        self.spinBox.setStepSize(0.001)
-        self.spinBox.spinLevel.setDecimals(3)
+        self.spinBox.setStepSize(1)
+        self.spinBox.spinLevel.setDecimals(1)
 
 
 class DAC8718Client(QtGui.QWidget):
 
     def __init__(self, reactor, parent=None):
 
-        super(dacclient, self).__init__()
+        super(DAC8718Client, self).__init__()
         self.electrodes = Electrodes()
         self.max_bit_value = 2**16 - 1
         self.min_bit_value = 0
@@ -102,31 +107,38 @@ class DAC8718Client(QtGui.QWidget):
         self._add_dipole_widgets()
         self._add_quadrupole_widgets()
 
-        res_box = QCustomSpinBox('Step Size', (0.0001, 3))
-        res_box.setStepSize(0.001)
-        res_box.spinLevel.setDecimals(3)
-        res_box.spinLevel.setValue(self.step_size)
-        res_box.spinLevel.valueChanged.connect(self.update_res)
+        resolution_box = QCustomSpinBox('Step Size', (0.0001, 3))
+        resolution_box.setStepSize(0.001)
+        resolution_box.spinLevel.setDecimals(3)
+        resolution_box.spinLevel.setValue(self.step_size)
+        resolution_box.spinLevel.valueChanged.connect(self.update_res)
 
         save_widget = QPushButton('Save values')
         save_widget.clicked.connect(self.save_to_registry)
 
         self.layout.addWidget(self.electrode_indicator, 0, 1, 1, 3)
 
-        self.layout.addWidget(res_box, 9, 0)
+        self.layout.addWidget(resolution_box, 9, 0)
         self.layout.addWidget(save_widget, 10, 0)
 
         for channel_config in self.config.channels:
-            electrode = ElectrodeWedgeGUI(channel_config, self.settings)
-            self.update_dac(electrode.init_voltage, channel_config.number, channel_config.number)
+            channel_name = channel_config.name
+            initial_bit_value = self.settings[channel_name]
+            electrode = self.electrodes.get_electrode(name=channel_name)
+            electrode.bit_value = initial_bit_value
 
-            self.electrode_guis.append(electrode)
-            subLayout.addWidget(electrode.spinBox)
-            e_connect = electrode.spinBox.spinLevel.valueChanged.connect
-            e_connect(lambda value=electrode.spinBox.spinLevel.value(),
-                      dac=channel_config.number,
-                      octant=channel_config.octant:
-                          self.update_dac(value, dac, octant))
+            electrode_gui = ElectrodeWedgeGUI(electrode=electrode)
+            self.update_dac(electrode)
+            self.update_dac(electrode_gui.init_voltage, channel_config.number,
+                            channel_config.number)
+
+            self.electrode_guis.append(electrode_gui)
+            subLayout.addWidget(electrode_gui.spinBox)
+#            e_connect = electrode_gui.spinBox.spinLevel.valueChanged.connect
+#            e_connect(lambda value=electrode_gui.spinBox.spinLevel.value(),
+#                      dac=channel_config.number,
+#                      octant=channel_config.octant:
+#                          self.update_dac(value, dac, octant))
 
         self.setLayout(self.layout)
 
@@ -283,6 +295,7 @@ class DAC8718Client(QtGui.QWidget):
         for electrode_gui in self.electrode_guis:
             value = electrode_gui.spinBox.spinLevel.value()
             yield self.reg.set(electrode_gui.name, value)
+
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])
