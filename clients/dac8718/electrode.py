@@ -6,6 +6,7 @@ class Electrode(object):
         self.name = name
         self._set_number()
         # Nominally the self.currentvalues value below.
+        # DAC bit value.
         self.value = None
 
     def _set_number(self):

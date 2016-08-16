@@ -13,22 +13,10 @@ class Electrodes(object):
 
     def _populate_electrodes_dict(self):
         # TODO: better way to populate this dictionary.
-        electrode_0 = Electrode(name='DAC 0')
-        self._electrode_dict[electrode_0.name] = electrode_0
-        electrode_1 = Electrode(name='DAC 1')
-        self._electrode_dict[electrode_1.name] = electrode_1
-        electrode_2 = Electrode(name='DAC 2')
-        self._electrode_dict[electrode_2.name] = electrode_2
-        electrode_3 = Electrode(name='DAC 3')
-        self._electrode_dict[electrode_3.name] = electrode_3
-        electrode_4 = Electrode(name='DAC 4')
-        self._electrode_dict[electrode_4.name] = electrode_4
-        electrode_5 = Electrode(name='DAC 5')
-        self._electrode_dict[electrode_5.name] = electrode_5
-        electrode_6 = Electrode(name='DAC 6')
-        self._electrode_dict[electrode_6.name] = electrode_6
-        electrode_7 = Electrode(name='DAC 7')
-        self._electrode_dict[electrode_7.name] = electrode_7
+        for channel_number in xrange(8):
+            dac_name = 'DAC %s' % channel_number
+            electrode = Electrode(name=dac_name)
+            self._electrode_dict[electrode.name] = electrode
 
     def get_electrode_value(self, name=None):
         """

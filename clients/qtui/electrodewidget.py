@@ -17,6 +17,7 @@ class ElectrodeWedge():
         starting_angle: describes how the electrode is drawn in degrees.
         """
         self.starting_angle = starting_angle
+        # Voltage attributes are used to set the wedge color.
         self.top_voltage = top_voltage
         self.bottom_voltage = bottom_voltage
         self.max_voltage = max_voltage
@@ -110,7 +111,7 @@ class ElectrodeIndicator(QtGui.QWidget):
         for quad in self.quads:
             qp.setBrush(quad.color)
             path = QtGui.QPainterPath(center)
-            path.arcTo(xcoord, ycoord, trapdim, trapdim, quad.startingangle, 90.0)
+            path.arcTo(xcoord, ycoord, trapdim, trapdim, quad.starting_angle, 90.0)
             path.lineTo(center)
             qp.drawPath(path)
 

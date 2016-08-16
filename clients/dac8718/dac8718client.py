@@ -5,19 +5,19 @@ from PyQt4 import QtGui
 from PyQt4.Qt import QPushButton
 from config.dac_8718_config import dac_8718_config
 import numpy as np
+from electrodes import Electrodes
 
 
-class Electrode():
+class ElectrodeWedgeGUI():
 
-    def __init__(self, dac, octant, minval, maxval, settings):
+    def __init__(self, channel_configuration, settings):
+        self.name = channel_configuration.name
+        self.dac_channel = channel_configuration.number
+        self.octant = channel_configuration.number
+        self.minval = channel_configuration.minval
+        self.maxval = channel_configuration.maxval
 
-        self.dac = dac
-        self.octant = octant
-        self.minval = minval
-        self.maxval = maxval
-        self.name = 'DAC: ' + str(dac)
-
-        if octant == 1:
+        if self.octant == 0:
             self.is_plus_x = True
             self.is_plus_x = False
             self.is_minus_x = True
@@ -34,7 +34,6 @@ class Electrode():
         self.setup_widget(settings)
 
     def setup_widget(self, settings):
-
         self.spinBox = QCustomSpinBox(self.name, (self.minval, self.maxval))
 
         try:
@@ -107,60 +106,92 @@ class dacclient(QtGui.QWidget):
             layout.addWidget(spinbox, 3, i + 1, 1, 1)
             self.dipoles.append(spinbox)
 
-        res_box = QCustomSpinBox('Step Size', (0.0001,3))
+        res_box = QCustomSpinBox('Step Size', (0.0001, 3))
         res_box.setStepSize(0.001)
         res_box.spinLevel.setDecimals(3)
         res_box.spinLevel.setValue(self.step_size)
         res_box.spinLevel.valueChanged.connect(self.update_res)
 
-        save_widget = QPushButton('Save current values to Registry')
+        save_widget = QPushButton('Save values')
         save_widget.clicked.connect(self.save_to_registry)
 
-        Ex_increase = QtGui.QPushButton('Ex Increase')
-        Ex_decrease = QtGui.QPushButton('Ex Decrease')
+        Ex_up = QtGui.QPushButton('Ex up')
+        Ex_down = QtGui.QPushButton('Ex down')
+        Ey_up = QtGui.QPushButton('Ey up')
+        Ey_down = QtGui.QPushButton('Ey down')
+        Ez_up = QtGui.QPushButton('Ez up')
+        Ez_down = QtGui.QPushButton('Ez down')
 
-        Ey_increase = QtGui.QPushButton('Ey Increase')
-        Ey_decrease = QtGui.QPushButton('Ey Decrease')
+        Exx_yy_up = QtGui.QPushButton('Exx_yy up')
+        Exx_yy_down = QtGui.QPushButton('Exx_yy down')
+        Ezz_xx_yy_up = QtGui.QPushButton('Ezz_xx_yy up')
+        Ezz_xx_yy_down = QtGui.QPushButton('Ezz_xx_yy down')
+        Exy_up = QtGui.QPushButton('Exy up')
+        Exy_down = QtGui.QPushButton('Exy down')
+        Eyz_up = QtGui.QPushButton('Eyz up')
+        Eyz_down = QtGui.QPushButton('Eyz down')
+        Ezx_up = QtGui.QPushButton('Ezx up')
+        Ezx_down = QtGui.QPushButton('Ezx down')
 
-        Ez_increase = QtGui.QPushButton('Ez Increase')
-        Ez_decrease = QtGui.QPushButton('Ez Decrease')
+        multipole_change = self.change_multipole_moment
+        Ex_up.clicked.connect(lambda: multipole_change(Ex_up))
+        Ex_down.clicked.connect(lambda: multipole_change(Ex_down))
+        Ey_up.clicked.connect(lambda: multipole_change(Ey_up))
+        Ey_down.clicked.connect(lambda: multipole_change(Ey_down))
+        Ez_up.clicked.connect(lambda: multipole_change(Ez_up))
+        Ez_down.clicked.connect(lambda: multipole_change(Ez_down))
 
-        Ex_increase.clicked.connect(lambda: self.change_dipole(Ex_increase))
-        Ey_increase.clicked.connect(lambda: self.change_dipole(Ey_increase))
-        Ez_increase.clicked.connect(lambda: self.change_dipole(Ez_increase))
+        Exx_yy_up.clicked.connect(lambda: multipole_change(Exx_yy_up))
+        Exx_yy_down.clicked.connect(lambda: multipole_change(Exx_yy_down))
+        Ezz_xx_yy_up.clicked.connect(lambda: multipole_change(Ezz_xx_yy_up))
+        Ezz_xx_yy_down.clicked.connect(lambda: multipole_change(Ezz_xx_yy_down))
+        Exy_up.clicked.connect(lambda: multipole_change(Exy_up))
+        Exy_down.clicked.connect(lambda: multipole_change(Exy_down))
+        Eyz_up.clicked.connect(lambda: multipole_change(Eyz_up))
+        Eyz_down.clicked.connect(lambda: multipole_change(Eyz_down))
+        Ezx_up.clicked.connect(lambda: multipole_change(Ezx_up))
+        Ezx_down.clicked.connect(lambda: multipole_change(Ezx_down))
 
-        Ex_decrease.clicked.connect(lambda: self.change_dipole(Ex_decrease))
-        Ey_decrease.clicked.connect(lambda: self.change_dipole(Ey_decrease))
-        Ez_decrease.clicked.connect(lambda: self.change_dipole(Ez_decrease))
+        layout.addWidget(self.electrode_indicator, 0, 1, 1, 3)
 
-        layout.addWidget(self.electrode_indicator, 0, 1, 1,3)
-        layout.addWidget(Ex_increase, 5,3)
-        layout.addWidget(Ex_decrease, 5,1)
-        layout.addWidget(Ey_increase, 4,2)
-        layout.addWidget(Ey_decrease, 6,2)
+        layout.addWidget(Ex_up, 4, 0)
+        layout.addWidget(Ex_down, 5, 0)
+        layout.addWidget(Ey_up, 4, 1)
+        layout.addWidget(Ey_down, 5, 1)
+        layout.addWidget(Ez_up, 4, 2)
+        layout.addWidget(Ez_down, 5, 2)
 
-        layout.addWidget(Ez_increase, 4,0)
-        layout.addWidget(Ez_decrease, 5,0)
+        layout.addWidget(Exx_yy_up, 6, 0)
+        layout.addWidget(Exx_yy_down, 7, 0)
+        layout.addWidget(Ezz_xx_yy_up, 6, 1)
+        layout.addWidget(Ezz_xx_yy_down, 7, 1)
+        layout.addWidget(Exy_up, 6, 2)
+        layout.addWidget(Exy_down, 7, 2)
+        layout.addWidget(Eyz_up, 6, 3)
+        layout.addWidget(Eyz_down, 7, 3)
+        layout.addWidget(Ezx_up, 6, 4)
+        layout.addWidget(Ezx_down, 7, 4)
 
-        layout.addWidget(res_box, 6,0)
-        layout.addWidget(save_widget, 7,0)
+        layout.addWidget(res_box, 8, 0)
+        layout.addWidget(save_widget, 9, 0)
 
-        for channel in self.config.channels:
-            electrode = Electrode(channel.dac_chan, channel.octant,
-                                  self.minval, self.maxval, self.settings)
-            self.update_dac(electrode.init_voltage, channel.dac_chan, channel.octant)
+        for channel_config in self.config.channels:
+            electrode = ElectrodeWedgeGUI(channel_config, self.settings)
+            self.update_dac(electrode.init_voltage, channel_config.number, channel_config.number)
 
             self.electrodes.append(electrode)
             subLayout.addWidget(electrode.spinBox)
-            electrode.spinBox.spinLevel.valueChanged.connect(lambda value = electrode.spinBox.spinLevel.value(),
-                                                             dac = channel.dac_chan,
-                                                             octant = channel.octant :self.update_dac(value, dac, octant))
+            e_connect = electrode.spinBox.spinLevel.valueChanged.connect
+            e_connect(lambda value=electrode.spinBox.spinLevel.value(),
+                      dac=channel_config.number,
+                      octant=channel_config.octant:
+                          self.update_dac(value, dac, octant))
 
         self.setLayout(layout)
 
-    def change_dipole(self, button):
+    def change_multipole_moment(self, button):
         buttonname = button.text()
-        if 'Increase' in buttonname:
+        if 'up' in buttonname:
             sign = 1
         else:
             sign = -1
