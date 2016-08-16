@@ -38,7 +38,7 @@ class ElectrodeWedgeGUI():
 
         self.setup_widget()
 
-    def setup_widget(self, settings):
+    def setup_widget(self):
         self.spinBox = QCustomSpinBox(self.name, (self.minval, self.maxval))
 
         try:
@@ -120,19 +120,21 @@ class DAC8718Client(QtGui.QWidget):
         self.layout.addWidget(step_size_box, 9, 0)
         self.layout.addWidget(save_widget, 10, 0)
 
+        print "Initializing electrode values"
         for channel_config in self.config.channels:
             channel_name = channel_config.name
             initial_bit_value = self.settings[channel_name]
+            print "\t initial_bit_value:", initial_bit_value
             electrode = self.electrodes.get_electrode(name=channel_name)
             electrode.bit_value = initial_bit_value
 
             electrode_gui = ElectrodeWedgeGUI(electrode=electrode)
-            self.update_dac(electrode)
-            self.update_dac(electrode_gui.init_voltage, channel_config.number,
-                            channel_config.number)
-
             self.electrode_guis.append(electrode_gui)
             subLayout.addWidget(electrode_gui.spinBox)
+
+        self.electrodes.initialize_multipole_values()
+        self.update_all_dac_channels()
+
 
         self.setLayout(self.layout)
 
@@ -200,7 +202,7 @@ class DAC8718Client(QtGui.QWidget):
         for electrode in self.electrodes.electrode_list:
             self.update_dac(electrode)
 
-    def _multipole_name_from_button(button_name=None):
+    def _multipole_name_from_button(self, button_name=None):
         """
         button_name: str
         """
