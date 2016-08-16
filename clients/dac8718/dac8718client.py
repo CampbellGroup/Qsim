@@ -88,23 +88,18 @@ class dacclient(QtGui.QWidget):
 
     def initialize_GUI(self):
 
-        layout = QtGui.QGridLayout()
+        self.layout = QtGui.QGridLayout()
         self.electrodes = []
         qBox = QtGui.QGroupBox('DAC Channels')
 
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
-        layout.addWidget(qBox, 0, 0)
+        self.layout.addWidget(qBox, 0, 0)
 
         self.electrode_indicator = ElectrodeIndicator(self.minval, self.maxval)
-        dipoles_names = ['Ex', 'Ey', 'Ez']
-        self.dipoles = []
-        for i, dipole in enumerate(dipoles_names):
-            spinbox = QCustomSpinBox(dipole, (-10, 10))
-            spinbox.setStepSize(0.001)
-            spinbox.spinLevel.setDecimals(3)
-            layout.addWidget(spinbox, 3, i + 1, 1, 1)
-            self.dipoles.append(spinbox)
+
+        self._add_dipole_widgets()
+        self._add_quadrupole_widgets()
 
         res_box = QCustomSpinBox('Step Size', (0.0001, 3))
         res_box.setStepSize(0.001)
@@ -115,65 +110,10 @@ class dacclient(QtGui.QWidget):
         save_widget = QPushButton('Save values')
         save_widget.clicked.connect(self.save_to_registry)
 
-        Ex_up = QtGui.QPushButton('Ex up')
-        Ex_down = QtGui.QPushButton('Ex down')
-        Ey_up = QtGui.QPushButton('Ey up')
-        Ey_down = QtGui.QPushButton('Ey down')
-        Ez_up = QtGui.QPushButton('Ez up')
-        Ez_down = QtGui.QPushButton('Ez down')
+        self.layout.addWidget(self.electrode_indicator, 0, 1, 1, 3)
 
-        Exx_yy_up = QtGui.QPushButton('Exx_yy up')
-        Exx_yy_down = QtGui.QPushButton('Exx_yy down')
-        Ezz_xx_yy_up = QtGui.QPushButton('Ezz_xx_yy up')
-        Ezz_xx_yy_down = QtGui.QPushButton('Ezz_xx_yy down')
-        Exy_up = QtGui.QPushButton('Exy up')
-        Exy_down = QtGui.QPushButton('Exy down')
-        Eyz_up = QtGui.QPushButton('Eyz up')
-        Eyz_down = QtGui.QPushButton('Eyz down')
-        Ezx_up = QtGui.QPushButton('Ezx up')
-        Ezx_down = QtGui.QPushButton('Ezx down')
-
-        multipole_change = self.change_multipole_moment
-        Ex_up.clicked.connect(lambda: multipole_change(Ex_up))
-        Ex_down.clicked.connect(lambda: multipole_change(Ex_down))
-        Ey_up.clicked.connect(lambda: multipole_change(Ey_up))
-        Ey_down.clicked.connect(lambda: multipole_change(Ey_down))
-        Ez_up.clicked.connect(lambda: multipole_change(Ez_up))
-        Ez_down.clicked.connect(lambda: multipole_change(Ez_down))
-
-        Exx_yy_up.clicked.connect(lambda: multipole_change(Exx_yy_up))
-        Exx_yy_down.clicked.connect(lambda: multipole_change(Exx_yy_down))
-        Ezz_xx_yy_up.clicked.connect(lambda: multipole_change(Ezz_xx_yy_up))
-        Ezz_xx_yy_down.clicked.connect(lambda: multipole_change(Ezz_xx_yy_down))
-        Exy_up.clicked.connect(lambda: multipole_change(Exy_up))
-        Exy_down.clicked.connect(lambda: multipole_change(Exy_down))
-        Eyz_up.clicked.connect(lambda: multipole_change(Eyz_up))
-        Eyz_down.clicked.connect(lambda: multipole_change(Eyz_down))
-        Ezx_up.clicked.connect(lambda: multipole_change(Ezx_up))
-        Ezx_down.clicked.connect(lambda: multipole_change(Ezx_down))
-
-        layout.addWidget(self.electrode_indicator, 0, 1, 1, 3)
-
-        layout.addWidget(Ex_up, 4, 0)
-        layout.addWidget(Ex_down, 5, 0)
-        layout.addWidget(Ey_up, 4, 1)
-        layout.addWidget(Ey_down, 5, 1)
-        layout.addWidget(Ez_up, 4, 2)
-        layout.addWidget(Ez_down, 5, 2)
-
-        layout.addWidget(Exx_yy_up, 6, 0)
-        layout.addWidget(Exx_yy_down, 7, 0)
-        layout.addWidget(Ezz_xx_yy_up, 6, 1)
-        layout.addWidget(Ezz_xx_yy_down, 7, 1)
-        layout.addWidget(Exy_up, 6, 2)
-        layout.addWidget(Exy_down, 7, 2)
-        layout.addWidget(Eyz_up, 6, 3)
-        layout.addWidget(Eyz_down, 7, 3)
-        layout.addWidget(Ezx_up, 6, 4)
-        layout.addWidget(Ezx_down, 7, 4)
-
-        layout.addWidget(res_box, 8, 0)
-        layout.addWidget(save_widget, 9, 0)
+        self.layout.addWidget(res_box, 9, 0)
+        self.layout.addWidget(save_widget, 10, 0)
 
         for channel_config in self.config.channels:
             electrode = ElectrodeWedgeGUI(channel_config, self.settings)
@@ -187,7 +127,47 @@ class dacclient(QtGui.QWidget):
                       octant=channel_config.octant:
                           self.update_dac(value, dac, octant))
 
-        self.setLayout(layout)
+        self.setLayout(self.layout)
+
+    def _add_dipole_widgets(self):
+        dipoles_names = ['Ex', 'Ey', 'Ez']
+        self.dipoles = []
+        for kk, dipole_name in enumerate(dipoles_names):
+            # Value indicator.
+            spinbox = QCustomSpinBox(dipole_name, (-10, 10))
+            spinbox.setStepSize(0.001)
+            spinbox.spinLevel.setDecimals(3)
+            self.layout.addWidget(spinbox, 3, kk, 1, 1)
+            self.dipoles.append(spinbox)
+            # Up and down value control buttons
+            up_name = dipole_name + ' up'
+            up_button = QtGui.QPushButton(up_name)
+            down_name = dipole_name + ' down'
+            down_button = QtGui.QPushButton(down_name)
+            multipole_change = self.change_multipole_moment
+            up_button.clicked.connect(lambda: multipole_change(up_button))
+            down_button.clicked.connect(lambda: multipole_change(down_button))
+            self.layout.addWidget(up_button, 4, kk)
+            self.layout.addWidget(down_button, 5, kk)
+
+    def _add_quadrupole_widgets(self):
+        quadrupole_names = ['Exx_yy', 'Ezz_xx_yy', 'Exy', 'Eyz', 'Ezx']
+        for kk, quadrupole_name in enumerate(quadrupole_names):
+            # Value indicator.
+            spinbox = QCustomSpinBox(quadrupole_name, (-10, 10))
+            spinbox.setStepSize(0.001)
+            spinbox.spinLevel.setDecimals(3)
+            self.layout.addWidget(spinbox, 8, kk, 1, 1)
+            # Up and down value control buttons
+            up_name = quadrupole_name + ' up'
+            up_button = QtGui.QPushButton(up_name)
+            down_name = quadrupole_name + ' down'
+            down_button = QtGui.QPushButton(down_name)
+            multipole_change = self.change_multipole_moment
+            up_button.clicked.connect(lambda: multipole_change(up_button))
+            down_button.clicked.connect(lambda: multipole_change(down_button))
+            self.layout.addWidget(up_button, 6, kk)
+            self.layout.addWidget(down_button, 7, kk)
 
     def change_multipole_moment(self, button):
         buttonname = button.text()
