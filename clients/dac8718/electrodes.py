@@ -8,33 +8,86 @@ class Electrodes(object):
     def __init__(self):
         # Access electrodes by name.
         self._electrode_dict = _collections.OrderedDict()
-        self._populate_electrodes_dict_and_list()
+        self._populate_electrodes_dict()
 
-        # Repetition of electrode collections
-        self._set_electrode_collections()
         self.multipole_moments = MultipoleMoments()
         self._set_multipole_transfer_matrices()
 
-    def _populate_electrodes_dict_and_list(self):
-        # TODO: better way to populate this dictionary.
-        self.electrode_list = []
+    def initialize_multipole_values(self):
+        """
+        Set the multipole vector based on the electrode voltages.
+        """
+        print "initialize multipole values in Electrodes."
+        voltage_vector = self._get_electrode_voltage_vector()
+        print "\t voltage_vector =", voltage_vector
+        mp_vector = self.electrode_to_multipole_matrix.dot(voltage_vector)
+        print "\t multipole vector =", mp_vector
+        self.multipole_moments.set_multipole_values_from_vector(mp_vector)
+
+    def _get_electrode_voltage_vector(self):
+        """
+        Returns a numpy array for matrix multiplication.
+        """
+        voltage_vector = []
+        for electrode in self._electrode_dict.values():
+            voltage = electrode.voltage
+            voltage_vector.append(voltage)
+        return np.array(voltage_vector)
+
+    def get_electrode(self, name=None):
+        """
+        Returns an electrode instance from the dict.
+        """
+        return self._electrode_dict[name]
+
+    def get_electrode_bit_value(self, name=None):
+        """
+        Returns electrode bit value given the electrode name (str).
+        """
+        electrode = self._electrode_dict[name]
+        return electrode.bit_value
+
+    def get_electrode_voltage(self, name=None):
+        """
+        Returns float for electrode voltage value given the electrode name.
+        """
+        electrode = self._electrode_dict[name]
+        return electrode.voltage
+
+    def set_electrode_bit_value(self, name=None, value=None):
+        """
+        Set electrode bit value given the electrode name (str).
+        """
+        self._electrode_dict[name].bit_value = value
+
+    def get_electrode_number(self, name=None):
+        """
+        Returns int for electrode number.
+        """
+        electrode = self._electrode_dict[name]
+        return electrode.number
+
+    def get_electrode_list(self):
+        return self._electrode_dict.values()
+
+    def update_voltages_from_multipole_moments(self):
+        """
+        Matrix transformation from multipole moments to electrode voltages.
+        """
+        vector = self.multipole_moments.get_multipole_vector_without_monopole()
+        voltages = self.multipole_to_electrode_matrix.dot(vector)
+        for kk in xrange(len(voltages)):
+            voltage = voltages[kk]
+            # Updates the ordered dict values by position.
+            self._electrode_dict[self._electrode_dict.keys()[kk]] = voltage
+        print "\n"
+        print "self._electrode_dict:", self._electrode_dict
+
+    def _populate_electrodes_dict(self):
         for channel_number in xrange(8):
             dac_name = 'DAC %s' % channel_number
             electrode = Electrode(name=dac_name)
             self._electrode_dict[electrode.name] = electrode
-            self.electrode_list.append(electrode)
-
-    def _set_electrode_collections(self):
-        """
-        Set list collections of the different electrode names for accessing
-        various multipole moments of the electrodes.
-        """
-        self._top = ['DAC 0', 'DAC 1', 'DAC 2', 'DAC 3']
-        self._bottom = ['DAC 4',  'DAC 5', 'DAC 6', 'DAC 7']
-        self._x_minus = ['DAC 2', 'DAC 6']
-        self._x_plus = ['DAC 0', 'DAC 4']
-        self._y_minus = ['DAC 1', 'DAC 5']
-        self._y_plus = ['DAC 3', 'DAC 7']
 
     def _set_multipole_transfer_matrices(self):
         """
@@ -85,76 +138,3 @@ class Electrodes(object):
         """
         inverted_matrix = np.linalg.inv(self.multipole_to_electrode_matrix)
         self.electrode_to_multipole_matrix = inverted_matrix
-
-    def initialize_multipole_values(self):
-        """
-        Set the multipole vector based on the electrode voltages.
-        """
-        print "initialize multipole values in Electrodes."
-        voltage_vector = self._get_electrode_voltage_vector()
-        print "\t voltage_vector =", voltage_vector
-        mp_vector = self.electrode_to_multipole_matrix.dot(voltage_vector)
-        print "\t multipole vector =", mp_vector
-        self.multipole_moments.set_multipole_values_from_vector(mp_vector)
-
-    def _get_electrode_voltage_vector(self):
-        """
-        Returns a numpy array for matrix multiplication.
-        """
-        voltage_vector = []
-        for electrode in self.electrode_list:
-            voltage = electrode.voltage
-            voltage_vector.append(voltage)
-        return np.array(voltage_vector)
-
-    def get_electrode(self, name=None):
-        """
-        Returns an electrode instance from the dict.
-        """
-        return self._electrode_dict[name]
-
-    def get_electrode_value(self, name=None):
-        """
-        Returns electrode bit value (float?) given the electrode name (str).
-        """
-        electrode = self._electrode_dict[name]
-        return electrode.value
-
-    def get_electrode_voltage(self, name=None):
-        """
-        Returns float for electrode voltage value given the electrode name.
-        """
-        electrode = self._electrode_dict[name]
-        return electrode.voltage
-
-    def set_electrode_value(self, name=None, value=None):
-        """
-        Set electrode bit value (float?) given the electrode name (str).
-        """
-        self._electrode_dict[name].value = value
-
-    def get_electrode_number(self, name=None):
-        """
-        Returns int for electrode number.
-        """
-        electrode = self._electrode_dict[name]
-        return electrode.number
-
-    def update_voltages_from_multipole_moments(self):
-        """
-        Matrix transformation from multipole moments to electrode voltages.
-        """
-        vector = self.multipole_moments.get_multipole_vector_without_monopole()
-        voltages = self.multipole_to_electrode_matrix.dot(vector)
-        for kk in xrange(len(voltages)):
-            voltage = voltages[kk]
-            # Updates the ordered dict values by position.
-            self._electrode_dict[self._electrode_dict.keys()[kk]] = voltage
-
-    @property
-    def z_electrodes(self):
-        """
-        List of all electrode names.
-        """
-        electrode_names = self._top + self._bottom
-        return electrode_names
