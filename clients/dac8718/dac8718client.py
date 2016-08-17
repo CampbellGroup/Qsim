@@ -120,11 +120,9 @@ class DAC8718Client(QtGui.QWidget):
         self.layout.addWidget(step_size_box, 9, 0)
         self.layout.addWidget(save_widget, 10, 0)
 
-        print "Initializing electrode values"
         for channel_config in self.config.channels:
             channel_name = channel_config.name
             initial_bit_value = self.settings[channel_name]
-            print "\t initial_bit_value:", initial_bit_value
             electrode = self.electrodes.get_electrode(name=channel_name)
             electrode.bit_value = initial_bit_value
 
@@ -134,7 +132,6 @@ class DAC8718Client(QtGui.QWidget):
 
         self.electrodes.initialize_multipole_values()
         self.update_all_dac_channels()
-
 
         self.setLayout(self.layout)
 

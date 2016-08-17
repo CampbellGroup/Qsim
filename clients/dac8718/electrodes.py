@@ -90,8 +90,11 @@ class Electrodes(object):
         """
         Set the multipole vector based on the electrode voltages.
         """
+        print "initialize multipole values in Electrodes."
         voltage_vector = self._get_electrode_voltage_vector()
-        mp_vector = self.electrode_to_multipole_matrix * voltage_vector
+        print "\t voltage_vector =", voltage_vector
+        mp_vector = self.electrode_to_multipole_matrix.dot(voltage_vector)
+        print "\t multipole vector =", mp_vector
         self.multipole_moments.set_multipole_values_from_vector(mp_vector)
 
     def _get_electrode_voltage_vector(self):
@@ -142,7 +145,7 @@ class Electrodes(object):
         Matrix transformation from multipole moments to electrode voltages.
         """
         vector = self.multipole_moments.get_multipole_vector_without_monopole()
-        voltages = self.multipole_to_electrode_matrix * vector
+        voltages = self.multipole_to_electrode_matrix.dot(vector)
         for kk in xrange(len(voltages)):
             voltage = voltages[kk]
             # Updates the ordered dict values by position.
