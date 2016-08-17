@@ -1,5 +1,6 @@
 import unittest as ut
 from Qsim.clients.dac8718.electrodes import Electrodes
+from Qsim.clients.dac8718.electrode import Electrode
 
 
 class TestScattering(ut.TestCase):
@@ -33,10 +34,34 @@ class TestScattering(ut.TestCase):
         voltage = self.electrodes.get_electrode_voltage(name='DAC 0')
         self.assertAlmostEqual(expected_voltage, voltage, 5)
 
-    def test_update_voltages_from_multipole_moments(self):
+    def test_update_voltages_from_multipole_moments_channel_name(self):
         self.electrodes.update_voltages_from_multipole_moments()
+        expected_name = 'DAC 0'
+        electrode_list = self.electrodes.get_electrode_list()
+        electrode = electrode_list[0]
+        name = electrode.name
+        self.assertEqual(expected_name, name)
 
     def test_get_multipole_vector_without_monopole(self):
         mm = self.electrodes.multipole_moments
         mm.get_multipole_vector_without_monopole()
 
+    def test_electrode_name(self):
+        expected_name = 'DAC 0'
+        electrode = self.electrodes.get_electrode(name='DAC 0')
+        name = electrode.name
+        self.assertEqual(expected_name, name)
+
+    def test_electrode_list_electrode_name(self):
+        expected_name = 'DAC 0'
+        electrode_list = self.electrodes.get_electrode_list()
+        electrode = electrode_list[0]
+        name = electrode.name
+        self.assertEqual(expected_name, name)
+
+    def test_electrode_dict_access(self):
+        """
+        Get an electrode by position and test its type.
+        """
+        electrode = self.electrodes._electrode_dict.items()[0][1]
+        self.assertIsInstance(obj=electrode, cls=Electrode)

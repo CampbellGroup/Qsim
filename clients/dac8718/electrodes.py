@@ -79,7 +79,7 @@ class Electrodes(object):
         for kk in xrange(len(voltages)):
             voltage = voltages[kk]
             # Updates the ordered dict values by position.
-            self._electrode_dict[self._electrode_dict.keys()[kk]] = voltage
+            self._electrode_dict.items()[kk][1].voltage = voltage
         print "\n"
         print "self._electrode_dict:", self._electrode_dict
 
