@@ -80,8 +80,6 @@ class Electrodes(object):
             voltage = voltages[kk]
             # Updates the ordered dict values by position.
             self._electrode_dict.items()[kk][1].voltage = voltage
-        print "\n"
-        print "self._electrode_dict:", self._electrode_dict
 
     def _populate_electrodes_dict(self):
         for channel_number in xrange(8):
