@@ -65,3 +65,8 @@ class TestScattering(ut.TestCase):
         """
         electrode = self.electrodes._electrode_dict.items()[0][1]
         self.assertIsInstance(obj=electrode, cls=Electrode)
+
+    def test_M_1(self):
+        expected_M_1 = -0.0006611920764475679
+        M_1 = self.electrodes.multipole_moments.get_value(name='M_1')
+        self.assertAlmostEqual(expected_M_1, M_1, 6)
