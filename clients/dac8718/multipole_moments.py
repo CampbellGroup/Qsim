@@ -12,16 +12,6 @@ class MultipoleMoments(object):
     """
 
     def __init__(self):
-        # Dipole moments
-        self.M_1 = None
-        self.M_2 = None
-        self.M_3 = None
-        # Quadrupole moments
-        self.M_4 = None
-        self.M_5 = None
-        self.M_6 = None
-        self.M_7 = None
-        self.M_8 = None
         self._multipole_dict = _collections.OrderedDict()
         self._set_multipole_dict()
 
@@ -29,14 +19,16 @@ class MultipoleMoments(object):
         """
         Useful for getting and setting values by name.
         """
-        self._multipole_dict['M_1'] = self.M_1
-        self._multipole_dict['M_2'] = self.M_2
-        self._multipole_dict['M_3'] = self.M_3
-        self._multipole_dict['M_4'] = self.M_4
-        self._multipole_dict['M_5'] = self.M_5
-        self._multipole_dict['M_6'] = self.M_6
-        self._multipole_dict['M_7'] = self.M_7
-        self._multipole_dict['M_8'] = self.M_8
+        # Dipole moments
+        self._multipole_dict['M_1'] = 0
+        self._multipole_dict['M_2'] = 0
+        self._multipole_dict['M_3'] = 0
+        # Quadrupole moments
+        self._multipole_dict['M_4'] = 0
+        self._multipole_dict['M_5'] = 0
+        self._multipole_dict['M_6'] = 0
+        self._multipole_dict['M_7'] = 0
+        self._multipole_dict['M_8'] = 0
 
     def get_value(self, name=None):
         """
@@ -73,12 +65,11 @@ class MultipoleMoments(object):
 
         Exlcudes the monopole term.
         """
-        self.M_1 = multipole_vector[0]
-        self.M_2 = multipole_vector[1]
-        self.M_3 = multipole_vector[2]
-        self.M_4 = multipole_vector[3]
-        self.M_5 = multipole_vector[4]
-        self.M_6 = multipole_vector[5]
-        self.M_7 = multipole_vector[6]
-        self.M_8 = multipole_vector[7]
-        self._set_multipole_dict()
+        self.set_value(name='M_1', value=multipole_vector[0])
+        self.set_value(name='M_2', value=multipole_vector[1])
+        self.set_value(name='M_3', value=multipole_vector[2])
+        self.set_value(name='M_4', value=multipole_vector[3])
+        self.set_value(name='M_5', value=multipole_vector[4])
+        self.set_value(name='M_6', value=multipole_vector[5])
+        self.set_value(name='M_7', value=multipole_vector[6])
+        self.set_value(name='M_8', value=multipole_vector[7])
