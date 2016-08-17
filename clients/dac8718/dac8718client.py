@@ -94,7 +94,6 @@ class DAC8718Client(QtGui.QWidget):
     def initialize_GUI(self):
 
         self.layout = QtGui.QGridLayout()
-        self.electrode_guis = []
         qBox = QtGui.QGroupBox('DAC Channels')
 
         subLayout = QtGui.QGridLayout()
@@ -107,8 +106,8 @@ class DAC8718Client(QtGui.QWidget):
         self._add_quadrupole_widgets()
 
         step_size_box = QCustomSpinBox('Step Size', (0.0001, 3))
-        step_size_box.setStepSize(0.001)
-        step_size_box.spinLevel.setDecimals(3)
+        step_size_box.setStepSize(0.0001)
+        step_size_box.spinLevel.setDecimals(4)
         step_size_box.spinLevel.setValue(self.step_size)
         step_size_box.spinLevel.valueChanged.connect(self.update_step_size)
 
@@ -120,6 +119,7 @@ class DAC8718Client(QtGui.QWidget):
         self.layout.addWidget(step_size_box, 9, 0)
         self.layout.addWidget(save_widget, 10, 0)
 
+        self.electrode_guis = {}
         for channel_config in self.config.channels:
             channel_name = channel_config.name
             initial_bit_value = self.settings[channel_name]
@@ -127,7 +127,7 @@ class DAC8718Client(QtGui.QWidget):
             electrode.bit_value = initial_bit_value
 
             electrode_gui = ElectrodeWedgeGUI(electrode=electrode)
-            self.electrode_guis.append(electrode_gui)
+            self.electrode_guis[channel_name] = electrode_gui
             subLayout.addWidget(electrode_gui.spinBox)
 
         self.electrodes.initialize_multipole_values()
@@ -137,14 +137,15 @@ class DAC8718Client(QtGui.QWidget):
 
     def _add_dipole_widgets(self):
         dipoles_names = ['Ex', 'Ey', 'Ez']
-        self.dipoles = []
+        self.dipole_indicators = []
         for kk, dipole_name in enumerate(dipoles_names):
             # Value indicator.
-            spinbox = QCustomSpinBox(dipole_name, (-10, 10))
-            spinbox.setStepSize(0.001)
-            spinbox.spinLevel.setDecimals(3)
-            self.layout.addWidget(spinbox, 3, kk, 1, 1)
-            self.dipoles.append(spinbox)
+            lcd = QtGui.QLCDNumber()
+            # Prevents "light" outline coloring from obscuring the numbers.
+            lcd.setSegmentStyle(QtGui.QLCDNumber.Flat)
+            lcd.setMinimumSize(50, 50)
+            self.layout.addWidget(lcd, 3, kk, 1, 1)
+            self.dipole_indicators.append(lcd)
             # Up and down value control buttons
             up_name = dipole_name + ' up'
             up_button = QtGui.QPushButton(up_name)
@@ -180,6 +181,7 @@ class DAC8718Client(QtGui.QWidget):
         self._update_multipoles_from_button_name(button_name=button_name)
         self.electrodes.update_voltages_from_multipole_moments()
         self.update_all_dac_channels()
+        self.update_all_gui_indicators()
 
     def _update_multipoles_from_button_name(self, button_name):
         if 'up' in button_name:
@@ -198,6 +200,26 @@ class DAC8718Client(QtGui.QWidget):
     def update_all_dac_channels(self):
         for electrode in self.electrodes.electrode_list:
             self.update_dac(electrode)
+            electrode_gui = self.electrode_guis[electrode.name]
+            print "electrode.bit_value =", electrode.bit_value
+            electrode_gui.spinBox.setValues(electrode.bit_value)
+
+    def update_all_gui_indicators(self):
+
+
+        #for electrode in self.electrodes.electrode_list:
+        M_1 = self.electrodes.multipole_moments.M_1
+        #print "M_1=", M_1
+        self.dipole_indicators[0].display(str(M_1))
+
+        M_2 = self.electrodes.multipole_moments.M_2
+        #print "M_2=", M_2
+        self.dipole_indicators[0].display(str(M_2))
+
+        M_3 = self.electrodes.multipole_moments.M_3
+        #print "M_3=", M_3
+        self.dipole_indicators[0].display(str(M_3))
+
 
     def _multipole_name_from_button(self, button_name=None):
         """
