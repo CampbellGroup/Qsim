@@ -97,12 +97,14 @@ class ElectrodeIndicator(QtGui.QWidget):
             x_top_position = signs[i][0]*trapdim/position_scaling
             y_top_position = signs[i][1]*trapdim/position_scaling
             top_position = center + QtCore.QPoint(x_top_position, y_top_position)
-            qp.drawText(top_position, str(self.quads[i].top_voltage))
+            top_value = round(self.quads[i].top_voltage, 5)
+            qp.drawText(top_position, str(top_value))
 
             x_bot_position = signs[i][0]*trapdim/position_scaling + bottom_offset
             y_bot_position = signs[i][1]*trapdim/position_scaling + bottom_offset
             bot_position = center + QtCore.QPoint(x_bot_position, y_bot_position)
-            qp.drawText(bot_position, str(self.quads[i].bottom_voltage))
+            bottom_value = round(self.quads[i].bottom_voltage, 5)
+            qp.drawText(bot_position, str(bottom_value))
 
         # Pen is changed to grey for the edges and wedge lines.
         pen = QtGui.QPen(QtCore.Qt.gray, 2, QtCore.Qt.SolidLine)
