@@ -17,11 +17,8 @@ class Electrodes(object):
         """
         Set the multipole vector based on the electrode voltages.
         """
-        print "initialize multipole values in Electrodes."
         voltage_vector = self._get_electrode_voltage_vector()
-        print "\t voltage_vector =", voltage_vector
         mp_vector = self.electrode_to_multipole_matrix.dot(voltage_vector)
-        print "\t multipole vector =", mp_vector
         self.multipole_moments.set_multipole_values_from_vector(mp_vector)
 
     def _get_electrode_voltage_vector(self):
