@@ -22,20 +22,6 @@ class ElectrodeWedgeGUI():
         self.minval = 0
         self.maxval = int(2**16) - 1
 
-        if self.octant == 0:
-            self.is_plus_x = True
-            self.is_plus_x = False
-            self.is_minus_x = True
-            self.is_minus_x = False
-            self.is_minus_y = True
-            self.is_minus_y = False
-            self.is_plus_y = True
-            self.is_plus_y = False
-            self.is_plus_z = True
-            self.is_minus_z = False
-            self.is_plus_z = False
-            self.is_minus_z = True
-
         self.setup_widget()
 
     def setup_widget(self):
