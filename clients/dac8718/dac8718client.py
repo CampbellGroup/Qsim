@@ -1,4 +1,5 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
+from Qsim.clients.qtui.electrodewidget import ElectrodeIndicator
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
 from PyQt4.Qt import QPushButton
@@ -6,421 +7,311 @@ from config.dac_8718_config import dac_8718_config
 from electrodes import Electrodes
 
 
-class dacclient(QtGui.QWidget):
+class ElectrodeWedgeGUI():
+
+    def __init__(self, electrode):
+        """
+        Parameters
+        ----------
+        electrode: Electrode instance.
+        """
+        self.electrode = electrode
+        self.name = electrode.name
+        self.dac_channel = electrode.number
+        self.octant = electrode.number
+        self.minval = 0
+        self.maxval = int(2**16) - 1
+
+        self.setup_widget()
+
+    def setup_widget(self):
+        self.spinBox = QCustomSpinBox(self.name, (self.minval, self.maxval))
+
+        try:
+            self.initial_bit_value = self.electrode.bit_value
+        except:
+            self.initial_bit_value = int(2**15)
+        self.spinBox.spinLevel.setValue(self.initial_bit_value)
+
+        self.spinBox.setStepSize(1)
+        self.spinBox.spinLevel.setDecimals(1)
+
+
+class DAC8718Client(QtGui.QWidget):
 
     def __init__(self, reactor, parent=None):
-        """initializes the GUI creates the reactor
-            and empty dictionary for channel widgets to
-            be stored for iteration.
-        """
-        super(dacclient, self).__init__()
+
+        super(DAC8718Client, self).__init__()
+        self.electrodes = Electrodes()
         self.max_bit_value = 2**16 - 1
         self.min_bit_value = 0
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor
-        self.d = {}
-        self.e = {}
-        self.topelectrodes = {'DAC 0': 0, 'DAC 1': 1, 'DAC 2': 2, 'DAC 3': 3}
-        self.bottomelectrodes = {'DAC 4': 4,  'DAC 5': 5,  'DAC 6': 6, 'DAC 7': 7}
-        self.xminuselectrodes = {'DAC 2': 2, 'DAC 6': 6}
-        self.xpluselectrodes = {'DAC 0': 0, 'DAC 4': 4}
-        self.yminuselectrodes = {'DAC 1': 1, 'DAC 5': 5}
-        self.ypluselectrodes = {'DAC 3': 3, 'DAC 7': 7}
-        self.electrodes = Electrodes()
+        self.config = dac_8718_config()
+        self.minval = self.config.minval
+        self.maxval = self.config.maxval
+        self.step_size = 0.01
         self.connect()
 
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connection."""
+
         from labrad.wrappers import connectAsync
         from labrad.units import WithUnit as U
 
         self.U = U
         self.cxn = yield connectAsync(name="dac8718 client")
-        self.server = yield self.cxn.dac8718_server
-        self.reg = yield self.cxn.registry
-
-        try:
-            yield self.reg.cd('settings')
-            self.settings = yield self.reg.dir()
-            self.settings = self.settings[1]
-        except:
-            self.settings = []
-
-        self.config = dac_8718_config
-        self.initializeGUI()
+        self.server = self.cxn.dac8718_server
+        self.reg = self.cxn.registry
+        yield self.get_settings()
+        yield self.initialize_GUI()
 
     @inlineCallbacks
-    def initializeGUI(self):
+    def get_settings(self):
 
-        layout = QtGui.QGridLayout()
+        self.settings = {}
+        yield self.reg.cd('settings', True)
+        self.keys = yield self.reg.dir()
+        self.keys = self.keys[1]
+        for key in self.keys:
+            value = yield self.reg.get(key)
+            self.settings[key] = value
 
+    def initialize_GUI(self):
+
+        self.layout = QtGui.QGridLayout()
         qBox = QtGui.QGroupBox('DAC Channels')
-        subLayout = QtGui.QGridLayout()
-        qBox.setLayout(subLayout)
-        layout.addWidget(qBox, 0, 0)
-        self.bit_step_size = 10
-        self.currentvalues = {}
 
-        self.Ex_label = QtGui.QLabel('E_x')
-        self.Ey_label = QtGui.QLabel('E_y')
-        self.Ez_label = QtGui.QLabel('E_z')
-        self.Ex_squeeze_label = QtGui.QLabel('E_x squeeze')
-        self.Ey_squeeze_label = QtGui.QLabel('E_y squeeze')
-        self.Ez_squeeze_label = QtGui.QLabel('E_z squeeze')
+        self.subLayout = QtGui.QGridLayout()
+        qBox.setLayout(self.subLayout)
+        self.layout.addWidget(qBox, 0, 0)
 
-        for channel_key in self.config.channels:
-            name = self.config.channels[channel_key].name
-            chan_number = self.config.channels[channel_key].number
+        self.electrode_indicator = ElectrodeIndicator(self.minval, self.maxval)
 
-            widget = QCustomSpinBox(name, (self.min_bit_value,
-                                           self.max_bit_value))
+        self._add_electrode_guis()
+        self._add_dipole_widgets()
+        self._add_quadrupole_widgets()
 
-            widget.title.setFixedWidth(120)
-            label = QtGui.QLabel('0 V')
-            if name in self.settings:
-                value = yield self.reg.get(name)
-                widget.spinLevel.setValue(value)
-                self.currentvalues.update({name: value})
-                self.electrodes.set_electrode_value(name=name, value=value)
-                self.set_value_no_widgets(value, [name, chan_number])
-            else:
-                widget.spinLevel.setValue(0.0)
-            widget.setStepSize(1)
-            widget.spinLevel.setDecimals(0)
-            widget.spinLevel.valueChanged.connect(lambda value=widget.spinLevel.value(),
-                                                  ident=[name, chan_number]:
-                                                  self.setvalue(value, ident))
+        # This will change electrode voltages at about ~1 mV.
+        initial_dipole_step_size = 1e-8
+        self.set_dipole_step(step_size=initial_dipole_step_size)
+        dipole_step_box = QCustomSpinBox('Dipole step size', (1e-12, 3))
+        dipole_step_box.setStepSize(self.dipole_step_size)
+        dipole_step_box.spinLevel.setDecimals(11)
+        dipole_step_box.spinLevel.setValue(self.dipole_step_size)
+        dipole_step_box.spinLevel.valueChanged.connect(self.set_dipole_step)
 
-            self.d[chan_number] = widget
-            self.e[chan_number] = label
-            subLayout.addWidget(self.d[chan_number],  chan_number, 1)
-            subLayout.addWidget(self.e[chan_number], chan_number, 2)
+        initial_quadrupole_step_size = 1e-9
+        self.set_quadrupole_step(step_size=initial_quadrupole_step_size)
+        quad_step_box = QCustomSpinBox('Quadrupole step size', (1e-14, 3))
+        quad_step_box.setStepSize(self.quadrupole_step_size)
+        quad_step_box.spinLevel.setDecimals(11)
+        quad_step_box.spinLevel.setValue(self.quadrupole_step_size)
+        quad_step_box.spinLevel.valueChanged.connect(self.set_quadrupole_step)
 
-        self.exsqueezeupwidget = QPushButton('X Squeeze increase')
-        self.exsqueezedownwidget = QPushButton('X Squeeze decrease')
-        self.eysqueezeupwidget = QPushButton('Y Squeeze increase')
-        self.eysqueezedownwidget = QPushButton('Y Squeeze decrease')
-        self.z_squeeze_up_widget = QPushButton('Z squeeze increase')
-        self.z_squeeze_down_widget = QPushButton('Z squeeze decrease')
+        save_widget = QPushButton('Save values')
+        save_widget.clicked.connect(self.save_to_registry)
 
-        self.ezupwidget = QPushButton('Ez increase')
-        self.ezdownwidget = QPushButton('Ez decrease')
-        self.exupwidget = QPushButton('Ex increase')
-        self.exdownwidget = QPushButton('Ex decrease')
-        self.eyupwidget = QPushButton('Ey increase')
-        self.eydownwidget = QPushButton('Ey decrease')
+        self.layout.addWidget(self.electrode_indicator, 0, 1, 1, 3)
 
-        self.save_widget = QPushButton('Save current values to Registry')
+        self.layout.addWidget(dipole_step_box, 9, 0)
+        self.layout.addWidget(quad_step_box, 9, 1)
+        self.layout.addWidget(save_widget, 10, 0)
 
-        self.dipole_res = QCustomSpinBox('Bit step size', (0, 1000))
-        self.dipole_res.spinLevel.setValue(10)
-        self.dipole_res.setStepSize(1)
-        self.dipole_res.spinLevel.setDecimals(0)
+        self.electrodes.initialize_multipole_values()
+        self.update_all_dac_channels()
+        self.update_all_gui_indicators()
 
-        self.exsqueezeupwidget.clicked.connect(self.ex_squeeze_up)
-        self.eysqueezeupwidget.clicked.connect(self.ey_squeeze_up)
-        self.z_squeeze_up_widget.clicked.connect(self.z_squeeze_up)
+        self.setLayout(self.layout)
 
-        self.exsqueezedownwidget.clicked.connect(self.ex_squeeze_down)
-        self.eysqueezedownwidget.clicked.connect(self.ey_squeeze_down)
-        self.z_squeeze_down_widget.clicked.connect(self.z_squeeze_down)
+    def _add_electrode_guis(self):
+        self.electrode_guis = {}
+        for channel_config in self.config.channels:
+            channel_name = channel_config.name
+            initial_bit_value = self.settings[channel_name]
+            self.electrodes.set_electrode_bit_value(name=channel_name,
+                                                    value=initial_bit_value)
 
-        self.ezupwidget.clicked.connect(self.ezup)
-        self.ezdownwidget.clicked.connect(self.ezdown)
-        self.exupwidget.clicked.connect(self.exup)
-        self.exdownwidget.clicked.connect(self.exdown)
-        self.eyupwidget.clicked.connect(self.eyup)
-        self.eydownwidget.clicked.connect(self.eydown)
-        self.dipole_res.spinLevel.valueChanged.connect(self.update_dipole_res)
-        self.save_widget.clicked.connect(self.save_to_registry)
+            electrode = self.electrodes.get_electrode(name=channel_name)
+            electrode_gui = ElectrodeWedgeGUI(electrode=electrode)
+            self.electrode_guis[channel_name] = electrode_gui
+            self.subLayout.addWidget(electrode_gui.spinBox)
 
-        subLayout.addWidget(self.ezupwidget,   0, 5)
-        subLayout.addWidget(self.ezdownwidget, 1, 5)
-        subLayout.addWidget(self.exupwidget,   3, 6)
-        subLayout.addWidget(self.exdownwidget, 3, 3)
-        subLayout.addWidget(self.eyupwidget,   2, 5)
-        subLayout.addWidget(self.eydownwidget, 4, 5)
-        subLayout.addWidget(self.dipole_res,   3, 5)
-        subLayout.addWidget(self.save_widget,  5, 5)
-        subLayout.addWidget(self.Ex_label,     6, 5)
-        subLayout.addWidget(self.Ey_label,     7, 5)
-        subLayout.addWidget(self.Ez_label,     8, 5)
-        subLayout.addWidget(self.Ex_squeeze_label, 9, 5)
-        subLayout.addWidget(self.Ey_squeeze_label, 10, 5)
-        subLayout.addWidget(self.Ez_squeeze_label, 11, 5)
+    def _add_dipole_widgets(self):
+        dipoles_names = ['Ex', 'Ey', 'Ez']
+        self.dipole_indicators = []
+        for index, dipole_name in enumerate(dipoles_names):
+            self._add_dipole_button(index, dipole_name)
 
-        subLayout.addWidget(self.exsqueezeupwidget,   6, 6)
-        subLayout.addWidget(self.exsqueezedownwidget, 6, 7)
-        subLayout.addWidget(self.eysqueezeupwidget,   7, 6)
-        subLayout.addWidget(self.eysqueezedownwidget, 7, 7)
-        subLayout.addWidget(self.z_squeeze_up_widget, 8, 6)
-        subLayout.addWidget(self.z_squeeze_down_widget, 8, 7)
+    def _add_dipole_button(self, index, dipole_name):
+        # Value indicator.
+        lcd = QtGui.QLCDNumber()
+        # Prevents "light" outline coloring from obscuring the numbers.
+        lcd.setSegmentStyle(QtGui.QLCDNumber.Flat)
+        lcd.setMinimumSize(50, 50)
+        lcd.setNumDigits(10)
+        self.layout.addWidget(lcd, 3, index, 1, 1)
+        self.dipole_indicators.append(lcd)
+        # Up and down value control buttons
+        up_name = dipole_name + ' up'
+        up_button = QtGui.QPushButton(up_name)
+        down_name = dipole_name + ' down'
+        down_button = QtGui.QPushButton(down_name)
 
-        self.setLayout(layout)
+        up_function = lambda: self.change_multipole_moment(up_button)
+        up_button.clicked.connect(up_function)
 
-    @inlineCallbacks
-    def ezup(self, isheld):
-        for name, dacchan in self.topelectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        down_function = lambda: self.change_multipole_moment(down_button)
+        down_button.clicked.connect(down_function)
 
-        for name, dacchan in self.bottomelectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        self.layout.addWidget(up_button, 4, index)
+        self.layout.addWidget(down_button, 5, index)
 
-    @inlineCallbacks
-    def ezdown(self, isheld):
-        for name, dacchan in self.bottomelectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+    def _add_quadrupole_widgets(self):
+        quadrupole_names = ['Exx_yy', 'Ezz_xx_yy', 'Exy', 'Eyz', 'Ezx']
+        self.quadrupole_indicators = []
+        for index, quadrupole_name in enumerate(quadrupole_names):
+            # Be careful removing this function as it seems essential, though
+            # why this is the case doesn't make sense.
+            self._add_quadrupole_button(index, quadrupole_name)
 
-        for name, dacchan in self.topelectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+    def _add_quadrupole_button(self, index, quadrupole_name):
+        # Value indicator.
+        lcd = QtGui.QLCDNumber()
+        # Prevents "light" outline coloring from obscuring the numbers.
+        lcd.setSegmentStyle(QtGui.QLCDNumber.Flat)
+        lcd.setMinimumSize(50, 50)
+        lcd.setNumDigits(10)
+        self.layout.addWidget(lcd, 8, index, 1, 1)
+        self.quadrupole_indicators.append(lcd)
+        # Up and down value control buttons
+        up_name = quadrupole_name + ' up'
+        up_button = QtGui.QPushButton(up_name)
+        down_name = quadrupole_name + ' down'
+        down_button = QtGui.QPushButton(down_name)
 
-    @inlineCallbacks
-    def exup(self, isheld):
-        for name, dacchan in self.xpluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        up_function = lambda: self.change_multipole_moment(up_button)
+        up_button.clicked.connect(up_function)
 
-        for name, dacchan in self.xminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        down_function = lambda: self.change_multipole_moment(down_button)
+        down_button.clicked.connect(down_function)
 
-    @inlineCallbacks
-    def exdown(self, isheld):
-        for name, dacchan in self.xminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        self.layout.addWidget(up_button, 6, index)
+        self.layout.addWidget(down_button, 7, index)
 
-        for name, dacchan in self.xpluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+    def change_multipole_moment(self, button):
+        button_name = button.text()
+        self._update_multipoles_from_button_name(button_name=button_name)
+        self.electrodes.update_voltages_from_multipole_moments()
+        self.update_all_dac_channels()
+        self.update_all_gui_indicators()
 
-    @inlineCallbacks
-    def eyup(self, isheld):
-        for name, dacchan in self.ypluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+    def _update_multipoles_from_button_name(self, button_name):
+        if 'up' in button_name:
+            sign = 1
+        else:
+            sign = -1
 
-        for name, dacchan in self.yminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        d_names = ('Ex up', 'Ex down', 'Ey up', 'Ey down', 'Ez up', 'Ez down')
+        if button_name in d_names:
+            step_size = self.dipole_step_size
+        else:
+            step_size = self.quadrupole_step_size
 
-    @inlineCallbacks
-    def eydown(self, isheld):
-        for name, dacchan in self.yminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        delta_value = sign * step_size
 
-        for name, dacchan in self.ypluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        multipole_name = self._multipole_name_from_button(button_name)
 
-    @inlineCallbacks
-    def ex_squeeze_up(self, isheld):
-        for name, dacchan in self.xpluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        multipole_moments = self.electrodes.multipole_moments
+        current_value = multipole_moments.get_value(multipole_name)
+        new_value = current_value + delta_value
+        self.electrodes.multipole_moments.set_value(name=multipole_name,
+                                                    value=new_value)
 
-        for name, dacchan in self.xminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+    def update_all_dac_channels(self):
+        electrode_list = self.electrodes.get_electrode_list()
+        for kk in xrange(len(electrode_list)):
+            electrode = electrode_list[kk]
+            self.update_dac(electrode)
+            electrode_gui = self.electrode_guis[electrode.name]
+            electrode_gui.spinBox.setValues(electrode.bit_value)
 
-    @inlineCallbacks
-    def ex_squeeze_down(self, isheld):
-        for name, dacchan in self.xpluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+    def update_all_gui_indicators(self):
+        volts_per_mm = 1000.
+        volts_per_mm_sq = 1000.**2.
+        M_1 = self.electrodes.multipole_moments.get_value(name='M_1')
+        self.dipole_indicators[0].display(volts_per_mm*M_1)
 
-        for name, dacchan in self.xminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        M_2 = self.electrodes.multipole_moments.get_value(name='M_2')
+        self.dipole_indicators[1].display(volts_per_mm*M_2)
 
-    @inlineCallbacks
-    def ey_squeeze_up(self, isheld):
-        for name, dacchan in self.ypluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        M_3 = self.electrodes.multipole_moments.get_value(name='M_3')
+        self.dipole_indicators[2].display(volts_per_mm*M_3)
 
-        for name, dacchan in self.yminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue >= self.max_bit_value:
-                break
-            new_value = currentvalue + self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        M_4 = self.electrodes.multipole_moments.get_value(name='M_4')
+        self.quadrupole_indicators[0].display(volts_per_mm_sq*M_4)
 
-    @inlineCallbacks
-    def ey_squeeze_down(self, isheld):
-        for name, dacchan in self.ypluselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        M_5 = self.electrodes.multipole_moments.get_value(name='M_5')
+        self.quadrupole_indicators[1].display(volts_per_mm_sq*M_5)
 
-        for name, dacchan in self.yminuselectrodes.iteritems():
-            currentvalue = self.currentvalues[name]
-            if currentvalue <= self.min_bit_value:
-                break
-            new_value = currentvalue - self.bit_step_size
-            yield self.setvalue(new_value, [name, dacchan])
+        M_6 = self.electrodes.multipole_moments.get_value(name='M_6')
+        self.quadrupole_indicators[2].display(volts_per_mm_sq*M_6)
 
-    @inlineCallbacks
-    def z_squeeze_up(self, isheld):
+        M_7 = self.electrodes.multipole_moments.get_value(name='M_7')
+        self.quadrupole_indicators[3].display(volts_per_mm_sq*M_7)
+
+        M_8 = self.electrodes.multipole_moments.get_value(name='M_8')
+        self.quadrupole_indicators[4].display(volts_per_mm_sq*M_8)
+
+    def _multipole_name_from_button(self, button_name=None):
         """
-        Increase the voltage on all electrodes.
+        button_name: str
         """
-        for name in self.electrodes.z_electrodes:
-            bit_value = self.electrodes.get_electrode_value(name)
-            if bit_value >= self.max_bit_value:
-                break
-            new_value = bit_value + self.bit_step_size
-            dac_channel = self.electrodes.get_electrode_number(name)
-            yield self.setvalue(new_value, [name, dac_channel])
+        if button_name in ('Ex up', 'Ex down'):
+            multipole_name = 'M_1'
+        elif button_name in ('Ey up', 'Ey down'):
+            multipole_name = 'M_2'
+        elif button_name in ('Ez up', 'Ez down'):
+            multipole_name = 'M_3'
+        elif button_name in ('Exx_yy up', 'Exx_yy down'):
+            multipole_name = 'M_4'
+        elif button_name in ('Ezz_xx_yy up', 'Ezz_xx_yy down'):
+            multipole_name = 'M_5'
+        elif button_name in ('Exy up', 'Exy down'):
+            multipole_name = 'M_6'
+        elif button_name in ('Eyz up', 'Eyz down'):
+            multipole_name = 'M_7'
+        elif button_name in ('Ezx up', 'Ezx down'):
+            multipole_name = 'M_8'
+        return multipole_name
 
     @inlineCallbacks
-    def z_squeeze_down(self, isheld):
-        """
-        Decrease the voltage on all electrodes.
-        """
-        for name in self.electrodes.z_electrodes:
-            bit_value = self.electrodes.get_electrode_value(name)
-            if bit_value <= self.min_bit_value:
-                break
-            new_value = bit_value - self.bit_step_size
-            dac_channel = self.electrodes.get_electrode_number(name)
-            yield self.setvalue(new_value, [name, dac_channel])
-
-    @inlineCallbacks
-    def setvalue(self, value, ident):
+    def update_dac(self, electrode):
         """
         Parameters
         ----------
-        value: float?  - converted to an int
-        ident: tuple, (name, chan) where name is a str and chan is an int
+        electrode: Electrode class instance.
         """
-        yield self.set_value_no_widgets(value=value, ident=ident)
-        channel_number = ident[1]
-        # change the GUI display value
-        self.d[channel_number].spinLevel.setValue(value)
+        yield self.server.dacoutput(electrode.number, electrode.bit_value)
+        self.electrode_indicator.update_octant(electrode)
+
+    def set_dipole_step(self, step_size):
+        """
+        Change dipole moment step size.
+        """
+        self.dipole_step_size = step_size
+
+    def set_quadrupole_step(self, step_size):
+        """
+        Change quadrupole moment step size.
+        """
+        self.quadrupole_step_size = step_size
 
     @inlineCallbacks
-    def set_value_no_widgets(self, value, ident):
-        """
-        Parameters
-        ----------
-        value: float?  - converted to an int
-        ident: tuple, (name, chan) where name is a str and chan is an int
-        """
-        name = ident[0]
-        channel_number = ident[1]
-        value = int(value)
-        self._set_electrode_current_value(name, value)
-        print "set_value_no_widgets"
-        print "\t name:", name
-        print "\t channel_number:", channel_number
-        print "\t value:", value
-        yield self.server.dacoutput(channel_number, value)
-        voltage = self.bit_to_volt(bit=value)
-        self.e[channel_number].setText(str(voltage))
-        self.currentvalues[name] = value
-        self.set_dipole_labels()
-        self.set_squeeze_labels()
-
-    def bit_to_volt(self, bit):
-        voltage = (2.2888e-4*bit - 7.5)
-        return voltage
-
-    def _set_electrode_current_value(self, name=None, value=None):
-        """
-        Set electrode value in the Electrodes class.
-        """
-        self.electrodes.set_electrode_value(name=name, value=value)
-
-    def set_dipole_labels(self):
-        xdipole = self.electrodes.x_dipole_moment
-        ydipole = self.electrodes.y_dipole_moment
-        zdipole = self.electrodes.z_dipole_moment
-
-        self.Ex_label.setText('Ex = ' + str(xdipole))
-        self.Ey_label.setText('Ey = ' + str(ydipole))
-        self.Ez_label.setText('Ez = ' + str(zdipole))
-
-    def set_squeeze_labels(self):
-        x_squeeze = self.electrodes.x_squeeze_moment
-        y_squeeze = self.electrodes.y_squeeze_moment
-        z_squeeze = self.electrodes.z_squeeze_moment
-
-        self.Ex_squeeze_label.setText('Ex squeeze = ' + str(x_squeeze))
-        self.Ey_squeeze_label.setText('Ey squeeze = ' + str(y_squeeze))
-        self.Ez_squeeze_label.setText('Ez squeeze = ' + str(z_squeeze))
-
-    def update_dipole_res(self, value):
-        self.bit_step_size = value
-
-    def save_to_registry(self):
-        for chan in self.currentvalues:
-            self.reg.set(chan, self.currentvalues[chan])
-
-    def closeEvent(self, x):
-        print 'Saving DAC values to regisry...'
-        self.save_to_registry()
-        print 'Saved.'
-        self.reactor.stop()
+    def save_to_registry(self, pressed):
+        for electrode_gui in self.electrode_guis:
+            value = electrode_gui.spinBox.spinLevel.value()
+            yield self.reg.set(electrode_gui.name, value)
 
 
 if __name__ == "__main__":
@@ -428,6 +319,6 @@ if __name__ == "__main__":
     import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
-    dacWidget = dacclient(reactor)
-    dacWidget.show()
-    reactor.run()  # @UndefinedVariable
+    dac_widget = DAC8718Client(reactor)
+    dac_widget.show()
+    reactor.run()

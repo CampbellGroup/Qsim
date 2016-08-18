@@ -6,34 +6,40 @@ class Electrode(object):
         self.name = name
         self._set_number()
         # Nominally the self.currentvalues value below.
-        self.value = None
+
+        # DAC bit value.
+        self._bit_value = None
 
     def _set_number(self):
-        # TODO: more intelligently...
-        if self.name == 'DAC 0':
-            self.number = 0
-        elif self.name == 'DAC 1':
-            self.number = 1
-        elif self.name == 'DAC 2':
-            self.number = 2
-        elif self.name == 'DAC 3':
-            self.number = 3
-        elif self.name == 'DAC 4':
-            self.number = 4
-        elif self.name == 'DAC 5':
-            self.number = 5
-        elif self.name == 'DAC 6':
-            self.number = 6
-        elif self.name == 'DAC 7':
-            self.number = 7
-        else:
-            self.number = None
-
-    def get_voltage(self):
-        bit = self.value
-        voltage = (2.2888e-4*bit - 7.5)
-        return voltage
+        """
+        Assumes self.name = 'DAC X' where X is a single digit number.
+        """
+        number = int(self.name[-1])
+        self.number = number
 
     @property
     def voltage(self):
-        return self.get_voltage()
+        return self._voltage
+
+    @voltage.setter
+    def voltage(self, value):
+        self._voltage = value
+        self._bit_value = self._get_bit_value_from_voltage()
+
+    @property
+    def bit_value(self):
+        return self._bit_value
+
+    @bit_value.setter
+    def bit_value(self, value):
+        self._bit_value = value
+        new_voltage = self._get_voltage_from_bit_value()
+        self._voltage = new_voltage
+
+    def _get_voltage_from_bit_value(self):
+        voltage = 2.2888e-4*self._bit_value - 7.5
+        return voltage
+
+    def _get_bit_value_from_voltage(self):
+        bit_value = (self._voltage + 7.4)/2.2888e-4
+        return int(bit_value)
