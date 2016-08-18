@@ -221,7 +221,6 @@ class DAC8718Client(QtGui.QWidget):
         self.update_all_gui_indicators()
 
     def _update_multipoles_from_button_name(self, button_name):
-        print "_update_multipoles_from_button_name"
         if 'up' in button_name:
             sign = 1
         else:
@@ -239,7 +238,6 @@ class DAC8718Client(QtGui.QWidget):
 
         multipole_moments = self.electrodes.multipole_moments
         current_value = multipole_moments.get_value(multipole_name)
-        print "\t current_value:", current_value
         new_value = current_value + delta_value
         self.electrodes.multipole_moments.set_value(name=multipole_name,
                                                     value=new_value)
@@ -248,46 +246,36 @@ class DAC8718Client(QtGui.QWidget):
         electrode_list = self.electrodes.get_electrode_list()
         for kk in xrange(len(electrode_list)):
             electrode = electrode_list[kk]
-            print electrode.name
             self.update_dac(electrode)
             electrode_gui = self.electrode_guis[electrode.name]
             electrode_gui.spinBox.setValues(electrode.bit_value)
 
     def update_all_gui_indicators(self):
-        print "\n"
-        print "update_all_gui_indicators"
+        volts_per_mm = 1000.
+        volts_per_mm_sq = 1000.**2.
         M_1 = self.electrodes.multipole_moments.get_value(name='M_1')
-        self.dipole_indicators[0].display(M_1)
+        self.dipole_indicators[0].display(volts_per_mm*M_1)
 
         M_2 = self.electrodes.multipole_moments.get_value(name='M_2')
-        self.dipole_indicators[1].display(M_2)
+        self.dipole_indicators[1].display(volts_per_mm*M_2)
 
         M_3 = self.electrodes.multipole_moments.get_value(name='M_3')
-        self.dipole_indicators[2].display(M_3)
+        self.dipole_indicators[2].display(volts_per_mm*M_3)
 
         M_4 = self.electrodes.multipole_moments.get_value(name='M_4')
-        self.quadrupole_indicators[0].display(M_4)
+        self.quadrupole_indicators[0].display(volts_per_mm_sq*M_4)
 
         M_5 = self.electrodes.multipole_moments.get_value(name='M_5')
-        self.quadrupole_indicators[1].display(M_5)
+        self.quadrupole_indicators[1].display(volts_per_mm_sq*M_5)
 
         M_6 = self.electrodes.multipole_moments.get_value(name='M_6')
-        self.quadrupole_indicators[2].display(M_6)
+        self.quadrupole_indicators[2].display(volts_per_mm_sq*M_6)
 
         M_7 = self.electrodes.multipole_moments.get_value(name='M_7')
-        self.quadrupole_indicators[3].display(M_7)
+        self.quadrupole_indicators[3].display(volts_per_mm_sq*M_7)
 
         M_8 = self.electrodes.multipole_moments.get_value(name='M_8')
-        self.quadrupole_indicators[4].display(M_8)
-
-        print "M_1=", M_1
-        print "M_2=", M_2
-        print "M_3=", M_3
-        print "M_4=", M_4
-        print "M_5=", M_5
-        print "M_6=", M_6
-        print "M_7=", M_7
-        print "M_8=", M_8
+        self.quadrupole_indicators[4].display(volts_per_mm_sq*M_8)
 
     def _multipole_name_from_button(self, button_name=None):
         """
