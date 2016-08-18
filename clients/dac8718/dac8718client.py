@@ -106,19 +106,30 @@ class DAC8718Client(QtGui.QWidget):
         self._add_dipole_widgets()
         self._add_quadrupole_widgets()
 
-        step_size_box = QCustomSpinBox('Step Size', (0.0001, 3))
-        step_size_box.setStepSize(1e-6)
-        step_size_box.spinLevel.setDecimals(6)
-        self.update_step_size(step_size=1e-6)
-        step_size_box.spinLevel.setValue(self.step_size)
-        step_size_box.spinLevel.valueChanged.connect(self.update_step_size)
+        # This will change electrode voltages at about ~1 mV.
+        initial_dipole_step_size = 1e-8
+        self.set_dipole_step(step_size=initial_dipole_step_size)
+        dipole_step_box = QCustomSpinBox('Dipole step size', (1e-12, 3))
+        dipole_step_box.setStepSize(self.dipole_step_size)
+        dipole_step_box.spinLevel.setDecimals(11)
+        dipole_step_box.spinLevel.setValue(self.dipole_step_size)
+        dipole_step_box.spinLevel.valueChanged.connect(self.set_dipole_step)
+
+        initial_quadrupole_step_size = 1e-9
+        self.set_quadrupole_step(step_size=initial_quadrupole_step_size)
+        quad_step_box = QCustomSpinBox('Quadrupole step size', (1e-14, 3))
+        quad_step_box.setStepSize(self.quadrupole_step_size)
+        quad_step_box.spinLevel.setDecimals(11)
+        quad_step_box.spinLevel.setValue(self.quadrupole_step_size)
+        quad_step_box.spinLevel.valueChanged.connect(self.set_quadrupole_step)
 
         save_widget = QPushButton('Save values')
         save_widget.clicked.connect(self.save_to_registry)
 
         self.layout.addWidget(self.electrode_indicator, 0, 1, 1, 3)
 
-        self.layout.addWidget(step_size_box, 9, 0)
+        self.layout.addWidget(dipole_step_box, 9, 0)
+        self.layout.addWidget(quad_step_box, 9, 1)
         self.layout.addWidget(save_widget, 10, 0)
 
         self.electrodes.initialize_multipole_values()
@@ -152,6 +163,7 @@ class DAC8718Client(QtGui.QWidget):
         # Prevents "light" outline coloring from obscuring the numbers.
         lcd.setSegmentStyle(QtGui.QLCDNumber.Flat)
         lcd.setMinimumSize(50, 50)
+        lcd.setNumDigits(10)
         self.layout.addWidget(lcd, 3, index, 1, 1)
         self.dipole_indicators.append(lcd)
         # Up and down value control buttons
@@ -183,6 +195,7 @@ class DAC8718Client(QtGui.QWidget):
         # Prevents "light" outline coloring from obscuring the numbers.
         lcd.setSegmentStyle(QtGui.QLCDNumber.Flat)
         lcd.setMinimumSize(50, 50)
+        lcd.setNumDigits(10)
         self.layout.addWidget(lcd, 8, index, 1, 1)
         self.quadrupole_indicators.append(lcd)
         # Up and down value control buttons
@@ -200,10 +213,8 @@ class DAC8718Client(QtGui.QWidget):
         self.layout.addWidget(up_button, 6, index)
         self.layout.addWidget(down_button, 7, index)
 
-
     def change_multipole_moment(self, button):
         button_name = button.text()
-        print "button_name:", button_name
         self._update_multipoles_from_button_name(button_name=button_name)
         self.electrodes.update_voltages_from_multipole_moments()
         self.update_all_dac_channels()
@@ -215,7 +226,14 @@ class DAC8718Client(QtGui.QWidget):
             sign = 1
         else:
             sign = -1
-        delta_value = sign * self.step_size
+
+        d_names = ('Ex up', 'Ex down', 'Ey up', 'Ey down', 'Ez up', 'Ez down')
+        if button_name in d_names:
+            step_size = self.dipole_step_size
+        else:
+            step_size = self.quadrupole_step_size
+
+        delta_value = sign * step_size
 
         multipole_name = self._multipole_name_from_button(button_name)
 
@@ -227,44 +245,40 @@ class DAC8718Client(QtGui.QWidget):
                                                     value=new_value)
 
     def update_all_dac_channels(self):
-        #print "\n update_all_dac_channels"
         electrode_list = self.electrodes.get_electrode_list()
-        #print "electrode_list =", electrode_list
         for kk in xrange(len(electrode_list)):
             electrode = electrode_list[kk]
             print electrode.name
             self.update_dac(electrode)
             electrode_gui = self.electrode_guis[electrode.name]
-            #print "\t electrode.bit_value =", electrode.bit_value
             electrode_gui.spinBox.setValues(electrode.bit_value)
-            #print "\t electrode.voltage =", electrode.voltage
 
     def update_all_gui_indicators(self):
         print "\n"
         print "update_all_gui_indicators"
         M_1 = self.electrodes.multipole_moments.get_value(name='M_1')
-        self.dipole_indicators[0].update(str(M_1))
+        self.dipole_indicators[0].display(M_1)
 
         M_2 = self.electrodes.multipole_moments.get_value(name='M_2')
-        self.dipole_indicators[1].update(str(M_2))
+        self.dipole_indicators[1].display(M_2)
 
         M_3 = self.electrodes.multipole_moments.get_value(name='M_3')
-        self.dipole_indicators[2].display(str(M_3))
+        self.dipole_indicators[2].display(M_3)
 
         M_4 = self.electrodes.multipole_moments.get_value(name='M_4')
-        self.quadrupole_indicators[0].display(str(M_4))
+        self.quadrupole_indicators[0].display(M_4)
 
         M_5 = self.electrodes.multipole_moments.get_value(name='M_5')
-        self.quadrupole_indicators[1].display(str(M_5))
+        self.quadrupole_indicators[1].display(M_5)
 
         M_6 = self.electrodes.multipole_moments.get_value(name='M_6')
-        self.quadrupole_indicators[2].display(str(M_6))
+        self.quadrupole_indicators[2].display(M_6)
 
         M_7 = self.electrodes.multipole_moments.get_value(name='M_7')
-        self.quadrupole_indicators[3].display(str(M_7))
+        self.quadrupole_indicators[3].display(M_7)
 
         M_8 = self.electrodes.multipole_moments.get_value(name='M_8')
-        self.quadrupole_indicators[4].display(str(M_8))
+        self.quadrupole_indicators[4].display(M_8)
 
         print "M_1=", M_1
         print "M_2=", M_2
@@ -307,11 +321,17 @@ class DAC8718Client(QtGui.QWidget):
         yield self.server.dacoutput(electrode.number, electrode.bit_value)
         self.electrode_indicator.update_octant(electrode)
 
-    def update_step_size(self, step_size):
+    def set_dipole_step(self, step_size):
         """
-        Changes the bit resolution.
+        Change dipole moment step size.
         """
-        self.step_size = step_size
+        self.dipole_step_size = step_size
+
+    def set_quadrupole_step(self, step_size):
+        """
+        Change quadrupole moment step size.
+        """
+        self.quadrupole_step_size = step_size
 
     @inlineCallbacks
     def save_to_registry(self, pressed):
@@ -327,4 +347,4 @@ if __name__ == "__main__":
     from twisted.internet import reactor
     dac_widget = DAC8718Client(reactor)
     dac_widget.show()
-    reactor.run()  # @UndefinedVariable
+    reactor.run()
