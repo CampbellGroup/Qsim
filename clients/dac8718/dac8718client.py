@@ -44,6 +44,7 @@ class dacclient(QtGui.QWidget):
         self.minval = self.config.minval
         self.maxval = self.config.maxval
         self.M = self.config.M
+        self.U = self.config.U
         self.connect()
 
     @inlineCallbacks
