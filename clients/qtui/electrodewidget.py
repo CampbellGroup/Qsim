@@ -76,9 +76,9 @@ class ElectrodeIndicator(QtGui.QWidget):
 
 		for i in range(4):
 			qp.drawText(center + QtCore.QPoint(signs[i][0]*trapdim/8,
-						signs[i][1]*trapdim/8), str(self.quads[i].top_voltage))
+						signs[i][1]*trapdim/8), str(round(self.quads[i].top_voltage, 4)))
 			qp.drawText(center + QtCore.QPoint(signs[i][0]*trapdim/8 + 20,
-						signs[i][1]*trapdim/8 + 20), str(self.quads[i].bottom_voltage))
+						signs[i][1]*trapdim/8 + 20), str(round(self.quads[i].bottom_voltage, 4)))
 
 
 		pen = QtGui.QPen(QtCore.Qt.gray, 2, QtCore.Qt.SolidLine)
