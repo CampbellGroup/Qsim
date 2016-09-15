@@ -41,6 +41,7 @@ class dacclient(QtGui.QWidget):
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor
         self.config = dac_8718_config()
+        print self.config
         self.minval = self.config.minval
         self.maxval = self.config.maxval
         self.M = self.config.M
