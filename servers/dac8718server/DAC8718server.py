@@ -1,10 +1,10 @@
 """
 ### BEGIN NODE INFO
 [info]
-name = DAC8718 Server
+name = dac8718
 version = 1.0
 description =
-instancename = DAC8718 Server
+instancename = dac8718
 
 [startup]
 cmdline = %PYTHON% %FILE%
@@ -12,60 +12,95 @@ timeout = 20
 
 [shutdown]
 message = 987654321
-timeout = 20
+timeout = 5
 ### END NODE INFO
 """
 
-
-'''
-Created on July 16, 2015
-
-@author: anthonyransford
-
-'''
-from common.lib.servers.serialdeviceserver import SerialDeviceServer, \
-    setting, inlineCallbacks, SerialDeviceError, SerialConnectionError
-
-from labrad.types import Error
-from twisted.internet import reactor
-from labrad import types as T
-from labrad.support import getNodeName
+from labrad.types import Value
+from labrad.devices import DeviceServer, DeviceWrapper
+from labrad.server import setting
+from twisted.internet.defer import inlineCallbacks, returnValue
 
 
-SERVERNAME = 'DAC8718 Server'
-TIMEOUT = 1.0
-BAUDRATE = 9600
+class DACDevice(DeviceWrapper):
+
+    @inlineCallbacks
+    def connect(self, server, port):
+        """Connect to a evPump device."""
+        print 'connecting to "%s" on port "%s"...' % (server.name, port),
+        self.server = server
+        self.ctx = server.context()
+        self.port = port
+        p = self.packet()
+        p.open(port)
+        p.baudrate(9600)
+        p.read()  # clear out the read buffer
+        p.timeout(TIMEOUT)
+        yield p.send()
+
+    def packet(self):
+        """Create a packet in our private context."""
+        return self.server.packet(context=self.ctx)
+
+    def shutdown(self):
+        """Disconnect from the serial port when we shut down."""
+        return self.packet().close().send()
+
+    @inlineCallbacks
+    def write(self, code):
+        """Write a data value to the heat switch."""
+        yield self.packet().write(code).send()
+
+    @inlineCallbacks
+    def query(self, code):
+        """ Write, then read. """
+        p = self.packet()
+        p.write_line(code)
+        p.read_line()
+        ans = yield p.send()
+        returnValue(ans.read_line)
 
 
-class ArduinoDAC(SerialDeviceServer):
-    name = SERVERNAME
-    regKey = 'DAC8718'
-    port = None
-    serNode = getNodeName()
-    timeout = T.Value(TIMEOUT, 's')
+class DAC8718(DeviceServer):
+    name = 'dac8718'
+    deviceWrapper = DACDevice
 
     @inlineCallbacks
     def initServer(self):
-        if not self.regKey or not self.serNode:
-            error_message = 'Must define regKey and serNode attributes'
-            raise SerialDeviceError(error_message)
-        port = yield self.getPortFromReg(self.regKey)
-        self.port = port
-        try:
-            serStr = yield self.findSerial(self.serNode)
-            self.initSerial(serStr, port, baudrate=BAUDRATE)
-        except SerialConnectionError, e:
-            self.ser = None
-            if e.code == 0:
-                print 'Could not find serial server for node: %s' % self.serNode
-                print 'Please start correct serial server'
-            elif e.code == 1:
-                print 'Error opening serial connection'
-                print 'Check set up and restart serial server'
-            else:
-                raise
+        print 'loading config info...',
+        self.reg = self.client.registry()
+        yield self.loadConfigInfo()
+        print self.serialLinks
+        yield DeviceServer.initServer(self)
 
-    @setting(1, chan='i', value='i')
+    @inlineCallbacks
+    def loadConfigInfo(self):
+        """Load configuration information from the registry."""
+        reg = self.reg
+        yield reg.cd(['', 'Servers', 'dac8718', 'Links'], True)
+        dirs, keys = yield reg.dir()
+        p = reg.packet()
+        for k in keys:
+            p.get(k, key=k)
+        ans = yield p.send()
+        self.serialLinks = dict((k, ans[k]) for k in keys)
+
+    @inlineCallbacks
+    def findDevices(self):
+        """Find available devices from list stored in the registry."""
+        devs = []
+        for name, (serServer, port) in self.serialLinks.items():
+            if serServer not in self.client.servers:
+                continue
+            server = self.client[serServer]
+            ports = yield server.list_serial_ports()
+            if port not in ports:
+                continue
+            devName = '%s - %s' % (serServer, port)
+            devs += [(devName, (server, port))]
+        returnValue(devs)
+
+    @setting(100, chan='i', value='i')
     def DACOutput(self, c, chan, value):
         """
         Output voltage value (in bits from 0 to 2^16) on chan.
@@ -74,6 +109,8 @@ class ArduinoDAC(SerialDeviceServer):
         ----------
         chan: int, DAC channel, valid from 0-15
         """
+
+        dev = self.selectDevice(c)
         chan = chan + 8
         if value > 2**16 - 1:
             value = 2**16 - 1
@@ -90,10 +127,15 @@ class ArduinoDAC(SerialDeviceServer):
         value1 = int('0b' + value1, 2)
         value2 = value[8:]
         value2 = int('0b' + value2, 2)
-        yield self.ser.write(chr(chan))
-        yield self.ser.write(chr(value1))
-        yield self.ser.write(chr(value2))
+        print 'chan = ', chan
+        print 'first byte = ', value1
+        print 'second byte = ', value2
+        yield dev.write(chr(chan))
+        yield dev.write(chr(value1))
+        yield dev.write(chr(value2))
+
+TIMEOUT = Value(1, 's')
 
 if __name__ == "__main__":
     from labrad import util
-    util.runServer(ArduinoDAC())
+    util.runServer(DAC8718())

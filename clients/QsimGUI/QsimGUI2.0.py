@@ -29,7 +29,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         control = self.makeControlWidget(reactor, cxn)
         analysis = self.makeAnalysisWidget(reactor, cxn)
         Tsunami = self.makeTsunamiWidget(reactor, cxn)
-	Pulser = self.makePulserWidget(reactor, cxn)
+        Pulser = self.makePulserWidget(reactor, cxn)
 
         # add tabs
         self.tabWidget = QtGui.QTabWidget()
@@ -75,9 +75,17 @@ class QSIM_GUI(QtGui.QMainWindow):
         return DDS
 
     def makeTsunamiWidget(self, reactor, cxn):
+        twidget = QtGui.QWidget()
         from common.lib.clients.evPump.evPumpClient import eVPumpClient
+        from common.lib.clients.bristol.bristol_client import bristol_client
+        gridLayout = QtGui.QGridLayout()
         evpump = eVPumpClient(reactor)
-        return evpump
+        evpump.setMinimumHeight(700)
+        bristol = bristol_client(reactor)
+        gridLayout.addWidget(evpump)
+        gridLayout.addWidget(bristol)
+        twidget.setLayout(gridLayout)
+        return twidget
 
     def makeScriptScannerWidget(self, reactor, cxn):
         from common.lib.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
@@ -85,9 +93,17 @@ class QSIM_GUI(QtGui.QMainWindow):
         return scriptscanner
 
     def makeWavemeterWidget(self, reactor, cxn):
+        widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
+        from Qsim.clients.wavemeter_rear_port.cal_channel_toggle import cal_toggle_switch
+        gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
-        return wavemeter
+        cal_toggle = cal_toggle_switch(reactor)
+        gridLayout.addWidget(wavemeter)
+        gridLayout.addWidget(cal_toggle)
+        wavemeter.setMaximumHeight(820)
+        widget.setLayout(gridLayout)
+        return widget
 
     def makeM2Widget(self, reactor, cxn):
         widget = QtGui.QWidget()
@@ -110,6 +126,7 @@ class QSIM_GUI(QtGui.QMainWindow):
 
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
+        from Qsim.clients.RF_control.RFcontrol import RFcontrol
         from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget
         from Qsim.clients.kittykat.kittykatPulser import kittykatclient
         from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
@@ -118,10 +135,11 @@ class QSIM_GUI(QtGui.QMainWindow):
 
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 4, 1)
-        gridLayout.addWidget(kittykatclient(reactor, cxn), 3, 0, 1, 1)
-        gridLayout.addWidget(pmtWidget(reactor, cxn),      1, 0, 1, 1)
+        #gridLayout.addWidget(kittykatclient(reactor, cxn), 4, 0, 1, 1)
+        gridLayout.addWidget(pmtWidget(reactor, cxn),      2, 0, 1, 1)
         gridLayout.addWidget(cameraswitch(reactor, cxn),   0, 0, 1, 1)
-        gridLayout.addWidget(switchclient(reactor, cxn),   2, 0, 1, 1)
+        gridLayout.addWidget(RFcontrol(reactor, cxn),      1, 0, 1, 1)
+        gridLayout.addWidget(switchclient(reactor, cxn),   3, 0, 1, 1)
         gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget
