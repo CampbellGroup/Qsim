@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks, returnValue
 import sys
 
+
 class QSIM_GUI(QtGui.QMainWindow):
     def __init__(self, reactor, clipboard, parent=None):
         super(QSIM_GUI, self).__init__(parent)
