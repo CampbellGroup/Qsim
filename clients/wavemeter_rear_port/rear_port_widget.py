@@ -82,7 +82,6 @@ class rear_port_client(QtGui.QWidget):
         if self.continuous:
             switchmode = yield self.server.get_switcher_mode()
             if switchmode:
-                print 'switching modes', switchmode
                 yield self.server.set_switcher_mode(False)
                 yield self.server.set_active_channel(9)
 

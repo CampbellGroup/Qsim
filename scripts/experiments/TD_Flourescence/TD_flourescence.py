@@ -1,7 +1,7 @@
 import labrad
 import numpy as np
 from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
-from Qsim.scripts.pulse_sequences.RecordTimeTags import record_timetags
+from Qsim.scripts.pulse_sequences.sub_sequences.RecordTimeTags import record_timetags
 from treedict import TreeDict
 
 
@@ -42,13 +42,12 @@ class TD_flourescence(experiment):
 
     def saveData(self, time_tags):
         self.dv.cd(['','QuickMeasurements','TD-Flourescence'],True)
-        name = self.dv.new('TD-Flourescence',[('time', 's')], [('number in bin','Arb','Arb')] )
-        data = np.mod(time_tags, int(self.drive_period['ns']))
+        name = self.dv.new('TD-Flourescence',[('time', 'ns')], [('number in bin','Arb','Arb')] )
+        data = np.remainder(1e9*time_tags, self.drive_period['ns'])
         hist, bin_edges = np.histogram(data, 200)
-        to_plot = np.array(np.vstack((bin_edges[1:], hist)).transpose(), dtype = 'float')
-        self.grapher.plot(name, 'TD_Flourescence', False)
-        self.dv.add_parameter('plotLive',True)
+        to_plot = np.array(np.vstack((bin_edges[1:], hist)).transpose(), dtype='float')
         self.dv.add(to_plot)
+        self.grapher.plot(name, 'TD_Flourescence', False)
         print 'Saved {}'.format(name)
 
     def finalize(self, cxn, context):

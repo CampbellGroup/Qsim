@@ -38,7 +38,6 @@ class dacRaster(experiment):
         self.Xminval = self.parameters.dacraster.X_Voltage[0]['V']
         self.Xmaxval = self.parameters.dacraster.X_Voltage[1]['V']
         self.Xnumberofsteps = int(self.parameters.dacraster.X_Voltage[2])
-        print self.Xminval, self.Xmaxval, self.Xnumberofsteps
         self.Xstepsize = (float(self.Xmaxval) - self.Xminval)/(self.Xnumberofsteps - 1)
         self.Xvalues = np.linspace(self.Xminval, self.Xmaxval,
                                    self.Xnumberofsteps)
@@ -89,7 +88,6 @@ class dacRaster(experiment):
     def changevoltage(self, direction, voltage):
         output = self.dacoutput(voltage)
         minusoutput = self.dacoutput(-voltage)
-        print direction, voltage
         if output > 255:
             output = 255
         elif output < 0:

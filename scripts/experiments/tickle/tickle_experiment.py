@@ -41,7 +41,6 @@ class ticklescan(experiment):
         '''
         self.set_scannable_parameters()
         self.setup_datavault()
-        print 'past datavault'
         self.rg.output(self.chan, True)
         time.sleep(0.1)
         self.rg.apply_waveform(self.p.ticklescan.waveform, self.frequency[0],
@@ -51,7 +50,6 @@ class ticklescan(experiment):
                 should_stop = self.pause_or_stop()
                 if should_stop:
                     break
-                print self.chan, freq
                 self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))
                 time.sleep(0.1)
                 print 'before counts'
