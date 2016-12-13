@@ -1,7 +1,8 @@
 from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks, returnValue
 import sys
-
+sys.path.append('/home/qsimexpcontrol/LabRAD/')
+sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
 
 class QSIM_GUI(QtGui.QMainWindow):
     def __init__(self, reactor, clipboard, parent=None):

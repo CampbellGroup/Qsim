@@ -2,6 +2,8 @@ import labrad
 from labrad.units import WithUnit
 from common.lib.servers.abstractservers.script_scanner.scan_methods \
     import experiment
+import numpy as np
+import time
 
 
 class wavemeter_linescan(experiment):
@@ -19,6 +21,9 @@ class wavemeter_linescan(experiment):
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_399'))
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_935'))
 
+    exp_parameters.append(('wavemeterscan', 'line_scan'))
+    exp_parameters.append(('wavemeterscan', 'pause_time'))
+
     @classmethod
     def all_required_parameters(cls):
         return cls.exp_parameters
@@ -26,6 +31,7 @@ class wavemeter_linescan(experiment):
     def initialize(self, cxn, context, ident):
         self.ident = ident
         self.laser = self.parameters.wavemeterscan.lasername
+        self.wait = self.parameters.wavemeterscan.pause_time
 
         if self.laser == '369':
             self.port = self.parameters.wavemeterscan.Port_369
@@ -49,8 +55,13 @@ class wavemeter_linescan(experiment):
         self.dv = self.cxn.data_vault
         self.grapher = self.cxn.grapher
         self.pmt = self.cxn.normalpmtflow
+        self.locker = self.cxn.single_wm_lock_server
 
     def run(self, cxn, context):
+
+        min, max, steps = self.parameters.wavemeterscan.line_scan
+        scan = np.linspace(min['THz'], max['THz'], steps)
+        scan = [WithUnit(pt, 'THz') for pt in scan]
 
         self.dv.cd('Wavemeter Line Scan', True)
         dataset = self.dv.new('Wavemeter Line Scan', [('freq', 'Hz')],
@@ -62,7 +73,11 @@ class wavemeter_linescan(experiment):
 
         self.currentfreq = self.currentfrequency()
         tempdata = []
-        while True:
+        for i, freq in enumerate(scan):
+            progress = 100*float(i)/len(scan)
+            self.sc.script_set_progress(self.ident, progress)
+            self.locker.set_point(freq['THz'])
+            time.sleep(self.wait['s'])
             should_stop = self.pause_or_stop()
             if should_stop:
                 tempdata.sort()
@@ -72,6 +87,8 @@ class wavemeter_linescan(experiment):
             self.currentfrequency()
             if self.currentfreq and counts:
                 tempdata.append([self.currentfreq['GHz'], counts])
+        tempdata.sort()
+        self.dv.add(tempdata)
 
     def currentfrequency(self):
         absfreq = WithUnit(float(self.wm.get_frequency(self.port)), 'THz')

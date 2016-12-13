@@ -112,6 +112,7 @@ class dacclient(QtGui.QWidget):
     def change_multipole(self):
         Mvector = []
         for multipole in self.multipoles:
+            print multipole.spinLevel.value()
             Mvector.append(multipole.spinLevel.value())
         Mvector = np.array(Mvector)
         Evector = self.M.dot(Mvector)
