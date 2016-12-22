@@ -53,26 +53,27 @@ class wavemeter_linescan(experiment):
                                      name='Wavemeter Scan', password='lab')
         self.wm = self.cxnwlm.multiplexerserver
         self.dv = self.cxn.data_vault
+        self.dv.cd('Wavemeter Line Scan', True)
         self.grapher = self.cxn.grapher
         self.pmt = self.cxn.normalpmtflow
         self.locker = self.cxn.single_wm_lock_server
+        self.init_freq = WithUnit(float(self.wm.get_frequency(self.port)), 'THz')
 
-    def run(self, cxn, context):
+    def run(self, cxn, context, append=''):
 
         min, max, steps = self.parameters.wavemeterscan.line_scan
         scan = np.linspace(min['THz'], max['THz'], steps)
         scan = [WithUnit(pt, 'THz') for pt in scan]
-
-        self.dv.cd('Wavemeter Line Scan', True)
-        dataset = self.dv.new('Wavemeter Line Scan', [('freq', 'Hz')],
+        dataset = self.dv.new(append + 'Wavemeter Line Scan', [('freq', 'Hz')],
                               [('', 'Amplitude', 'kilocounts/sec')])
-        self.grapher.plot(dataset, 'spectrum', False)
 
         self.dv.add_parameter('Frequency', self.centerfrequency)
         self.dv.add_parameter('Laser', self.laser)
 
         self.currentfreq = self.currentfrequency()
         tempdata = []
+        self.locker.set_point(scan[0]['THz'])
+        time.sleep(1.0) # allows lock to catch up
         for i, freq in enumerate(scan):
             progress = 100*float(i)/len(scan)
             self.sc.script_set_progress(self.ident, progress)
@@ -82,19 +83,26 @@ class wavemeter_linescan(experiment):
             if should_stop:
                 tempdata.sort()
                 self.dv.add(tempdata)
+                self.grapher.plot(dataset, 'spectrum', False)
                 break
-            counts = self.pmt.get_next_counts('ON', 1, False)
+            counts = self.pmt.get_next_counts('ON', 1, False)[0]
             self.currentfrequency()
             if self.currentfreq and counts:
-                tempdata.append([self.currentfreq['GHz'], counts])
+                    tempdata.append([self.currentfreq['GHz'], counts])
         tempdata.sort()
         self.dv.add(tempdata)
+        time.sleep(1)
+        self.grapher.plot(dataset, 'spectrum', False)
 
     def currentfrequency(self):
-        absfreq = WithUnit(float(self.wm.get_frequency(self.port)), 'THz')
-        self.currentfreq = absfreq - self.centerfrequency
+        try:
+            absfreq = WithUnit(float(self.wm.get_frequency(self.port)), 'THz')
+            self.currentfreq = absfreq - self.centerfrequency
+        except:
+            pass
 
     def finalize(self, cxn, context):
+        self.locker.set_point(self.init_freq['THz'])
         self.cxn.disconnect()
         self.cxnwlm.disconnect()
 

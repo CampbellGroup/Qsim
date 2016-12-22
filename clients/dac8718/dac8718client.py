@@ -5,28 +5,22 @@ from PyQt4 import QtGui
 from config.dac_8718_config import dac_8718_config
 import numpy as np
 
-
 class Electrode():
 
-    def __init__(self, dac, octant, minval, maxval, settings):
+    def __init__(self, dac, octant, minval, maxval):
 
         self.dac = dac
         self.octant = octant
         self.minval = minval
         self.maxval = maxval
         self.name = str('DAC: ' + str(dac))
-        self.setup_widget(settings)
+        self.setup_widget()
 
-    def setup_widget(self, settings):
+    def setup_widget(self):
 
         self.spinBox = QCustomSpinBox(self.name, (self.minval, self.maxval))
-
-        try:
-            self.init_voltage = settings[self.name]
-            self.spinBox.spinLevel.setValue(self.init_voltage)
-        except:
-            self.init_voltage = 0.0
-            self.spinBox.spinLevel.setValue(0.0)
+        self.init_voltage = 0.0
+        self.spinBox.spinLevel.setValue(0.0)
 
         self.spinBox.setStepSize(0.001)
         self.spinBox.spinLevel.setDecimals(3)
@@ -39,11 +33,6 @@ class dacclient(QtGui.QWidget):
         super(dacclient, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor
-        self.config = dac_8718_config()
-        self.minval = self.config.minval
-        self.maxval = self.config.maxval
-        self.M = self.config.M
-        self.U = self.config.U
         self.connect()
 
     @inlineCallbacks
@@ -51,27 +40,17 @@ class dacclient(QtGui.QWidget):
 
         from labrad.wrappers import connectAsync
         from labrad.units import WithUnit as U
-
+        self.config = dac_8718_config()
+        self.minval = self.config.minval
+        self.maxval = self.config.maxval
         self.U = U
         self.cxn = yield connectAsync(name="dac8718 client")
-        self.server = self.cxn.dac8718
-        self.reg = self.cxn.registry
-        yield self.get_settings()
-        yield self.initialize_GUI()
-
-    @inlineCallbacks
-    def get_settings(self):
-
-        self.settings = {}
-        yield self.reg.cd('settings', True)
-        self.keys = yield self.reg.dir()
-        self.keys = self.keys[1]
-        for key in self.keys:
-            value = yield self.reg.get(key)
-            self.settings[key] = value
+        self.server = self.cxn.multipole_server
+        self.dacserver = self.cxn.dac8718
+        self.init_multipoles = yield self.server.get_multipoles()
+        self.initialize_GUI()
 
     def initialize_GUI(self):
-
         layout = QtGui.QGridLayout()
         self.electrodes = {}
         qBox = QtGui.QGroupBox('DAC Channels')
@@ -85,12 +64,14 @@ class dacclient(QtGui.QWidget):
         self.multipoles = []
         j = 0
         for i, multipole in enumerate(multipole_names):
+            k = i
             if i >= 4:
                 j = 1
                 i = i - 4
             spinbox = QCustomSpinBox(multipole, (-100, 100))
             spinbox.setStepSize(0.001)
             spinbox.spinLevel.setDecimals(3)
+            spinbox.spinLevel.setValue(self.init_multipoles[k])
             spinbox.spinLevel.valueChanged.connect(self.change_multipole)
             layout.addWidget(spinbox, 3 + j, i + 1, 1, 1)
             self.multipoles.append(spinbox)
@@ -99,32 +80,27 @@ class dacclient(QtGui.QWidget):
 
         for channel in self.config.channels:
             electrode = Electrode(channel.dac, channel.octant,
-                                  self.minval, self.maxval, self.settings)
-            self.update_dac(electrode.init_voltage, channel)
-
+                                  self.minval, self.maxval)
             self.electrodes[electrode.octant] = electrode
             subLayout.addWidget(electrode.spinBox)
             electrode.spinBox.spinLevel.valueChanged.connect(lambda value=electrode.spinBox.spinLevel.value(),
                                                              electrode=electrode: self.update_dac(value, electrode))
 
+        self.change_multipole('dummy value')
         self.setLayout(layout)
 
-    def change_multipole(self):
+    @inlineCallbacks
+    def change_multipole(self, value):
         Mvector = []
         for multipole in self.multipoles:
-            print multipole.spinLevel.value()
             Mvector.append(multipole.spinLevel.value())
-        Mvector = np.array(Mvector)
-        Evector = self.M.dot(Mvector)
-
-        if max(Evector) >= self.maxval:
-            return
-        if min(Evector) <= self.minval:
-            return
-
-        for octant, voltage in enumerate(Evector):
-            self.update_dac(voltage, self.electrodes[octant + 1])
-            self.electrodes[octant + 1].spinBox.spinLevel.setValue(voltage)
+        print Mvector
+        Evector = yield self.server.set_multipoles(Mvector)
+        print Evector
+        if len(Evector) == 8:
+            for octant, voltage in enumerate(Evector):
+                self.electrodes[octant + 1].spinBox.spinLevel.setValue(voltage)
+                self.electrodeind.update_octant(octant + 1, voltage)
 
     def volt_to_bit(self, volt):
         m = (2**16 - 1)/(self.maxval - self.minval)
@@ -136,8 +112,11 @@ class dacclient(QtGui.QWidget):
     def update_dac(self, voltage, electrode):
 
         bit = self.volt_to_bit(voltage)
-        yield self.server.dacoutput(electrode.dac, bit)
+        yield self.dacserver.dacoutput(electrode.dac, bit)
         self.electrodeind.update_octant(electrode.octant, voltage)
+
+    def closeEvent(self, event):
+        self.server.save_multipoles_to_registry()
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])

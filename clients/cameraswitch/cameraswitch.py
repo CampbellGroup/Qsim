@@ -38,7 +38,6 @@ class cameraswitch(QtGui.QWidget):
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
         widget = QCustomSwitchChannel('Camera/PMT Toggle', ('PMT', 'Camera'))
-        RFwidget = QCustomSwitchChannel('RF Drive Switch', ('RF On', 'RF Off'))
         if 'cameraswitch' in self.settings:
             value = yield self.reg.get('cameraswitch')
             value = bool(value)
@@ -46,14 +45,7 @@ class cameraswitch(QtGui.QWidget):
         else:
             widget.TTLswitch.setChecked(False)
 
-        if 'RFswitch' in self.settings:
-            value = yield self.reg.get('RFswitch')
-            value = bool(value)
-            RFwidget.TTLswitch.setChecked(value)
-
         widget.TTLswitch.toggled.connect(self.toggle)
-        RFwidget.TTLswitch.toggled.connect(self.toggleRF)
-        layout.addWidget(RFwidget)
         layout.addWidget(widget)
         self.setLayout(layout)
 
@@ -67,15 +59,6 @@ class cameraswitch(QtGui.QWidget):
         yield self.server.ttl_read(8)
         if 'cameraswitch' in self.settings:
             yield self.reg.set('cameraswitch', state)
-
-    @inlineCallbacks
-    def toggleRF(self, state):
-        '''
-        Toggles RF
-        '''
-        yield self.server.ttl_output(7, not state)
-        if 'RFswitch' in self.settings:
-            yield self.reg.set('RFswitch', state)
 
     def closeEvent(self, x):
         self.reactor.stop()
