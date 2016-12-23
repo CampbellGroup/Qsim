@@ -3,7 +3,7 @@ from Qsim.clients.qtui.electrodewidget import ElectrodeIndicator
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
 from config.dac_8718_config import dac_8718_config
-import numpy as np
+
 
 class Electrode():
 
@@ -94,9 +94,7 @@ class dacclient(QtGui.QWidget):
         Mvector = []
         for multipole in self.multipoles:
             Mvector.append(multipole.spinLevel.value())
-        print Mvector
         Evector = yield self.server.set_multipoles(Mvector)
-        print Evector
         if len(Evector) == 8:
             for octant, voltage in enumerate(Evector):
                 self.electrodes[octant + 1].spinBox.spinLevel.setValue(voltage)

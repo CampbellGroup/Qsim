@@ -20,7 +20,6 @@ from twisted.internet.defer import returnValue
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks
 from config.dac_8718_config import dac_8718_config
-import os
 import socket
 import numpy as np
 
@@ -64,7 +63,6 @@ class Multipole_Server(LabradServer):
 
         yield self.reg.cd('settings', True)
         self.multipoles = yield self.reg.get('Multipoles')
-        print self.multipoles
 
         self.electrodes = {}
         for channel in self.config.channels:
