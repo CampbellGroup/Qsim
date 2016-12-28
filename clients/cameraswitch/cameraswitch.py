@@ -27,7 +27,7 @@ class cameraswitch(QtGui.QWidget):
         self.reg = yield self.cxn.get_server('registry')
 
         try:
-            yield self.reg.cd('settings')
+            yield self.reg.cd(['', 'settings'])
             self.settings = yield self.reg.dir()
             self.settings = self.settings[1]
         except:

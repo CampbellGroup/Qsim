@@ -61,7 +61,7 @@ class Multipole_Server(LabradServer):
         self.server = self.cxn.dac8718
         self.reg = self.cxn.registry
 
-        yield self.reg.cd('settings', True)
+        yield self.reg.cd(['', 'settings'], True)
         self.multipoles = yield self.reg.get('Multipoles')
 
         self.electrodes = {}

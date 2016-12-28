@@ -136,13 +136,15 @@ class QSIM_GUI(QtGui.QMainWindow):
         from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import switchclient
         from Qsim.clients.dac8718.dac8718client import dacclient
+        from Qsim.clients.load_control.load_control import LoadControl
 
         gridLayout = QtGui.QGridLayout()
-        gridLayout.addWidget(pmtWidget(reactor, cxn),      0, 0, 1, 1)
-        gridLayout.addWidget(RFcontrol(reactor, cxn),      1, 0, 1, 1)
+        gridLayout.addWidget(pmtWidget(reactor, cxn),      1, 0, 1, 1)
+        gridLayout.addWidget(RFcontrol(reactor, cxn),      3, 0, 1, 1)
         gridLayout.addWidget(cameraswitch(reactor, cxn),   2, 0, 1, 1)
-        gridLayout.addWidget(switchclient(reactor, cxn),   3, 0, 1, 1)
-        gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 4, 1)
+        gridLayout.addWidget(switchclient(reactor, cxn),   0, 0, 1, 1)
+        gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 2, 1)
+        gridLayout.addWidget(LoadControl(reactor, cxn),    2, 1, 2, 1)
         gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget
