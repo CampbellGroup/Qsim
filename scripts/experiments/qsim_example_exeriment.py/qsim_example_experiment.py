@@ -1,7 +1,5 @@
 import labrad
-import numpy as np
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-import time
 
 
 class experiment_example(QsimExperiment):
