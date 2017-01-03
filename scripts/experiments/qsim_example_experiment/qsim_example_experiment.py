@@ -29,9 +29,7 @@ class experiment_example(QsimExperiment):
         '''
         This function does any initialization needed, Such as connecting to
         equipment servers or setting up Data Vault or the grapher.
-        Objects available in this function afrom labrad.units import WithUnit
-import time
-import socketre cxn (a connection to LabRAD),
+        Objects available in this function are cxn (a connection to LabRAD),
         context (the LabRAD connection id) and ident (the scriptscanner connection id)
         '''
 

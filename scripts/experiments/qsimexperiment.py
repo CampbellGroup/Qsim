@@ -65,10 +65,7 @@ class QsimExperiment(experiment):
 
             should_stop = self.pause_or_stop()
             self.sc.script_set_progress(self.ident, 100*progress)
-            if should_stop:
-                return True
-            else:
-                return False
+            return should_stop
 
     def get_scan_list(self, scan, units):
         if units is None:
