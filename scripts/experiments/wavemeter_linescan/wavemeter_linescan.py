@@ -1,8 +1,8 @@
 import labrad
-from labrad.units import WithUnit
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
 import os
+
 
 class wavemeter_linescan(QsimExperiment):
 

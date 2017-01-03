@@ -13,7 +13,7 @@ class dipole_interogation(pulse_sequence):
     required_subsequences = [empty_sequence]
 
     replaced_parameters = {
-                           empty_sequence:[('EmptySequence','empty_sequence_duration')]
+                           empty_sequence: [('EmptySequence', 'empty_sequence_duration')]
                            }
 
     def sequence(self):
