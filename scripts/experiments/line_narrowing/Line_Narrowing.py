@@ -1,12 +1,10 @@
 import labrad
-from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
+from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.wavemeter_linescan.wavemeter_linescan import wavemeter_linescan
-from labrad.units import WithUnit
-import time
-import socket
 import numpy as np
 
-class Line_Narrowing(experiment):
+
+class Line_Narrowing(QsimExperiment):
 
     name = 'Line_Narrowing'
 
@@ -15,80 +13,48 @@ class Line_Narrowing(experiment):
     exp_parameters.append(('Line_Narrowing', 'direction'))
 
     exp_parameters.append(('wavemeterscan', 'lasername'))
-
     exp_parameters.append(('wavemeterscan', 'Port_369'))
-    exp_parameters.append(('wavemeterscan', 'Port_399'))
-    exp_parameters.append(('wavemeterscan', 'Port_935'))
-
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_369'))
-    exp_parameters.append(('wavemeterscan', 'Center_Frequency_399'))
-    exp_parameters.append(('wavemeterscan', 'Center_Frequency_935'))
-
     exp_parameters.append(('wavemeterscan', 'line_scan'))
     exp_parameters.append(('wavemeterscan', 'pause_time'))
 
-    @classmethod
-    def all_required_parameters(cls):
-        return cls.exp_parameters
-
     def initialize(self, cxn, context, ident):
 
+        self.multipole_names = {'Ex': 0, 'Ey': 1, 'Ez': 2}
         self.ident = ident
         self.wmlinescan = self.make_experiment(wavemeter_linescan)
-        self.wmlinescan.initialize(cxn, context,ident)
-        self.cxn = labrad.connect(name='Line_narrowing exp')
-        self.dv = self.cxn.data_vault
-        self.grapher = self.cxn.grapher
+        self.wmlinescan.initialize(cxn, context, ident)
         self.mps = self.cxn.multipole_server
         self.init_multipoles = cxn.multipole_server.get_multipoles()
-        self.p = self.parameters
 
     def run(self, cxn, context):
 
         '''
         Main loop
         '''
-        min, max, steps = self.p.Line_Narrowing.voltage_scan
-        direction = self.p.Line_Narrowing.direction
-        scan = np.linspace(min, max, steps)
-        scan = [pt for pt in scan]
-        multipoles = np.array(self.init_multipoles)
-        if direction == 'Ex':
-            multipoleindex = 0
-        elif direction == 'Ey':
-            multipoleindex = 1
-        else:
-            multipoleindex = 2
 
-        self.setup_datavault()
-        for i, step in enumerate(scan):
-                multipoles[multipoleindex] = step
-                self.mps.set_multipoles(multipoles)
-                should_stop = self.pause_or_stop()
-                if should_stop:
-                    break
-                self.wmlinescan.run(cxn, context,
-                                    append=' ' + direction + ' ' + str(step) + ' ')
-                progress = 100*float(i)/steps
-                self.sc.script_set_progress(self.ident, progress)
+        self.setup_parameters()
+        x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan)
 
-    def setup_datavault(self):
+        for i, step in enumerate(x_values):
 
-        '''
-        Adds parameters to datavault and parameter vault
-        '''
-        pass
+            should_break = self.update_progress(i/float(len(self.x_values)))
+            if should_break:
+                break
 
-#        self.dv.cd('Line Narrowing', True)
-#        dataset = self.dv.new('ML Piezo Scan', [('Volt', 'num')],
-#                              [('kilocounts/sec', '', 'num')])
-#        self.grapher.plot(dataset, 'ML Piezo Scan', False)
-#        self.dv.add_parameter('scan', self.scan)
-#        self.dv.add_parameter('average', self.average)
+            self.multipoles[self.multipole_index] = step
+            self.mps.set_multipoles(self.multipoles)
+            self.wmlinescan.run(cxn, context)
+            self.wmlinescan.dv.add_parameter(self.multipole_direction, step)
+
+    def setup_parameters(self):
+
+        self.multipole_direction = self.p.Line_Narrowing.direction
+        self.multipole_index = self.multipole_names[self.multipole_direction]
+        self.multipoles = np.array(self.init_multipoles)
 
     def finalize(self, cxn, context):
         self.mps.set_multipoles(self.init_multipoles)
-        self.cxn.disconnect()
 
 
 if __name__ == '__main__':

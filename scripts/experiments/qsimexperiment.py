@@ -1,6 +1,7 @@
 from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
 import numpy as np
 
+
 class QsimExperiment(experiment):
 
     @classmethod
@@ -37,9 +38,8 @@ class QsimExperiment(experiment):
 
         try:
             self.grapher = self.cxn.servers['grapher']
-        except KeyError as error:
-            error_message = error + '\n' + "Grapher is not running"
-            raise KeyError(error_message)
+        except:
+            self.grapher = None
 
     def setup_datavault(self, x_axis, y_axis):
 
@@ -70,9 +70,14 @@ class QsimExperiment(experiment):
             else:
                 return False
 
-    def get_scan_list(self, scan):
-        minvalue = scan[0]
-        maxvalue = scan[1]
+    def get_scan_list(self, scan, units):
+        if units is None:
+            minvalue = scan[0]
+            maxvalue = scan[1]
+        else:
+            minvalue = scan[0][units]
+            maxvalue = scan[1][units]
+
         num_steps = scan[2]
         scan_list = np.linspace(minvalue, maxvalue, num_steps)
         return list(scan_list)
