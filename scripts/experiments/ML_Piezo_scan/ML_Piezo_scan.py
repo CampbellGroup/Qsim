@@ -1,6 +1,7 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
+import os
 
 
 class MLpiezoscan(QsimExperiment):
@@ -17,7 +18,8 @@ class MLpiezoscan(QsimExperiment):
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
-        self.cxnwlm = labrad.connect('10.97.112.2', password='lab')
+        self.cxnwlm = labrad.connect('10.97.112.2',
+                                     password=os.environ['LABRADPASSWORD'])
         self.locker = self.cxn.single_wm_lock_server
         self.wm = self.cxnwlm.multiplexerserver
         self.pmt = self.cxn.normalpmtflow

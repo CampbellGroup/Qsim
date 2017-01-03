@@ -2,6 +2,7 @@ import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
 import socket
+import os
 
 
 class lasermonitor(QsimExperiment):
@@ -17,7 +18,7 @@ class lasermonitor(QsimExperiment):
         self.ident = ident
         self.cxnwlm = labrad.connect('10.97.112.2',
                                      name=socket.gethostname() + " Laser Monitor",
-                                     password='lab')
+                                     password=os.environ['LABRADPASSWORD'])
 
         self.wlm = self.cxnwlm.multiplexerserver
 

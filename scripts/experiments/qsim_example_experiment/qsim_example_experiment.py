@@ -29,7 +29,9 @@ class experiment_example(QsimExperiment):
         '''
         This function does any initialization needed, Such as connecting to
         equipment servers or setting up Data Vault or the grapher.
-        Objects available in this function are cxn (a connection to LabRAD),
+        Objects available in this function afrom labrad.units import WithUnit
+import time
+import socketre cxn (a connection to LabRAD),
         context (the LabRAD connection id) and ident (the scriptscanner connection id)
         '''
 
@@ -47,7 +49,7 @@ class experiment_example(QsimExperiment):
         self.amplitude = self.p.example_parameters.Amplitude  # shortens the amplitude name
         # the following generates a list of the points used in the scan. If the points
         # have LabRAD unit types they can be specified in the second argument
-        self.x_values = self.get_scan_list(self.p.example_parameters.Range, units=None) 
+        self.x_values = self.get_scan_list(self.p.example_parameters.Range, units=None)
 
         for i, x_point in enumerate(self.x_values):  # Main Loop. Every iteration will have an index i and an associated x point 
 

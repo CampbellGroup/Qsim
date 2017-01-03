@@ -7,6 +7,7 @@ Created on Sep 21, 2016
 from PyQt4 import QtGui, QtCore
 from twisted.internet.defer import inlineCallbacks
 from twisted.internet.task import LoopingCall
+import os
 
 
 class indicator():
@@ -44,7 +45,8 @@ class LoadIndicator(QtGui.QWidget):
 
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync(name='Load Indicator')
-        self.cxnwlm = yield connectAsync('10.97.112.2', password='lab',
+        self.cxnwlm = yield connectAsync('10.97.112.2',
+                                         password=os.environ['LABRADPASSWORD'],
                                          name='Load Indicator')
         self.wlm = self.cxnwlm.multiplexerserver
 

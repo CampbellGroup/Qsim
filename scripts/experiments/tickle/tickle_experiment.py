@@ -3,6 +3,7 @@ from common.lib.servers.abstractservers.script_scanner.scan_methods import exper
 from labrad.units import WithUnit
 import time
 import socket
+import os
 
 
 class ticklescan(experiment):
@@ -25,7 +26,8 @@ class ticklescan(experiment):
         self.ident = ident
         self.cxn = labrad.connect(name='Tickle Scan')
         self.cxnwlm = labrad.connect('10.97.112.2',
-                                     name=socket.gethostname() + " Tickle Scan", password = 'lab')
+                                     name=socket.gethostname() + " Tickle Scan",
+                                     password=os.environ['LABRADPASSWORD'])
         self.dv = self.cxn.data_vault
         self.grapher = self.cxn.grapher
         self.rg = self.cxnwlm.rigol_dg1022_server
