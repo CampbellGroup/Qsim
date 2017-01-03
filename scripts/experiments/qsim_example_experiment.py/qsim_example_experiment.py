@@ -4,6 +4,8 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 
 class experiment_example(QsimExperiment):
     
+    name = 'Example Experiment' # gives a name to display on scripscanner
+    
     '''
     This expirement_example inherits from the QsimExperiment Class which in turn inherits
     from the experiment class. This provides functionality for saving data, plotting and connecting 
@@ -28,7 +30,8 @@ class experiment_example(QsimExperiment):
         Objects available in this function are cxn (a connection to LabRAD), context (the LabRAD
         connection id) and ident (the scriptscanner connection id)
         '''
-
+        
+        self.ident = ident # this is required so that script scanner can sort and access different instances
         self.setup_datavault('Range', 'Amplitude') # gives the x and y names to Data Vault 
         self.setup_grapher('experiment_example') # Tells the grapher which tab to plot the data on
 
@@ -41,7 +44,9 @@ class experiment_example(QsimExperiment):
         '''
 
         self.amplitude = self.p.example_parameters.Amplitude # shortens the amplitude name
-        self.x_values = self.get_scan_list(self.p.example_parameters.Range) # uses function in qsimexperiment to return an iterable list from a scan
+        # the following generates a list of the points used in the scan. If the points
+        # have LabRAD unit types they can be specified in the second argument
+        self.x_values = self.get_scan_list(self.p.example_parameters.Range, units=None) 
 
         for i, x_point in enumerate(self.x_values): # Main Loop. Every iteration will have an index i and an associated x point 
             
@@ -53,8 +58,8 @@ class experiment_example(QsimExperiment):
             if should_break:
                 break
 
-            y = self.amplitude * value**2 # calculates the parabola
-            self.dv.add(value, y) # adds the data to Data Vault which will be automatically plotted
+            y_point = self.amplitude * x_point**2 # calculates the parabola
+            self.dv.add(x_point, y_point) # adds the data to Data Vault which will be automatically plotted
         
     def finalize(self, cxn, context):
         '''
