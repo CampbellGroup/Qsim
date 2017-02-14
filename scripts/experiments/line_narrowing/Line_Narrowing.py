@@ -34,11 +34,11 @@ class Line_Narrowing(QsimExperiment):
         '''
 
         self.setup_parameters()
-        x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan)
+        x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan, units=None)
 
         for i, step in enumerate(x_values):
 
-            should_break = self.update_progress(i/float(len(self.x_values)))
+            should_break = self.update_progress(i/float(len(x_values)))
             if should_break:
                 break
 

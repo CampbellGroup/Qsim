@@ -3,7 +3,7 @@ from Qsim.clients.qtui.electrodewidget import ElectrodeIndicator
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
 from config.dac_8718_config import dac_8718_config
-
+import time
 
 class Electrode():
 
@@ -91,6 +91,7 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def change_multipole(self, value):
+        self.start = time.time()
         Mvector = []
         for multipole in self.multipoles:
             Mvector.append(multipole.spinLevel.value())
@@ -114,7 +115,7 @@ class dacclient(QtGui.QWidget):
         self.electrodeind.update_octant(electrode.octant, voltage)
 
     def closeEvent(self, event):
-        self.server.save_multipoles_to_registry()
+        pass
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])

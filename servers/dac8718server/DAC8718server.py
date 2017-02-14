@@ -127,9 +127,6 @@ class DAC8718(DeviceServer):
         value1 = int('0b' + value1, 2)
         value2 = value[8:]
         value2 = int('0b' + value2, 2)
-        print 'chan = ', chan
-        print 'first byte = ', value1
-        print 'second byte = ', value2
         yield dev.write(chr(chan))
         yield dev.write(chr(value1))
         yield dev.write(chr(value2))

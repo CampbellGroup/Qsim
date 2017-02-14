@@ -1,4 +1,4 @@
-from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
+from common.lib.servers.script_scanner.scan_methods import experiment
 import numpy as np
 
 

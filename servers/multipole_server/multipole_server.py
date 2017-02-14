@@ -20,6 +20,7 @@ from twisted.internet.defer import returnValue
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks
 from config.dac_8718_config import dac_8718_config
+from twisted.internet.task import LoopingCall
 import socket
 import numpy as np
 
@@ -47,6 +48,7 @@ class Multipole_Server(LabradServer):
         self.maxval = self.config.maxval
         self.M = self.config.M
         self.U = self.config.U
+        self.lc = LoopingCall(self.loop)
         self.connect()
 
     @inlineCallbacks
@@ -58,7 +60,10 @@ class Multipole_Server(LabradServer):
 
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync(name='Multipole Server')
-        self.server = self.cxn.dac8718
+        try:
+            self.server = self.cxn.dac8718
+        except:
+            self.server = None
         self.reg = self.cxn.registry
 
         yield self.reg.cd(['', 'settings'], True)
@@ -70,6 +75,26 @@ class Multipole_Server(LabradServer):
                                   self.minval, self.maxval, self.settings)
             self.update_dac(0.0, channel)
             self.electrodes[electrode.octant] = electrode
+
+        self.lc.start(5.0)  # start registry saving looping call
+
+    @inlineCallbacks
+    def setupListeners(self):
+        yield self.client.manager.subscribe_to_named_message('Server Connect', 9898689, True)
+        yield self.client.manager.subscribe_to_named_message('Server Disconnect', 9398989, True)
+
+    @inlineCallbacks
+    def followServerConnect(self, cntx, serverName):
+        serverName = serverName[1]
+        if serverName == 'dac8718':
+            yield self.client.refresh()
+            yield self.connect()
+
+    @inlineCallbacks
+    def followServerDisconnect(self, cntx, serverName):
+        serverName = serverName[1]
+        if serverName == 'dac8718':
+            self.server = None
 
     @setting(16, Mvector='*v', returns='*v')
     def set_multipoles(self, c, Mvector):
@@ -102,8 +127,14 @@ class Multipole_Server(LabradServer):
 
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
+        if not self.server:
+            returnValue('Server not Connected')
         bit = self.volt_to_bit(voltage)
         yield self.server.dacoutput(electrode.dac, bit)
+
+    @inlineCallbacks
+    def loop(self):
+        yield self.reg.set('Multipoles', self.multipoles)
 
 
 if __name__ == "__main__":

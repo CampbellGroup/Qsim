@@ -19,11 +19,11 @@ class dacRaster(experiment):
 
     exp_parameters.append(('dacraster', 'X_Voltage'))
     exp_parameters.append(('dacraster', 'Y_Voltage'))
-    exp_parameters.append(('dacraster', 'DC_Offset_Voltage'))
+    exp_parameters.append(('dacraster', 'Z_Voltage'))
 
     exp_parameters.append(('dacraster', 'Scan_X'))
     exp_parameters.append(('dacraster', 'Scan_Y'))
-    exp_parameters.append(('dacraster', 'Scan_DC'))
+    exp_parameters.append(('dacraster', 'Scan_Z'))
 
     exp_parameters.append(('dacraster', 'Pause_Time'))
 
@@ -49,17 +49,17 @@ class dacRaster(experiment):
         self.Yvalues = np.linspace(self.Yminval, self.Ymaxval,
                                    self.Ynumberofsteps)
 
-        self.DCminval = self.parameters.dacraster.DC_Offset_Voltage[0]['V']
-        self.DCmaxval = self.parameters.dacraster.DC_Offset_Voltage[1]['V']
-        self.DCnumberofsteps = int(self.parameters.dacraster.DC_Offset_Voltage[2])
-        self.DCstepsize = int((float(self.DCmaxval) - self.DCminval)/(self.DCnumberofsteps - 1))
-        self.DCvalues = np.linspace(self.DCminval, self.DCmaxval,
-                              self.DCnumberofsteps)
+        self.Zminval = self.parameters.dacraster.Z_Voltage[0]['V']
+        self.Zmaxval = self.parameters.dacraster.Z_Voltage[1]['V']
+        self.Znumberofsteps = int(self.parameters.dacraster.Z_Voltage[2])
+        self.Zstepsize = int((float(self.DCmaxval) - self.DCminval)/(self.DCnumberofsteps - 1))
+        self.Zvalues = np.linspace(self.DCminval, self.DCmaxval,
+                                   self.Znumberofsteps)
 
-        self.totalstep = (self.Xnumberofsteps)  * (self.Ynumberofsteps ) * (self.DCnumberofsteps )
+        self.totalstep = (self.Xnumberofsteps)  * (self.Ynumberofsteps ) * (self.Znumberofsteps )
 
-        if self.parameters.dacraster.Scan_DC:
-            self.lowestaxis = 'DC'
+        if self.parameters.dacraster.Scan_Z:
+            self.lowestaxis = 'Z'
         elif self.parameters.dacraster.Scan_Y:
             self.lowestaxis = 'Y'
         else:
@@ -75,37 +75,22 @@ class dacRaster(experiment):
             for yvoltage in self.Yvalues:
                 self.currentyvolt = yvoltage
                 self.changevoltage('Y', yvoltage)
-                for dcvoltage in self.DCvalues:
-                    self.changevoltage('DC', dcvoltage)
+                for zvoltage in self.Zvalues:
+                    self.changevoltage('Z', zvoltage)
                     should_stop = self.pause_or_stop()
                     if should_stop:
                         return
 
-    def dacoutput(self, voltage):
-        output = int(255/25.4 * (voltage) + 127.5)
-        return output
-
     def changevoltage(self, direction, voltage):
-        output = self.dacoutput(voltage)
-        minusoutput = self.dacoutput(-voltage)
-        if output > 255:
-            output = 255
-        elif output < 0:
-            output = 0
+
         if direction == 'X':
-            self.dac.dacoutput(1, output)
-            self.dac.dacoutput(2, minusoutput)
+
 
         elif direction == 'Y':
-            self.dac.dacoutput(3, output)
-            self.dac.dacoutput(5, minusoutput)
 
-        elif direction == 'DC':
 
-            self.dac.dacoutput(1, self.dacoutput(self.currentxvolt + voltage))
-            self.dac.dacoutput(2, self.dacoutput(-self.currentxvolt + voltage))
-            self.dac.dacoutput(3, self.dacoutput(self.currentyvolt + voltage))
-            self.dac.dacoutput(5, self.dacoutput(-self.currentyvolt + voltage))
+        elif direction == 'Z':
+)
 
         if direction != self.lowestaxis:
             pass

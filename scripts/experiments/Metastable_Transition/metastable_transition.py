@@ -1,6 +1,6 @@
 import labrad
 import numpy as np
-from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
+from common.lib.servers.script_scanner.scan_methods import experiment
 from treedict import TreeDict
 from labrad.units import WithUnit
 import time

@@ -29,14 +29,15 @@ class wavemeter_linescan(QsimExperiment):
                                      password=os.environ['LABRADPASSWORD'])
         self.wm = self.cxnwlm.multiplexerserver
         self.pmt = self.cxn.normalpmtflow
+        self.init_mode = self.pmt.getcurrentmode()
         self.locker = self.cxn.single_wm_lock_server
-        self.init_freq = self.wm.get_frequency(self.port)
 
     def run(self, cxn, context):
 
         self.setup_parameters()
+        self.pmt.set_mode('Normal')
+        self.init_freq = self.wm.get_frequency(self.port)
         self.setup_datavault('Frequency (THz)', 'kcounts/sec')
-        self.setup_grapher('spectrum')
         self.currentfreq = self.currentfrequency()
         tempdata = []
         self.locker.set_point(self.x_values[0])
@@ -50,6 +51,7 @@ class wavemeter_linescan(QsimExperiment):
 
             if should_break:
                 tempdata.sort()
+                self.setup_grapher('spectrum')
                 self.dv.add(tempdata)
                 return
 
@@ -57,10 +59,13 @@ class wavemeter_linescan(QsimExperiment):
             currentfreq = self.currentfrequency()
 
             if currentfreq and counts:
-                    tempdata.append([1000*self.currentfreq, counts])
+                tempdata.append([1e6*currentfreq, counts])
 
-        tempdata.sort()
-        self.dv.add(tempdata)
+        if len(tempdata) > 0:
+            tempdata.sort()
+            self.setup_grapher('spectrum')
+            self.dv.add(tempdata)
+
         time.sleep(1)
 
     def setup_parameters(self):
@@ -69,27 +74,29 @@ class wavemeter_linescan(QsimExperiment):
         self.wait = self.p.wavemeterscan.pause_time
 
         if self.laser == '369':
-            self.port = self.p.wavemeterscan.Port_369
+            self.port = int(self.p.wavemeterscan.Port_369)
             self.centerfrequency = self.p.wavemeterscan.Center_Frequency_369
 
         elif self.laser == '399':
-            self.port = self.p.wavemeterscan.Port_399
+            self.port = int(self.p.wavemeterscan.Port_399)
             self.centerfrequency = self.p.wavemeterscan.Center_Frequency_399
 
         elif self.laser == '935':
-            self.port = self.p.wavemeterscan.Port_935
+            self.port = int(self.p.wavemeterscan.Port_935)
             self.centerfrequency = self.p.wavemeterscan.Center_Frequency_935
 
     def currentfrequency(self):
         try:
             absfreq = float(self.wm.get_frequency(self.port))
-            currentfreq = absfreq - self.centerfrequency
+            currentfreq = absfreq - self.centerfrequency['THz']
             return currentfreq
         except:
             return None
 
     def finalize(self, cxn, context):
         self.locker.set_point(self.init_freq)
+        time.sleep(1)
+        self.pmt.set_mode(self.init_mode)
         self.cxnwlm.disconnect()
 
 if __name__ == '__main__':

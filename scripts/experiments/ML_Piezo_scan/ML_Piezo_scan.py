@@ -20,6 +20,7 @@ class MLpiezoscan(QsimExperiment):
         self.ident = ident
         self.cxnwlm = labrad.connect('10.97.112.2',
                                      password=os.environ['LABRADPASSWORD'])
+        self.TTL = cxn.arduinottl
         self.locker = self.cxn.single_wm_lock_server
         self.wm = self.cxnwlm.multiplexerserver
         self.pmt = self.cxn.normalpmtflow
@@ -35,9 +36,14 @@ class MLpiezoscan(QsimExperiment):
         self.set_scannable_parameters()
         self.locker.set_point(self.WLcenter['THz'] + self.detuning['THz'])
         time.sleep(1.0)
-
+        cxn.arduinottl.ttl_output(12, False)
         self.setup_datavault('Volts', 'kcounts/sec')
         self.setup_grapher('ML Piezo Scan')
+        try:
+            MLfreq = cxn.bristol_521.get_wavelength()
+            self.dv.add_parameter('Bristol Reading', MLfreq)
+        except:
+            pass
 
         if self.mode == 'DIFF':
             self.pmt.set_mode('Differential')
@@ -64,6 +70,7 @@ class MLpiezoscan(QsimExperiment):
         self.x_values = self.get_scan_list(self.p.MLpiezoscan.scan, 'V')
 
     def finalize(self, cxn, context):
+        cxn.arduinottl.ttl_output(12, True)
         self.pmt.set_mode(self.init_mode)
 
 if __name__ == '__main__':

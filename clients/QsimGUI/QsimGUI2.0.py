@@ -1,8 +1,11 @@
+#!/usr/bin/env python
 from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks, returnValue
 import sys
+import os
 sys.path.append('/home/qsimexpcontrol/LabRAD/')
 sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
+os.environ["LABRADPASSWORD"] = "lab"
 
 class QSIM_GUI(QtGui.QMainWindow):
     def __init__(self, reactor, clipboard, parent=None):
@@ -32,16 +35,19 @@ class QSIM_GUI(QtGui.QMainWindow):
         analysis = self.makeAnalysisWidget(reactor, cxn)
         Tsunami = self.makeTsunamiWidget(reactor, cxn)
         Pulser = self.makePulserWidget(reactor, cxn)
+        Config = self.makeConfigWidget(reactor, cxn)
+        
 
         # add tabs
         self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.addTab(wavemeter, '&Wavemeter')
-        #self.tabWidget.addTab(M2, '&M2')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')
-        self.tabWidget.addTab(analysis, '&Analysis')
         self.tabWidget.addTab(Tsunami, '&Tsunami')
-	self.tabWidget.addTab(Pulser, '&Pulser')
+        self.tabWidget.addTab(Pulser, '&Pulser')
+        self.tabWidget.addTab(analysis, '&Analysis')
+        self.tabWidget.addTab(Config, '&Config')
+
 
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
@@ -75,6 +81,11 @@ class QSIM_GUI(QtGui.QMainWindow):
         from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
         DDS = DDS_CONTROL(reactor, cxn)
         return DDS
+    
+    def makeConfigWidget(self, reactor, cxn):
+        from common.lib.clients.config_editor.config_editor import CONFIG_EDITOR
+        widget = CONFIG_EDITOR(reactor, cxn)
+        return widget
 
     def makeTsunamiWidget(self, reactor, cxn):
         twidget = QtGui.QWidget()
