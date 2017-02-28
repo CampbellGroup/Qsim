@@ -133,24 +133,6 @@ class DACServer(LabradServer):
                 prec = hc.PREC_BITS
                 chan.calibration = [2**(prec - 1), float(2**(prec))/(vMax - vMin)]
 
-    @setting(2, "Set Digital Voltages", digital_voltages='*v', set_num='i')
-    def setDigitalVoltages(self, c, digital_voltages, set_num):
-        """
-        Pass digital_voltages, a list of digital voltages to update.
-        Currently, there must be one for each port.
-        """
-        l = zip(self.dac_dict.keys(), digital_voltages)
-        self.setIndivDigVoltages(c, l, set_num)
-
-    @setting(3, "Set Analog Voltages", analog_voltages='*v', set_num='i')
-    def setAnalogVoltages(self, c, analog_voltages, set_num):
-        """
-        Pass analog_voltages, a list of analog voltages to update.
-        Currently, there must be one for each port.
-        """
-        l = zip(self.dac_dict.keys(), analog_voltages)
-        yield self.setIndivAnaVoltages(c, l, set_num)
-
     @setting(4, "Set Individual Digital Voltages", digital_voltages='*(si)')
     def setIndividualDigitalVoltages(self, c, digital_voltages):
         """
