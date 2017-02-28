@@ -101,10 +101,6 @@ class DACServer(LabradServer):
         self.initializeBoard()
         print 'setting cals...'
         yield self.setCalibrations()
-#         try:
-#             yield self.setPreviousControlFile()
-#         except:
-#             yield self.setVoltagesZero()
 
     def initializeBoard(self):
         connected = self.api.connectOKBoard()
