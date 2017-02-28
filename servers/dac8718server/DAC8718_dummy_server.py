@@ -1,10 +1,10 @@
 """
 ### BEGIN NODE INFO
 [info]
-name = DAC8718 Server
+name = DAC8718 Dummy Server
 version = 1.0
 description =
-instancename = DAC8718 Server
+instancename = DAC8718 Dummy Server
 
 [startup]
 cmdline = %PYTHON% %FILE%
