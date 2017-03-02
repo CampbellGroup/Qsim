@@ -154,7 +154,7 @@ class DACServer(LabradServer):
         for i in range(len(self.queue.set_dict[self.queue.current_set])):
             v = self.queue.get()
             self.api.setDACVoltage(v.hex_rep)
-            if v.channel.name in dict(hc.elec_dict.items() + hc.sma_dict.items()).keys():
+            if v.channel.name in hc.elec_dict.keys():
                 self.current_voltages[v.channel.name] = v.analog_voltage
         if c is not None:
             self.notifyOtherListeners(c)

@@ -42,10 +42,20 @@ class api(object):
         self.xem.SetPLL22150Configuration(pll)
 
     def programBoard(self, sequence):
-        self.xem.WriteToBlockPipeIn(0x80, 2, sequence)
+        sequence_data = self.padTo16(sequence)
+        self.xem.WriteToBlockPipeIn(0x80, 16, bytearray(sequence_data))
 
     def resetFIFODAC(self):
         self.xem.ActivateTriggerIn(0x40, 8)
 
     def setDACVoltage(self, volstr):
-        self.xem.WriteToBlockPipeIn(0x82, 2, volstr)
+        volstr_padded = self.padTo16(volstr)
+        self.xem.WriteToBlockPipeIn(0x82, 16, volstr_padded)
+
+    def padTo16(self, data):
+        '''
+        Padding function to make the data a multiple of 16
+        '''
+        size_needed = (16 - len(data) % 16) % 16
+        zero_padding = bytearray(size_needed)
+        return data+zero_padding
