@@ -30,7 +30,7 @@ class Voltage(object):
 
     def program(self, set_num):
         '''
-        Compute the hex code to progam this voltage
+        Compute the hex code to program this voltage
         '''
         self.set_num = set_num
         if self.analog_voltage is not None:

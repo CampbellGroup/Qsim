@@ -5,6 +5,7 @@ from PyQt4 import QtGui
 from config.dac_8718_config import dac_8718_config
 import time
 
+
 class Electrode():
 
     def __init__(self, dac, octant, minval, maxval):
@@ -44,9 +45,9 @@ class dacclient(QtGui.QWidget):
         self.minval = self.config.minval
         self.maxval = self.config.maxval
         self.U = U
-        self.cxn = yield connectAsync(name="dac8718 client")
+        self.cxn = yield connectAsync(name="dac client")
         self.server = self.cxn.multipole_server
-        self.dacserver = self.cxn.dac8718
+        self.dacserver = self.cxn.dac_ad660_server
         self.init_multipoles = yield self.server.get_multipoles()
         self.initialize_GUI()
 
@@ -101,17 +102,11 @@ class dacclient(QtGui.QWidget):
                 self.electrodes[octant + 1].spinBox.spinLevel.setValue(voltage)
                 self.electrodeind.update_octant(octant + 1, voltage)
 
-    def volt_to_bit(self, volt):
-        m = (2**16 - 1)/(self.maxval - self.minval)
-        b = -1 * self.minval * m
-        bit = int(m*volt + b)
-        return bit
-
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
 
-        bit = self.volt_to_bit(voltage)
-        yield self.dacserver.dacoutput(electrode.dac, bit)
+        print electrode.dac
+        yield self.dacserver.set_individual_analog_voltages([(str(electrode.dac), voltage)])
         self.electrodeind.update_octant(electrode.octant, voltage)
 
     def closeEvent(self, event):

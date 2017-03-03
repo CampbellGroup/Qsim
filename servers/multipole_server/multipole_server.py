@@ -61,7 +61,7 @@ class Multipole_Server(LabradServer):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync(name='Multipole Server')
         try:
-            self.server = self.cxn.dac8718
+            self.server = self.cxn.dac_ad660_server
         except:
             self.server = None
         self.reg = self.cxn.registry
@@ -119,18 +119,11 @@ class Multipole_Server(LabradServer):
         yield None
         returnValue(self.multipoles)
 
-    def volt_to_bit(self, volt):
-        m = (2**16 - 1)/(self.maxval - self.minval)
-        b = -1 * self.minval * m
-        bit = int(m*volt + b)
-        return bit
-
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
         if not self.server:
             returnValue('Server not Connected')
-        bit = self.volt_to_bit(voltage)
-        yield self.server.dacoutput(electrode.dac, bit)
+        yield self.server.set_individual_analog_voltages([(str(electrode.dac), voltage)])
 
     @inlineCallbacks
     def loop(self):
