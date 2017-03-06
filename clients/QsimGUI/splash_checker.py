@@ -51,7 +51,7 @@ def checklabrad():
 
 def checknode(cxn):
     try:
-        node = cxn.node_qsimexpcontrol
+        node = cxn.node_mj
         return node
     except:
         return None
