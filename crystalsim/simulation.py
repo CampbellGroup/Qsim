@@ -75,7 +75,7 @@ def make_crystal(N_ions=6, starting_ions=None, constant_ion=None,
     return E[-1], ions
 
 
-def squeeze_crystal(starting_ions=None, max_assy=1.3, N_ions=6):
+def squeeze_crystal(starting_ions=None, max_assy=1.3, N_ions=6, steps = 100):
 
     timestamp = str(datetime.datetime.now())
 
@@ -84,7 +84,7 @@ def squeeze_crystal(starting_ions=None, max_assy=1.3, N_ions=6):
     else:
         prev_ions = None
 
-    assy_step = (max_assy - 1)/100
+    assy_step = (max_assy - 1)/steps
     path = str(N_ions) + '_Ions/' + timestamp + '/'
     if not os.path.isdir(path):
         os.makedirs(path)
@@ -103,10 +103,14 @@ def squeeze_crystal(starting_ions=None, max_assy=1.3, N_ions=6):
         color.append(ion.color)
 
     prev_ions = ions
-    for i in range(100):
+    Eprofile = []
+    assyprof = []
+    for i in range(steps):
         assymetry = 1 + i*assy_step
+	assyprof.append(assymetry)
         _E, ions = make_crystal(N_ions=N_ions, starting_ions=prev_ions,
                                 progress=False, assymetry=assymetry)
+	Eprofile.append(_E)
         prev_ions = ions
         x = []
         y = []
@@ -120,26 +124,7 @@ def squeeze_crystal(starting_ions=None, max_assy=1.3, N_ions=6):
         plt.text(0, 0, str(assymetry))
         plt.scatter(x, y, c=color)
         plt.pause(0.0001)
-        plt.savefig(path + 'Frame_' + str(i) + '.png')
-
-    for i in range(101):
-        assymetry = max_assy - i*assy_step
-        _E, ions = make_crystal(N_ions = N_ions, starting_ions = prev_ions, progress = False, assymetry = assymetry)
-        prev_ions = ions
-        x=[]
-        y=[]
-        for particle in ions:
-            x.append(particle.x * 1e6)
-            y.append(particle.y * 1e6)
-
-        plt.clf()
-        plt.xlim(xlims)
-        plt.ylim(ylims)
-        plt.text(0,0,str(assymetry))
-        plt.scatter(x,y, c = color)
-        plt.pause(0.0001)
-        plt.savefig(path + 'Frame_' + str(i + 100) + '.png')
-    return ions
+    return [assyprof, Eprofile]
 
 
 def drag_ion(crystal = symmetric_6(6e-6), pinned_ions = [0], initpos = [(0,0)], finalpos = [(0,6e-6)], 

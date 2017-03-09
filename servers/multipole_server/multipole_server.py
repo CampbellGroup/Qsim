@@ -19,7 +19,7 @@ timeout = 20
 from twisted.internet.defer import returnValue
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks
-from config.dac_8718_config import dac_8718_config
+from config.dac_ad660_config import hardwareConfiguration as hc
 from twisted.internet.task import LoopingCall
 import socket
 import numpy as np
@@ -27,7 +27,7 @@ import numpy as np
 
 class Electrode():
 
-    def __init__(self, dac, octant, minval, maxval, settings):
+    def __init__(self, dac, octant, minval, maxval):
 
         self.dac = dac
         self.octant = octant
@@ -43,11 +43,9 @@ class Multipole_Server(LabradServer):
     def initServer(self):
         self.name = socket.gethostname() + ' Multipole Server'
 
-        self.config = dac_8718_config()
-        self.minval = self.config.minval
-        self.maxval = self.config.maxval
-        self.M = self.config.M
-        self.U = self.config.U
+        self.hc = hc
+        self.M = self.hc.M
+        self.U = self.hc.U
         self.lc = LoopingCall(self.loop)
         self.connect()
 
@@ -61,7 +59,7 @@ class Multipole_Server(LabradServer):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync(name='Multipole Server')
         try:
-            self.server = self.cxn.dac8718
+            self.server = self.cxn.dac_ad660_server
         except:
             self.server = None
         self.reg = self.cxn.registry
@@ -70,11 +68,11 @@ class Multipole_Server(LabradServer):
         self.multipoles = yield self.reg.get('Multipoles')
 
         self.electrodes = {}
-        for channel in self.config.channels:
-            electrode = Electrode(channel.dac, channel.octant,
-                                  self.minval, self.maxval, self.settings)
-            self.update_dac(0.0, channel)
+        for chan_name, channel in self.hc.elec_dict.iteritems():
+            electrode = Electrode(channel.dacChannelNumber, channel.octantNumber,
+                                  minval = -10.0, maxval = 10.0)
             self.electrodes[electrode.octant] = electrode
+            #self.update_dac(0.0, channel)
 
         self.lc.start(5.0)  # start registry saving looping call
 
@@ -119,18 +117,11 @@ class Multipole_Server(LabradServer):
         yield None
         returnValue(self.multipoles)
 
-    def volt_to_bit(self, volt):
-        m = (2**16 - 1)/(self.maxval - self.minval)
-        b = -1 * self.minval * m
-        bit = int(m*volt + b)
-        return bit
-
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
         if not self.server:
             returnValue('Server not Connected')
-        bit = self.volt_to_bit(voltage)
-        yield self.server.dacoutput(electrode.dac, bit)
+        yield self.server.set_individual_analog_voltages([(str(electrode.dac), voltage)])
 
     @inlineCallbacks
     def loop(self):
