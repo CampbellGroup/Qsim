@@ -2,7 +2,7 @@ from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from Qsim.clients.qtui.electrodewidget import ElectrodeIndicator
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
-from config.dac_8718_config import dac_8718_config
+from config.dac_ad660_config import hardwareConfiguration as hc
 import time
 
 
@@ -41,10 +41,8 @@ class dacclient(QtGui.QWidget):
 
         from labrad.wrappers import connectAsync
         from labrad.units import WithUnit as U
-        self.config = dac_8718_config()
-        self.minval = self.config.minval
-        self.maxval = self.config.maxval
-        self.U = U
+        self.elec_dict = hc.elec_dict
+        self.U = hc.U
         self.cxn = yield connectAsync(name="dac client")
         self.server = self.cxn.multipole_server
         self.dacserver = self.cxn.dac_ad660_server
@@ -79,9 +77,9 @@ class dacclient(QtGui.QWidget):
 
         layout.addWidget(self.electrodeind, 0, 1, 1, 3)
 
-        for channel in self.config.channels:
-            electrode = Electrode(channel.dac, channel.octant,
-                                  self.minval, self.maxval)
+        for key, channel in self.elec_dict.iteritems():
+            electrode = Electrode(channel.dacChannelNumber, channel.octantNumber,
+                                  channel.allowedVoltageRange[0], channel.allowedVoltageRange[1])
             self.electrodes[electrode.octant] = electrode
             subLayout.addWidget(electrode.spinBox)
             electrode.spinBox.spinLevel.valueChanged.connect(lambda value=electrode.spinBox.spinLevel.value(),
@@ -105,7 +103,6 @@ class dacclient(QtGui.QWidget):
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
 
-        print electrode.dac
         yield self.dacserver.set_individual_analog_voltages([(str(electrode.dac), voltage)])
         self.electrodeind.update_octant(electrode.octant, voltage)
 

@@ -23,11 +23,11 @@ class QSIM_GUI(QtGui.QMainWindow):
 
     #Highest level adds tabs to big GUI
     def create_layout(self, cxn):
-	    #creates central layout
+        #  creates central layout
         centralWidget = QtGui.QWidget()
         layout = QtGui.QHBoxLayout()
 
-	    #create subwidgets to be added to tabs
+        #  create subwidgets to be added to tabs
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         wavemeter = self.makeWavemeterWidget(reactor, cxn)
         #M2 = self.makeM2Widget(reactor, cxn)
@@ -146,7 +146,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget
         from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import switchclient
-        from Qsim.clients.dac8718.dac8718client import dacclient
+        from Qsim.clients.dac_control.dac_client import dacclient
         from Qsim.clients.load_control.load_control import LoadControl
 
         gridLayout = QtGui.QGridLayout()
