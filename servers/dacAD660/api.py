@@ -30,13 +30,10 @@ class api(object):
         return False
 
     def programOKBoard(self):
-        print 'in program board...'
         prog = self.xem.ConfigureFPGA(self.okDeviceFile)
-        print 'sent file...'
         if prog:
             raise("Not able to program FPGA")
         pll = ok.PLL22150()
-        print 'configured PLL'
         self.xem.GetEepromPLL22150Configuration(pll)
         pll.SetDiv1(pll.DivSrc_VCO, 4)
         self.xem.SetPLL22150Configuration(pll)

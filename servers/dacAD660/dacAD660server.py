@@ -97,14 +97,11 @@ class DACServer(LabradServer):
     @inlineCallbacks
     def initServer(self):
         self.registry = self.client.registry
-        print 'initializing board...'
         self.initializeBoard()
-        print 'setting cals...'
         yield self.setCalibrations()
 
     def initializeBoard(self):
         connected = self.api.connectOKBoard()
-        print 'connected!'
         if not connected:
             raise Exception("FPGA Not Found")
 
@@ -113,7 +110,6 @@ class DACServer(LabradServer):
         ''' Go through the list of electrodes and try to detect calibrations '''
         yield self.registry.cd(self.registry_path + ['Calibrations'], True)
         subs, keys = yield self.registry.dir()
-        print 'Calibrated channels: ', subs
         for chan in self.dac_dict.values():
             c = []  # list of calibration coefficients in form [c0, c1, ..., cn]
             if str(chan.dacChannelNumber) in subs:
