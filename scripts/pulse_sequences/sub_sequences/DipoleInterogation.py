@@ -1,5 +1,4 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from EmptySequency import empty_sequence
 
 
 class dipole_interogation(pulse_sequence):
@@ -9,12 +8,6 @@ class dipole_interogation(pulse_sequence):
                            ('DipoleInterogation', 'interogation_frequency'),
                            ('DipoleInterogation', 'interogation_power')
                            ]
-
-    required_subsequences = [empty_sequence]
-
-    replaced_parameters = {
-                           empty_sequence: [('EmptySequence', 'empty_sequence_duration')]
-                           }
 
     def sequence(self):
         p = self.parameters.DipoleInterogation

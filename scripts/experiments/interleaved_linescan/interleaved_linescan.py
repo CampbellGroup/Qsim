@@ -28,25 +28,21 @@ class InterleavedLinescan(QsimExperiment):
     def run(self, cxn, context):
 
         self.frequencies = self.get_scan_list(self.p.InterleavedLinescan.line_scan, 'MHz')
-        power = self.parameters.DipoleInterogation.interogation_power
+        power = self.p.DipoleInterogation.interogation_power
         for freq in self.frequencies:
-            print freq, power
+            print freq
             #self.program_pulser(freq)
 
     def program_pulser(self, freq):
         self.pulser.reset_timetags()
-        self.parameters['DipoleInterogation.interogation_frequency'] = freq
-        pulse_sequence = sequence(self.parameters)
+        self.p['DipoleInterogation.interogation_frequency'] = freq
+        pulse_sequence = sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
         self.pulser.start_single()
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()
-        #timetags = self.pulser.get_timetags()
-        #if timetags.size >= 65535:
-        #    raise Exception("Timetags Overflow, should reduce number of back to back pulse sequences")
-        #else:
-            #print 'save data'
-            #self.dv.add([index, timetags.size], context = self.total_timetag_save_context)
+        readout = self.pulser.get_readout_counts
+        print readout
 
     def finalize(self, cxn, context):
         pass

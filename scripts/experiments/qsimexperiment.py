@@ -54,6 +54,8 @@ class QsimExperiment(experiment):
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter])
 
+        return self.dataset
+
     def setup_grapher(self, tab):
         self.grapher.plot(self.dataset, tab, False)
 

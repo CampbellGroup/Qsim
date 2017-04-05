@@ -98,9 +98,9 @@ class Multipole_Server(LabradServer):
     def set_multipoles(self, c, Mvector):
         Mvector = np.array(Mvector)
         Evector = self.M.dot(Mvector)
-        if max(Evector) >= self.maxval:
+        if max(Evector) >= 10.0:
             returnValue([])
-        if min(Evector) <= self.minval:
+        if min(Evector) <= -10.0:
             returnValue([])
 
         for octant, voltage in enumerate(Evector):
