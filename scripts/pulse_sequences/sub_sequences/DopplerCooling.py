@@ -1,5 +1,5 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-
+from labrad.units import WithUnit
 
 class doppler_cooling(pulse_sequence):
 

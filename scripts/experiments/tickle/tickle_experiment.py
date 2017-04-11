@@ -1,5 +1,5 @@
 import labrad
-from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
+from common.lib.servers.script_scanner.scan_methods import experiment
 from labrad.units import WithUnit
 import time
 import socket
