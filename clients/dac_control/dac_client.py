@@ -103,7 +103,11 @@ class dacclient(QtGui.QWidget):
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
 
-        yield self.dacserver.set_individual_analog_voltages([(str(electrode.dac), voltage)])
+        if len(str(electrode.dac)) == 1:
+            dac = '0' + str(electrode.dac)
+        else:
+            dac = str(electrode.dac)
+        yield self.dacserver.set_individual_analog_voltages([(dac, voltage)])
         self.electrodeind.update_octant(electrode.octant, voltage)
 
     def closeEvent(self, event):

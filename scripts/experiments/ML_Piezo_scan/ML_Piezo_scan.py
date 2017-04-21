@@ -3,7 +3,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
 import os
 
-
+__scriptscanner_name__ = 'MLpiezoscan' # this should match the class name
 class MLpiezoscan(QsimExperiment):
 
     name = 'ML Piezo Scan'

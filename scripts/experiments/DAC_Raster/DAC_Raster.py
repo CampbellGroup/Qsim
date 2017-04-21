@@ -33,7 +33,7 @@ class dacRaster(experiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
-        self.dac = cxn.arduinodac
+        self.dac = cxn.dac_ad660_server5
 
         self.Xminval = self.parameters.dacraster.X_Voltage[0]['V']
         self.Xmaxval = self.parameters.dacraster.X_Voltage[1]['V']

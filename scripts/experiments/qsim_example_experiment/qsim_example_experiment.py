@@ -59,7 +59,7 @@ class experiment_example(QsimExperiment):
             if should_break:
                 break
 
-            y_point = self.amplitude * x_point**2  # calculates the parabola
+            y_point = self.amplitude * 0.5*x_point**3  # calculates the parabola
             self.dv.add(x_point, y_point)  # adds the data to Data Vault which will be automatically plotted
 
     def finalize(self, cxn, context):

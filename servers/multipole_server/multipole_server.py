@@ -119,9 +119,13 @@ class Multipole_Server(LabradServer):
 
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
+        if len(str(electrode.dac)) == 1:
+            dac = '0' + str(electrode.dac)
+        else:
+            dac = str(electrode.dac)
         if not self.server:
             returnValue('Server not Connected')
-        yield self.server.set_individual_analog_voltages([(str(electrode.dac), voltage)])
+        yield self.server.set_individual_analog_voltages([(dac, voltage)])
 
     @inlineCallbacks
     def loop(self):
