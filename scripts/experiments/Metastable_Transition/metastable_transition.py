@@ -57,7 +57,7 @@ class metastable_transition(QsimExperiment):
         self.y_pixel_range = [self.image_region[4], self.image_region[5]]
         self.image_x_length = self.x_pixel_range[-1] - self.x_pixel_range[0] + 1
         self.image_y_length = self.y_pixel_range[-1] - self.y_pixel_range[0] + 1
-        self.data_size = [self.image_x_length, self.image_y_length]
+        self.data_size = [self.image_y_length, self.image_x_length]
         self.dv.add_parameter('image size', self.data_size)
         self.dv.add_parameter('binning', [self.x_bin, self.y_bin])
 

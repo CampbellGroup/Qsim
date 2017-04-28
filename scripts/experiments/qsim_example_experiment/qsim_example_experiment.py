@@ -47,6 +47,7 @@ class experiment_example(QsimExperiment):
         self.amplitude = self.p.example_parameters.Amplitude  # shortens the amplitude name
         # the following generates a list of the points used in the scan. If the points
         # have LabRAD unit types they can be specified in the second argument
+        print self.p.example_parameters.Range
         self.x_values = self.get_scan_list(self.p.example_parameters.Range, units=None)
 
         for i, x_point in enumerate(self.x_values):  # Main Loop. Every iteration will have an index i and an associated x point 

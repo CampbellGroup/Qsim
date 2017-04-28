@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.sub_sequences.DipoleInterogation import dipole_interogation as sequence
+from Qsim.scripts.pulse_sequences.interleaved_point import interleaved_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit
 
@@ -13,7 +13,6 @@ class InterleavedLinescan(QsimExperiment):
     name = 'Interleaved Line Scan'
 
     exp_parameters = []
-    exp_parameters.append(('InterleavedLinescan', 'doppler_cooling_time'))
     exp_parameters.append(('InterleavedLinescan', 'interogation_repititions'))
     exp_parameters.append(('InterleavedLinescan', 'line_scan'))
 
@@ -27,8 +26,9 @@ class InterleavedLinescan(QsimExperiment):
 
     def run(self, cxn, context):
 
+        self.setup_datavault('frequency', 'photons')  # gives the x and y names to Data Vault
+        self.setup_grapher('Interleaved Linescan')
         self.frequencies = self.get_scan_list(self.p.InterleavedLinescan.line_scan, 'MHz')
-        power = self.p.DipoleInterogation.interogation_power
         for i, freq in enumerate(self.frequencies):
             should_break = self.update_progress(i/float(len(self.frequencies)))
             if should_break:
@@ -37,14 +37,16 @@ class InterleavedLinescan(QsimExperiment):
             self.program_pulser(freq)
 
     def program_pulser(self, freq):
-        self.pulser.reset_readout_counts()
         self.p['DipoleInterogation.interogation_frequency'] = freq
         pulse_sequence = sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
         self.pulser.start_single()
         self.pulser.wait_sequence_done()
-        readout = self.pulser.get_readout_counts()
-        print readout
+        self.pulser.stop_sequence()
+        time_tags = self.pulser.get_timetags()
+        counts = len(time_tags)
+        self.pulser.reset_timetags()
+        self.dv.add(freq['MHz'], counts)
 
     def finalize(self, cxn, context):
         pass

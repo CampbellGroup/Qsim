@@ -16,5 +16,5 @@ class dipole_interogation(pulse_sequence):
                     p.interogation_time,
                     p.interogation_frequency,
                     p.interogation_power)
-        self.addTTL('ReadoutCount', self.start, p.interogation_time)
+        self.addTTL('TimeResolvedCount', self.start, p.interogation_time)
         self.end = self.start + p.interogation_time
