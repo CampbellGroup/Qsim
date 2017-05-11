@@ -1,6 +1,5 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-import time
 import os
 
 __scriptscanner_name__ = 'MLpiezoscan' # this should match the class name
@@ -13,20 +12,22 @@ class MLpiezoscan(QsimExperiment):
     exp_parameters.append(('MLpiezoscan', 'average'))
     exp_parameters.append(('MLpiezoscan', 'mode'))
     exp_parameters.append(('MLpiezoscan', 'detuning'))
-    exp_parameters.append(('wavemeterscan', 'Center_Frequency_369'))
+    exp_parameters.append(('DDS_line_scan', 'Center_Frequency'))
+    exp_parameters.append(('DDS_line_scan', 'Power'))
 
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
+        self.TTL = cxn.arduinottl
         self.cxnwlm = labrad.connect('10.97.112.2',
                                      password=os.environ['LABRADPASSWORD'])
-        self.TTL = cxn.arduinottl
-        self.locker = self.cxn.single_wm_lock_server
         self.wm = self.cxnwlm.multiplexerserver
+        self.chan = 2
         self.pmt = self.cxn.normalpmtflow
         self.shutter = self.cxn.arduinottl
         self.init_mode = self.pmt.getcurrentmode()
-        self.chan = 2
+        self.pulser = cxn.pulser
+        self.init_freq = self.pulser.frequency('369')
 
     def run(self, cxn, context):
 
@@ -34,8 +35,8 @@ class MLpiezoscan(QsimExperiment):
         Main loop
         '''
         self.set_scannable_parameters()
-        self.locker.set_point(self.WLcenter['THz'] + self.detuning['THz'])
-        time.sleep(1.0)
+        self.pulser.frequency('369',self.WLcenter + self.detuning/2.0) # this is real laser detuning
+        self.pulser.amplitude('369', self.power)
         cxn.arduinottl.ttl_output(12, False)
         self.setup_datavault('Volts', 'kcounts/sec')
         self.setup_grapher('ML Piezo Scan')
@@ -63,13 +64,15 @@ class MLpiezoscan(QsimExperiment):
         gets parameters, called in run so scan works
         '''
 
-        self.WLcenter = self.p.wavemeterscan.Center_Frequency_369
+        self.power = self.p.DDS_line_scan.Power
+        self.WLcenter = self.p.DDS_line_scan.Center_Frequency
         self.detuning = self.p.MLpiezoscan.detuning
         self.mode = self.p.MLpiezoscan.mode
         self.average = int(self.p.MLpiezoscan.average)
         self.x_values = self.get_scan_list(self.p.MLpiezoscan.scan, 'V')
 
     def finalize(self, cxn, context):
+        self.pulser.frequency('369', self.init_freq)
         cxn.arduinottl.ttl_output(12, True)
         self.pmt.set_mode(self.init_mode)
 

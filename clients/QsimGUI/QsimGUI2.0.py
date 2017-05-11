@@ -108,15 +108,13 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeWavemeterWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
-        #from Qsim.clients.wavemeter_rear_port.cal_channel_toggle import cal_toggle_switch
-        from Qsim.clients.wavemeter_rear_port.rear_lock import cal_lock
+        from Qsim.clients.single_wavemeter_channel.single_channel_wm import single_channel_wm
         gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
-        #cal_toggle = cal_toggle_switch(reactor)
-        cal_lock = cal_lock(reactor)
+        ws7 = single_channel_wm(reactor)
         gridLayout.addWidget(wavemeter)
         #gridLayout.addWidget(cal_toggle)
-        gridLayout.addWidget(cal_lock)
+        gridLayout.addWidget(ws7)
         wavemeter.setMaximumHeight(820)
         widget.setLayout(gridLayout)
         return widget
