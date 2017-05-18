@@ -21,6 +21,9 @@ class InterleavedLinescan(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
+        self.pmt = self.cxn.normalpmtflow
+        self.init_mode = self.pmt.getcurrentmode()
+        self.pmt.set_mode('Normal')
         self.pulser = self.cxn.pulser
         self.dds_channel = '369'
 
@@ -49,7 +52,7 @@ class InterleavedLinescan(QsimExperiment):
         self.dv.add(freq['MHz'], counts)
 
     def finalize(self, cxn, context):
-        pass
+        self.pmt.set_mode(self.init_mode)
 
 if __name__ == '__main__':
     cxn = labrad.connect()

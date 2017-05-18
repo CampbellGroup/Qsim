@@ -12,10 +12,10 @@ class metastable_transition(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('metastable', 'M2_scan'))
     exp_parameters.append(('metastable', 'pause_time'))
-    exp_parameters.append(('metastable', 'image_center_x'))
-    exp_parameters.append(('metastable', 'image_center_y'))
-    exp_parameters.append(('metastable', 'image_width'))
-    exp_parameters.append(('metastable', 'image_height'))
+    exp_parameters.append(('images', 'image_center_x'))
+    exp_parameters.append(('images', 'image_center_y'))
+    exp_parameters.append(('images', 'image_width'))
+    exp_parameters.append(('images', 'image_height'))
 
     dv_path = "/home/qsimexpcontrol/LabRAD/data"
 
@@ -33,7 +33,7 @@ class metastable_transition(QsimExperiment):
 
     def run(self, cxn, context):
         self.forward_x_values = self.get_scan_list(self.p.metastable.M2_scan, units=None)
-        self.reverse_x_values = list(reversed(self.forward_x_values[0:-1])) # does not turning poing value
+        self.reverse_x_values = list(reversed(self.forward_x_values[0:-1])) # does not use turning point value
         self.x_values = self.forward_x_values + self.reverse_x_values
         multipoles = np.array(self.init_multipoles)
         image_data = np.array([])
@@ -65,10 +65,10 @@ class metastable_transition(QsimExperiment):
             pass
 
     def init_camera(self):
-        center_y = self.p.metastable.image_center_x['pix'] #  switched for same reason
-        center_x = self.p.metastable.image_center_y['pix']
-        height = self.p.metastable.image_width['pix']
-        width = self.p.metastable.image_height['pix']  # switched do to transpose of camera data700
+        center_y = self.p.images.image_center_x['pix'] #  switched for same reason
+        center_x = self.p.images.image_center_y['pix']
+        height = self.p.images.image_width['pix']
+        width = self.p.images.image_height['pix']  # switched due to transpose of camera data
         self.exposure = self.cam.get_exposure_time()
         self.x_pixel_range = [int(center_x - width/2), int(center_x + width/2)] # rounds image size
         self.y_pixel_range = [int(center_y - height/2), int(center_y + height/2)]
