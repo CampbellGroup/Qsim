@@ -109,11 +109,13 @@ class QSIM_GUI(QtGui.QMainWindow):
         widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
         from Qsim.clients.single_wavemeter_channel.single_channel_wm import single_channel_wm
+        from Qsim.clients.WM_DAC_Control.wm_dac_control import wm_dac_control
         gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
         ws7 = single_channel_wm(reactor)
+        dac_control = wm_dac_control(reactor)
         gridLayout.addWidget(wavemeter)
-        #gridLayout.addWidget(cal_toggle)
+        gridLayout.addWidget(dac_control)
         gridLayout.addWidget(ws7)
         wavemeter.setMaximumHeight(820)
         widget.setLayout(gridLayout)
