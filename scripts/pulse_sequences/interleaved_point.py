@@ -9,7 +9,5 @@ class interleaved_point(pulse_sequence):
     required_subsequences = [doppler_cooling, dipole_interogation]
 
     def sequence(self):
-        cycles = int(self.parameters.InterleavedLinescan.interogation_repititions['s'])
-        for i in range(cycles):
-            self.addSequence(doppler_cooling)
-            self.addSequence(dipole_interogation)
+        self.addSequence(doppler_cooling)
+        self.addSequence(dipole_interogation)
