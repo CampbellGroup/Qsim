@@ -38,7 +38,7 @@ class Delaystagescan(QsimExperiment):
         Main loop
         '''
         self.set_scannable_parameters()
-        self.keithley.gpib_write('Apply CH2,' + str(self.init_volt) + 'V')
+        self.keithley.gpib_write('Apply CH1,' + str(self.init_volt) + 'V')
         self.keithley.output(self.chan, True)
         self.pulser.frequency('369',self.WLcenter + self.detuning/2.0) # this is real laser detuning
         self.pulser.amplitude('369', self.power)
@@ -60,7 +60,8 @@ class Delaystagescan(QsimExperiment):
             should_break = self.update_progress(i/float(len(self.x_values)))
             if should_break:
                 break
-            self.keithley.gpib_write('APPLy CH2,' + str(volt) + 'V')  # we write direct GPIB for speed
+            print volt
+            self.keithley.gpib_write('APPLy CH1,' + str(volt) + 'V')  # we write direct GPIB for speed
             counts = self.pmt.get_next_counts(self.mode, self.average, True)
             self.dv.add(volt, counts)
 

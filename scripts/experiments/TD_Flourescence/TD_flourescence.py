@@ -26,13 +26,13 @@ class TD_flourescence(experiment):
         drive_freq = self.parameters.TrapFrequencies.rf_drive_frequency
         self.drive_period = 1/drive_freq
         self.time_resolution = self.pulser.get_timetag_resolution()
-        self.programPulseSequence(self.record_time)
 
     def programPulseSequence(self, record_time):
         seq = record_timetags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': record_time}))
         seq.programSequence(self.pulser)
 
     def run(self, cxn, context):
+        self.programPulseSequence(self.record_time)
         self.pulser.reset_timetags()
         self.pulser.start_single()
         self.pulser.wait_sequence_done()
@@ -43,10 +43,12 @@ class TD_flourescence(experiment):
     def saveData(self, time_tags):
         self.dv.cd(['','QuickMeasurements','TD-Flourescence'],True)
         name = self.dv.new('TD-Flourescence',[('time', 'ns')], [('number in bin','Arb','Arb')] )
-        data = np.remainder(1e9*time_tags, self.drive_period['ns'])
-        hist, bin_edges = np.histogram(data, 200)
-        to_plot = np.array(np.vstack((bin_edges[1:], hist)).transpose(), dtype='float')
-        self.dv.add(to_plot)
+        #data = np.remainder(time_tags, self.drive_period['ns'])
+        #hist, bin_edges = np.histogram(data, 200)
+        x = np.array(range(len(time_tags)))
+        to_plot = np.array(np.vstack((x, time_tags)).transpose(), dtype='float')
+        print time_tags
+        self.dv.add(time_tags)
         self.grapher.plot(name, 'TD_Flourescence', False)
         print 'Saved {}'.format(name)
 

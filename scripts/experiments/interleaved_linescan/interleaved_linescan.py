@@ -16,11 +16,13 @@ class InterleavedLinescan(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('InterleavedLinescan', 'interogation_repititions'))
     exp_parameters.append(('InterleavedLinescan', 'line_scan'))
-    exp_parameters.append(('InterleavedLinescan', 'line_center'))
+    exp_parameters.append(('InterleavedLinescan', 'line_center_AOM'))
     exp_parameters.append(('InterleavedLinescan', 'use_calibration'))
+    exp_parameters.append(('InterleavedLinescan', 'doppler_cooling_detuning'))
 
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.remove(('DipoleInterogation', 'interogation_frequency'))
+    exp_parameters.remove(('DopplerCooling', 'doppler_cooling_frequency'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -45,6 +47,8 @@ class InterleavedLinescan(QsimExperiment):
 
     def program_pulser(self, freq):
         self.p['DipoleInterogation.interogation_frequency'] = freq
+        cool_detune = self.p.InterleavedLinescan.line_center_AOM + self.p.InterleavedLinescan.doppler_cooling_detuning
+        self.p['DopplerCooling.doppler_cooling_frequency'] = cool_detune
         if self.p.InterleavedLinescan.use_calibration:
             cal_power = self.map_power(self.init_power, freq)
             self.p['DipoleInterogation.interogation_power'] = cal_power
@@ -55,7 +59,7 @@ class InterleavedLinescan(QsimExperiment):
         self.pulser.stop_sequence()
         time_tags = self.pulser.get_timetags()
         counts = len(time_tags)
-        relative_freq = (freq - self.p.InterleavedLinescan.line_center)*2
+        relative_freq = (freq - self.p.InterleavedLinescan.line_center_AOM)*2
         self.pulser.reset_timetags()
         self.dv.add(relative_freq['MHz'], counts)
 
@@ -69,7 +73,6 @@ class InterleavedLinescan(QsimExperiment):
         for i, c in enumerate(coeff):
             int_increase += c*(freq['MHz'] - 191.5)**i
         gain_fit = -0.003475*freq['MHz']**2 + 1.3978*freq['MHz'] - 126.69
-        dB_increase = WithUnit(10*np.log10(3192.09/int_increase),'dBm')
         dB_increase = WithUnit(10*np.log10(11.877/gain_fit),'dBm')
         adj_power = power + dB_increase
         if adj_power > WithUnit(-8.0, 'dBm'):
