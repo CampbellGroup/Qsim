@@ -36,6 +36,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         Tsunami = self.makeTsunamiWidget(reactor, cxn)
         Pulser = self.makePulserWidget(reactor, cxn)
         Config = self.makeConfigWidget(reactor, cxn)
+        Histogram = self.makeHistogramWidget(reactor, cxn)
         
 
         # add tabs
@@ -45,8 +46,10 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(Tsunami, '&Tsunami')
         self.tabWidget.addTab(Pulser, '&Pulser')
+        self.tabWidget.addTab(Histogram, '&Histogram')
         self.tabWidget.addTab(analysis, '&Analysis')
         self.tabWidget.addTab(Config, '&Config')
+        self.tabWidget.setMovable(True)
 
 
         layout.addWidget(self.tabWidget)
@@ -159,6 +162,11 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget
+
+    def makeHistogramWidget(self, reactor, cxn):
+        from barium.lib.clients.Histogram_client.readout_histogram import readout_histogram
+        hist = readout_histogram(reactor, cxn)
+        return hist
 
     def closeEvent(self, x):
         self.reactor.stop()

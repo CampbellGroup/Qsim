@@ -1,6 +1,6 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.wavemeter_linescan.wavemeter_linescan import wavemeter_linescan
+from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
 import numpy as np
 
 
@@ -12,18 +12,12 @@ class Line_Narrowing(QsimExperiment):
     exp_parameters.append(('Line_Narrowing', 'voltage_scan'))
     exp_parameters.append(('Line_Narrowing', 'direction'))
 
-    exp_parameters.append(('wavemeterscan', 'lasername'))
-    exp_parameters.append(('wavemeterscan', 'Port_369'))
-    exp_parameters.append(('wavemeterscan', 'Center_Frequency_369'))
-    exp_parameters.append(('wavemeterscan', 'line_scan'))
-    exp_parameters.append(('wavemeterscan', 'pause_time'))
-
     def initialize(self, cxn, context, ident):
 
         self.multipole_names = {'Ex': 0, 'Ey': 1, 'Ez': 2}
         self.ident = ident
-        self.wmlinescan = self.make_experiment(wavemeter_linescan)
-        self.wmlinescan.initialize(cxn, context, ident)
+        self.linescan = self.make_experiment(InterleavedLinescan)
+        self.linescan.initialize(cxn, context, ident)
         self.mps = self.cxn.multipole_server
         self.init_multipoles = cxn.multipole_server.get_multipoles()
 
@@ -44,8 +38,8 @@ class Line_Narrowing(QsimExperiment):
 
             self.multipoles[self.multipole_index] = step
             self.mps.set_multipoles(self.multipoles)
-            self.wmlinescan.run(cxn, context)
-            self.wmlinescan.dv.add_parameter(self.multipole_direction, step)
+            self.linescan.run(cxn, context)
+            self.linescan.dv.add_parameter(self.multipole_direction, step)
 
     def setup_parameters(self):
 

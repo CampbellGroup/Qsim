@@ -21,6 +21,8 @@ class AOM_fitting(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
 
+        self.reg = cxn.registry
+        self.reg.cd(['','settings'])
         self.pmt = cxn.normalpmtflow
         self.pulser = cxn.pulser
         self.init_mode = self.pmt.getcurrentmode()
@@ -36,13 +38,15 @@ class AOM_fitting(QsimExperiment):
         self.setup_datavault('Frequency', 'Counts')
         self.setup_grapher('AOM Fitting')
         self.pmt.set_mode('Normal')
-        self.gate_time = self.p.DDS_line_scan.Collection_Time
-        self.center_freq = self.p.DDS_line_scan.Center_Frequency
-        self.power = self.p.DDS_line_scan.Power
-        self.pmt.set_time_length(self_time)
+        self.gate_time = self.p.AOM_fitting.Collection_Time
+        self.center_freq = self.p.AOM_fitting.Center_Frequency
+        self.power = self.p.AOM_fitting.Power
+        self.pmt.set_time_length(self.gate_time)
         self.pulser.amplitude('369', self.power)
-        self.x_values = self.get_scan_list(self.p.DDS_line_scan.DDS_Frequencies, units='MHz')
+        self.x_values = self.get_scan_list(self.p.AOM_fitting.DDS_Frequencies, units='MHz')
 
+
+        tmp_counts = []
         for i, x_point in enumerate(self.x_values):
 
             should_break = self.update_progress(i / float(len(self.x_values)))
@@ -57,11 +61,15 @@ class AOM_fitting(QsimExperiment):
             self.delta_freq.append(x_point - self.center_freq['MHz'])
             if counts:
                 self.dv.add(2 * (x_point - self.center_freq['MHz']), counts)  # Since Double passed factor of 2 added
+                tmp_counts.append(counts)
 
-        self.fit_parameters = self.fit_profile(self.delta_freq, self.intensity)
+        self.fit_parameters = self.fit_profile(self.delta_freq, self.intensity/np.max(tmp_counts))
+        self.reg.set('AOM_calibration', self.fit_parameters)
+        self.setup_datavault('Fit', 'Counts')
+        self.setup_grapher('AOM Fitting')
         for n in range(len(self.x_values)):
             self.fitIntensity.append(np.polyval(self.fit_parameters, self.delta_freq[n]))
-            self.dv.add(self.delta_freq[n], self.fitIntensity[n])
+            self.dv.add(2*(self.delta_freq[n]), np.max(tmp_counts)*self.fitIntensity[n])
 
 
     def fit_profile(self, x, y):

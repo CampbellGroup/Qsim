@@ -57,6 +57,8 @@ class QsimExperiment(experiment):
         return self.dataset
 
     def setup_grapher(self, tab):
+        if self.grapher == None:
+            print 'grapher not running'
         self.grapher.plot(self.dataset, tab, False)
 
     def update_progress(self, progress):
