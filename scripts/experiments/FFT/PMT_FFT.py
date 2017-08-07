@@ -1,94 +1,80 @@
+#!scriptscanner
 import labrad
-import numpy as np
-from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
-from processFFT import processFFT
-from Qsim.scripts.pulse_sequences.RecordTimeTags import record_timetags
+from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
+from Qsim.scripts.pulse_sequences.sub_sequences.RecordTimeTags import record_timetags
 from treedict import TreeDict
+from processFFT import processFFT
+from labrad.units import WithUnit as U
+import numpy as np
 
-class fft_spectrum(experiment):
-    
-    name = 'PMT FFT Spectrum'
-    
+
+class PMT_FFT(QsimExperiment):
+
+    name = 'PMT_FFT'
+
+    '''
+    Takes FFT of incoming PMT Counts
+
+    '''
+
     exp_parameters = []
-    exp_parameters.append(('TrapFrequencies','rf_drive_frequency'))
+    exp_parameters.append(('FFT', 'center_frequency'))
     exp_parameters.append(('FFT', 'average'))
     exp_parameters.append(('FFT', 'frequency_offset'))
     exp_parameters.append(('FFT', 'frequency_span'))
     exp_parameters.append(('FFT', 'record_time'))
-    
-    @classmethod
-    def all_required_parameters(cls):
-        return cls.exp_parameters
-    
+
     def initialize(self, cxn, context, ident):
+
         self.ident = ident
-        self.processor = processFFT()
-        self.average = int(self.parameters.FFT.average)
-        self.record_time = self.parameters.FFT.record_time
-        self.freq_span = self.parameters.FFT.frequency_span
-        self.freq_offset = self.parameters.FFT.frequency_offset
-        self.dv = cxn.data_vault
         self.pulser = cxn.pulser
-        self.grapher = cxn.grapher
-        center_freq = self.parameters.TrapFrequencies.rf_drive_frequency
-        self.time_resolution = self.pulser.get_timetag_resolution()
-        self.freqs = self.processor.computeFreqDomain(self.record_time['s'], self.freq_span['Hz'],  self.freq_offset['Hz'], center_freq['Hz'])
+        self.processor = processFFT()
+        self.record_time = self.p.FFT.record_time
+        self.average = int(self.p.FFT.average)
+        self.center_freq = self.p.FFT.center_frequency
+        self.freq_span = self.p.FFT.frequency_span
+        self.freq_offset = self.p.FFT.frequency_offset
+        self.freqs = self.processor.computeFreqDomain(self.record_time['s'], self.freq_span['Hz'],
+                                                      self.freq_offset['Hz'], self.center_freq['Hz'])
         self.programPulseSequence(self.record_time)
-    
+
     def programPulseSequence(self, record_time):
         seq = record_timetags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': record_time}))
         seq.programSequence(self.pulser)
-    
-    def getTotalPower(self):
-        '''computers the total power in the spectrum of the given frequencies'''
-        spectrum = self.getPowerSpectrum()
-        totalPower = self.processor.totalPower(spectrum)
-        print 'Total Power {}'.format(totalPower)
-        return totalPower
-    
-    def getPeakArea(self, ptsAround):
-        '''Finds the maximum of the power spectrum, computers the area of the peak using ptsAround, then subtracts the background'''
-        spectrum = self.getPowerSpectrum()
-        peakArea = self.processor.peakArea(spectrum, ptsAround)
-        print 'Peak Area {}'.format(peakArea)
-        return peakArea
 
     def run(self, cxn, context):
-        pwr = self.getPowerSpectrum()
-        self.saveData(pwr)
-    
-    def getPowerSpectrum(self):
+
+        self.setup_datavault('Frequencies', 'Amplitude')
+        self.setup_grapher('PMT FFT')
+
         pwr = np.zeros_like(self.freqs)
         for i in range(self.average):
-            should_stop = self.pause_or_stop()
-            if should_stop: break
+            seq = record_timetags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': self.record_time}))
+            seq.programSequence(self.pulser)
             self.pulser.reset_timetags()
             self.pulser.start_single()
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             timetags = self.pulser.get_timetags()
-            pwr += self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time['s'], self.time_resolution)
-            progress = self.min_progress + (self.max_progress - self.min_progress) * (i + 1) / float(self.average)
-            self.sc.script_set_progress(self.ident,  progress)
+            should_break = self.update_progress(i/float(self.average))
+            if should_break:
+                break
+            pwr += self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time, U(10.0, 'ns'))
         pwr = pwr / float(self.average)
-        return pwr
-    
-    def saveData(self, pwr):
-        self.dv.cd(['','QuickMeasurements','FFT'],True)
-        name = self.dv.new('FFT',[('Freq', 'Hz')], [('Power','Arb','Arb')] )
-        data = np.array(np.vstack((self.freqs,pwr)).transpose(), dtype = 'float')
-        self.grapher.plot(name, 'PMT_FFT', False)
-        self.dv.add_parameter('plotLive',True)
+        data = np.array(np.vstack((self.freqs, pwr)).transpose(), dtype='float')
         self.dv.add(data)
-        print 'Saved {}'.format(name)
-    
+
+
     def finalize(self, cxn, context):
+        '''
+        In the finalize function we can close any connections or stop any
+        processes that are no longer necessary.
+        '''
         pass
-    
+
 if __name__ == '__main__':
-    #normal way to launch
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = fft_spectrum(cxn = cxn)
+    exprt = PMT_FFT(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

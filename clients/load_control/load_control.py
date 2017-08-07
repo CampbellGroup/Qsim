@@ -98,7 +98,7 @@ class LoadControl(QtGui.QWidget):
         disc_value = self.disc_widget.spinLevel.value()
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(False)
-        if self.timer_widget.time >= 300.0:
+        if self.timer_widget.time >= 600.0:
             self.shutter_widget.TTLswitch.setChecked(False)
 
     @inlineCallbacks

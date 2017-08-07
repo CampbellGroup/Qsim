@@ -1,7 +1,5 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-import time
-import numpy as np
 
 __scriptscanner_name__ = 'Delaystagescan' # this should match the class name
 class Delaystagescan(QsimExperiment):
@@ -12,25 +10,26 @@ class Delaystagescan(QsimExperiment):
     exp_parameters.append(('Delaystagescan', 'scan'))
     exp_parameters.append(('Delaystagescan', 'average'))
     exp_parameters.append(('Delaystagescan', 'mode'))
-    exp_parameters.append(('Delaystagescan', 'detuning'))
-    exp_parameters.append(('Delaystagescan', 'power'))
-    exp_parameters.append(('DDS_line_scan', 'Center_Frequency'))
+    exp_parameters.append(('Delaystagescan', 'cooling_detuning'))
+    exp_parameters.append(('Delaystagescan', 'cooling_power'))
+    exp_parameters.append(('Delaystagescan', 'ML_power'))
+    exp_parameters.append(('Transitions', 'main_cooling_369'))
 
 
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
-        self.TTL = cxn.arduinottl
 
-        self.chan = 2
+        self.chan = 1
         self.keithley = self.cxn.keithley_2230g_server
         self.keithley.select_device(0)
 
         self.pmt = self.cxn.normalpmtflow
         self.init_mode = self.pmt.getcurrentmode()
         self.pulser = cxn.pulser
-        self.init_freq = self.pulser.frequency('369')
-        self.init_power = self.pulser.amplitude('369')
+        self.init_ML_power = self.pulser.amplitude('ML_SinglePass')
+        self.init_cooling_freq = self.pulser.frequency('369')
+        self.init_cooling_power = self.pulser.amplitude('Doppler Cooling (14 GHz)')
 
     def run(self, cxn, context):
 
@@ -40,9 +39,9 @@ class Delaystagescan(QsimExperiment):
         self.set_scannable_parameters()
         self.keithley.gpib_write('Apply CH1,' + str(self.init_volt) + 'V')
         self.keithley.output(self.chan, True)
-        self.pulser.frequency('369',self.WLcenter + self.detuning/2.0) # this is real laser detuning
-        self.pulser.amplitude('369', self.power)
-        cxn.arduinottl.ttl_output(12, False)
+        self.pulser.frequency('369',self.cooling_center + self.cooling_detuning/2.0) # this is real laser detuning
+        self.pulser.amplitude('Doppler Cooling (14 GHz)', self.cooling_power)
+        self.pulser.amplitude('ML_SinglePass', self.ML_power)
         self.path = self.setup_datavault('Volts', 'kcounts/sec')
         self.setup_grapher('Ramsey Delay Stage Piezo Scan')
         try:
@@ -71,18 +70,19 @@ class Delaystagescan(QsimExperiment):
         gets parameters, called in run so scan works
         '''
 
-        self.power = self.p.Delaystagescan.power
-        self.WLcenter = self.p.DDS_line_scan.Center_Frequency
-        self.detuning = self.p.Delaystagescan.detuning
+        self.cooling_power = self.p.Delaystagescan.cooling_power
+        self.cooling_center = self.p.Transitions.main_cooling_369
+        self.cooling_detuning = self.p.Delaystagescan.cooling_detuning
+        self.ML_power = self.p.Delaystagescan.ML_power
         self.mode = self.p.Delaystagescan.mode
         self.average = int(self.p.Delaystagescan.average)
         self.x_values = self.get_scan_list(self.p.Delaystagescan.scan, 'V')
         self.init_volt = self.x_values[0]
 
     def finalize(self, cxn, context):
-        self.pulser.frequency('369', self.init_freq)
-        self.pulser.amplitude('369', self.init_power)
-        cxn.arduinottl.ttl_output(12, True)
+        self.pulser.frequency('369', self.init_cooling_freq)
+        self.pulser.amplitude('Doppler Cooling (14 GHz)', self.init_cooling_power)
+        self.pulser.amplitude('ML_SinglePass', self.init_ML_power)
         self.pmt.set_mode(self.init_mode)
         self.keithley.gpib_write('Apply CH1,' + str(self.init_volt) + 'V')
 

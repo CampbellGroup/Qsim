@@ -1,3 +1,4 @@
+#!scriptscanner
 import labrad
 import numpy as np
 from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as sequence
@@ -21,7 +22,7 @@ class BrightStateDetection(QsimExperiment):
         self.init_mode = self.pmt.getcurrentmode()
         self.pmt.set_mode('Normal')
         self.pulser = self.cxn.pulser
-        self.cxn.registry.cd(['','Bright_State_Detection'], True)
+        self.dv.cd(['','Bright_State_Detection'], True)
 
     def run(self, cxn, context):
 

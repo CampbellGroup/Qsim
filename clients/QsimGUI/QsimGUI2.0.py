@@ -82,8 +82,16 @@ class QSIM_GUI(QtGui.QMainWindow):
 
     def makePulserWidget(self, reactor, cxn):
         from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
+        from common.lib.clients.pulser_switch.pulser_switch_control import switchWidget
+        puls_widget = QtGui.QWidget()
+        gridLayout = QtGui.QGridLayout()
+
         DDS = DDS_CONTROL(reactor, cxn)
-        return DDS
+        switch = switchWidget(reactor)
+        gridLayout.addWidget(DDS)
+        gridLayout.addWidget(switch)
+        puls_widget.setLayout(gridLayout)
+        return puls_widget
     
     def makeConfigWidget(self, reactor, cxn):
         from common.lib.clients.config_editor.config_editor import CONFIG_EDITOR

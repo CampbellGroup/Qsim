@@ -23,6 +23,7 @@ class InterleavedLinescan(QsimExperiment):
     exp_parameters.append(('AOM_fitting', 'Center_Frequency'))
 
     exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.remove(('DipoleInterogation','frequency'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -60,7 +61,7 @@ class InterleavedLinescan(QsimExperiment):
         time_tags = self.pulser.get_timetags()
         counts = len(time_tags)
         self.pulser.reset_timetags()
-        self.dv.add(detuning['MHz'], counts)
+        self.dv.add(detuning, counts)
 
     def map_power(self, power, freq):
         low = 0.0

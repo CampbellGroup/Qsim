@@ -22,7 +22,7 @@ class DarkStateDetection(QsimExperiment):
         self.init_mode = self.pmt.getcurrentmode()
         self.pmt.set_mode('Normal')
         self.pulser = self.cxn.pulser
-        self.cxn.registry.cd(['','Bright_State_Detection'], True)
+        self.dv.cd(['','Dark_State_Detection'], True)
 
     def run(self, cxn, context):
 
