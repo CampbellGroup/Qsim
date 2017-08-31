@@ -51,7 +51,7 @@ class LoadControl(QtGui.QWidget):
     @inlineCallbacks
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
-        self.shutter_widget = QCustomSwitchChannel('399/Oven',
+        self.shutter_widget = QCustomSwitchChannel('399/Oven/ProtectionBeam',
                                                    ('Open/Oven On', 'Closed/Oven Off'))
         self.shutter_widget.TTLswitch.toggled.connect(self.toggle)
         self.timer_widget = QCustomTimer('Loading Time', show_control=False)
@@ -93,13 +93,18 @@ class LoadControl(QtGui.QWidget):
         layout.addWidget(self.timer_widget, 0, 2)
         self.setLayout(layout)
 
+    @inlineCallbacks
     def on_new_counts(self, signal, pmt_value):
         switch_on = self.shutter_widget.TTLswitch.isChecked()
         disc_value = self.disc_widget.spinLevel.value()
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(False)
+            #a = QtGui.Qsound.isAvailable()
+            #print a
+            #QtGui.Qsound('trap.wav').play()
         if self.timer_widget.time >= 600.0:
             self.shutter_widget.TTLswitch.setChecked(False)
+        yield None
 
     @inlineCallbacks
     def toggle(self, value):
@@ -127,6 +132,9 @@ class LoadControl(QtGui.QWidget):
     def changeState(self, state):
         if '399 trapshutter' in self.settings:
             yield self.reg.set('399 trapshutter', state)
+        if 'Protection Beam' in self.settings:
+            yield self.reg.set('Protection Beam', state)
+        yield self.TTL.ttl_output(9, state)
         yield self.TTL.ttl_output(10, state)
 
     def closeEvent(self, x):

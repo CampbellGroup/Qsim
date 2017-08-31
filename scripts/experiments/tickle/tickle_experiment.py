@@ -1,6 +1,7 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit
+import time
 
 
 class ticklescan(QsimExperiment):
@@ -31,9 +32,11 @@ class ticklescan(QsimExperiment):
         self.setup_grapher('tickle_scan')
         self.set_scannable_parameters()
         self.x_values = self.get_scan_list(self.p.ticklescan.frequency_scan, units='Hz')
+        self.rg.set_output(self.chan, True)
         self.rg.applywaveform(self.p.ticklescan.waveform, WithUnit(self.x_values[0], 'Hz'),
                                self.amplitude, self.offset, self.chan)
-        self.rg.set_output(self.chan, True)
+        print 'ouput true'
+        time.sleep(1)
 
         for i, freq in enumerate(self.x_values):
             should_break = self.update_progress(i / float(len(self.x_values)))

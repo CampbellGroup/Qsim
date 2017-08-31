@@ -17,7 +17,7 @@ class MLpiezoscan(QsimExperiment):
     exp_parameters.append(('MLpiezoscan', 'take_images'))
     exp_parameters.append(('MLpiezoscan', 'number_of_images'))
 
-    exp_parameters.append(('DDS_line_scan', 'Center_Frequency'))
+    exp_parameters.append(('Transitions', 'main_cooling_369'))
 
     exp_parameters.append(('images', 'image_center_x'))
     exp_parameters.append(('images', 'image_center_y'))
@@ -38,7 +38,7 @@ class MLpiezoscan(QsimExperiment):
         self.init_mode = self.pmt.getcurrentmode()
         self.pulser = cxn.pulser
         self.init_freq = self.pulser.frequency('369')
-        self.init_power = self.pulser.amplitude('369')
+        self.init_power = self.pulser.amplitude('Doppler Cooling (14 GHz)')
 
     def run(self, cxn, context):
 
@@ -53,7 +53,7 @@ class MLpiezoscan(QsimExperiment):
         self.keithley.output(self.chan, True)
         time.sleep(0.5) # allow voltage to settle
         self.pulser.frequency('369',self.WLcenter + self.detuning/2.0) # this is real laser detuning
-        self.pulser.amplitude('369', self.power)
+        self.pulser.amplitude('Doppler Cooling (14 GHz)', self.power)
         cxn.arduinottl.ttl_output(12, False)
         self.path = self.setup_datavault('Volts', 'kcounts/sec')
         self.setup_grapher('ML Piezo Scan')
@@ -102,7 +102,7 @@ class MLpiezoscan(QsimExperiment):
         '''
 
         self.power = self.p.MLpiezoscan.power
-        self.WLcenter = self.p.DDS_line_scan.Center_Frequency
+        self.WLcenter = self.p.Transitions.main_cooling_369
         self.detuning = self.p.MLpiezoscan.detuning
         self.mode = self.p.MLpiezoscan.mode
         self.average = int(self.p.MLpiezoscan.average)
@@ -132,7 +132,7 @@ class MLpiezoscan(QsimExperiment):
 
     def finalize(self, cxn, context):
         self.pulser.frequency('369', self.init_freq)
-        self.pulser.amplitude('369', self.init_power)
+        self.pulser.amplitude('Doppler Cooling (14 GHz)', self.init_power)
         cxn.arduinottl.ttl_output(12, True)
         self.pmt.set_mode(self.init_mode)
 
