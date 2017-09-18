@@ -23,8 +23,8 @@ class Electrode():
         self.init_voltage = 0.0
         self.spinBox.spinLevel.setValue(0.0)
 
-        self.spinBox.setStepSize(0.001)
-        self.spinBox.spinLevel.setDecimals(3)
+        self.spinBox.setStepSize(0.0001)
+        self.spinBox.spinLevel.setDecimals(4)
 
 
 class dacclient(QtGui.QWidget):
@@ -42,7 +42,6 @@ class dacclient(QtGui.QWidget):
         from labrad.wrappers import connectAsync
         from labrad.units import WithUnit as U
         self.elec_dict = hc.elec_dict
-        self.U = hc.U
         self.cxn = yield connectAsync(name="dac client")
         self.server = self.cxn.multipole_server
         self.dacserver = self.cxn.dac_ad660_server
@@ -59,7 +58,7 @@ class dacclient(QtGui.QWidget):
         layout.addWidget(qBox, 0, 0)
 
         self.electrodeind = ElectrodeIndicator([-12, 12])
-        multipole_names = ['Ex', 'Ey', 'Ez', 'M1', 'M2', 'M3', 'M4', 'M5']
+        multipole_names = ['Ey', 'Ez', 'Ex', 'M1', 'M2', 'M3', 'M4', 'M5']
         self.multipoles = []
         j = 0
         for i, multipole in enumerate(multipole_names):

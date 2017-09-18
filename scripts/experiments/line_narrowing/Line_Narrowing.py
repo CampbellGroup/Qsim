@@ -14,7 +14,7 @@ class Line_Narrowing(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
 
-        self.multipole_names = {'Ex': 0, 'Ey': 1, 'Ez': 2}
+        self.multipole_names = {'Ex': 2, 'Ey': 0, 'Ez': 1}
         self.ident = ident
         self.linescan = self.make_experiment(InterleavedLinescan)
         self.linescan.initialize(cxn, context, ident)

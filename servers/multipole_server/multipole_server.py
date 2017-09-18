@@ -45,7 +45,6 @@ class Multipole_Server(LabradServer):
 
         self.hc = hc
         self.M = self.hc.M
-        self.U = self.hc.U
         self.lc = LoopingCall(self.loop)
         self.connect()
 
@@ -98,6 +97,7 @@ class Multipole_Server(LabradServer):
     def set_multipoles(self, c, Mvector):
         Mvector = np.array(Mvector)
         Evector = self.M.dot(Mvector)
+        print Evector
         if max(Evector) >= 10.0:
             returnValue([])
         if min(Evector) <= -10.0:

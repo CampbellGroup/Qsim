@@ -78,7 +78,6 @@ class MLpiezoscan(QsimExperiment):
                 new_image = self.cam.get_most_recent_image()
                 self.grapher.plot_image(new_image, self.data_size, 'Images',
                                         self.path[1] + ' ' + str(i + 1) + ' Voltage = ' + str(volt))
-                print volt
                 cxn.arduinottl.ttl_output(8, True)
                 cxn.arduinottl.ttl_output(8, False)
                 time.sleep(1)
@@ -88,14 +87,16 @@ class MLpiezoscan(QsimExperiment):
                     self.pmt.set_mode('Normal')
                 image_data = np.concatenate([image_data, new_image])
             should_break = self.update_progress(i/float(len(self.x_values)))
-            if should_break:
-                break
             self.keithley.gpib_write('APPLy CH1,' + str(volt) + 'V')  # we write direct GPIB for speed
             counts = self.pmt.get_next_counts(self.mode, self.average, True)
             self.dv.add(volt, counts)
+            if should_break:
+                break
         if self.p.MLpiezoscan.take_images:
-            self.save_camera_data(image_data)
-
+            try:
+                self.save_camera_data(image_data)
+            except:
+                print 'could not save data: probably array size error'
     def set_scannable_parameters(self):
         '''
         gets parameters, called in run so scan works
@@ -131,6 +132,11 @@ class MLpiezoscan(QsimExperiment):
         self.dv.save_image(image_data, self.data_size, int(self.num_images), self.path[1])
 
     def finalize(self, cxn, context):
+        hor_max, ver_max =  self.cam.get_detector_dimensions(None)
+        hor_min, ver_min = [1, 1]
+        self.cam.abort_acquisition()
+        self.cam.set_image_region([1, 1, hor_min, hor_max, ver_min, ver_max])
+        self.cam.start_live_display()
         self.pulser.frequency('369', self.init_freq)
         self.pulser.amplitude('Doppler Cooling (14 GHz)', self.init_power)
         cxn.arduinottl.ttl_output(12, True)
