@@ -32,6 +32,7 @@ class LoadControl(QtGui.QWidget):
         self.TTL = yield self.cxn.get_server('arduinottl')
         self.oven = yield self.cxn.get_server('ovenserver')
         self.reg = yield self.cxn.get_server('registry')
+        self.dv = yield self.cxn.get_server('data_vault')
         try:
             yield self.reg.cd(['', 'settings'])
             self.settings = yield self.reg.dir()

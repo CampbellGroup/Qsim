@@ -49,7 +49,6 @@ class OvenServer(LabradServer):
 
     @setting(16, value='v[A]')
     def oven_current(self, c, value):
-        print 'called'
         if value <= self.max_current:
             yield self.server.current(3, value)
         else:
@@ -58,6 +57,11 @@ class OvenServer(LabradServer):
     @setting(17, output='b')
     def oven_output(self, c, output):
         yield self.server.output(3, output)
+
+    @setting(18, returns='v[A]')
+    def get_current(self, c):
+        current = yield self.server.output(3)
+        returnValue(current)
 
     @inlineCallbacks
     def stopServer(self):

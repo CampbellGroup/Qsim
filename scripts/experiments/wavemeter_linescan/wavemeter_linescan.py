@@ -22,7 +22,6 @@ class wavemeter_linescan(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
 
-        print 'in initialize'
         self.ident = ident
         self.cxnwlm = labrad.connect('10.97.112.2',
                                      name='Wavemeter Scan',
@@ -33,7 +32,7 @@ class wavemeter_linescan(QsimExperiment):
 
     def run(self, cxn, context):
 
-        print 'in run'
+        should_break = self.update_progress(5.0)
         self.setup_parameters()
         self.pmt.set_mode('Normal')
         self.setup_datavault('Frequency (THz)', 'kcounts/sec')
@@ -41,7 +40,7 @@ class wavemeter_linescan(QsimExperiment):
         tempdata = []
         while True:
 
-            should_break = self.update_progress(50.0)
+            should_break = self.update_progress(5.0)
 
             if should_break:
                 tempdata.sort()

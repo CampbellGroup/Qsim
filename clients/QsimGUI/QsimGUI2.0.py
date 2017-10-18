@@ -37,6 +37,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         Pulser = self.makePulserWidget(reactor, cxn)
         Config = self.makeConfigWidget(reactor, cxn)
         Histogram = self.makeHistogramWidget(reactor, cxn)
+        Rigol = self.makeRigolWidget(reactor, cxn)
         
 
         # add tabs
@@ -49,6 +50,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(Histogram, '&Histogram')
         self.tabWidget.addTab(analysis, '&Analysis')
         self.tabWidget.addTab(Config, '&Config')
+        self.tabWidget.addTab(Rigol, '&Rigol')
         self.tabWidget.setMovable(True)
 
 
@@ -92,6 +94,11 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.addWidget(switch)
         puls_widget.setLayout(gridLayout)
         return puls_widget
+
+    def makeRigolWidget(self, reactor, cxn):
+        from Qsim.clients.rigol_controller_usbtmc.rigolcontroller_usbtmc import rigolclient
+        widget = rigolclient(reactor, cxn)
+        return widget
     
     def makeConfigWidget(self, reactor, cxn):
         from common.lib.clients.config_editor.config_editor import CONFIG_EDITOR

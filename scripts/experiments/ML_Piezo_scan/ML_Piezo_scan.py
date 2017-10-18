@@ -38,7 +38,7 @@ class MLpiezoscan(QsimExperiment):
         self.init_mode = self.pmt.getcurrentmode()
         self.pulser = cxn.pulser
         self.init_freq = self.pulser.frequency('369')
-        self.init_power = self.pulser.amplitude('Doppler Cooling (14 GHz)')
+        self.init_power = self.pulser.amplitude('369')
 
     def run(self, cxn, context):
 
@@ -53,8 +53,8 @@ class MLpiezoscan(QsimExperiment):
         self.keithley.output(self.chan, True)
         time.sleep(0.5) # allow voltage to settle
         self.pulser.frequency('369',self.WLcenter + self.detuning/2.0) # this is real laser detuning
-        self.pulser.amplitude('Doppler Cooling (14 GHz)', self.power)
-        cxn.arduinottl.ttl_output(12, False)
+        self.pulser.amplitude('369', self.power)
+        cxn.arduinottl.ttl_output(12, True)
         self.path = self.setup_datavault('Volts', 'kcounts/sec')
         self.setup_grapher('ML Piezo Scan')
         try:
@@ -93,10 +93,8 @@ class MLpiezoscan(QsimExperiment):
             if should_break:
                 break
         if self.p.MLpiezoscan.take_images:
-            try:
-                self.save_camera_data(image_data)
-            except:
-                print 'could not save data: probably array size error'
+            self.save_camera_data(image_data)
+
     def set_scannable_parameters(self):
         '''
         gets parameters, called in run so scan works
@@ -129,17 +127,20 @@ class MLpiezoscan(QsimExperiment):
         self.cam.start_live_display()
 
     def save_camera_data(self, image_data):
-        self.dv.save_image(image_data, self.data_size, int(self.num_images), self.path[1])
+        num_images_final = len(image_data)/(self.data_size[0]*self.data_size[1])
+        self.dv.save_image(image_data, self.data_size, int(num_images_final), self.path[1])
 
     def finalize(self, cxn, context):
-        hor_max, ver_max =  self.cam.get_detector_dimensions(None)
-        hor_min, ver_min = [1, 1]
-        self.cam.abort_acquisition()
-        self.cam.set_image_region([1, 1, hor_min, hor_max, ver_min, ver_max])
-        self.cam.start_live_display()
+        if self.p.MLpiezoscan.take_images:
+            hor_max, ver_max =  self.cam.get_detector_dimensions(None)
+            hor_min, ver_min = [1, 1]
+            self.cam.abort_acquisition()
+            self.cam.set_image_region([1, 1, hor_min, hor_max, ver_min, ver_max])
+            self.cam.start_live_display()
+        self.keithley.gpib_write('APPLy CH1,' + str(self.x_values[0]) + 'V')
         self.pulser.frequency('369', self.init_freq)
-        self.pulser.amplitude('Doppler Cooling (14 GHz)', self.init_power)
-        cxn.arduinottl.ttl_output(12, True)
+        self.pulser.amplitude('369', self.init_power)
+        cxn.arduinottl.ttl_output(12, False)
         self.pmt.set_mode(self.init_mode)
 
 if __name__ == '__main__':
