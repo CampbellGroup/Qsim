@@ -16,6 +16,7 @@ class lasermonitor(QsimExperiment):
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
+        print self.ident
         self.cxnwlm = labrad.connect('10.97.112.2',
                                      name=socket.gethostname() + " Laser Monitor",
                                      password=os.environ['LABRADPASSWORD'])
@@ -30,8 +31,10 @@ class lasermonitor(QsimExperiment):
 
         self.inittime = time.time()
         self.initfreq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
+        print self.initfreq
         self.setup_datavault('Elapsed Time', 'Frequency Deviation')
-        self.setup_grapher('current')
+        self.setup_grapher('Frequency Monitor')
+        print 'dv setup'
         while (time.time() - self.inittime) <= self.p.lasermonitor.measuretime['s']:
             should_stop = self.pause_or_stop()
             if should_stop:
@@ -52,5 +55,6 @@ if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = lasermonitor(cxn=cxn)
+    print exprt.name
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

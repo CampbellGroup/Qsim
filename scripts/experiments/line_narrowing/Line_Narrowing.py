@@ -9,7 +9,9 @@ class Line_Narrowing(QsimExperiment):
     name = 'Line_Narrowing'
 
     exp_parameters = []
-    exp_parameters.append(('Line_Narrowing', 'voltage_scan'))
+    exp_parameters.append(('Line_Narrowing', 'voltage_scan_x'))
+    exp_parameters.append(('Line_Narrowing', 'voltage_scan_y'))
+    exp_parameters.append(('Line_Narrowing', 'voltage_scan_z'))
     exp_parameters.append(('Line_Narrowing', 'direction'))
 
     def initialize(self, cxn, context, ident):
@@ -28,15 +30,21 @@ class Line_Narrowing(QsimExperiment):
         '''
 
         self.setup_parameters()
-        x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan, units=None)
+        if self.multipole_direction == 'Ex':
+            x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan_x, units=None)
+        elif self.multipole_direction == 'Ey':
+            x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan_y, units=None)
+        elif self.multipole_direction == 'Ez':
+            x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan_z, units=None)
 
         for i, step in enumerate(x_values):
 
             should_break = self.update_progress(i/float(len(x_values)))
             if should_break:
                 break
-
+            print step
             self.multipoles[self.multipole_index] = step
+            print self.multipoles
             self.mps.set_multipoles(self.multipoles)
             self.linescan.run(cxn, context)
             self.linescan.dv.add_parameter(self.multipole_direction, step)

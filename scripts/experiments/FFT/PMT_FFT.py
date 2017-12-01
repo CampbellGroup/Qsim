@@ -33,6 +33,7 @@ class PMT_FFT(QsimExperiment):
         self.pulser = cxn.pulser
         self.init_mode = self.pmt.getcurrentmode()
         self.init_freq = self.pulser.frequency('369')
+        self.pmt.set_mode('Normal')
         self.processor = processFFT()
 
     def programPulseSequence(self, record_time):
