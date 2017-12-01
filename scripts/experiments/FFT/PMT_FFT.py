@@ -32,7 +32,7 @@ class PMT_FFT(QsimExperiment):
         self.pmt = cxn.normalpmtflow
         self.pulser = cxn.pulser
         self.init_mode = self.pmt.getcurrentmode()
-        self.init_freq = self.pulser.frequency('369')
+        self.init_freq = self.pulser.frequency('369DP')
         self.pmt.set_mode('Normal')
         self.processor = processFFT()
 
@@ -43,7 +43,7 @@ class PMT_FFT(QsimExperiment):
     def run(self, cxn, context):
 
         self.set_scannable_parameters()
-        self.pulser.frequency('369', self.freq)
+        self.pulser.frequency('369DP', self.freq)
         self.programPulseSequence(self.record_time)
         self.setup_datavault('Frequencies', 'Amplitude')
         self.setup_grapher('PMT FFT')
@@ -77,7 +77,7 @@ class PMT_FFT(QsimExperiment):
                                                       self.freq_offset['Hz'], self.center_freq['Hz'])
     def finalize(self, cxn, context):
 
-        self.pulser.frequency('369', self.init_freq)
+        self.pulser.frequency('369DP', self.init_freq)
         self.pmt.set_mode(self.init_mode)
 
 if __name__ == '__main__':

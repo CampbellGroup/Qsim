@@ -18,7 +18,7 @@ class DDS_LineScan(QsimExperiment):
         self.pulser = cxn.pulser
         self.init_mode = self.pmt.getcurrentmode()
         self.init_gate_time = self.pmt.get_time_length()
-        self.init_freq = self.pulser.frequency('369')
+        self.init_freq = self.pulser.frequency('369DP')
         self.ident = ident
 
     def run(self, cxn, context):
@@ -30,7 +30,7 @@ class DDS_LineScan(QsimExperiment):
         self.center_freq = self.p.DDS_line_scan.Center_Frequency
         self.power = self.p.DDS_line_scan.Power
         self.pmt.set_time_length(self.gate_time)
-        self.pulser.amplitude('369', self.power)
+        self.pulser.amplitude('369DP', self.power)
         self.x_values = self.get_scan_list(self.p.DDS_line_scan.DDS_Frequencies, units='MHz')
 
         for i, x_point in enumerate(self.x_values):
@@ -40,14 +40,14 @@ class DDS_LineScan(QsimExperiment):
                 self.finalize(cxn, context)
                 break
 
-            self.pulser.frequency('369', U(x_point, 'MHz'))
+            self.pulser.frequency('369DP', U(x_point, 'MHz'))
             time.sleep(self.gate_time['s'])
             counts = self.pmt.get_next_counts('ON', 1, False)[0]
             if counts:
                 self.dv.add(2*(x_point - self.center_freq['MHz']), counts) # Since Double passed factor of 2 added
 
     def finalize(self, cxn, context):
-        self.pulser.frequency('369', self.init_freq)
+        self.pulser.frequency('369DP', self.init_freq)
         self.pmt.set_mode(self.init_mode)
         self.pmt.set_time_length(self.init_gate_time)
 

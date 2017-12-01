@@ -37,8 +37,8 @@ class MLpiezoscan(QsimExperiment):
         self.pmt = self.cxn.normalpmtflow
         self.init_mode = self.pmt.getcurrentmode()
         self.pulser = cxn.pulser
-        self.init_freq = self.pulser.frequency('369')
-        self.init_power = self.pulser.amplitude('369')
+        self.init_freq = self.pulser.frequency('369DP')
+        self.init_power = self.pulser.amplitude('369DP')
 
     def run(self, cxn, context):
 
@@ -52,8 +52,8 @@ class MLpiezoscan(QsimExperiment):
         self.keithley.gpib_write('APPLy CH1,' + str(self.init_volt) + 'V')
         self.keithley.output(self.chan, True)
         time.sleep(0.5) # allow voltage to settle
-        self.pulser.frequency('369',self.WLcenter + self.detuning/2.0) # this is real laser detuning
-        self.pulser.amplitude('369', self.power)
+        self.pulser.frequency('369DP',self.WLcenter + self.detuning/2.0) # this is real laser detuning
+        self.pulser.amplitude('369DP', self.power)
         cxn.arduinottl.ttl_output(12, True)
         self.path = self.setup_datavault('Volts', 'kcounts/sec')
         self.setup_grapher('ML Piezo Scan')
@@ -138,8 +138,8 @@ class MLpiezoscan(QsimExperiment):
             self.cam.set_image_region([1, 1, hor_min, hor_max, ver_min, ver_max])
             self.cam.start_live_display()
         self.keithley.gpib_write('APPLy CH1,' + str(self.x_values[0]) + 'V')
-        self.pulser.frequency('369', self.init_freq)
-        self.pulser.amplitude('369', self.init_power)
+        self.pulser.frequency('369DP', self.init_freq)
+        self.pulser.amplitude('369DP', self.init_power)
         cxn.arduinottl.ttl_output(12, False)
         self.pmt.set_mode(self.init_mode)
 

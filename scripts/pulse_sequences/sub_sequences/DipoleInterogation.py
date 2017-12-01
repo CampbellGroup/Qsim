@@ -11,17 +11,17 @@ class dipole_interogation(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        self.addDDS('369',
+        self.addDDS('369DP',
                     self.start,
                     p.DipoleInterogation.duration,
                     p.DipoleInterogation.frequency,
                     p.DipoleInterogation.power)
-        #self.addDDS('Doppler Cooling (14 GHz)',
+        #self.addDDS('DopplerCoolingSP',
         #            self.start,
         #            p.DipoleInterogation.duration,
         #            U(110.0, 'MHz'),
         #            p.DipoleInterogation.power)
-        self.addDDS('repump',
+        self.addDDS('935SP',
                     self.start,
                     p.DipoleInterogation.duration,
                     U(320.0, 'MHz'),

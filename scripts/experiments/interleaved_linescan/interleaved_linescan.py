@@ -33,7 +33,7 @@ class InterleavedLinescan(QsimExperiment):
         self.init_mode = self.pmt.getcurrentmode()
         self.pmt.set_mode('Normal')
         self.pulser = self.cxn.pulser
-        self.dds_channel = '369'
+        self.dds_channel = '369DP'
         self.init_power = self.p.DipoleInterogation.interogation_power
 
     def run(self, cxn, context):

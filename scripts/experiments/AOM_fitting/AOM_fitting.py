@@ -27,7 +27,7 @@ class AOM_fitting(QsimExperiment):
         self.pulser = cxn.pulser
         self.init_mode = self.pmt.getcurrentmode()
         self.init_gate_time = self.pmt.get_time_length()
-        self.init_freq = self.pulser.frequency('369')
+        self.init_freq = self.pulser.frequency('369DP')
         self.ident = ident
         self.intensity = []
         self.delta_freq = []
@@ -42,7 +42,7 @@ class AOM_fitting(QsimExperiment):
         self.center_freq = self.p.AOM_fitting.Center_Frequency
         self.power = self.p.AOM_fitting.Power
         self.pmt.set_time_length(self.gate_time)
-        self.pulser.amplitude('369', self.power)
+        self.pulser.amplitude('369DP', self.power)
         self.x_values = self.get_scan_list(self.p.AOM_fitting.DDS_Frequencies, units='MHz')
 
 
@@ -54,7 +54,7 @@ class AOM_fitting(QsimExperiment):
                 self.finalize(cxn, context)
                 break
 
-            self.pulser.frequency('369', U(x_point, 'MHz'))
+            self.pulser.frequency('369DP', U(x_point, 'MHz'))
             time.sleep(self.gate_time['s'])
             counts = self.pmt.get_next_counts('ON', 1, False)[0]
             self.intensity.append(counts)
@@ -78,7 +78,7 @@ class AOM_fitting(QsimExperiment):
 
 
     def finalize(self, cxn, context):
-        self.pulser.frequency('369', self.init_freq)
+        self.pulser.frequency('369DP', self.init_freq)
         self.pmt.set_mode(self.init_mode)
         self.pmt.set_time_length(self.init_gate_time)
 

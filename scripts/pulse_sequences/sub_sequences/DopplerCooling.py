@@ -14,19 +14,19 @@ class doppler_cooling(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        #self.addDDS('Doppler Cooling (14 GHz)',
+        #self.addDDS('DopplerCoolingSP',
         #            self.start,
         #            p.DopplerCooling.duration,
         #            U(110.0, 'MHz'),
         #            p.DopplerCooling.cooling_power)
 
-        self.addDDS('369',
+        self.addDDS('369DP',
                     self.start,
                     p.DopplerCooling.duration,
                     p.Transitions.main_cooling_369 + p.DopplerCooling.detuning/2.0,
                     p.DopplerCooling.cooling_power)
 
-        self.addDDS('repump',
+        self.addDDS('935SP',
                     self.start,
                     p.DopplerCooling.duration,
                     U(320.0, 'MHz'),

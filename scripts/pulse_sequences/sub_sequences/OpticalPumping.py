@@ -12,19 +12,19 @@ class optical_pumping(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        self.addDDS('State Detection',
+        self.addDDS('StateDetectionSP',
                     self.start,
                     p.OpticalPumping.duration,
                     U(110.0, 'MHz'),
                     p.OpticalPumping.power)
 
-        self.addDDS('369',
+        self.addDDS('369DP',
                     self.start,
                     p.OpticalPumping.duration,
                     p.Transitions.main_cooling_369 + p.OpticalPumping.detuning/2.0,
                     U(-5.0, 'dBm'))
 
-        self.addDDS('repump',
+        self.addDDS('935SP',
                     self.start,
                     p.OpticalPumping.duration,
                     U(320.0, 'MHz'),

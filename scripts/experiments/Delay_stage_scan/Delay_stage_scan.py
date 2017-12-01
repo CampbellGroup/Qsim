@@ -27,9 +27,9 @@ class Delaystagescan(QsimExperiment):
         self.pmt = self.cxn.normalpmtflow
         self.init_mode = self.pmt.getcurrentmode()
         self.pulser = cxn.pulser
-        self.init_ML_power = self.pulser.amplitude('ML_SinglePass')
-        self.init_cooling_freq = self.pulser.frequency('369')
-        self.init_cooling_power = self.pulser.amplitude('Doppler Cooling (14 GHz)')
+        self.init_ML_power = self.pulser.amplitude('ModeLockedSP')
+        self.init_cooling_freq = self.pulser.frequency('369DP')
+        self.init_cooling_power = self.pulser.amplitude('DopplerCoolingSP')
 
     def run(self, cxn, context):
 
@@ -39,9 +39,9 @@ class Delaystagescan(QsimExperiment):
         self.set_scannable_parameters()
         self.keithley.gpib_write('Apply CH1,' + str(self.init_volt) + 'V')
         self.keithley.output(self.chan, True)
-        self.pulser.frequency('369',self.cooling_center + self.cooling_detuning/2.0) # this is real laser detuning
-        self.pulser.amplitude('Doppler Cooling (14 GHz)', self.cooling_power)
-        self.pulser.amplitude('ML_SinglePass', self.ML_power)
+        self.pulser.frequency('369DP',self.cooling_center + self.cooling_detuning/2.0) # this is real laser detuning
+        self.pulser.amplitude('Doppler CoolingSP', self.cooling_power)
+        self.pulser.amplitude('ModeLockedSP', self.ML_power)
         self.path = self.setup_datavault('Volts', 'kcounts/sec')
         self.setup_grapher('Ramsey Delay Stage Piezo Scan')
         try:
@@ -80,9 +80,9 @@ class Delaystagescan(QsimExperiment):
         self.init_volt = self.x_values[0]
 
     def finalize(self, cxn, context):
-        self.pulser.frequency('369', self.init_cooling_freq)
-        self.pulser.amplitude('Doppler Cooling (14 GHz)', self.init_cooling_power)
-        self.pulser.amplitude('ML_SinglePass', self.init_ML_power)
+        self.pulser.frequency('369DP', self.init_cooling_freq)
+        self.pulser.amplitude('DopplerCoolingSP', self.init_cooling_power)
+        self.pulser.amplitude('ModeLockedSP', self.init_ML_power)
         self.pmt.set_mode(self.init_mode)
         self.keithley.gpib_write('Apply CH1,' + str(self.init_volt) + 'V')
 

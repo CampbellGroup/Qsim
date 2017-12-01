@@ -16,7 +16,7 @@ class state_detection(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addDDS('repump',
+        self.addDDS('935SP',
                     self.start,
                     p.StateReadout.duration,
                     U(320.0, 'MHz'),
@@ -25,13 +25,13 @@ class state_detection(pulse_sequence):
         self.addTTL('935EOM', self.start, p.StateReadout.duration)
 
         if p.StateReadout.mode == 'CW':
-            self.addDDS('State Detection',
+            self.addDDS('StateDetectionSP',
                         self.start,
                         p.StateReadout.duration,
                         U(110.0, 'MHz'),
                         p.StateReadout.CW_power)
 
-            self.addDDS('369',
+            self.addDDS('369DP',
                         self.start,
                         p.StateReadout.duration,
                         p.Transitions.main_cooling_369 + p.StateReadout.detuning,

@@ -49,8 +49,8 @@ class velocity_class(QsimExperiment):
         self.keithley.select_device(0)
 
         self.init_mode = self.pmt.getcurrentmode()
-        self.init_freq = self.pulser.frequency('369')
-        self.init_power = self.pulser.amplitude('369')
+        self.init_freq = self.pulser.frequency('369DP')
+        self.init_power = self.pulser.amplitude('369DP')
 
     def run(self, cxn, context):
 
@@ -66,11 +66,11 @@ class velocity_class(QsimExperiment):
         image_data = np.array([])
 
         # Doppler cool
-        self.pulser.amplitude('369', self.cw_cooling_power)
+        self.pulser.amplitude('369DP', self.cw_cooling_power)
         time.sleep(self.cw_cooling_time['s'])
 
         # CW off ML on
-        self.pulser.amplitude('369', WithUnit(-46.0, 'dBm'))
+        self.pulser.amplitude('369DP', WithUnit(-46.0, 'dBm'))
         self.TTL.ttl_output(12, True)
         time.sleep(self.ML_precooling_time['s'])
         image = self.take_image('pre-tickle')
@@ -161,30 +161,30 @@ class velocity_class(QsimExperiment):
         self.cam.start_live_display()
 
         if self.background_subtraction == True:
-            repump_amp = self.pulser.amplitude('repump')
-            cw_amp = self.pulser.amplitude('369')
-            self.pulser.amplitude('repump', WithUnit(-46.0, 'dBm'))
+            repump_amp = self.pulser.amplitude('935SP')
+            cw_amp = self.pulser.amplitude('369DP')
+            self.pulser.amplitude('935SP', WithUnit(-46.0, 'dBm'))
             self.TTL.ttl_output(12, True)
-            self.pulser.amplitude('369', WithUnit(-46.0, 'dBm'))
+            self.pulser.amplitude('369DP', WithUnit(-46.0, 'dBm'))
             time.sleep(1.0)
             self.background_subtraction = False
             self.bg_image = self.take_image('background_subtraction')
             self.TTL.ttl_output(12, False)
-            self.pulser.amplitude('repump', repump_amp)
-            self.pulser.amplitude('369', cw_amp)
+            self.pulser.amplitude('935SP', repump_amp)
+            self.pulser.amplitude('369DP', cw_amp)
             self.background_subtraction = True
             self.bg_image = self.bg_image.reshape(self.image_x_length, self.image_y_length)
 
         self.keithley.gpib_write('APPLy CH1,' + str(self.ML_piezo_voltage['V']) + 'V')
         self.keithley.output(self.kt_chan, True)
 
-        self.pulser.frequency('369',self.WLcenter - WithUnit(10.0, 'MHz')/2.0) # this is real laser detuning
+        self.pulser.frequency('369DP',self.WLcenter - WithUnit(10.0, 'MHz')/2.0) # this is real laser detuning
 
     def get_initial_settings(self):
 
         self.init_mode = self.pmt.getcurrentmode()
-        self.init_freq = self.pulser.frequency('369')
-        self.init_power = self.pulser.amplitude('369')
+        self.init_freq = self.pulser.frequency('369DP')
+        self.init_power = self.pulser.amplitude('369DP')
         self.exposure = self.cam.get_exposure_time()
 
     def set_scannable_parameters(self):
@@ -217,8 +217,8 @@ class velocity_class(QsimExperiment):
         self.cam.abort_acquisition()
         self.cam.set_image_region([1, 1, hor_min, hor_max, ver_min, ver_max])
         self.cam.start_live_display()
-        self.pulser.frequency('369', self.init_freq)
-        self.pulser.amplitude('369', self.init_power)
+        self.pulser.frequency('369DP', self.init_freq)
+        self.pulser.amplitude('369DP', self.init_power)
         cxn.arduinottl.ttl_output(12, False)
         self.pmt.set_mode(self.init_mode)
         self.rg.set_output(self.rg_chan, False)

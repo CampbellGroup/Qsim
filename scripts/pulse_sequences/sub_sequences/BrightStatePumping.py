@@ -14,19 +14,19 @@ class bright_state_pumping(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addDDS('Doppler Cooling (14 GHz)',
+        self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.BrightStatePumping.duration,
                     U(110.0, 'MHz'),
                     p.BrightStatePumping.doppler_power)
 
-        self.addDDS('369',
+        self.addDDS('369DP',
                     self.start,
                     p.BrightStatePumping.duration,
                     p.Transitions.main_cooling_369 + p.BrightStatePumping.detuning/2.0,
                     U(-5.0, 'dBm'))
 
-        self.addDDS('repump',
+        self.addDDS('935SP',
                     self.start,
                     p.BrightStatePumping.duration,
                     U(320.0, 'MHz'),
