@@ -5,7 +5,7 @@ Created on Jun 16, 2016
 '''
 
 import labrad
-from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
+from common.lib.servers.script_scanner.scan_methods import experiment
 from labrad.units import WithUnit
 import time
 import numpy as np
@@ -84,13 +84,13 @@ class dacRaster(experiment):
     def changevoltage(self, direction, voltage):
 
         if direction == 'X':
-
+            pass
 
         elif direction == 'Y':
-
+            pass
 
         elif direction == 'Z':
-)
+            pass
 
         if direction != self.lowestaxis:
             pass
