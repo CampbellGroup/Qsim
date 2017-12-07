@@ -1,4 +1,3 @@
-#!scriptscanner
 import labrad
 import numpy as np
 from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as sequence
@@ -13,7 +12,7 @@ class BrightStateDetection(QsimExperiment):
     name = 'Bright State Detection'
 
     exp_parameters = []
-    exp_parameters.append(('BrightStateDetection', 'repititions'))
+    exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -32,7 +31,7 @@ class BrightStateDetection(QsimExperiment):
 
         pulse_sequence = sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
-        self.pulser.start_number(int(self.p.BrightStateDetection.repititions))
+        self.pulser.start_number(int(self.p.StateDetection.repititions))
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()
         counts = self.pulser.get_readout_counts()
@@ -40,7 +39,7 @@ class BrightStateDetection(QsimExperiment):
         dataset = self.dv.new('bright_state_detection', [('run', 'arb u')], [('Counts', 'Counts', 'num')])
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter])
-        data = np.column_stack((np.arange(self.p.BrightStateDetection.repititions),counts))
+        data = np.column_stack((np.arange(self.p.StateDetection.repititions),counts))
         self.dv.add(data)
         self.dv.add_parameter('isHistogram', True)
 

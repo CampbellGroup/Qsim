@@ -10,7 +10,7 @@ class scan_935(QsimExperiment):
 
     exp_parameters = []
     exp_parameters.append(('wavemeterscan', 'Port_935'))
-    exp_parameters.append(('wavemeterscan', 'Center_Frequency_935'))
+    exp_parameters.append(('Transitions', 'repump_935'))
     exp_parameters.append(('wavemeterscan', 'scan_range_935'))
     exp_parameters.append(('wavemeterscan', 'rail_wait_time'))
 
@@ -36,16 +36,13 @@ class scan_935(QsimExperiment):
         self.high_rail = str(self.init_freq + self.scan_range['THz']/2.0)
         self.tempdata = []
         self.wm.set_pid_course(7, self.high_rail)
-        print self.high_rail
         progress = 0.3
         delay = self.wait_time['s']
         self.take_data(progress, delay)
         self.wm.set_pid_course(7, self.low_rail)
-        print self.low_rail
         progress = 0.6
         self.take_data(progress, 2*delay)
         self.wm.set_pid_course(7, str(self.init_freq))
-        print self.init_freq
         progress = 0.9
         self.take_data(progress, delay)
 
@@ -57,7 +54,6 @@ class scan_935(QsimExperiment):
         time.sleep(1)
 
     def take_data(self, progress, delay):
-
         init_time = time.time()
         while (time.time() - init_time) < delay:
             should_break = self.update_progress(progress)
@@ -69,14 +65,13 @@ class scan_935(QsimExperiment):
 
             counts = self.pmt.get_next_counts('ON', 1, False)[0]
             currentfreq = self.currentfrequency()
-
             if currentfreq and counts:
                 self.tempdata.append([1e6 * currentfreq, counts])
 
     def setup_parameters(self):
 
         self.port = int(self.p.wavemeterscan.Port_935)
-        self.centerfrequency = self.p.wavemeterscan.Center_Frequency_935
+        self.centerfrequency = self.p.Transitions.repump_935
         self.scan_range = self.p.wavemeterscan.scan_range_935
         self.wait_time = self.p.wavemeterscan.rail_wait_time
 

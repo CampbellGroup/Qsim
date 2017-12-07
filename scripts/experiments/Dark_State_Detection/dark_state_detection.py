@@ -13,7 +13,7 @@ class DarkStateDetection(QsimExperiment):
     name = 'Dark State Detection'
 
     exp_parameters = []
-    exp_parameters.append(('DarkStateDetection', 'repititions'))
+    exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -32,7 +32,7 @@ class DarkStateDetection(QsimExperiment):
 
         pulse_sequence = sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
-        self.pulser.start_number(int(self.p.DarkStateDetection.repititions))
+        self.pulser.start_number(int(self.p.StateDetection.repititions))
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()
         counts = self.pulser.get_readout_counts()
@@ -40,7 +40,7 @@ class DarkStateDetection(QsimExperiment):
         dataset = self.dv.new('dark_state_detection', [('run', 'arb u')], [('Counts', 'Counts', 'num')])
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter])
-        data = np.column_stack((np.arange(self.p.DarkStateDetection.repititions),counts))
+        data = np.column_stack((np.arange(self.p.StateDetection.repititions),counts))
         self.dv.add(data)
         self.dv.add_parameter('isHistogram', True)
 
