@@ -39,7 +39,7 @@ class BrightStateDetection(QsimExperiment):
                 if i % 10 == 0:
                     self.setup_hist_datavault()
                     self.plot_hist(hist)
-                self.plot_prob(i, hist)
+                self.plot_prob(i, counts)
                 should_break = self.update_progress(np.random.random())
                 if should_break:
                     break
@@ -93,13 +93,10 @@ class BrightStateDetection(QsimExperiment):
         self.dv.add(hist, context=self.hist_ctx)
         self.rsg.plot(self.dataset_hist, 'Histogram', False)
 
-    def plot_prob(self, num, hist):
+    def plot_prob(self, num, counts):
         self.thresholdVal = self.p.StateDetection.state_readout_threshold
-        if len(hist) < self.thresholdVal:
-            fid = 0
-        else:
-            fid = np.sum(hist[int(self.thresholdVal):])/np.sum(hist)
-        self.dv.add(num, fid, context = self.prob_ctx)
+        prob = len(np.where(counts > self.thresholdVal)[0])/float(len(counts))
+        self.dv.add(num, prob, context = self.prob_ctx)
 
     def finalize(self, cxn, context):
         self.pmt.set_mode(self.init_mode)

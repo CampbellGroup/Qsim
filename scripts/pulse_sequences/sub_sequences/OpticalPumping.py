@@ -13,10 +13,11 @@ class optical_pumping(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
+
         self.addDDS('OpticalPumpingSP',
                     self.start,
                     p.OpticalPumping.duration,
-                    U(326.0, 'MHz'),
+                    U(100.0, 'MHz'),
                     p.OpticalPumping.power)
 
         self.addDDS('369DP',

@@ -22,6 +22,11 @@ class dipole_interogation(pulse_sequence):
                     p.DipoleInterogation.duration,
                     U(110.0, 'MHz'),
                     p.DipoleInterogation.power)
+        self.addDDS('StateDetectionSP',
+                    self.start,
+                    p.DipoleInterogation.duration,
+                    U(110.0, 'MHz'),
+                    U(-18.5, 'dBm'))
         self.addDDS('935SP',
                     self.start,
                     p.DipoleInterogation.duration,
