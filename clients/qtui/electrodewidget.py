@@ -39,7 +39,7 @@ class ElectrodeIndicator(QtGui.QWidget):
         
     def init_UI(self):      
 
-        self.setGeometry(200, 200, 600, 600)
+        self.setGeometry(200, 200, 400, 400)
 
 	quad1 = Wedge(None, None, 0.0)
 	quad2 = Wedge(None, None, 90.0)

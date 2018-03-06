@@ -6,12 +6,14 @@ class dipole_interogation(pulse_sequence):
     required_parameters = [
                            ('DipoleInterogation', 'duration'),
                            ('DipoleInterogation', 'frequency'),
-                           ('DipoleInterogation', 'power'),
+                           ('DipoleInterogation', 'DopplerCoolingSP_power'),
+                           ('DipoleInterogation', 'StateDetectionSP_power'),
                            ('DipoleInterogation', 'repump_power')
                            ]
 
     def sequence(self):
         p = self.parameters
+        int_laser = p.DipoleInterogation.interogation_laser
         self.addDDS('369DP',
                     self.start,
                     p.DipoleInterogation.duration,
@@ -21,12 +23,12 @@ class dipole_interogation(pulse_sequence):
                     self.start,
                     p.DipoleInterogation.duration,
                     U(110.0, 'MHz'),
-                    p.DipoleInterogation.power)
+                    p.DipoleInterogation.DopplerCoolingSP_power)
         self.addDDS('StateDetectionSP',
                     self.start,
                     p.DipoleInterogation.duration,
                     U(110.0, 'MHz'),
-                    U(-18.5, 'dBm'))
+                    p.DipoleInterogation.StateDetectionSP_power)
         self.addDDS('935SP',
                     self.start,
                     p.DipoleInterogation.duration,

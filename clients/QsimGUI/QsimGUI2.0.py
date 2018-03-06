@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-from PyQt4 import QtGui
-from twisted.internet.defer import inlineCallbacks, returnValue
-import sys
 import os
+import sys
+
+from PyQt4 import QtGui
+from twisted.internet.defer import inlineCallbacks
+
 sys.path.append('/home/qsimexpcontrol/LabRAD/')
 sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
 os.environ["LABRADPASSWORD"] = "lab"
@@ -36,8 +38,8 @@ class QSIM_GUI(QtGui.QMainWindow):
         Tsunami = self.makeTsunamiWidget(reactor, cxn)
         Pulser = self.makePulserWidget(reactor, cxn)
         Config = self.makeConfigWidget(reactor, cxn)
-        Histogram = self.makeHistogramWidget(reactor, cxn)
-        Rigol = self.makeRigolWidget(reactor, cxn)
+#        Histogram = self.makeHistogramWidget(reactor, cxn)
+        Keithley = self.makeKeithleyWidget(reactor, cxn)
         
 
         # add tabs
@@ -45,12 +47,12 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(wavemeter, '&Wavemeter')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')
-        self.tabWidget.addTab(Tsunami, '&Tsunami')
         self.tabWidget.addTab(Pulser, '&Pulser')
-        self.tabWidget.addTab(Histogram, '&Histogram')
+#        self.tabWidget.addTab(Histogram, '&Histogram')
         self.tabWidget.addTab(analysis, '&Analysis')
         self.tabWidget.addTab(Config, '&Config')
-        self.tabWidget.addTab(Rigol, '&Rigol')
+        self.tabWidget.addTab(Tsunami, '&Tsunami')
+        self.tabWidget.addTab(Keithley, '&Keithley')
         self.tabWidget.setMovable(True)
 
 
@@ -95,11 +97,17 @@ class QSIM_GUI(QtGui.QMainWindow):
         puls_widget.setLayout(gridLayout)
         return puls_widget
 
-    def makeRigolWidget(self, reactor, cxn):
-        from Qsim.clients.rigol_controller_usbtmc.rigolcontroller_usbtmc import rigolclient
-        widget = rigolclient(reactor, cxn)
+#    def makeRigolWidget(self, reactor, cxn):
+#        from clients.kiethley_control.rigolcontroller_usbtmc import rigolclient
+#        widget = rigolclient(reactor, cxn)
+#        return widget
+
+    def makeKeithleyWidget(self, reactor, cxn):
+        from Qsim.clients.kiethley_control.kiethley_controller import kiethleyclient
+        widget = kiethleyclient(reactor, cxn)
         return widget
-    
+
+
     def makeConfigWidget(self, reactor, cxn):
         from common.lib.clients.config_editor.config_editor import CONFIG_EDITOR
         widget = CONFIG_EDITOR(reactor, cxn)
@@ -178,10 +186,10 @@ class QSIM_GUI(QtGui.QMainWindow):
         widget.setLayout(gridLayout)
         return widget
 
-    def makeHistogramWidget(self, reactor, cxn):
-        from barium.lib.clients.Histogram_client.readout_histogram import readout_histogram
-        hist = readout_histogram(reactor, cxn)
-        return hist
+#    def makeHistogramWidget(self, reactor, cxn):
+#        from barium.lib.clients.Histogram_client.readout_histogram import readout_histogram
+#        hist = readout_histogram(reactor, cxn)
+#        return hist
 
     def closeEvent(self, x):
         self.reactor.stop()

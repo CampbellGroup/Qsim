@@ -20,16 +20,10 @@ class doppler_cooling(pulse_sequence):
                     U(110.0, 'MHz'),
                     p.DopplerCooling.cooling_power)
 
-        self.addDDS('StateDetectionSP',
-                    self.start,
-                    p.DopplerCooling.duration,
-                    U(110.0, 'MHz'),
-                    U(-18.5, 'dBm'))
-
         self.addDDS('369DP',
                     self.start,
                     p.DopplerCooling.duration,
-                    p.Transitions.main_cooling_369 + p.DopplerCooling.detuning/2.0,
+                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
                     U(-5.0, 'dBm'))
 
         self.addDDS('935SP',

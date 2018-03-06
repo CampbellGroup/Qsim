@@ -34,15 +34,21 @@ class state_detection(pulse_sequence):
             self.addDDS('369DP',
                         self.start,
                         p.StateDetection.duration,
-                        p.Transitions.main_cooling_369 + p.StateDetection.detuning,
+                        p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.StateDetection.detuning,
                         U(-5.0, 'dBm'))
 
         elif p.StateDetection.mode == 'ML':
-            self.addDDS('ML_SinglePass',
+            self.addDDS('ModeLockedSP',
                         self.start,
                         p.StateDetection.duration,
                         U(320.0, 'MHz'),
                         p.StateDetection.ML_power)
+
+            self.addDDS('369DP',
+                        self.start,
+                        p.StateDetection.duration,
+                        U(200.0, 'MHz'),
+                        U(-46.0, 'dBm'))
 
         self.addTTL('ReadoutCount',
                     self.start,

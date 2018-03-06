@@ -33,8 +33,8 @@ class freq_drift_monitor(LabradServer):
 	def initServer(self):
 		self.password = os.environ['LABRADPASSWORD']
 		self.name = socket.gethostname() + ' Frequency Monitor'
-		self.chan = [ 4, 8]  #wavemeter channels to monitor
-		self.set_freq = [320.569000, 469.439000] #desired frequencies of lasers, 935 and 638
+		self.chan = [8]  #wavemeter channels to monitor
+		self.set_freq = [0.0] #desired frequencies
 		self.rate = 6 #seconds between wavemeter readings
 		self.time = 0
 		self.connect()

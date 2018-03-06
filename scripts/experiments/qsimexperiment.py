@@ -23,10 +23,8 @@ class QsimExperiment(experiment):
         self.cxn = cxn
         self.pv = None
         self.sc = None
-        self.context = None
-        self.min_progress = min_progress
-        self.max_progress = max_progress
-        self.should_stop = False
+        self.init_mode = self.cxn.NormalPMTFlow.getcurrentmode()
+        self.cxn.NormalPMTFlow.set_mode('Normal')
 
     def _connect(self):
         experiment._connect(self)
@@ -37,9 +35,22 @@ class QsimExperiment(experiment):
             raise KeyError(error_message)
 
         try:
+            self.pmt = self.cxn.servers['NormalPMTFlow']
+        except KeyError as error:
+            error_message = error + '\n' + "NormalPMTFlow is not running"
+            raise KeyError(error_message)
+
+        try:
+            self.pulser = self.cxn.servers['pulser']
+        except KeyError as error:
+            error_message = error + '\n' + "DataVault is not running"
+            raise KeyError(error_message)
+
+        try:
             self.grapher = self.cxn.servers['grapher']
-        except:
-            self.grapher = None
+        except KeyError as error:
+            error_message = error + '\n' + "Grapher is not running"
+            raise KeyError(error_message)
 
     def setup_datavault(self, x_axis, y_axis):
 
@@ -57,7 +68,7 @@ class QsimExperiment(experiment):
         return self.dataset
 
     def setup_grapher(self, tab):
-        if self.grapher == None:
+        if self.grapher is None:
             print 'grapher not running'
         self.grapher.plot(self.dataset, tab, False)
 
@@ -82,3 +93,54 @@ class QsimExperiment(experiment):
         num_steps = scan[2]
         scan_list = np.linspace(minvalue, maxvalue, num_steps)
         return list(scan_list)
+
+    def program_pulser(self, pulse_sequence):
+        pulse_sequence = pulse_sequence(self.p)
+        pulse_sequence.programSequence(self.pulser)
+
+    def run_sequence(self):
+        reps_completed = 0
+        counts = np.array([])
+        while int(reps_completed) < self.p.StateDetection.repititions:
+            if self.p.StateDetection.repititions - reps_completed >= 1000:
+                self.pulser.start_number(1000)
+                reps_completed += 1000
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                temp_counts = self.pulser.get_readout_counts()
+                self.pulser.reset_readout_counts()
+                counts = np.concatenate((counts, temp_counts))
+            elif self.p.StateDetection.repititions - reps_completed < 1000:
+                final = int(self.p.StateDetection.repititions - reps_completed)
+                self.pulser.start_number(final)
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                temp_counts = self.pulser.get_readout_counts()
+                self.pulser.reset_readout_counts()
+                reps_completed += int(self.p.StateDetection.repititions)
+                counts = np.concatenate((counts, temp_counts))
+        return counts
+
+    def process_data(self, counts):
+
+        repititions = len(counts)
+        data = np.column_stack((np.arange(repititions),
+                                counts))
+        y = np.histogram(data[:, 1],
+                         int(np.max([data[:, 1].max() - data[:, 1].min(), 1])))
+        counts = y[0]
+        bins = y[1][:-1]
+        if bins[0] < 0:
+            bins = bins + .5
+        hist = np.column_stack((bins, counts))
+        return hist
+
+    def get_pop(self, counts):
+        self.thresholdVal = self.p.StateDetection.state_readout_threshold
+        prob = len(np.where(counts > self.thresholdVal)[0])/float(len(counts))
+        return prob
+
+    def _finalize(self, cxn, context):
+        self.pmt.set_mode(self.init_mode)
+        self.finalize(cxn, context)
+        self.sc.finish_confirmed(self.ident)

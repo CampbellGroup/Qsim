@@ -51,13 +51,27 @@ class MicrowaveLineScan(QsimExperiment):
 
     def program_pulser(self, detuning):
         self.p['MicrowaveInterogation.detuning'] = detuning
+        reps_completed = 0
+        counts = np.array([])
         pulse_sequence = sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
-        self.pulser.start_number(int(self.p.StateDetection.repititions))
-        self.pulser.wait_sequence_done()
-        self.pulser.stop_sequence()
-        counts = self.pulser.get_readout_counts()
-        self.pulser.reset_readout_counts()
+        while int(reps_completed) < self.p.StateDetection.repititions:
+            if self.p.StateDetection.repititions - reps_completed >= 1000:
+                self.pulser.start_number(1000)
+                reps_completed += 1000
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                temp_counts = self.pulser.get_readout_counts()
+                self.pulser.reset_readout_counts()
+                counts = np.concatenate((counts, temp_counts))
+            elif self.p.StateDetection.repititions - reps_completed  < 1000:
+                self.pulser.start_number(int(self.p.StateDetection.repititions - reps_completed))
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                temp_counts = self.pulser.get_readout_counts()
+                self.pulser.reset_readout_counts()
+                reps_completed += int(self.p.StateDetection.repititions)
+                counts = np.concatenate((counts, temp_counts))
         return counts
 
     def process_data(self, counts):

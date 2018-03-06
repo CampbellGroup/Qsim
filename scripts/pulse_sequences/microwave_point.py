@@ -4,12 +4,17 @@ from sub_sequences.MicrowaveInterogation import microwave_interogation
 from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.StateDetection import state_detection
 from sub_sequences.OpticalPumping import optical_pumping
+from labrad.units import WithUnit as U
+
 
 class microwave_point(pulse_sequence):
 
-    required_subsequences = [turn_off_all, doppler_cooling, microwave_interogation, state_detection, optical_pumping]
+    required_subsequences = [turn_off_all, doppler_cooling,
+                             microwave_interogation,
+                             state_detection, optical_pumping]
 
     def sequence(self):
+        self.end = U(10.0, 'us')
         self.addSequence(turn_off_all)
         self.addSequence(doppler_cooling)
         self.addSequence(optical_pumping)

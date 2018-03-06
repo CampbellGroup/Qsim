@@ -12,11 +12,9 @@ class microwave_interogation(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addTTL('MicrowaveTTL', self.start, p.MicrowaveInterogation.duration)
-
         self.addDDS('PLL_Reference_RF',
                     self.start,
                     p.MicrowaveInterogation.duration,
-                    (p.Transitions.qubit_0 + p.MicrowaveInterogation.detuning)/135.0,
-                    U(-3.0, 'dBm'))
+                    (p.Transitions.qubit_0 + p.MicrowaveInterogation.detuning),
+                    U(7.0, 'dBm'))
         self.end = self.start + p.MicrowaveInterogation.duration

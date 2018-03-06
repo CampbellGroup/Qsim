@@ -45,7 +45,7 @@ class InterleavedLinescan(QsimExperiment):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
                 break
-            freq = WithUnit(detuning, 'MHz')/2.0 + self.p.Transitions.main_cooling_369 # divide by 2 for the double pass
+            freq = WithUnit(detuning, 'MHz')/2.0 + WithUnit(200.0, 'MHz') # self.p.Transitions.main_cooling_369 divide by 2 for the double pass
             self.program_pulser(freq, detuning)
 
     def program_pulser(self, freq, detuning):
@@ -71,8 +71,6 @@ class InterleavedLinescan(QsimExperiment):
         adj_power = power + 15.0*abs(dB_increase)
         if adj_power > WithUnit(-5.0, 'dBm'):
             adj_power = WithUnit(-5.0, 'dBm')
-        print adj_power
-        return adj_power
 
 
     def finalize(self, cxn, context):

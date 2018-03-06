@@ -23,7 +23,7 @@ class bright_state_pumping(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.BrightStatePumping.duration,
-                    p.Transitions.main_cooling_369 + p.BrightStatePumping.detuning/2.0,
+                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.BrightStatePumping.detuning/2.0,
                     U(-5.0, 'dBm'))
 
         self.addDDS('935SP',

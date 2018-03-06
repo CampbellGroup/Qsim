@@ -68,7 +68,7 @@ class PMT_FFT(QsimExperiment):
 
     def set_scannable_parameters(self):
         detuning = self.p.DopplerCooling.detuning
-        self.freq = detuning / 2.0 + self.p.Transitions.main_cooling_369  # divide by 2 for the double pass
+        self.freq = detuning / 2.0 + self.p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz')  # divide by 2 for the double pass
         self.record_time = self.p.FFT.record_time
         self.average = int(self.p.FFT.average)
         self.center_freq = self.p.FFT.center_frequency
