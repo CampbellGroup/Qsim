@@ -30,5 +30,4 @@ class AOM_fitting(pulse_sequence):
                     p.AOMTiming.duration,
                     p.AOMTiming.frequency,
                     p.AOMTiming.power)
-        
         self.addTTL('TimeResolvedCount', self.start, self.end)

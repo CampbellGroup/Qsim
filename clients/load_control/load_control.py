@@ -4,7 +4,6 @@ from common.lib.clients.qtui.timer import QCustomTimer
 from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
 from PyQt4 import QtGui
-from twisted.internet.task import LoopingCall
 
 SIGNALID = 123456
 
@@ -32,7 +31,7 @@ class LoadControl(QtGui.QWidget):
             self.cxn = yield connection(name="Load Control")
             yield self.cxn.connect()
         self.PMT = yield self.cxn.get_server('normalpmtflow')
-        self.pv = yield  self.cxn.get_server('parametervault')
+        self.pv = yield self.cxn.get_server('parametervault')
         self.TTL = yield self.cxn.get_server('arduinottl')
         self.oven = yield self.cxn.get_server('ovenserver')
         self.reg = yield self.cxn.get_server('registry')
@@ -61,7 +60,6 @@ class LoadControl(QtGui.QWidget):
         self.timer_widget = QCustomTimer('Loading Time', show_control=False)
         self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 3.0))
 
-
         self.current_widget.setStepSize(0.01)
         self.current_widget.spinLevel.setDecimals(2)
         self.current_widget.spinLevel.valueChanged.connect(self.current_changed)
@@ -88,12 +86,8 @@ class LoadControl(QtGui.QWidget):
         disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(False)
-#        elif (pmt_value >= disc_value) and (not switch_on):
-#            yield self.TTL.ttl_output(10, False)
         elif self.timer_widget.time >= 600.0:
             self.shutter_widget.TTLswitch.setChecked(False)
-#        elif (pmt_value <= disc_value) and (not switch_on):
-#            yield self.TTL.ttl_output(10, True)
 
     @inlineCallbacks
     def toggle(self, value):
@@ -120,6 +114,7 @@ class LoadControl(QtGui.QWidget):
 
     def closeEvent(self, x):
         self.reactor.stop()
+
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])

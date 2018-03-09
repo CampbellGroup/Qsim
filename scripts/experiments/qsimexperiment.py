@@ -98,27 +98,22 @@ class QsimExperiment(experiment):
         pulse_sequence = pulse_sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
 
-    def run_sequence(self):
-        reps_completed = 0
+    def run_sequence(self, max_runs=1000):
+
         counts = np.array([])
-        while int(reps_completed) < self.p.StateDetection.repititions:
-            if self.p.StateDetection.repititions - reps_completed >= 1000:
-                self.pulser.start_number(1000)
-                reps_completed += 1000
-                self.pulser.wait_sequence_done()
-                self.pulser.stop_sequence()
-                temp_counts = self.pulser.get_readout_counts()
-                self.pulser.reset_readout_counts()
-                counts = np.concatenate((counts, temp_counts))
-            elif self.p.StateDetection.repititions - reps_completed < 1000:
-                final = int(self.p.StateDetection.repititions - reps_completed)
-                self.pulser.start_number(final)
-                self.pulser.wait_sequence_done()
-                self.pulser.stop_sequence()
-                temp_counts = self.pulser.get_readout_counts()
-                self.pulser.reset_readout_counts()
-                reps_completed += int(self.p.StateDetection.repititions)
-                counts = np.concatenate((counts, temp_counts))
+        for i in range(int(self.p.StateDetection.repititions)/max_runs):
+            self.pulser.start_number(max_runs)
+            self.pulser.wait_sequence_done()
+            self.pulser.stop_sequence()
+            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+            self.pulser.reset_readout_counts()
+        if int(self.p.StateDetection.repititions) % max_runs is not 0:
+            self.pulser.start_number(int(self.p.StateDetection.repititions) % max_runs)
+            self.pulser.wait_sequence_done()
+            self.pulser.stop_sequence()
+            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+            self.pulser.reset_readout_counts()
+        print len(counts), 'length of counts'
         return counts
 
     def process_data(self, counts):

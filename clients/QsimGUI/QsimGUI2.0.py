@@ -107,7 +107,6 @@ class QSIM_GUI(QtGui.QMainWindow):
         widget = kiethleyclient(reactor, cxn)
         return widget
 
-
     def makeConfigWidget(self, reactor, cxn):
         from common.lib.clients.config_editor.config_editor import CONFIG_EDITOR
         widget = CONFIG_EDITOR(reactor, cxn)

@@ -5,9 +5,11 @@ from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.BrightStatePumping import bright_state_pumping
 from sub_sequences.OpticalPumping import optical_pumping
 
+
 class fidelity_tweak_up(pulse_sequence):
 
-    required_subsequences = [doppler_cooling, state_detection, turn_off_all, bright_state_pumping, optical_pumping]
+    required_subsequences = [doppler_cooling, state_detection,
+                             turn_off_all, bright_state_pumping, optical_pumping]
 
     def sequence(self):
         self.addSequence(turn_off_all)

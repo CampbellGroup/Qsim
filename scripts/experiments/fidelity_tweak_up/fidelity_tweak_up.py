@@ -30,7 +30,7 @@ class fidelity_tweak_up(QsimExperiment):
         self.program_pulser(sequence)
         while True:
             i += 1
-            counts = self.run_sequence()
+            counts = self.run_sequence(max_runs=500)
             counts_bright = counts[0::2]
             counts_dark = counts[1::2]
             hist_dark = self.process_data(counts_dark)

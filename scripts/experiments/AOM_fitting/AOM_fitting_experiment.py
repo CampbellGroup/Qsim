@@ -27,14 +27,13 @@ class AOM_fitting(QsimExperiment):
 
         timetags = []
         repititions = self.p.AOMTiming.repititions
+        self.program_pulser(sequence)
         for i in range(int(repititions)):
-            self.program_pulser(sequence)
             self.pulser.reset_timetags()
             self.pulser.start_number(10000)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             temp_timetags = self.pulser.get_timetags()
-            print len(temp_timetags)
             timetags += list(temp_timetags)
             should_break = self.update_progress(i/float(repititions))
             if should_break:
