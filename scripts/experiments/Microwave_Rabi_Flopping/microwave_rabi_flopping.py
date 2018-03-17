@@ -27,12 +27,6 @@ class MicrowaveRabiFlopping(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
-        self.reg = cxn.registry
-        self.reg.cd(['','settings'])
-        self.pmt = self.cxn.normalpmtflow
-        self.init_mode = self.pmt.getcurrentmode()
-        self.pmt.set_mode('Normal')
-        self.pulser = self.cxn.pulser
 
     def run(self, cxn, context):
 
@@ -43,41 +37,14 @@ class MicrowaveRabiFlopping(QsimExperiment):
             should_break = self.update_progress(i/float(len(self.times)))
             if should_break:
                 break
-            counts = self.program_pulser(U(duration, 'us'))
-            hist = self.process_data(counts)
+            self.p['MicrowaveInterogation.duration'] = U(duration, 'us')
+            self.program_pulser(sequence)
+            counts = self.run_sequence()
             pop = self.get_pop(counts)
             self.dv.add(duration, pop)
 
-    def program_pulser(self, duration):
-        self.p['MicrowaveInterogation.duration'] = duration
-        pulse_sequence = sequence(self.p)
-        pulse_sequence.programSequence(self.pulser)
-        self.pulser.start_number(int(self.p.StateDetection.repititions))
-        self.pulser.wait_sequence_done()
-        self.pulser.stop_sequence()
-        counts = self.pulser.get_readout_counts()
-        self.pulser.reset_readout_counts()
-        return counts
-
-    def process_data(self, counts):
-        data = np.column_stack((np.arange(self.p.StateDetection.repititions), counts))
-        y = np.histogram(data[:, 1], int(np.max([data[:, 1].max() - data[:, 1].min(), 1])))
-        counts = y[0]
-        bins = y[1][:-1]
-        if bins[0] < 0:
-            bins = bins + .5
-        hist = np.column_stack((bins, counts))
-        return hist
-
-
-    def get_pop(self, counts):
-        self.thresholdVal = self.p.StateDetection.state_readout_threshold
-        prob = len(np.where(counts > self.thresholdVal)[0])/float(len(counts))
-        return prob
-
-
     def finalize(self, cxn, context):
-        self.pmt.set_mode(self.init_mode)
+        pass
 
 if __name__ == '__main__':
     cxn = labrad.connect()

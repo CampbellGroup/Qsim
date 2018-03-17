@@ -4,6 +4,7 @@ import sys
 
 from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks
+from Qsim.clients.qtui.detachable_tab import DetachableTabWidget
 
 sys.path.append('/home/qsimexpcontrol/LabRAD/')
 sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
@@ -43,7 +44,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         
 
         # add tabs
-        self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget = DetachableTabWidget()
         self.tabWidget.addTab(wavemeter, '&Wavemeter')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')

@@ -18,7 +18,7 @@ class AOM_fitting(QsimExperiment):
     exp_parameters.append(('AOMTiming', 'frequency'))
     exp_parameters.append(('AOMTiming', 'power'))
     exp_parameters.append(('AOMTiming', 'repititions'))
-
+    exp_parameters.extend(sequence.all_required_parameters())
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
@@ -30,7 +30,7 @@ class AOM_fitting(QsimExperiment):
         self.program_pulser(sequence)
         for i in range(int(repititions)):
             self.pulser.reset_timetags()
-            self.pulser.start_number(10000)
+            self.pulser.start_number(100)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             temp_timetags = self.pulser.get_timetags()
@@ -42,7 +42,7 @@ class AOM_fitting(QsimExperiment):
         self.dataset_hist = self.dv.new('AOMTiming',
                                         [('run', 'arb u')],
                                         [('Counts', 'Counts', 'num')])
-        times = np.linspace(0, int(self.p.AOMTiming.duration['ns']), 1000)
+        times = np.linspace(0, int(self.p.AOMTiming.duration['ns']) + 10000, 1000)
         y = np.histogram(np.array(timetags)*1e9, bins=times)[0]
         hist = np.column_stack((times[:-1], y))
         self.dv.add(hist)
