@@ -2,7 +2,6 @@ import labrad
 from Qsim.scripts.pulse_sequences.microwave_ramsey_point import microwave_ramsey_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
-import numpy as np
 
 
 class MicrowaveRamseyExperiment(QsimExperiment):
@@ -16,7 +15,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
     exp_parameters.append(('Transitions', 'qubit_0'))
-    exp_parameters.append(('Transitions', 'rabi_freq_qubit_0')) #paramter currently unused --> need rabi freq.
+    exp_parameters.append(('Transitions', 'rabi_freq_qubit_0'))
     exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.append(('StateDetection', 'state_readout_threshold'))
     exp_parameters.append(('MicrowaveInterogation', 'duration'))
@@ -26,8 +25,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
 
     exp_parameters.extend(sequence.all_required_parameters())
 
-    exp_parameters.remove(('MicrowaveInterogation','detuning'))
-
+    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -49,6 +47,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
 
     def finalize(self, cxn, context):
         pass
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

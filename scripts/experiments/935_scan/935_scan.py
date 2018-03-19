@@ -28,18 +28,18 @@ class scan_935(QsimExperiment):
         self.pmt.set_mode('Normal')
         self.setup_datavault('Frequency (THz)', 'kcounts/sec')
         self.currentfreq = self.currentfrequency()
-        self.init_freq = 0.0 #float(self.wm.get_pid_course(7))
+        self.init_freq = 0.0
         self.low_rail = str(self.init_freq - self.scan_range['THz']/2.0)
         self.high_rail = str(self.init_freq + self.scan_range['THz']/2.0)
         self.tempdata = []
-        #self.wm.set_pid_course(7, self.high_rail)
+        self.wm.set_pid_course(7, self.high_rail)
         progress = 0.3
         delay = self.wait_time['s']
         self.take_data(progress, delay)
-        #self.wm.set_pid_course(7, self.low_rail)
+        self.wm.set_pid_course(7, self.low_rail)
         progress = 0.6
         self.take_data(progress, 2*delay)
-        #self.wm.set_pid_course(7, str(self.init_freq))
+        self.wm.set_pid_course(7, str(self.init_freq))
         progress = 0.9
         self.take_data(progress, delay)
 
@@ -74,8 +74,7 @@ class scan_935(QsimExperiment):
 
     def currentfrequency(self):
         try:
-            #absfreq = float(self.wm.get_frequency(self.port))
-            absfreq = 0.0
+            absfreq = float(self.wm.get_frequency(self.port))
             currentfreq = absfreq - self.centerfrequency['THz']
             return currentfreq
         except:
@@ -83,7 +82,7 @@ class scan_935(QsimExperiment):
 
     def finalize(self, cxn, context):
         self.pmt.set_mode(self.init_mode)
-        #self.cxnwlm.disconnect()
+        self.cxnwlm.disconnect()
 
 
 if __name__ == '__main__':
