@@ -22,8 +22,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
 
     exp_parameters.extend(sequence.all_required_parameters())
 
-    exp_parameters.remove(('MicrowaveInterogation','duration'))
-
+    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident

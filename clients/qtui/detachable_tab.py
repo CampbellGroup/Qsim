@@ -14,8 +14,9 @@ from PyQt4.QtCore import pyqtSignal, pyqtSlot
 #     double clicking the detached tab's window frame
 #
 # Modified Features:
-#   Re-ordering (moving) tabs by dragging was re-implemented  
-#   
+# Re-ordering (moving) tabs by dragging was re-implemented
+
+
 class DetachableTabWidget(QtGui.QTabWidget):
     def __init__(self, parent=None):
         QtGui.QTabWidget.__init__(self, parent)
@@ -25,7 +26,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
         self.tabBar.onMoveTabSignal.connect(self.moveTab)
 
         self.setTabBar(self.tabBar)
-
 
     ##
     #  The default movable functionality of QTabWidget must remain disabled
@@ -48,8 +48,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
         self.insertTab(toIndex, widget, icon, text)
         self.setCurrentIndex(toIndex)
 
-
-    ##
     #  Detach the tab by removing it's contents and placing them in
     #  a DetachedTab dialog
     #
@@ -60,9 +58,9 @@ class DetachableTabWidget(QtGui.QTabWidget):
 
         # Get the tab content
         name = self.tabText(index)
-        icon = self.tabIcon(index)        
+        icon = self.tabIcon(index)
         if icon.isNull():
-            icon = self.window().windowIcon()              
+            icon = self.window().windowIcon()
         contentWidget = self.widget(index)
         contentWidgetRect = contentWidget.frameGeometry()
 
@@ -77,8 +75,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
         detachedTab.move(point)
         detachedTab.show()
 
-
-    ##
     #  Re-attach the tab by removing the content from the DetachedTab dialog,
     #  closing it, and placing the content back into the DetachableTabWidget
     #
@@ -91,14 +87,12 @@ class DetachableTabWidget(QtGui.QTabWidget):
         # Make the content widget a child of this widget
         contentWidget.setParent(self)
 
-
         # Create an image from the given icon
         if not icon.isNull():
             tabIconPixmap = icon.pixmap(icon.availableSizes()[0])
             tabIconImage = tabIconPixmap.toImage()
         else:
             tabIconImage = None
-
 
         # Create an image of the main window icon
         if not icon.isNull():
@@ -107,7 +101,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
         else:
             windowIconImage = None
 
-
         # Determine if the given image and the main window icon are the same.
         # If they are, then do not add the icon to the tab
         if tabIconImage == windowIconImage:
@@ -115,13 +108,10 @@ class DetachableTabWidget(QtGui.QTabWidget):
         else:
             index = self.addTab(contentWidget, icon, name)
 
-
         # Make this tab the current tab
         if index > -1:
             self.setCurrentIndex(index)
 
-
-    ##
     #  When a tab is detached, the contents are placed into this QDialog.  The tab
     #  can be re-attached by closing the dialog or by double clicking on its
     #  window frame.
@@ -131,13 +121,11 @@ class DetachableTabWidget(QtGui.QTabWidget):
         def __init__(self, contentWidget, parent=None):
             QtGui.QDialog.__init__(self, parent)
 
-            layout = QtGui.QVBoxLayout(self)            
-            self.contentWidget = contentWidget            
+            layout = QtGui.QVBoxLayout(self)
+            self.contentWidget = contentWidget
             layout.addWidget(self.contentWidget)
             self.contentWidget.show()
 
-
-        ##
         #  Capture a double click event on the dialog's window frame
         #
         #  @param    event    an event
@@ -162,8 +150,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
         def closeEvent(self, event):
             self.onCloseSignal.emit(self.contentWidget, self.objectName(), self.windowIcon())
 
-
-    ##
     #  The TabBar class re-implements some of the functionality of the QTabBar widget
     class TabBar(QtGui.QTabBar):
         onDetachTabSignal = pyqtSignal(int, QtCore.QPoint)
@@ -181,8 +167,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
             self.mouseCursor = QtGui.QCursor()
             self.dragInitiated = False
 
-
-        ##
         #  Send the onDetachTabSignal when a tab is double clicked
         #
         #  @param    event    a mouse double click event
@@ -190,8 +174,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
             event.accept()
             self.onDetachTabSignal.emit(self.tabAt(event.pos()), self.mouseCursor.pos())
 
-
-        ##
         #  Set the starting position for a drag event when the mouse button is pressed
         #
         #  @param    event    a mouse press event
@@ -282,6 +264,7 @@ class DetachableTabWidget(QtGui.QTabWidget):
             self.dragDropedPos = event.pos()
             QtGui.QTabBar.dropEvent(self, event)
 
+
 if __name__ == '__main__':
     import sys
 
@@ -290,7 +273,7 @@ if __name__ == '__main__':
     mainWindow = QtGui.QMainWindow()
     tabWidget = DetachableTabWidget(mainWindow)
 
-    tab1 = QtGui.QLabel('Test Widget 1')    
+    tab1 = QtGui.QLabel('Test Widget 1')
     tabWidget.addTab(tab1, 'Tab1')
 
     tab2 = QtGui.QLabel('Test Widget 2')

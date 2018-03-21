@@ -1,6 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from labrad.units import WithUnit as U
 
+
 class state_detection(pulse_sequence):
 
     required_parameters = [

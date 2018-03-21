@@ -16,7 +16,6 @@ class scan_935(QsimExperiment):
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
-        print 'after cxnwlm'
         self.cxnwlm = labrad.connect('10.97.112.2', password='lab')
         self.wm = self.cxnwlm.multiplexerserver
         self.pmt = self.cxn.normalpmtflow
@@ -28,10 +27,11 @@ class scan_935(QsimExperiment):
         self.pmt.set_mode('Normal')
         self.setup_datavault('Frequency (THz)', 'kcounts/sec')
         self.currentfreq = self.currentfrequency()
-        self.init_freq = 0.0
+        self.init_freq = self.parameters.Transitions.repump_935['THz']
         self.low_rail = str(self.init_freq - self.scan_range['THz']/2.0)
         self.high_rail = str(self.init_freq + self.scan_range['THz']/2.0)
         self.tempdata = []
+        print self.high_rail
         self.wm.set_pid_course(7, self.high_rail)
         progress = 0.3
         delay = self.wait_time['s']

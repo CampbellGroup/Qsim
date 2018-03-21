@@ -13,7 +13,6 @@ class dipole_interogation(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        int_laser = p.DipoleInterogation.interogation_laser
         self.addDDS('369DP',
                     self.start,
                     p.DipoleInterogation.duration,
