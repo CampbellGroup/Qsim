@@ -65,6 +65,7 @@ class DetachableTabWidget(QtGui.QTabWidget):
         contentWidgetRect = contentWidget.frameGeometry()
 
         # Create a new detached tab window
+        print self.parentWidget()
         detachedTab = self.DetachedTab(contentWidget, self.parentWidget())
         detachedTab.setWindowModality(QtCore.Qt.NonModal)
         detachedTab.setWindowTitle(name)

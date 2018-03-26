@@ -21,10 +21,11 @@ class MicrowaveRamseyExperiment(QsimExperiment):
     exp_parameters.append(('MicrowaveInterogation', 'duration'))
     exp_parameters.append(('MicrowaveInterogation', 'detuning'))
     exp_parameters.append(('MicrowaveDelay', 'delay_time'))
-    exp_parameters.append(('EmptySequence', 'duration'))
+    exp_parameters.append(('StateDetection', 'points_per_histogram'))
 
     exp_parameters.extend(sequence.all_required_parameters())
 
+    exp_parameters.remove(('EmptySequence', 'duration'))
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
 
     def initialize(self, cxn, context, ident):
@@ -42,6 +43,9 @@ class MicrowaveRamseyExperiment(QsimExperiment):
             self.p['EmptySequence.duration'] = U(dark_time, 'us')
             self.program_pulser(sequence)
             counts = self.run_sequence()
+            if i % self.p.StateDetection.points_per_histogram == 0:
+                hist = self.process_data(counts)
+                self.plot_hist(hist)
             pop = self.get_pop(counts)
             self.dv.add(dark_time, pop)
 

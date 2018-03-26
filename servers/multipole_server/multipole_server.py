@@ -96,6 +96,8 @@ class Multipole_Server(LabradServer):
     @setting(16, Mvector='*v', returns='*v')
     def set_multipoles(self, c, Mvector):
         Mvector = np.array(Mvector)
+        print Mvector
+        print self.M
         Evector = self.M.dot(Mvector)
         print Evector
         if max(Evector) >= 10.0:

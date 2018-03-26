@@ -2,7 +2,6 @@ import labrad
 from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
-import numpy as np
 
 
 class MicrowaveRabiFlopping(QsimExperiment):
@@ -19,6 +18,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(('Transitions', 'main_cooling_369'))
     exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.append(('StateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('StateDetection', 'points_per_histogram'))
 
     exp_parameters.extend(sequence.all_required_parameters())
 
@@ -39,11 +39,15 @@ class MicrowaveRabiFlopping(QsimExperiment):
             self.p['MicrowaveInterogation.duration'] = U(duration, 'us')
             self.program_pulser(sequence)
             counts = self.run_sequence()
+            if i % self.p.StateDetection.points_per_histogram == 0:
+                hist = self.process_data(counts)
+                self.plot_hist(hist)
             pop = self.get_pop(counts)
             self.dv.add(duration, pop)
 
     def finalize(self, cxn, context):
         pass
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

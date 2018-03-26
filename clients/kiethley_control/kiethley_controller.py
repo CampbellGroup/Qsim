@@ -24,7 +24,7 @@ class kiethleyclient(QtGui.QWidget):
         self.U = U
         self.cxn = yield connectAsync(name = "kiethley client")
         self.server = self.cxn.keithley_2230g_server
-        self.server.select_device(0)
+        yield self.server.select_device(0)
         self.initializeGUI()
 
     def initializeGUI(self):
@@ -52,7 +52,6 @@ class kiethleyclient(QtGui.QWidget):
     @inlineCallbacks
     def voltchanged(self, chan, value):
         value = self.U(value, 'V')
-        print chan,
         yield self.server.voltage(chan, value)
 
 

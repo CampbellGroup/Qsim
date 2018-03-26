@@ -24,6 +24,7 @@ class QsimExperiment(experiment):
         self.pv = None
         self.sc = None
         self.init_mode = self.cxn.NormalPMTFlow.getcurrentmode()
+        self.hist_ctx = self.cxn.data_vault.context()
         self.cxn.NormalPMTFlow.set_mode('Normal')
 
     def _connect(self):
@@ -99,7 +100,6 @@ class QsimExperiment(experiment):
         pulse_sequence.programSequence(self.pulser)
 
     def run_sequence(self, max_runs=1000):
-
         counts = np.array([])
         for i in range(int(self.p.StateDetection.repititions)/max_runs):
             self.pulser.start_number(max_runs)
@@ -113,7 +113,6 @@ class QsimExperiment(experiment):
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             self.pulser.reset_readout_counts()
-        print len(counts), 'length of counts'
         return counts
 
     def process_data(self, counts):
@@ -132,8 +131,15 @@ class QsimExperiment(experiment):
 
     def get_pop(self, counts):
         self.thresholdVal = self.p.StateDetection.state_readout_threshold
-        prob = len(np.where(counts > self.thresholdVal)[0])/float(len(counts))
+        prob = len(np.where(counts >= self.thresholdVal)[0])/float(len(counts))
         return prob
+
+    def plot_hist(self, hist):
+        self.dv.cd(['', 'Histograms'], True, context=self.hist_ctx)
+        self.dataset_hist = self.dv.new('Histogram', [('run', 'arb u')],
+                                        [('Counts', 'Counts', 'num')], context=self.hist_ctx)
+        self.dv.add(hist, context=self.hist_ctx)
+        self.grapher.plot(self.dataset_hist, 'Histogram', False)
 
     def _finalize(self, cxn, context):
         self.pmt.set_mode(self.init_mode)

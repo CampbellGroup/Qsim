@@ -2,7 +2,6 @@ import labrad
 from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
-import numpy as np
 
 
 class MicrowaveLineScan(QsimExperiment):
@@ -19,11 +18,10 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.append(('StateDetection', 'state_readout_threshold'))
     exp_parameters.append(('MicrowaveLinescan', 'scan'))
+    exp_parameters.append(('StateDetection', 'points_per_histogram'))
 
     exp_parameters.extend(sequence.all_required_parameters())
-
-    exp_parameters.remove(('MicrowaveInterogation','detuning'))
-
+    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -40,11 +38,15 @@ class MicrowaveLineScan(QsimExperiment):
             self.p['MicrowaveInterogation.detuning'] = U(detuning, 'kHz')
             self.program_pulser(sequence)
             counts = self.run_sequence()
+            if i % self.p.StateDetection.points_per_histogram == 0:
+                hist = self.process_data(counts)
+                self.plot_hist(hist)
             pop = self.get_pop(counts)
             self.dv.add(detuning, pop)
 
     def finalize(self, cxn, context):
         pass
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()
