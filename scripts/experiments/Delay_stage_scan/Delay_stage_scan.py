@@ -4,7 +4,9 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as sequence_bright
 from Qsim.scripts.pulse_sequences.dark_state_preperation import dark_state_preperation as sequence_dark
 
-__scriptscanner_name__ = 'Delaystagescan' # this should match the class name
+__scriptscanner_name__ = 'Delaystagescan'  # this should match the class name
+
+
 class Delaystagescan(QsimExperiment):
 
     name = 'Ramsey Delay Stage Scan'
@@ -22,9 +24,7 @@ class Delaystagescan(QsimExperiment):
     exp_parameters.extend(sequence_bright.all_required_parameters())
     exp_parameters.extend(sequence_dark.all_required_parameters())
 
-    exp_parameters.remove(('StateDetection','mode'))
-
-
+    exp_parameters.remove(('StateDetection', 'mode'))
 
     def initialize(self, cxn, context, ident):
 
@@ -34,9 +34,6 @@ class Delaystagescan(QsimExperiment):
         self.keithley = self.cxn.keithley_2230g_server
         self.keithley.select_device(0)
 
-        self.pmt = self.cxn.normalpmtflow
-        self.init_mode = self.pmt.getcurrentmode()
-        self.pulser = cxn.pulser
         self.init_ML_power = self.pulser.amplitude('ModeLockedSP')
         self.init_cooling_freq = self.pulser.frequency('369DP')
         self.init_cooling_power = self.pulser.amplitude('DopplerCoolingSP')
@@ -53,11 +50,13 @@ class Delaystagescan(QsimExperiment):
         self.set_scannable_parameters()
         self.keithley.gpib_write('Apply CH1,' + str(self.init_volt) + 'V')
         self.keithley.output(self.chan, True)
-        self.pulser.frequency('369DP',self.cooling_center + self.detuning/2.0) # this is real laser detuning
+        # this is real laser detuning
+        self.pulser.frequency('369DP', self.cooling_center + self.detuning/2.0)
         self.pulser.amplitude('DopplerCoolingSP', self.cooling_power)
         self.pulser.amplitude('ModeLockedSP', self.ML_power)
         self.path = self.setup_datavault('Volts', 'kcounts/sec')
         self.setup_grapher('Ramsey Delay Stage Piezo Scan')
+
         try:
             MLfreq = cxn.bristol_521.get_wavelength()
             self.dv.add_parameter('Bristol Reading', MLfreq)
@@ -74,7 +73,8 @@ class Delaystagescan(QsimExperiment):
                 if should_break:
                     break
                 print volt
-                self.keithley.gpib_write('APPLy CH2,' + str(volt) + 'V')  # we write direct GPIB for speed
+                # we write direct GPIB for speed
+                self.keithley.gpib_write('APPLy CH2,' + str(volt) + 'V')
                 counts = self.pmt.get_next_counts(self.mode, self.average, True)
                 self.dv.add(volt, counts)
         elif self.state_prep == 'BRIGHT':
@@ -96,8 +96,6 @@ class Delaystagescan(QsimExperiment):
                 counts = self.program_pulser(sequence_dark)
                 self.dv.add(volt, np.sum(np.array(counts))/self.p.StateDetection.repititions)
 
-
-
     def set_scannable_parameters(self):
         '''
         gets parameters, called in run so scan works
@@ -113,25 +111,21 @@ class Delaystagescan(QsimExperiment):
         self.init_volt = self.x_values[0]
 
     def program_pulser(self, sequence):
-        print sequence
         pulse_sequence = sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
-        print self.p.StateDetection.repititions
         self.pulser.start_number(int(self.p.StateDetection.repititions))
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()
         counts = self.pulser.get_readout_counts()
-        print counts
         self.pulser.reset_readout_counts()
         return counts
-
 
     def finalize(self, cxn, context):
         self.pulser.frequency('369DP', self.init_cooling_freq)
         self.pulser.amplitude('DopplerCoolingSP', self.init_cooling_power)
         self.pulser.amplitude('ModeLockedSP', self.init_ML_power)
-        self.pmt.set_mode(self.init_mode)
         self.keithley.gpib_write('Apply CH2,' + str(self.init_volt) + 'V')
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

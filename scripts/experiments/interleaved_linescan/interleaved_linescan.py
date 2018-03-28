@@ -23,18 +23,12 @@ class InterleavedLinescan(QsimExperiment):
     exp_parameters.append(('AOM_fitting', 'Center_Frequency'))
 
     exp_parameters.extend(sequence.all_required_parameters())
-    exp_parameters.remove(('DipoleInterogation','frequency'))
+    exp_parameters.remove(('DipoleInterogation', 'frequency'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
         self.reg = cxn.registry
-        self.reg.cd(['','settings'])
-        self.pmt = self.cxn.normalpmtflow
-        self.init_mode = self.pmt.getcurrentmode()
-        self.pmt.set_mode('Normal')
-        self.pulser = self.cxn.pulser
-        self.dds_channel = '369DP'
-        self.init_power = self.p.DipoleInterogation.interogation_power
+        self.reg.cd(['', 'settings'])
 
     def run(self, cxn, context):
 
@@ -44,8 +38,9 @@ class InterleavedLinescan(QsimExperiment):
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
-                break
-            freq = WithUnit(detuning, 'MHz')/2.0 + WithUnit(200.0, 'MHz') # self.p.Transitions.main_cooling_369 divide by 2 for the double pass
+                return should_break
+            # self.p.Transitions.main_cooling_369 divide by 2 for the double pass
+            freq = WithUnit(detuning, 'MHz')/2.0 + WithUnit(200.0, 'MHz')
             self.program_pulser(freq, detuning)
 
     def program_pulser(self, freq, detuning):
@@ -72,9 +67,9 @@ class InterleavedLinescan(QsimExperiment):
         if adj_power > WithUnit(-5.0, 'dBm'):
             adj_power = WithUnit(-5.0, 'dBm')
 
-
     def finalize(self, cxn, context):
-        self.pmt.set_mode(self.init_mode)
+        pass
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

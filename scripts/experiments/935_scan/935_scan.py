@@ -31,7 +31,6 @@ class scan_935(QsimExperiment):
         self.low_rail = str(self.init_freq - self.scan_range['THz']/2.0)
         self.high_rail = str(self.init_freq + self.scan_range['THz']/2.0)
         self.tempdata = []
-        print self.high_rail
         self.wm.set_pid_course(7, self.high_rail)
         progress = 0.3
         delay = self.wait_time['s']

@@ -86,7 +86,6 @@ class TDCDevice(DeviceWrapper):
     @inlineCallbacks
     def main_loop(self):
 
-        #print 'in loop'
         value = yield self.read_line()
         try:
             value = float(value[0:14])

@@ -71,7 +71,6 @@ class multipole_monitor(LabradServer):
         # grab the multipoles
         mps = yield self.server.get_multipoles()
         self.time = self.time + self.rate
-        print mps
 
         # yield self.dv.add(self.time, mps[0], mps[1], mps[2], mps[3], mps[4], mps[5], mps[6], mps[7])
 

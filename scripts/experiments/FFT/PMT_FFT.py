@@ -38,7 +38,6 @@ class PMT_FFT(QsimExperiment):
 
     def programPulseSequence(self, record_time):
         seq = record_timetags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': record_time}))
-        print seq._ttl_pulses
         seq.programSequence(self.pulser)
 
     def run(self, cxn, context):

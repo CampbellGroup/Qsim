@@ -35,7 +35,6 @@ class ticklescan(QsimExperiment):
         self.rg.set_output(self.chan, True)
         self.rg.applywaveform(self.p.ticklescan.waveform, WithUnit(self.x_values[0], 'Hz'),
                               self.amplitude, self.offset, self.chan)
-        print 'ouput true'
         time.sleep(1)
 
         for i, freq in enumerate(self.x_values):

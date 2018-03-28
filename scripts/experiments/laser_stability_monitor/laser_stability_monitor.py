@@ -16,11 +16,9 @@ class lasermonitor(QsimExperiment):
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
-        print self.ident
         self.cxnwlm = labrad.connect('10.97.112.2',
                                      name=socket.gethostname() + " Laser Monitor",
                                      password=os.environ['LABRADPASSWORD'])
-        print self.cxnwlm
         self.wlm = self.cxnwlm.multiplexerserver
 
     def run(self, cxn, context):

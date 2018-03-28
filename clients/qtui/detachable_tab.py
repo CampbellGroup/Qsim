@@ -65,7 +65,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
         contentWidgetRect = contentWidget.frameGeometry()
 
         # Create a new detached tab window
-        print self.parentWidget()
         detachedTab = self.DetachedTab(contentWidget, self.parentWidget())
         detachedTab.setWindowModality(QtCore.Qt.NonModal)
         detachedTab.setWindowTitle(name)
@@ -289,7 +288,6 @@ if __name__ == '__main__':
 
     try:
         exitStatus = app.exec_()
-        print 'Done...'
         sys.exit(exitStatus)
     except:
         pass
