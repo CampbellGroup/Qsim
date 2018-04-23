@@ -28,7 +28,10 @@ class cameraswitch(QtGui.QWidget):
         self.reg = yield self.cxn.get_server('registry')
         self.cam = yield self.cxn.get_server('andor_server')
         self.dv = yield self.cxn.get_server('data_vault')
-        self.grapher = yield self.cxn.get_server('grapher')
+        try:
+            self.grapher = yield self.cxn.get_server('grapher')
+        except:
+            pass
 
         try:
             yield self.reg.cd(['', 'settings'])
@@ -85,8 +88,11 @@ class cameraswitch(QtGui.QWidget):
                                    [('', '', 'num')])
         yield self.dv.save_image(image_data, [image_region[5], image_region[3]], 1, dataset[1])
         self.last_saved_label.setText('file: ' + dataset[1])
-        yield self.grapher.plot_image(image_data, [image_region[5], image_region[3]], 'Images',
+        try:
+            yield self.grapher.plot_image(image_data, [image_region[5], image_region[3]], 'Images',
                             str(dataset))
+        except:
+            pass
 
     def closeEvent(self, x):
         self.reactor.stop()
