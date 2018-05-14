@@ -8,6 +8,7 @@ class dipole_interogation(pulse_sequence):
                            ('DipoleInterogation', 'frequency'),
                            ('DipoleInterogation', 'DopplerCoolingSP_power'),
                            ('DipoleInterogation', 'StateDetectionSP_power'),
+                           ('DipoleInterogation', 'OpticalPumpingSP_power'),
                            ('DipoleInterogation', 'repump_power')
                            ]
 
@@ -28,6 +29,11 @@ class dipole_interogation(pulse_sequence):
                     p.DipoleInterogation.duration,
                     U(110.0, 'MHz'),
                     p.DipoleInterogation.StateDetectionSP_power)
+        self.addDDS('OpticalPumpingSP',
+                    self.start,
+                    p.DipoleInterogation.duration,
+                    U(110.0, 'MHz'),
+                    p.DipoleInterogation.OpticalPumpingSP_power)
         self.addDDS('935SP',
                     self.start,
                     p.DipoleInterogation.duration,

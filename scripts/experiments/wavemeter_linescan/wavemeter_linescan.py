@@ -14,10 +14,12 @@ class wavemeter_linescan(QsimExperiment):
     exp_parameters.append(('wavemeterscan', 'Port_369'))
     exp_parameters.append(('wavemeterscan', 'Port_399'))
     exp_parameters.append(('wavemeterscan', 'Port_935'))
+    exp_parameters.append(('wavemeterscan', 'Port_760'))
 
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_369'))
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_399'))
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_935'))
+    exp_parameters.append(('wavemeterscan', 'Center_Frequency_760'))
 
 
     def initialize(self, cxn, context, ident):
@@ -76,9 +78,14 @@ class wavemeter_linescan(QsimExperiment):
             self.port = int(self.p.wavemeterscan.Port_935)
             self.centerfrequency = self.p.wavemeterscan.Center_Frequency_935
 
+        elif self.laser == '760':
+            self.port = int(self.p.wavemeterscan.Port_760)
+            self.centerfrequency = self.p.wavemeterscan.Center_Frequency_760
+
     def currentfrequency(self):
         try:
-            absfreq = float(self.wm.get_frequency(self.port))
+            absfreq = float(self.wm.get_frequency(2))
+	    print absfreq
             currentfreq = absfreq - self.centerfrequency['THz']
             return currentfreq
         except:

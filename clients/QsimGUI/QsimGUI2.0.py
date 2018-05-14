@@ -44,7 +44,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         
 
         # add tabs
-        self.tabWidget = DetachableTabWidget()
+        self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.addTab(wavemeter, '&Wavemeter')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')

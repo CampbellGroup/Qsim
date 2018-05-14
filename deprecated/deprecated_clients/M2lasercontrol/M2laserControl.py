@@ -64,7 +64,7 @@ class M2Window(QtGui.QWidget):
         connects incoming signals to relavent functions
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('10.97.112.2', name = socket.gethostname() + ' M2 Client')
+        self.cxn = yield connectAsync('10.97.112.2', name = socket.gethostname() + ' M2 Client', password='lab')
         self.server = yield self.cxn.multiplexerserver
         yield self.server.signal__frequency_changed(SIGNALID1)
         yield self.server.addListener(listener = self.updateFrequency, source = None, ID = SIGNALID1)
@@ -104,7 +104,7 @@ class M2Window(QtGui.QWidget):
 
 if __name__ == "__main__":
     a = QtGui.QApplication( [] )
-    from common.lib.clients import qt4reactor
+    import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
     M2WindowWidget = M2Window(reactor)
