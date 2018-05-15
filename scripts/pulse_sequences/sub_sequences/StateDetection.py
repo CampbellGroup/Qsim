@@ -12,10 +12,9 @@ class state_detection(pulse_sequence):
                            ('StateDetection', 'detuning'),
                            ('StateDetection', 'mode'),
                            ('DopplerCooling', 'cooling_power'),
-                           ('DopplerCooling', 'repump_power'),
                            ('DopplerCooling', 'detuning'),
                            ('Transitions', 'main_cooling_369')
-                           ]
+                            ]
 
     def sequence(self):
         p = self.parameters
@@ -26,9 +25,10 @@ class state_detection(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.StateDetection.repump_power)
 
-        self.addTTL('935EOM', self.start, p.StateDetection.duration)
-
         if p.StateDetection.mode == 'CW':
+
+            self.addTTL('935EOM', self.start, p.StateDetection.duration)
+
             self.addDDS('StateDetectionSP',
                         self.start,
                         p.StateDetection.duration,
@@ -67,8 +67,6 @@ class state_detection(pulse_sequence):
                         p.StateDetection.duration,
                         p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
                         U(-5.0, 'dBm'))
-
-            #self.addTTL('935EOM', self.start, p.StateDetection.duration)
 
 
         self.addTTL('ReadoutCount',

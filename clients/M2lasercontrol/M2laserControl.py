@@ -99,7 +99,7 @@ class M2Window(QtGui.QWidget):
 
     def updateFrequency(self, c, signal):
         #self.wavelength.setText(signal)
-        if signal[0] == 5:
+        if signal[0] == 1:
             self.wavelength.setText(str(signal[1])[0:10])
 
 if __name__ == "__main__":

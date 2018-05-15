@@ -64,26 +64,136 @@ class QSIM_GUI(QtGui.QMainWindow):
 
 #################### Here we will connect to individual clients and add sub-tabs #####################
 
-######sub tab layout example#############
-#    def makeLaserSubTab(self, reactor, cxn):
-#        centralWidget = QtGui.QWidget()
-#        layout = QtGui.QHBoxLayout()
 
-#	wavemeter = self.makeWavemeterWidget(reactor, cxn)
-#	M2 = self.makeM2Widget(reactor, cxn)
-#	M2pump = self.makeM2PumpWidget(reactor, cxn)
-#
-#	subtabWidget = QtGui.QTabWidget()
-#
-#	subtabWidget.addTab(wavemeter, '&Wavemeter')
-#	subtabWidget.addTab(M2, '&M2')
-#	subtabWidget.addTab(M2pump, '&PumpM2')
-#
-#       self.setCentralWidget(centralWidget)
-#        self.setWindowTitle('Lasers')
-#	return subtabWidget
 
-######create widgets with shared connection######
+sys.path.append('/home/qsimexpcontrol/LabRAD/')
+sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
+os.environ["LABRADPASSWORD"] = "lab"
+
+class QSIM_GUI(QtGui.QMainWindow):
+    def __init__(self, reactor, clipboard, parent=None):
+        super(QSIM_GUI, self).__init__(parent)
+        self.clipboard = clipboard
+        self.reactor = reactor
+        self.connect_labrad()
+
+    @inlineCallbacks
+    def connect_labrad(self):
+        from common.lib.clients.connection import connection
+        cxn = connection(name = 'Qsim GUI Client')
+        yield cxn.connect()
+        self.create_layout(cxn)
+
+    #Highest level adds tabs to big GUI
+    def create_layout(self, cxn):
+        #  creates central layout
+        centralWidget = QtGui.QWidget()
+        layout = QtGui.QHBoxLayout()
+
+        #  create subwidgets to be added to tabs
+        script_scanner = self.makeScriptScannerWidget(reactor, cxn)
+        wavemeter = self.makeWavemeterWidget(reactor, cxn)
+        M2 = self.makeM2Widget(reactor, cxn)
+        control = self.makeControlWidget(reactor, cxn)
+        analysis = self.makeAnalysisWidget(reactor, cxn)
+        Tsunami = self.makeTsunamiWidget(reactor, cxn)
+        Pulser = self.makePulserWidget(reactor, cxn)
+        Config = self.makeConfigWidget(reactor, cxn)
+#        Histogram = self.makeHistogramWidget(reactor, cxn)
+        Keithley = self.makeKeithleyWidget(reactor, cxn)
+        
+
+        # add tabs
+        self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget.addTab(wavemeter, '&Wavemeter')
+        self.tabWidget.addTab(script_scanner, '&Script Scanner')
+        self.tabWidget.addTab(control, '&Control')
+        self.tabWidget.addTab(Pulser, '&Pulser')
+        self.tabWidget.addTab(M2, '&M2')
+        self.tabWidget.addTab(analysis, '&Analysis')
+        self.tabWidget.addTab(Config, '&Config')
+        self.tabWidget.addTab(Tsunami, '&Tsunami')
+        self.tabWidget.addTab(Keithley, '&Keithley')
+        self.tabWidget.setMovable(True)
+
+
+        layout.addWidget(self.tabWidget)
+        centralWidget.setLayout(layout)
+        self.setCentralWidget(centralWidget)
+        self.setWindowTitle('Qsim GUI')
+
+#################### Here we will connect to individual clients and add sub-tabs #####################
+
+
+
+sys.path.append('/home/qsimexpcontrol/LabRAD/')
+sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
+os.environ["LABRADPASSWORD"] = "lab"
+
+class QSIM_GUI(QtGui.QMainWindow):
+    def __init__(self, reactor, clipboard, parent=None):
+        super(QSIM_GUI, self).__init__(parent)
+        self.clipboard = clipboard
+        self.reactor = reactor
+        self.connect_labrad()
+
+    @inlineCallbacks
+    def connect_labrad(self):
+        from common.lib.clients.connection import connection
+        cxn = connection(name = 'Qsim GUI Client')
+        yield cxn.connect()
+        self.create_layout(cxn)
+
+    #Highest level adds tabs to big GUI
+    def create_layout(self, cxn):
+        #  creates central layout
+        centralWidget = QtGui.QWidget()
+        layout = QtGui.QHBoxLayout()
+
+        #  create subwidgets to be added to tabs
+        script_scanner = self.makeScriptScannerWidget(reactor, cxn)
+        wavemeter = self.makeWavemeterWidget(reactor, cxn)
+        M2 = self.makeM2Widget(reactor, cxn)
+        control = self.makeControlWidget(reactor, cxn)
+        analysis = self.makeAnalysisWidget(reactor, cxn)
+        Tsunami = self.makeTsunamiWidget(reactor, cxn)
+        Pulser = self.makePulserWidget(reactor, cxn)
+        Config = self.makeConfigWidget(reactor, cxn)
+        Keithley = self.makeKeithleyWidget(reactor, cxn)
+        
+
+        # add tabs
+        self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget.addTab(wavemeter, '&Wavemeter')
+        self.tabWidget.addTab(script_scanner, '&Script Scanner')
+        self.tabWidget.addTab(control, '&Control')
+        self.tabWidget.addTab(Pulser, '&Pulser')
+        self.tabWidget.addTab(M2, '&M2')
+        self.tabWidget.addTab(analysis, '&Analysis')
+        self.tabWidget.addTab(Config, '&Config')
+        self.tabWidget.addTab(Tsunami, '&Tsunami')
+        self.tabWidget.addTab(Keithley, '&Keithley')
+        self.tabWidget.setMovable(True)
+
+
+        layout.addWidget(self.tabWidget)
+        centralWidget.setLayout(layout)
+        self.setCentralWidget(centralWidget)
+        self.setWindowTitle('Qsim GUI')
+
+#################### Here we will connect to individual clients and add sub-tabs #####################
+
+
+
+    def makeM2Widget(self, reactor, cxn):
+        from Qsim.clients.M2lasercontrol.M2laserControl import M2Window
+        M2Widget = QtGui.QWidget()
+        gridLayout = QtGui.QGridLayout()
+	M2 = M2Window(reactor, cxn)
+	gridLayout.addWidget(M2)
+        M2Widget.setLayout(gridLayout)
+        self.setWindowTitle('Lasers')
+        return M2Widget
 
     def makePulserWidget(self, reactor, cxn):
         from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
@@ -144,20 +254,6 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.addWidget(dac_control)
         gridLayout.addWidget(ws7)
         wavemeter.setMaximumHeight(820)
-        widget.setLayout(gridLayout)
-        return widget
-
-    def makeM2Widget(self, reactor, cxn):
-        widget = QtGui.QWidget()
-        from Qsim.clients.M2lasercontrol.M2laserControl import M2Window
-        from Qsim.clients.M2pump.M2pumpclient import M2PumpClient
-        gridLayout = QtGui.QGridLayout()
-        pump = M2PumpClient(reactor, cxn)
-        pump.setMaximumWidth(200)
-        pump.setMinimumHeight(600)
-        gridLayout.addWidget(M2Window(reactor, cxn),                  0,0,5,5)
-        gridLayout.addWidget(pump,                0,5, 5,1)
-        gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget
 
