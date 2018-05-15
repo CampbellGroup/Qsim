@@ -1,0 +1,90 @@
+import labrad
+from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
+from labrad.units import WithUnit
+import time
+import numpy as np
+
+
+class ticklescan(QsimExperiment):
+
+    name = 'Tickle Scan'
+
+    exp_parameters = []
+    exp_parameters.append(('ticklescan', 'amplitude'))
+    exp_parameters.append(('ticklescan', 'frequency_scan'))
+    exp_parameters.append(('ticklescan', 'average'))
+    exp_parameters.append(('ticklescan', 'offset'))
+    exp_parameters.append(('ticklescan', 'waveform'))
+    exp_parameters.append(('ticklescan', 'detuning_369'))
+    exp_parameters.append(('ticklescan', 'tickle_cooling_power'))
+    exp_parameters.append(('ticklescan', 'M5'))
+    exp_parameters.append(('Transitions', 'main_cooling_369'))
+
+    def initialize(self, cxn, context, ident):
+
+        self.ident = ident
+        self.rg = self.cxn.dg1022_rigol_server
+        self.chan = 1
+        self.mps = self.cxn.multipole_server
+        self.init_laser_power = self.pulser.amplitude('DopplerCoolingSP')
+        self.init_laser_freq = self.pulser.frequency('369DP')
+        self.init_multipoles = cxn.multipole_server.get_multipoles()
+
+    def run(self, cxn, context):
+
+        '''
+        Main loop
+        '''
+        from labrad.units import WithUnit as U
+        self.U = U
+        self.setup_datavault('Frequency', 'kCounts/sec')
+        self.setup_grapher('tickle_scan')
+        self.set_scannable_parameters()
+        self.multipoles[7] = self.multipole[self.multipole.units]
+        self.mps.set_multipoles(self.multipoles)
+        self.pulser.frequency('369DP', self.cooling_center + self.laser_detuning/2.0)
+        self.pulser.amplitude('DopplerCoolingSP', self.laser_power)
+        self.x_values = self.get_scan_list(self.p.ticklescan.frequency_scan, units='Hz')
+        self.rg.set_output(self.chan, True)
+        self.rg.applywaveform(self.p.ticklescan.waveform, WithUnit(self.x_values[0], 'Hz'),
+                              self.amplitude, self.offset, self.chan)
+        time.sleep(1)
+
+        for i, freq in enumerate(self.x_values):
+            should_break = self.update_progress(i / float(len(self.x_values)))
+            if should_break:
+                break
+
+            self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))
+            counts = self.pmt.get_next_counts('ON', self.average, True)
+            self.dv.add(freq, counts)
+
+    def set_scannable_parameters(self):
+
+        '''
+        gets parameters, called in run so scan works
+        '''
+
+        self.amplitude = self.p.ticklescan.amplitude
+        self.offset = self.p.ticklescan.offset
+        self.average = int(self.p.ticklescan.average)
+        self.cooling_center = self.p.Transitions.main_cooling_369/2. + self.U(200.0, 'MHz')
+        self.laser_detuning = self.p.ticklescan.detuning_369
+        self.laser_power = self.p.ticklescan.tickle_cooling_power
+        self.multipole = self.p.ticklescan.M5
+        self.multipoles = np.array(self.init_multipoles)
+
+    def finalize(self, cxn, context):
+        self.rg.set_output(self.chan, False)
+        self.rg.frequency(self.chan, WithUnit(self.x_values[0], 'Hz'))
+        self.pulser.frequency('369DP', self.init_laser_freq)
+        self.pulser.amplitude('DopplerCoolingSP', self.init_laser_power)
+        time.sleep(0.2)
+
+
+if __name__ == '__main__':
+    cxn = labrad.connect()
+    scanner = cxn.scriptscanner
+    exprt = ticklescan(cxn=cxn)
+    ident = scanner.register_external_launch(exprt.name)
+    exprt.execute(ident)

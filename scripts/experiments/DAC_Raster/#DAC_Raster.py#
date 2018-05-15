@@ -1,0 +1,59 @@
+import labrad
+from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
+import time
+import numpy as np
+
+
+class dacRaster(QsimExperiment):
+
+    name = 'DAC Raster'
+
+    exp_parameters = []
+    exp_parameters.append(('dacraster', 'voltage_scan_x'))
+    exp_parameters.append(('dacraster', 'voltage_scan_y'))
+    exp_parameters.append(('dacraster', 'voltage_scan_z'))
+    exp_parameters.append(('dacraster', 'Pause_Time'))
+
+    def initialize(self, cxn, context, ident):
+        self.ident = ident
+        self.mps = self.cxn.multipole_server
+        self.init_multipoles = cxn.multipole_server.get_multipoles()
+        self.multipoles = np.array(self.init_multipoles)
+        self.Xvalues = self.get_scan_list(self.p.dacraster.voltage_scan_x, units=None)
+        self.Yvalues = self.get_scan_list(self.p.dacraster.voltage_scan_y, units=None)
+        self.Zvalues = self.get_scan_list(self.p.dacraster.voltage_scan_z, units=None)
+
+        self.totalstep = (len(self.Xvalues))*(len(self.Yvalues))*(len(self.Zvalues))
+
+    def run(self, cxn, context):
+
+        for i, xvoltage in enumerate(self.Xvalues):
+            self.changevoltage('X', xvoltage)
+            for j, yvoltage in enumerate(self.Yvalues):
+                self.changevoltage('Y', yvoltage)
+                for k, zvoltage in enumerate(self.Zvalues):
+                    self.changevoltage('Z', zvoltage)
+                    should_break = self.update_progress((i + j + k)/float(self.totalstep))
+                    if should_break:
+                        return should_break
+                    time.sleep(self.parameters.dacraster.Pause_Time['s'])
+
+    def changevoltage(self, direction, voltage):
+
+        if direction == 'X':
+            self.multipoles[2] = voltage
+            self.mps.set_multipoles(self.multipoles)
+        elif direction == 'Y':
+            self.multipoles[0] = voltage
+            self.mps.set_multipoles(self.multipoles)
+        elif direction == 'Z':
+            self.multipoles[1] = voltage
+            self.mps.set_multipoles(self.multipoles)
+
+
+if __name__ == '__main__':
+    cxn = labrad.connect()
+    scanner = cxn.scriptscanner
+    exprt = dacRaster(cxn=cxn)
+    ident = scanner.register_external_launch(exprt.name)
+    exprt.execute(ident)
