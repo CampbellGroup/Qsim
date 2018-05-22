@@ -36,6 +36,6 @@ class deshelving(pulse_sequence):
                     self.start,
                     p.Deshelving.duration,
                     U(320.0, 'MHz'),
-                    U(-11.0, 'dBm'))
+                    p.Deshelving.power)
         
         self.end = self.start + p.Deshelving.duration
