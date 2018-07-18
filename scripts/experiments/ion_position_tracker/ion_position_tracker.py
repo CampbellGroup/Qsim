@@ -12,6 +12,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit
 import time
 import numpy as np
+from skimage.feature import blob_dog
 
 class ion_position_tracker(QsimExperiment):
 
@@ -23,8 +24,8 @@ class ion_position_tracker(QsimExperiment):
     exp_parameters.append(('images', 'image_center_y'))
     exp_parameters.append(('images', 'image_width'))
     exp_parameters.append(('images', 'image_height'))
-    exp_parameters.append(('images', 'number_images'))
     exp_parameters.append(('images', 'measure_time'))
+    exp_parameters.append(('images', 'blob_detect_threshold'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -36,16 +37,17 @@ class ion_position_tracker(QsimExperiment):
     def run(self, cxn, context):
         elapsed = WithUnit(0.0, 's')
         self.dv.cd(['','Ion Location Tracker'],True)
-        self.dataset = self.dv.new('ion position', [('Time', 's')], [('X Location','X Location','um'), ('Y Location','Y Location','um')])
+        self.dataset = self.dv.new('ion position', [('Time', 's')], [('X Location','X Location','um'), ('Y Location','Y Location','um'), ('Ion Diameter','Ion Diameter', 'um')])
         self.grapher.plot(self.dataset, 'Ion Drift Tracker', False)
         self.set_scannable_parameters()
         self.set_exp_settings()
         init_time = time.time()
         while elapsed <= self.p.images.measure_time:
-            data = np.reshape(self.cam.get_most_recent_image(), (self.p.image_height, self.p.image_width))
-            xMax, yMax = WithUnit(np.argmax(np.sum(data, axis = 0)), 'um'), WithUnit(np.argmax(np.sum(data, axis = 1)),'um')
+            data = np.reshape(self.cam.get_most_recent_image(), (self.image_y_length, self.image_x_length))
+            ion = blob_dog(data, max_sigma = 10, sigma_ratio = 1.6, threshold = self.p.images.blob_detect_threshold)
+            xPos, yPos, diameter = WithUnit(ion[0][0]/7.7, 'um'), WithUnit(ion[0][1]/7.7, 'um'), WithUnit(ion[0][2]*np.sqrt(2)*2/7.7, 'um')
             elapsed = WithUnit(time.time() - init_time, 's')
-            self.dv.add([elapsed['s'], xMax['um']/7.7, yMax['um']/7.7])
+            self.dv.add([elapsed['s'], xPos['um'], yPos['um'], diameter['um']])
             should_break = self.update_progress(elapsed['s']/self.p.images.measure_time['s'])
             if should_break:
                 break
