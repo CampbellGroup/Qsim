@@ -20,7 +20,7 @@ from twisted.internet.defer import returnValue
 import os
 from labrad.server import LabradServer, setting
 
-dev_name = '/dev/usbtmc0'
+dev_name = '/dev/ttyUSBRigolscope'
 
 
 class DG1022_Rigol_Server(LabradServer):

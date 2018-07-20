@@ -5,7 +5,7 @@ from sub_sequences.Test760 import test760
 
 class test_760_point(pulse_sequence):
 
-    required_subsequences = [turn_off_all, empty_sequence, test760]
+    required_subsequences = [ empty_sequence, test760, turn_off_all]
 
     def sequence(self):
         self.addSequence(turn_off_all)

@@ -5,6 +5,7 @@ class shelving(pulse_sequence):
 
     required_parameters = [
                            ('Shelving', 'duration'),
+                           ('Shelving', 'power'),
                            ('Shelving', 'cooling_assist_power'),
                            ('DopplerCooling', 'cooling_power'),
                            ('DopplerCooling', 'repump_power'),
@@ -14,7 +15,6 @@ class shelving(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        self.addTTL('MicrowaveTTL', self.start, p.Shelving.duration)
         self.end = self.start + p.Shelving.duration
 
         self.addDDS('DopplerCoolingSP',
@@ -35,3 +35,8 @@ class shelving(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.DopplerCooling.repump_power)
 
+        self.addDDS('ShelvingSP',
+                    self.start,
+                    p.Shelving.duration,
+                    U(160.0, 'MHz'),
+                    p.Shelving.power)

@@ -42,7 +42,7 @@ class ion_position_tracker(QsimExperiment):
         self.set_exp_settings()
         init_time = time.time()
         while elapsed <= self.p.images.measure_time:
-            data = np.reshape(self.cam.get_most_recent_image(), (self.p.image_height, self.p.image_width))
+            data = np.reshape(self.cam.get_most_recent_image(), (self.image_y_length, self.image_x_length))
             xMax, yMax = WithUnit(np.argmax(np.sum(data, axis = 0)), 'um'), WithUnit(np.argmax(np.sum(data, axis = 1)),'um')
             elapsed = WithUnit(time.time() - init_time, 's')
             self.dv.add([elapsed['s'], xMax['um']/7.7, yMax['um']/7.7])

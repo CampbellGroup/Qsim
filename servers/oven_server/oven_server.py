@@ -58,10 +58,10 @@ class OvenServer(LabradServer):
     def oven_output(self, c, output):
         yield self.server.output(3, output)
 
-    @setting(18, returns='v[A]')
-    def get_current(self, c):
-        current = yield self.server.output(3)
-        returnValue(current)
+    @setting(18, returns='b')
+    def get_output(self, c):
+        output = yield self.server.output(3)
+        returnValue(output)
 
     @inlineCallbacks
     def stopServer(self):

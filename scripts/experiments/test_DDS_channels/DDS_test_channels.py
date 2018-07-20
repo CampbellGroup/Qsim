@@ -7,14 +7,14 @@ class DDS_test_channels(QsimExperiment):
     name = 'DDS channel tester'
 
     exp_parameters = []
-    exp_parameters.append(('testDDS', 'channel'))
-    exp_parameters.append(('testDDS', 'duration'))
-    exp_parameters.append(('testDDS', 'frequency'))
-    exp_parameters.append(('testDDS', 'power'))
-    exp_parameters.append(('testDDS', 'phase'))
-    exp_parameters.append(('testDDS', 'ramprate'))
-    exp_parameters.append(('testDDS', 'ampramprate'))
-    exp_parameters.append(('testDDS', 'cycles'))
+#    exp_parameters.append(('testDDS', 'channel'))
+#    exp_parameters.append(('testDDS', 'duration'))
+#    exp_parameters.append(('testDDS', 'frequency'))
+#    exp_parameters.append(('testDDS', 'power'))
+#    exp_parameters.append(('testDDS', 'phase'))
+#    exp_parameters.append(('testDDS', 'ramprate'))
+#    exp_parameters.append(('testDDS', 'ampramprate'))
+#    exp_parameters.append(('testDDS', 'cycles'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -30,38 +30,46 @@ class DDS_test_channels(QsimExperiment):
         sets them to the given parameters for that duration then off for
         the same duration
         '''
-        self.chan = self.p.testDDS.channel
-        self.duration = self.p.testDDS.duration
+        self.chan = 'Microwave_qubit'
+        self.chan2 = '369DP'
+        self.duration = self.U(10, 'us')
         self.pulser.new_sequence()
 
+        self.pulser.add_dds_pulses([(self.chan2, self.starttime,
+                                     3*self.duration,
+                                     self.U(200.0, 'MHz'),
+                                     self.U(-7.0, 'dBm'),
+                                     self.U(0.0, 'deg'),
+                                     self.U(0.0, 'MHz'),
+                                     self.U(0.0, 'dB'))])
+        
         self.pulser.add_dds_pulses([(self.chan, self.starttime,
                                      self.duration,
-                                     self.p.testDDS.frequency,
-                                     self.U(-48.0, 'dBm'),
-                                     self.p.testDDS.phase,
-                                     self.p.testDDS.ramprate,
-                                     self.p.testDDS.ampramprate)])
+                                     self.U(2.0, 'MHz'),
+                                     self.U(-7.0, 'dBm'),
+                                     self.U(23.0, 'deg'),
+                                     self.U(0.0, 'MHz'),
+                                     self.U(0.0, 'dB'))])
 
-        self.pulser.add_dds_pulses([(self.chan,
-                                     self.starttime + self.duration,
+        self.pulser.add_dds_pulses([(self.chan, self.starttime + self.duration,
                                      self.duration,
-                                     self.p.testDDS.frequency,
-                                     self.p.testDDS.power,
-                                     self.p.testDDS.phase,
-                                     self.p.testDDS.ramprate,
-                                     self.p.testDDS.ampramprate)])
+                                     self.U(2.0, 'MHz'),
+                                     self.U(-7.0, 'dBm'),
+                                     self.U(112.0, 'deg'),
+                                     self.U(0.0, 'MHz'),
+                                     self.U(0.0, 'dB'))])
 
-        self.pulser.add_dds_pulses([(self.chan,
-                                     self.starttime + 2*self.duration,
+        self.pulser.add_dds_pulses([(self.chan, self.starttime + 2*self.duration,
                                      self.duration,
-                                     self.p.testDDS.frequency,
-                                     self.U(-48.0, 'dBm'),
-                                     self.p.testDDS.phase,
-                                     self.p.testDDS.ramprate,
-                                     self.p.testDDS.ampramprate)])
+                                     self.U(2.0, 'MHz'),
+                                     self.U(-7.0, 'dBm'),
+                                     self.U(23.0, 'deg'),
+                                     self.U(0.0, 'MHz'),
+                                     self.U(0.0, 'dB'))])
+         
 
         self.pulser.program_sequence()
-        self.pulser.start_number(int(self.p.testDDS.cycles))
+        self.pulser.start_number(10)
 
     def finalize(self, cxn, context):
         self.pulser.stop_sequence()

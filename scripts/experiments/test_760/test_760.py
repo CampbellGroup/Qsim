@@ -22,7 +22,7 @@ class Test760(QsimExperiment):
             if should_break:
                 break
             self.program_pulser(sequence)
-            self.pulser.start_single()
+            self.pulser.start_number(5)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
 

@@ -15,12 +15,13 @@ class wavemeter_linescan(QsimExperiment):
     exp_parameters.append(('wavemeterscan', 'Port_399'))
     exp_parameters.append(('wavemeterscan', 'Port_935'))
     exp_parameters.append(('wavemeterscan', 'Port_760'))
-
+    exp_parameters.append(('wavemeterscan', 'Port_411'))
+    
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_369'))
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_399'))
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_935'))
     exp_parameters.append(('wavemeterscan', 'Center_Frequency_760'))
-
+    exp_parameters.append(('wavemeterscan', 'Center_Frequency_411'))
 
     def initialize(self, cxn, context, ident):
 
@@ -28,6 +29,7 @@ class wavemeter_linescan(QsimExperiment):
         self.cxnwlm = labrad.connect('10.97.112.2',
                                      name='Wavemeter Scan',
                                      password=os.environ['LABRADPASSWORD'])
+        self.cxnwlm = labrad.connect()
         self.wm = self.cxnwlm.multiplexerserver
         self.pmt = self.cxn.normalpmtflow
         self.init_mode = self.pmt.getcurrentmode()
@@ -82,10 +84,13 @@ class wavemeter_linescan(QsimExperiment):
             self.port = int(self.p.wavemeterscan.Port_760)
             self.centerfrequency = self.p.wavemeterscan.Center_Frequency_760
 
+        elif self.laser == '411':
+            self.port = int(self.p.wavemeterscan.Port_411)
+            self.centerfrequency = self.p.wavemeterscan.Center_Frequency_411
+            
     def currentfrequency(self):
         try:
-            absfreq = float(self.wm.get_frequency(2))
-	    print absfreq
+            absfreq = float(self.wm.get_frequency(self.port))
             currentfreq = absfreq - self.centerfrequency['THz']
             return currentfreq
         except:

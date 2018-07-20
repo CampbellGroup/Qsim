@@ -37,6 +37,6 @@ class doppler_cooling(pulse_sequence):
                     self.start,
                     p.DopplerCooling.duration,
                     U(320.0, 'MHz'),
-                    U(-11.0, 'dBm'))
+                    U(-14.0, 'dBm'))
 
         self.end = self.start + p.DopplerCooling.duration

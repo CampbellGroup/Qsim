@@ -13,12 +13,18 @@ class state_detection(pulse_sequence):
                            ('StateDetection', 'mode'),
                            ('DopplerCooling', 'cooling_power'),
                            ('DopplerCooling', 'detuning'),
-                           ('Transitions', 'main_cooling_369')
+                           ('Transitions', 'main_cooling_369'),
+                           ('Deshelving', 'duration'),
+                           ('Deshelving', 'power')
                             ]
 
     def sequence(self):
         p = self.parameters
 
+        self.addTTL('ReadoutCount',
+                    self.start,
+                    p.StateDetection.duration)
+        
         self.addDDS('935SP',
                     self.start,
                     p.StateDetection.duration,
@@ -40,8 +46,10 @@ class state_detection(pulse_sequence):
                         p.StateDetection.duration,
                         p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.StateDetection.detuning,
                         U(-5.0, 'dBm'))
-
+            self.end = self.start + p.StateDetection.duration
+            
         elif p.StateDetection.mode == 'ML':
+
             self.addDDS('ModeLockedSP',
                         self.start,
                         p.StateDetection.duration,
@@ -53,23 +61,27 @@ class state_detection(pulse_sequence):
                         p.StateDetection.duration,
                         U(200.0, 'MHz'),
                         U(-46.0, 'dBm'))
-
+            self.end = self.start + p.StateDetection.duration
+            
         elif p.StateDetection.mode == 'Shelving':
 
+            self.addDDS('369DP',
+                        self.start,
+                        p.StateDetection.duration,
+                        p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.StateDetection.detuning,
+                        U(-5.0, 'dBm'))
+            
             self.addDDS('DopplerCoolingSP',
                         self.start,
                         p.StateDetection.duration,
                         U(110.0, 'MHz'),
                         p.DopplerCooling.cooling_power)
 
-            self.addDDS('369DP',
-                        self.start,
-                        p.StateDetection.duration,
-                        p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                        U(-5.0, 'dBm'))
+            # After DopplerCooling, and state readout, deshelve
+            self.addDDS('ModeLockedSP',
+                        self.start + p.StateDetection.duration,
+                        p.Deshelving.duration,
+                        U(320.0, 'MHz'),
+                        p.Deshelving.power)
 
-
-        self.addTTL('ReadoutCount',
-                    self.start,
-                    p.StateDetection.duration)
-        self.end = self.start + p.StateDetection.duration
+            self.end = self.start + p.StateDetection.duration + p.Deshelving.duration
