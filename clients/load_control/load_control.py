@@ -91,7 +91,7 @@ class LoadControl(QtGui.QWidget):
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(False)
             self.its_trap.play()
-        elif self.timer_widget.time >= 600.0:
+        elif (self.timer_widget.time >= 600.0) and switch_on:
             self.vader.play()
             self.shutter_widget.TTLswitch.setChecked(False)
 
