@@ -25,11 +25,13 @@ class indicator():
 
 class LoadIndicator(QtGui.QWidget):
 
-    indicators = {'369 Freq': [811.291, 811.2915],
-                  '399 Freq': [751.52670, 751.5269],
-                  '935 Freq': [320.57162, 320.57168],
-                  'RF Power Foward': [2.8, 3.2],
-                  'RF reflected': [0., 0.09]}
+    indicators = {'369 Freq': [812.108, 812.112],
+                  '399 Freq': [752.450, 752.453],
+                  '935 Freq': [320.568, 320.572],
+                  'RF Power Foward': [2.3, 3.2],
+                  'RF reflected': [0., 0.09],
+                  'DAC Working': [0.9, 1.1],
+                  'Oven On': [0.9, 1.1]}
 
     def __init__(self, reactor):
         super(LoadIndicator, self).__init__()
@@ -48,14 +50,18 @@ class LoadIndicator(QtGui.QWidget):
         self.cxnwlm = yield connectAsync('10.97.112.2',
                                          password=os.environ['LABRADPASSWORD'],
                                          name='Load Indicator')
+        self.W7 = self.cxn.multiplexerserver
         self.wlm = self.cxnwlm.multiplexerserver
 
         yield self.wlm.signal__frequency_changed(546532)
         yield self.wlm.addListener(listener=self.update_frequency,
                                    source=None, ID=546532)
 
+        self.dac = self.cxn.dac_ad660_server
         self.arduino_ttl = self.cxn.arduinottl
         self.RFscope = self.cxn.ds1052e_scope_server
+        self.kt = self.cxn.keithley_2230g_server
+        self.kt.select_device(0)
         self.initialize_gui()
 
     def initialize_gui(self):
@@ -81,15 +87,40 @@ class LoadIndicator(QtGui.QWidget):
         freq = signal[1]
         if chan == 4:
             self.indwidgets['935 Freq'].update_value(freq)
-        if chan == 8:
-            self.indwidgets['399 Freq'].update_value(freq)
-        if chan == 9:
-            self.indwidgets['369 Freq'].update_value(freq)
 
     @inlineCallbacks
     def main_loop(self):
-        reflected = yield self.RFscope.measurevpp(1)
-        forward = yield self.RFscope.measurevpp(2)
+        try:
+            reflected = yield self.RFscope.measurevpp(1)
+            forward = yield self.RFscope.measurevpp(2)
+        except:
+            reflected = 1000
+            forward = 0.0
+
+        try:
+            WS7_freq = yield self.W7.get_frequency(1)
+            if 812.0 < WS7_freq < 813.0:
+                self.indwidgets['369 Freq'].update_value(WS7_freq)
+            elif 752.0 < WS7_freq < 753.0:
+                self.indwidgets['399 Freq'].update_value(WS7_freq)
+        except:
+            WS7_freq = 0.0
+
+        try:
+            volts = yield self.dac.get_analog_voltages()
+            if len(volts) > 1:
+                self.indwidgets['DAC Working'].update_value(1.0)
+            else:
+                self.indwidgets['DAC Working'].update_value(0.0)
+        except:
+            self.indwidgets['DAC Working'].update_value(0.0)
+
+        oven_output = yield self.kt.current(3)
+        if oven_output['A'] >= 1.0:
+            self.indwidgets['Oven On'].update_value(1.0)
+        else:
+            self.indwidgets['Oven On'].update_value(0.0)
+
         self.indwidgets['RF Power Foward'].update_value(float(forward))
         self.indwidgets['RF reflected'].update_value(float(reflected))
 

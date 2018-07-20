@@ -272,6 +272,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         from common.lib.clients.switchclient.switchclient import switchclient
         from Qsim.clients.dac_control.dac_client import dacclient
         from Qsim.clients.load_control.load_control import LoadControl
+        from Qsim.clients.load_indicator.load_indicator import LoadIndicator
 
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(pmtWidget(reactor, cxn),      1, 0, 1, 1)
@@ -280,6 +281,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.addWidget(switchclient(reactor, cxn),   0, 0, 1, 1)
         gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 2, 1)
         gridLayout.addWidget(LoadControl(reactor, cxn),    2, 1, 2, 1)
+        gridLayout.addWidget(LoadIndicator(reactor),       3, 1, 2, 1)
         gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget

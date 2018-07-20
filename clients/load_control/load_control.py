@@ -4,6 +4,7 @@ from common.lib.clients.qtui.timer import QCustomTimer
 from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
 from PyQt4 import QtGui
+from pygame import mixer
 
 SIGNALID = 123456
 
@@ -13,6 +14,9 @@ class LoadControl(QtGui.QWidget):
     def __init__(self, reactor, cxn=None):
         super(LoadControl, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        mixer.init()
+        self.its_trap = mixer.Sound('/home/qsimexpcontrol/Music/trap.wav')
+        self.vader = mixer.Sound('swvader01.wav')
         self.reactor = reactor
         self.kt = None
         self.bi_directional_state = False
@@ -86,7 +90,9 @@ class LoadControl(QtGui.QWidget):
         disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(False)
+            self.its_trap.play()
         elif self.timer_widget.time >= 600.0:
+            self.vader.play()
             self.shutter_widget.TTLswitch.setChecked(False)
 
     @inlineCallbacks
