@@ -244,14 +244,16 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeWavemeterWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
+        from common.lib.clients.ucla_piezo_client.UCLA_piezo_client import ucla_piezo_client
         from Qsim.clients.single_wavemeter_channel.single_channel_wm import single_channel_wm
-        from Qsim.clients.WM_DAC_Control.wm_dac_control import wm_dac_control
+#        from Qsim.clients.WM_DAC_Control.wm_dac_control import wm_dac_control
         gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
         ws7 = single_channel_wm(reactor)
-        dac_control = wm_dac_control(reactor)
+        piezo = ucla_piezo_client(reactor)
+#        dac_control = wm_dac_control(reactor)
         gridLayout.addWidget(wavemeter)
-        gridLayout.addWidget(dac_control)
+        gridLayout.addWidget(piezo, 0, 1)
         gridLayout.addWidget(ws7)
         wavemeter.setMaximumHeight(820)
         widget.setLayout(gridLayout)
