@@ -11,11 +11,10 @@ class microwave_interogation(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        qubit_freq = U(12.642812118, 'GHz') + p.MicrowaveInterogation.detuning
-        DDS_freq = 30 - (qubit_freq['MHz']/3. - 10.*(int(qubit_freq['MHz']/30.)))
+        DDS_freq = U(200.0, 'MHz') + p.MicrowaveInterogation.detuning
         self.addDDS('Microwave_qubit',
                     self.start,
                     p.MicrowaveInterogation.duration,
-                    U(DDS_freq, 'MHz'),
-                    U(-11.0, 'dBm'))
+                    DDS_freq,
+                    U(6.0, 'dBm'))
         self.end = self.start + p.MicrowaveInterogation.duration

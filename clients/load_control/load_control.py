@@ -16,7 +16,7 @@ class LoadControl(QtGui.QWidget):
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         mixer.init()
         self.its_trap = mixer.Sound('/home/qsimexpcontrol/Music/trap.wav')
-        self.vader = mixer.Sound('swvader01.wav')
+        self.vader = mixer.Sound('/home/qsimexpcontrol/Music/swvader01.wav')
         self.reactor = reactor
         self.kt = None
         self.bi_directional_state = False
