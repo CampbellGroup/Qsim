@@ -104,7 +104,7 @@ class LoadControl(QtGui.QWidget):
             yield self.oven.oven_output(True)
         else:
             yield self.oven.oven_output(False)
-            self.timer_widget.stop()
+            self.timer_widget.reset()
 
     @inlineCallbacks
     def current_changed(self, value):

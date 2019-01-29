@@ -29,7 +29,7 @@ class wavemeter_linescan(QsimExperiment):
         self.cxnwlm = labrad.connect('10.97.112.2',
                                      name='Wavemeter Scan',
                                      password=os.environ['LABRADPASSWORD'])
-        self.cxnwlm = labrad.connect()
+        #self.cxnwlm = labrad.connect()
         self.wm = self.cxnwlm.multiplexerserver
         self.pmt = self.cxn.normalpmtflow
         self.init_mode = self.pmt.getcurrentmode()
@@ -91,6 +91,7 @@ class wavemeter_linescan(QsimExperiment):
     def currentfrequency(self):
         try:
             absfreq = float(self.wm.get_frequency(self.port))
+            print absfreq
             currentfreq = absfreq - self.centerfrequency['THz']
             return currentfreq
         except:

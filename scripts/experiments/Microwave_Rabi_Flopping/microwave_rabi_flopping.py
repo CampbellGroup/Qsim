@@ -16,6 +16,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(('RabiFlopping', 'scan'))
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
+
     exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.append(('StateDetection', 'state_readout_threshold'))
     exp_parameters.append(('StateDetection', 'points_per_histogram'))
@@ -30,7 +31,8 @@ class MicrowaveRabiFlopping(QsimExperiment):
     def run(self, cxn, context):
 
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
-        self.setup_grapher('Rabi Flopping')
+        qubit = self.p.Line_Selection.qubit
+        self.setup_grapher('Rabi Flopping ' + qubit)
         self.times = self.get_scan_list(self.p.RabiFlopping.scan, 'us')
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i/float(len(self.times)))

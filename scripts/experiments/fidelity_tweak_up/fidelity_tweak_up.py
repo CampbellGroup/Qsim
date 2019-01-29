@@ -2,6 +2,7 @@ import labrad
 from Qsim.scripts.pulse_sequences.fidelity_tweak_up import fidelity_tweak_up as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
+from labrad.units import WithUnit as U
 
 
 class fidelity_tweak_up(QsimExperiment):
@@ -16,13 +17,35 @@ class fidelity_tweak_up(QsimExperiment):
     exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.append(('StateDetection', 'state_readout_threshold'))
     exp_parameters.append(('StateDetection', 'points_per_histogram'))
-    exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.append(('Pi_times', 'qubit_0'))
+    exp_parameters.append(('Pi_times', 'qubit_plus'))
+    exp_parameters.append(('Pi_times', 'qubit_minus'))
 
+    exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.remove(('MicrowaveInterogation', 'detuning')) 
+    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+
+    
     def initialize(self, cxn, context, ident):
         self.ident = ident
 
     def run(self, cxn, context):
 
+        qubit = self.p.Line_Selection.qubit
+        if qubit == 'qubit_0':
+            center = self.p.Transitions.qubit_0
+            pi_time = self.p.Pi_times.qubit_0
+
+        elif qubit == 'qubit_plus':
+            center = self.p.Transitions.qubit_plus
+            pi_time = self.p.Pi_times.qubit_plus
+
+        elif qubit == 'qubit_minus':
+            center = self.p.Transitions.qubit_minus
+            pi_time = self.p.Pi_times.qubit_minus
+
+        self.p['MicrowaveInterogation.duration'] = pi_time
+        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
         self.setup_prob_datavault()
         i = 0
         self.program_pulser(sequence)

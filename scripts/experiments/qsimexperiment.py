@@ -121,17 +121,15 @@ class QsimExperiment(experiment):
         data = np.column_stack((np.arange(repititions),
                                 counts))
         y = np.histogram(data[:, 1],
-                         int(np.max([data[:, 1].max() - data[:, 1].min(), 1])))
+                         int(data[:, 1].max() - data[:, 1].min() + 1))
         counts = y[0]
-        bins = y[1][:-1]
-        if bins[0] < 0:
-            bins = bins + .5
+        bins = np.arange(0, data[:,1].max() + 1, 1)
         hist = np.column_stack((bins, counts))
         return hist
 
     def get_pop(self, counts):
         self.thresholdVal = self.p.StateDetection.state_readout_threshold
-        prob = len(np.where(counts >= self.thresholdVal)[0])/float(len(counts))
+        prob = float(len(np.where(counts >= self.thresholdVal)[0]))/float(len(counts))
         return prob
 
     def plot_hist(self, hist):

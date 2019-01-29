@@ -48,7 +48,7 @@ class Delaystagescan(QsimExperiment):
         self.U = U
         self.state_prep = self.p.Delaystagescan.state_prep
         self.set_scannable_parameters()
-        self.keithley.gpib_write('Apply CH1,' + str(self.init_volt) + 'V')
+        self.keithley.gpib_write('Apply CH2,' + str(self.init_volt) + 'V')
         self.keithley.output(self.chan, True)
         # this is real laser detuning
         self.pulser.frequency('369DP', self.cooling_center + self.detuning/2.0)

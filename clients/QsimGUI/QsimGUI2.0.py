@@ -33,129 +33,9 @@ class QSIM_GUI(QtGui.QMainWindow):
         #  create subwidgets to be added to tabs
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         wavemeter = self.makeWavemeterWidget(reactor, cxn)
-        #M2 = self.makeM2Widget(reactor, cxn)
+#        M2 = self.makeM2Widget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
-        analysis = self.makeAnalysisWidget(reactor, cxn)
-        Tsunami = self.makeTsunamiWidget(reactor, cxn)
-        Pulser = self.makePulserWidget(reactor, cxn)
-        Config = self.makeConfigWidget(reactor, cxn)
-#        Histogram = self.makeHistogramWidget(reactor, cxn)
-        Keithley = self.makeKeithleyWidget(reactor, cxn)
-        
-
-        # add tabs
-        self.tabWidget = QtGui.QTabWidget()
-        self.tabWidget.addTab(wavemeter, '&Wavemeter')
-        self.tabWidget.addTab(script_scanner, '&Script Scanner')
-        self.tabWidget.addTab(control, '&Control')
-        self.tabWidget.addTab(Pulser, '&Pulser')
-#        self.tabWidget.addTab(Histogram, '&Histogram')
-        self.tabWidget.addTab(analysis, '&Analysis')
-        self.tabWidget.addTab(Config, '&Config')
-        self.tabWidget.addTab(Tsunami, '&Tsunami')
-        self.tabWidget.addTab(Keithley, '&Keithley')
-        self.tabWidget.setMovable(True)
-
-
-        layout.addWidget(self.tabWidget)
-        centralWidget.setLayout(layout)
-        self.setCentralWidget(centralWidget)
-        self.setWindowTitle('Qsim GUI')
-
-#################### Here we will connect to individual clients and add sub-tabs #####################
-
-
-
-sys.path.append('/home/qsimexpcontrol/LabRAD/')
-sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
-os.environ["LABRADPASSWORD"] = "lab"
-
-class QSIM_GUI(QtGui.QMainWindow):
-    def __init__(self, reactor, clipboard, parent=None):
-        super(QSIM_GUI, self).__init__(parent)
-        self.clipboard = clipboard
-        self.reactor = reactor
-        self.connect_labrad()
-
-    @inlineCallbacks
-    def connect_labrad(self):
-        from common.lib.clients.connection import connection
-        cxn = connection(name = 'Qsim GUI Client')
-        yield cxn.connect()
-        self.create_layout(cxn)
-
-    #Highest level adds tabs to big GUI
-    def create_layout(self, cxn):
-        #  creates central layout
-        centralWidget = QtGui.QWidget()
-        layout = QtGui.QHBoxLayout()
-
-        #  create subwidgets to be added to tabs
-        script_scanner = self.makeScriptScannerWidget(reactor, cxn)
-        wavemeter = self.makeWavemeterWidget(reactor, cxn)
-        M2 = self.makeM2Widget(reactor, cxn)
-        control = self.makeControlWidget(reactor, cxn)
-        analysis = self.makeAnalysisWidget(reactor, cxn)
-        Tsunami = self.makeTsunamiWidget(reactor, cxn)
-        Pulser = self.makePulserWidget(reactor, cxn)
-        Config = self.makeConfigWidget(reactor, cxn)
-#        Histogram = self.makeHistogramWidget(reactor, cxn)
-        Keithley = self.makeKeithleyWidget(reactor, cxn)
-        
-
-        # add tabs
-        self.tabWidget = QtGui.QTabWidget()
-        self.tabWidget.addTab(wavemeter, '&Wavemeter')
-        self.tabWidget.addTab(script_scanner, '&Script Scanner')
-        self.tabWidget.addTab(control, '&Control')
-        self.tabWidget.addTab(Pulser, '&Pulser')
-        self.tabWidget.addTab(M2, '&M2')
-        self.tabWidget.addTab(analysis, '&Analysis')
-        self.tabWidget.addTab(Config, '&Config')
-        self.tabWidget.addTab(Tsunami, '&Tsunami')
-        self.tabWidget.addTab(Keithley, '&Keithley')
-        self.tabWidget.setMovable(True)
-
-
-        layout.addWidget(self.tabWidget)
-        centralWidget.setLayout(layout)
-        self.setCentralWidget(centralWidget)
-        self.setWindowTitle('Qsim GUI')
-
-#################### Here we will connect to individual clients and add sub-tabs #####################
-
-
-
-sys.path.append('/home/qsimexpcontrol/LabRAD/')
-sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
-os.environ["LABRADPASSWORD"] = "lab"
-
-class QSIM_GUI(QtGui.QMainWindow):
-    def __init__(self, reactor, clipboard, parent=None):
-        super(QSIM_GUI, self).__init__(parent)
-        self.clipboard = clipboard
-        self.reactor = reactor
-        self.connect_labrad()
-
-    @inlineCallbacks
-    def connect_labrad(self):
-        from common.lib.clients.connection import connection
-        cxn = connection(name = 'Qsim GUI Client')
-        yield cxn.connect()
-        self.create_layout(cxn)
-
-    #Highest level adds tabs to big GUI
-    def create_layout(self, cxn):
-        #  creates central layout
-        centralWidget = QtGui.QWidget()
-        layout = QtGui.QHBoxLayout()
-
-        #  create subwidgets to be added to tabs
-        script_scanner = self.makeScriptScannerWidget(reactor, cxn)
-        wavemeter = self.makeWavemeterWidget(reactor, cxn)
-        M2 = self.makeM2Widget(reactor, cxn)
-        control = self.makeControlWidget(reactor, cxn)
-        analysis = self.makeAnalysisWidget(reactor, cxn)
+#        analysis = self.makeAnalysisWidget(reactor, cxn)
         Tsunami = self.makeTsunamiWidget(reactor, cxn)
         Pulser = self.makePulserWidget(reactor, cxn)
         Config = self.makeConfigWidget(reactor, cxn)
@@ -168,8 +48,8 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(Pulser, '&Pulser')
-        self.tabWidget.addTab(M2, '&M2')
-        self.tabWidget.addTab(analysis, '&Analysis')
+#        self.tabWidget.addTab(M2, '&M2')
+#        self.tabWidget.addTab(analysis, '&Analysis')
         self.tabWidget.addTab(Config, '&Config')
         self.tabWidget.addTab(Tsunami, '&Tsunami')
         self.tabWidget.addTab(Keithley, '&Keithley')
@@ -244,16 +124,16 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeWavemeterWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
-        from common.lib.clients.ucla_piezo_client.UCLA_piezo_client import ucla_piezo_client
+#        from common.lib.clients.ucla_piezo_client.UCLA_piezo_client import ucla_piezo_client
         from Qsim.clients.single_wavemeter_channel.single_channel_wm import single_channel_wm
-#        from Qsim.clients.WM_DAC_Control.wm_dac_control import wm_dac_control
+        from Qsim.clients.WM_DAC_Control.wm_dac_control import wm_dac_control
         gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
         ws7 = single_channel_wm(reactor)
-        piezo = ucla_piezo_client(reactor)
-#        dac_control = wm_dac_control(reactor)
+#        piezo = ucla_piezo_client(reactor)
+        dac_control = wm_dac_control(reactor)
         gridLayout.addWidget(wavemeter)
-        gridLayout.addWidget(piezo, 0, 1)
+#        gridLayout.addWidget(piezo, 0, 1)
         gridLayout.addWidget(ws7)
         wavemeter.setMaximumHeight(820)
         widget.setLayout(gridLayout)

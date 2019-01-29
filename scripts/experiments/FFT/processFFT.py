@@ -52,4 +52,4 @@ class processFFT():
         else:
             pwr = np.zeros_like(freqs)
             del (mat, fft)
-            return pwr
+        return pwr

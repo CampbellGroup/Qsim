@@ -60,7 +60,9 @@ class PMT_FFT(QsimExperiment):
             should_break = self.update_progress(i/float(self.average))
             if should_break:
                 break
-            pwr += self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time, U(10.0, 'ns'))
+            new_pwr =  self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time, U(10.0, 'ns'))
+            np.add(pwr, new_pwr, out=pwr, casting="unsafe")
+            #pwr += self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time, U(10.0, 'ns'))
         pwr = pwr / float(self.average)
         data = np.array(np.vstack((self.freqs, pwr)).transpose(), dtype='float')
         self.dv.add(data)
