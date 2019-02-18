@@ -21,13 +21,13 @@ class shelving(pulse_sequence):
                     self.start,
                     p.Shelving.duration,
                     U(110.0, 'MHz'),
-                    p.Shelving.cooling_assist_power)
+                    U(-20.8, 'dBm'))
 
         self.addDDS('369DP',
                     self.start,
                     p.Shelving.duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                    U(-5.0, 'dBm'))
+                    p.Shelving.cooling_assist_power)
 
         self.addDDS('935SP',
                     self.start,
@@ -35,8 +35,8 @@ class shelving(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.DopplerCooling.repump_power)
 
-        self.addDDS('ShelvingSP',
+        self.addDDS('411SP',
                     self.start,
                     p.Shelving.duration,
-                    U(160.0, 'MHz'),
+                    U(250.0, 'MHz'),
                     p.Shelving.power)

@@ -12,8 +12,8 @@ class kiethleyclient(QtGui.QWidget):
         """
         super(kiethleyclient, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        self.reactor = reactor
         self.connect()
+        self.reactor = reactor
 
     @inlineCallbacks
     def connect(self):
@@ -65,4 +65,4 @@ if __name__ == "__main__":
     from twisted.internet import reactor
     kiethleyWidget = kiethleyclient(reactor)
     kiethleyWidget.show()
-    reactor.run()
+    run = reactor.run()

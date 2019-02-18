@@ -33,4 +33,10 @@ class doppler_cooling(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.DopplerCooling.repump_power)
 
+        self.addDDS('760SP',
+                    self.start,
+                    p.DopplerCooling.duration,
+                    U(320.0, 'MHz'),
+                    U(-2.0,  'dBm'))
+
         self.end = self.start + p.DopplerCooling.duration

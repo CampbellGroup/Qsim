@@ -26,7 +26,7 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_minus'))
     
     exp_parameters.extend(sequence.all_required_parameters())
-    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
+    exp_parameters.remove(('MicrowaveInterogation', 'detuning')) 
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
     

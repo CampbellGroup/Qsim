@@ -33,9 +33,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         #  create subwidgets to be added to tabs
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         wavemeter = self.makeWavemeterWidget(reactor, cxn)
-#        M2 = self.makeM2Widget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
-#        analysis = self.makeAnalysisWidget(reactor, cxn)
         Tsunami = self.makeTsunamiWidget(reactor, cxn)
         Pulser = self.makePulserWidget(reactor, cxn)
         Config = self.makeConfigWidget(reactor, cxn)
@@ -48,8 +46,6 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(Pulser, '&Pulser')
-#        self.tabWidget.addTab(M2, '&M2')
-#        self.tabWidget.addTab(analysis, '&Analysis')
         self.tabWidget.addTab(Config, '&Config')
         self.tabWidget.addTab(Tsunami, '&Tsunami')
         self.tabWidget.addTab(Keithley, '&Keithley')
@@ -63,18 +59,6 @@ class QSIM_GUI(QtGui.QMainWindow):
 
 #################### Here we will connect to individual clients and add sub-tabs #####################
 
-
-
-    def makeM2Widget(self, reactor, cxn):
-        from Qsim.clients.M2lasercontrol.M2laserControl import M2Window
-        M2Widget = QtGui.QWidget()
-        gridLayout = QtGui.QGridLayout()
-	M2 = M2Window(reactor, cxn)
-	gridLayout.addWidget(M2)
-        M2Widget.setLayout(gridLayout)
-        self.setWindowTitle('Lasers')
-        return M2Widget
-
     def makePulserWidget(self, reactor, cxn):
         from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
         from common.lib.clients.pulser_switch.pulser_switch_control import switchWidget
@@ -87,11 +71,6 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.addWidget(switch)
         puls_widget.setLayout(gridLayout)
         return puls_widget
-
-#    def makeRigolWidget(self, reactor, cxn):
-#        from clients.kiethley_control.rigolcontroller_usbtmc import rigolclient
-#        widget = rigolclient(reactor, cxn)
-#        return widget
 
     def makeKeithleyWidget(self, reactor, cxn):
         from Qsim.clients.kiethley_control.kiethley_controller import kiethleyclient
@@ -124,25 +103,12 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeWavemeterWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
-#        from common.lib.clients.ucla_piezo_client.UCLA_piezo_client import ucla_piezo_client
-        from Qsim.clients.single_wavemeter_channel.single_channel_wm import single_channel_wm
-        from Qsim.clients.WM_DAC_Control.wm_dac_control import wm_dac_control
         gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
-        ws7 = single_channel_wm(reactor)
-#        piezo = ucla_piezo_client(reactor)
-        dac_control = wm_dac_control(reactor)
         gridLayout.addWidget(wavemeter)
-#        gridLayout.addWidget(piezo, 0, 1)
-        gridLayout.addWidget(ws7)
         wavemeter.setMaximumHeight(820)
         widget.setLayout(gridLayout)
         return widget
-
-    def makeAnalysisWidget(self, reactor, cxn):
-        from Qsim.clients.analysis.analysis import analysis
-        analysis = analysis(reactor, cxn)
-        return analysis
 
     def makeControlWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
@@ -152,7 +118,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         from common.lib.clients.switchclient.switchclient import switchclient
         from Qsim.clients.dac_control.dac_client import dacclient
         from Qsim.clients.load_control.load_control import LoadControl
-        from Qsim.clients.load_indicator.load_indicator import LoadIndicator
+#        from Qsim.clients.load_indicator.load_indicator import LoadIndicator
 
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(pmtWidget(reactor, cxn),      1, 0, 1, 1)
@@ -161,15 +127,10 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.addWidget(switchclient(reactor, cxn),   0, 0, 1, 1)
         gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 2, 1)
         gridLayout.addWidget(LoadControl(reactor, cxn),    2, 1, 2, 1)
-        gridLayout.addWidget(LoadIndicator(reactor),       3, 1, 2, 1)
-        gridLayout.setSpacing(10)
+#        gridLayout.addWidget(LoadIndicator(reactor),       3, 1, 2, 1)
+        gridLayout.setSpacing(1)
         widget.setLayout(gridLayout)
         return widget
-
-#    def makeHistogramWidget(self, reactor, cxn):
-#        from barium.lib.clients.Histogram_client.readout_histogram import readout_histogram
-#        hist = readout_histogram(reactor, cxn)
-#        return hist
 
     def closeEvent(self, x):
         self.reactor.stop()

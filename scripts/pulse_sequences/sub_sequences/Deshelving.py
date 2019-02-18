@@ -18,13 +18,13 @@ class deshelving(pulse_sequence):
                     self.start,
                     p.Deshelving.duration,
                     U(110.0, 'MHz'),
-                    p.DopplerCooling.cooling_power)
+                    U(-20.8, 'dBm'))
 
         self.addDDS('369DP',
                     self.start,
                     p.Deshelving.duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                    U(-5.0, 'dBm'))
+                    p.DopplerCooling.cooling_power)
 
         self.addDDS('935SP',
                     self.start,
@@ -32,7 +32,7 @@ class deshelving(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.DopplerCooling.repump_power)
 
-        self.addDDS('ModeLockedSP',
+        self.addDDS('760SP',
                     self.start,
                     p.Deshelving.duration,
                     U(320.0, 'MHz'),

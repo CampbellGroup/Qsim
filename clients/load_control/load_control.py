@@ -50,10 +50,9 @@ class LoadControl(QtGui.QWidget):
 
     @inlineCallbacks
     def setup_listeners(self):
-        ctx = yield self.PMT.context()
-        yield self.PMT.signal__new_count(SIGNALID, context=ctx)
+        yield self.PMT.signal__new_count(SIGNALID)
         yield self.PMT.addListener(listener=self.on_new_counts,
-                                   source=None, ID=SIGNALID, context=ctx)
+                                   source=None, ID=SIGNALID)
 
     @inlineCallbacks
     def initializeGUI(self):
@@ -86,8 +85,8 @@ class LoadControl(QtGui.QWidget):
 
     @inlineCallbacks
     def on_new_counts(self, signal, pmt_value):
+        disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold') #this throws error on closeout since listner is yielding to server
         switch_on = self.shutter_widget.TTLswitch.isChecked()
-        disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(False)
             self.its_trap.play()

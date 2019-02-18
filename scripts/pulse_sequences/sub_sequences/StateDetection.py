@@ -83,7 +83,7 @@ class state_detection(pulse_sequence):
                         U(-20.8, 'dBm'))
 
             # After DopplerCooling, and state readout, deshelve
-            self.addDDS('ModeLockedSP',
+            self.addDDS('760SP',
                         self.start + p.StateDetection.duration,
                         p.Deshelving.duration,
                         U(320.0, 'MHz'),

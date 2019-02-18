@@ -117,14 +117,10 @@ class QsimExperiment(experiment):
 
     def process_data(self, counts):
 
-        repititions = len(counts)
-        data = np.column_stack((np.arange(repititions),
-                                counts))
-        y = np.histogram(data[:, 1],
-                         int(data[:, 1].max() - data[:, 1].min() + 1))
-        counts = y[0]
-        bins = np.arange(0, data[:,1].max() + 1, 1)
-        hist = np.column_stack((bins, counts))
+        bins = []
+        bins = list(np.arange(0, np.max(counts) + 1,1))
+        events = [list(counts).count(i) for i in bins]
+        hist = np.column_stack((bins, events))
         return hist
 
     def get_pop(self, counts):

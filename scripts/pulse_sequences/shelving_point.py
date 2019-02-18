@@ -14,3 +14,4 @@ class shelving_point(pulse_sequence):
         self.addSequence(doppler_cooling)
         self.addSequence(shelving)
         self.addSequence(state_detection)
+        self.addSequence(deshelving)
