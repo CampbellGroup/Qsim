@@ -17,6 +17,7 @@ class fidelity_tweak_up(QsimExperiment):
     exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.append(('StateDetection', 'state_readout_threshold'))
     exp_parameters.append(('StateDetection', 'points_per_histogram'))
+    exp_parameters.append(('StateDetection', 'mode'))
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
@@ -51,9 +52,23 @@ class fidelity_tweak_up(QsimExperiment):
         self.program_pulser(sequence)
         while True:
             i += 1
-            counts = self.run_sequence(max_runs=500)
-            counts_bright = counts[0::2]
-            counts_dark = counts[1::2]
+            if self.p.StateDetection.mode == 'Shelving':
+                counts = self.run_sequence(max_runs=250)
+                counts_doppler_bright = counts[0::4]
+                
+                bright_errors = np.where(counts_doppler_bright <= self.p.StateDetection.state_readout_threshold)
+                counts_bright = counts[1::4]
+                counts_bright = np.delete(counts_bright, bright_errors)
+                print len(counts_bright)
+                counts_doppler_dark = counts[2::4]
+                dark_errors = np.where(counts_doppler_dark <= self.p.StateDetection.state_readout_threshold)
+                counts_dark = counts[3::4]
+                counts_dark = np.delete(counts_dark, dark_errors)
+                print dark_errors, bright_errors
+            else:
+                counts = self.run_sequence(max_runs=500)
+                counts_bright = counts[0::2]
+                counts_dark = counts[1::2]
             if i % self.p.StateDetection.points_per_histogram == 0:
                 hist_bright = self.process_data(counts_bright)
                 hist_dark = self.process_data(counts_dark)

@@ -40,27 +40,27 @@ class wavemeter_linescan(QsimExperiment):
 
         low_x = np.linspace(self.centerfrequency['THz'], self.low_rail, 100)
         high_x = np.linspace(self.centerfrequency['THz'], self.high_rail, 100)
-
+        delay = self.wait_time['s']
         for i in range(100):
             progress = i/200.0
-            delay = self.wait_time['s']
             self.take_data(progress, delay)
             self.wm.set_pid_course(self.dac_port, str(low_x[i]))
 
+        self.wm.set_pid_course(self.dac_port, str(self.centerfrequency['THz']))
+        time.sleep(5*delay)
+            
         for i in range(100):
             progress = (100+ i)/200.0
-            delay = self.wait_time['s']
             self.take_data(progress, delay)
             self.wm.set_pid_course(self.dac_port, str(high_x[i]))
 
         self.wm.set_pid_course(self.dac_port, str(self.centerfrequency['THz']))
+        time.sleep(5*delay)
 
         if len(self.tempdata) > 0:
             self.tempdata.sort()
-            self.setup_grapher('Wavemeter Linescan')
+            self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
             self.dv.add(self.tempdata)
-
-        time.sleep(1)
 
     def take_data(self, progress, delay):
         init_time = time.time()
@@ -68,7 +68,7 @@ class wavemeter_linescan(QsimExperiment):
             should_break = self.update_progress(progress)
             if should_break:
                 self.tempdata.sort()
-                self.setup_grapher('Wavemeter Linescan')
+                self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
                 self.dv.add(self.tempdata)
                 return
 
@@ -88,13 +88,13 @@ class wavemeter_linescan(QsimExperiment):
         elif self.p.wavemeterscan.lasername == '760':
             self.centerfrequency = self.p.Transitions.repump_760
             self.scan_range = self.p.wavemeterscan.scan_range_760
-            self.channel = 2
+            self.channel = 5
             self.dac_port = 5
 
         elif self.p.wavemeterscan.lasername == '411':
             self.centerfrequency = self.p.Transitions.shelving_411
             self.scan_range = self.p.wavemeterscan.scan_range_411
-            self.channel = 1
+            self.channel = 2
             self.dac_port = 3
 
         self.wait_time = self.p.wavemeterscan.rail_wait_time

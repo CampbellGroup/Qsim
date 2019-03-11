@@ -108,7 +108,8 @@ class QsimExperiment(experiment):
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             self.pulser.reset_readout_counts()
         if int(self.p.StateDetection.repititions) % max_runs is not 0:
-            self.pulser.start_number(int(self.p.StateDetection.repititions) % max_runs)
+            runs = int(self.p.StateDetection.repititions) % max_runs
+            self.pulser.start_number(runs)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
@@ -128,8 +129,8 @@ class QsimExperiment(experiment):
         prob = float(len(np.where(counts >= self.thresholdVal)[0]))/float(len(counts))
         return prob
 
-    def plot_hist(self, hist):
-        self.dv.cd(['', 'Histograms'], True, context=self.hist_ctx)
+    def plot_hist(self, hist, folder_name= 'Histograms'):
+        self.dv.cd(['', folder_name], True, context=self.hist_ctx)
         self.dataset_hist = self.dv.new('Histogram', [('run', 'arb u')],
                                         [('Counts', 'Counts', 'num')], context=self.hist_ctx)
         self.dv.add(hist, context=self.hist_ctx)

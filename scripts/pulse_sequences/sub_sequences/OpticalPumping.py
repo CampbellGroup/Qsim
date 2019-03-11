@@ -11,7 +11,7 @@ class optical_pumping(pulse_sequence):
                            ('StateDetection', 'mode'),
                            ('Shelving', 'duration'),
                            ('Shelving', 'power'),
-                           ('Shelving', 'cooling_assist_power'),
+                           ('Shelving', 'assist_power'),
                            ('Transitions', 'main_cooling_369'),
                            ('DopplerCooling', 'detuning')
                            ]
@@ -32,7 +32,7 @@ class optical_pumping(pulse_sequence):
                         self.start,
                         p.Shelving.duration,
                         p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                        p.Shelving.cooling_assist_power)
+                        p.Shelving.assist_power)
             self.addDDS('DopplerCoolingSP',
                         self.start,
                         p.Shelving.duration,

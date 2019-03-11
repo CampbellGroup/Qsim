@@ -1,4 +1,5 @@
 import labrad
+import numpy as np
 from Qsim.scripts.pulse_sequences.deshelving_point import deshelving_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
@@ -12,16 +13,13 @@ class DeshelvingRate(QsimExperiment):
 
     exp_parameters = []
     exp_parameters.append(('DeshelvingRate', 'scan'))
-    exp_parameters.append(('DopplerCooling', 'detuning'))
-    exp_parameters.append(('Transitions', 'main_cooling_369'))
+    exp_parameters.extend(sequence.all_required_parameters())
+
     exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.append(('StateDetection', 'state_readout_threshold'))
     exp_parameters.append(('StateDetection', 'points_per_histogram'))
-
-    exp_parameters.extend(sequence.all_required_parameters())
-
-    exp_parameters.remove(('Deshelving', 'duration'))
-
+    exp_parameters.append(('StateDetection', 'doppler_counts_threshold'))
+    exp_parameters.remove(('VariableDeshelving', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -34,14 +32,18 @@ class DeshelvingRate(QsimExperiment):
             should_break = self.update_progress(i/float(len(self.times)))
             if should_break:
                 break
-            self.p['Deshelving.duration'] = U(duration, 'ms')
+            self.p['VariableDeshelving.duration'] = U(duration, 'ms')
             self.program_pulser(sequence)
             counts = self.run_sequence()
+            doppler_counts = counts[0::2]
+            deshelving_errors = np.where(doppler_counts <= self.p.StateDetection.doppler_counts_threshold)
+            print deshelving_errors
+            detection_counts = np.delete(counts[1::2], deshelving_errors)
             if i % self.p.StateDetection.points_per_histogram == 0:
-                hist = self.process_data(counts)
+                hist = self.process_data(detection_counts)
                 self.plot_hist(hist)
-            pop = self.get_pop(counts)
-            self.dv.add(duration, pop)
+            pop = self.get_pop(detection_counts)
+            self.dv.add(duration, 1 - pop)
 
     def finalize(self, cxn, context):
         pass

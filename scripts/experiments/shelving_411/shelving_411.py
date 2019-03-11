@@ -1,4 +1,5 @@
 import labrad
+import numpy as np
 from Qsim.scripts.pulse_sequences.shelving_point import shelving_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
@@ -12,15 +13,13 @@ class ShelvingRate(QsimExperiment):
 
     exp_parameters = []
     exp_parameters.append(('ShelvingRate', 'scan'))
-    exp_parameters.append(('DopplerCooling', 'detuning'))
-    exp_parameters.append(('Transitions', 'main_cooling_369'))
-    exp_parameters.append(('StateDetection', 'repititions'))
-    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('StateDetection', 'points_per_histogram'))
-
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('Shelving', 'duration'))
+    exp_parameters.append(('StateDetection', 'repititions'))
+    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('StateDetection', 'points_per_histogram'))
+    exp_parameters.append(('StateDetection', 'doppler_counts_threshold'))
 
 
     def initialize(self, cxn, context, ident):
@@ -31,18 +30,20 @@ class ShelvingRate(QsimExperiment):
         self.setup_grapher('ShelvingRate')
         self.times = self.get_scan_list(self.p.ShelvingRate.scan, 'ms')
         for i, duration in enumerate(self.times):
-            print duration
             should_break = self.update_progress(i/float(len(self.times)))
             if should_break:
                 break
             self.p['Shelving.duration'] = U(duration, 'ms')
-            print self.p.items()
             self.program_pulser(sequence)
             counts = self.run_sequence()
+            doppler_counts = counts[0::2]
+            deshelving_errors = np.where(doppler_counts <= self.p.StateDetection.doppler_counts_threshold)
+            print deshelving_errors
+            detection_counts = np.delete(counts[1::2], deshelving_errors)
             if i % self.p.StateDetection.points_per_histogram == 0:
-                hist = self.process_data(counts)
+                hist = self.process_data(detection_counts)
                 self.plot_hist(hist)
-            pop = self.get_pop(counts)
+            pop = self.get_pop(detection_counts)
             self.dv.add(duration, pop)
 
     def finalize(self, cxn, context):
