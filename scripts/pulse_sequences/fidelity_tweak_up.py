@@ -26,13 +26,8 @@ class fidelity_tweak_up(pulse_sequence):
         else:
             self.addSequence(doppler_cooling)
 
-        self.addSequence(turn_off_all)        
-        if bright_prep == 'Doppler Cooling':
-            self.addSequence(bright_state_pumping)
-        elif bright_prep == 'Microwave':
-            self.addSequence(optical_pumping)
-            self.addSequence(turn_off_all)
-            self.addSequence(microwave_interogation)
+        self.addSequence(turn_off_all)
+        self.addSequence(bright_state_pumping)
         self.addSequence(turn_off_all)
         self.addSequence(state_detection)
         self.addSequence(turn_off_all)

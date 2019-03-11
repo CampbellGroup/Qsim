@@ -36,7 +36,7 @@ class shelving_state_detection(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.StateDetection.duration,
-                    U(116.7, 'MHz'),
+                    U(110.0, 'MHz'),
                     U(-20.8, 'dBm'))
 
             # state readout, deshelve
