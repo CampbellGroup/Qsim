@@ -14,10 +14,7 @@ class manifold_measurement(QsimExperiment):
     name = 'Manifold Measurement'
 
     exp_parameters = []
-    exp_parameters.append(('StateDetection', 'repititions'))
-    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('StateDetection', 'doppler_counts_threshold'))
-    exp_parameters.append(('StateDetection', 'points_per_histogram'))
+    exp_parameters.append(('ShelvingStateDetection', 'doppler_counts_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     
@@ -31,19 +28,16 @@ class manifold_measurement(QsimExperiment):
         self.program_pulser(sequence)
         while True:
             i += 1
-            counts = self.run_sequence(max_runs=250)
-            counts_doppler_bright = counts[0::4]
+            [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num = 4)
                 
-            bright_errors = np.where(counts_doppler_bright <= self.p.StateDetection.doppler_counts_threshold)
-            counts_bright = counts[1::4]
+            bright_errors = np.where(counts_doppler_bright <= self.p.ShelvingStateDetection.doppler_counts_threshold)
             counts_bright = np.delete(counts_bright, bright_errors)
-            counts_doppler_dark = counts[2::4]
-            dark_errors = np.where(counts_doppler_dark <= self.p.StateDetection.doppler_counts_threshold)
-            counts_dark = counts[3::4]
+            
+            dark_errors = np.where(counts_doppler_dark <= self.p.ShelvingStateDetection.doppler_counts_threshold)
             counts_dark = np.delete(counts_dark, dark_errors)
             print dark_errors, bright_errors
 
-            if i % self.p.StateDetection.points_per_histogram == 0:
+            if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist_bright = self.process_data(counts_bright)
                 hist_dark = self.process_data(counts_dark)
                 self.plot_hist(hist_bright, folder_name='manifold_data_bright')

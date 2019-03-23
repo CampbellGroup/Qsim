@@ -12,10 +12,7 @@ class DarkStateDetection(QsimExperiment):
     name = 'Dark State Detection'
 
     exp_parameters = []
-    exp_parameters.append(('StateDetection', 'repititions'))
     exp_parameters.append(('DarkStateDetection', 'RunContinuous'))
-    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('StateDetection', 'points_per_histogram'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -35,7 +32,7 @@ class DarkStateDetection(QsimExperiment):
                 i += 1
                 counts = self.run_sequence()
                 hist = self.process_data(counts)
-                if i % self.p.StateDetection.points_per_histogram == 0:
+                if i % self.p.StandardStateDetection.points_per_histogram == 0:
                     self.setup_hist_datavault()
                     self.plot_hist(hist)
                 self.plot_prob(i, counts)

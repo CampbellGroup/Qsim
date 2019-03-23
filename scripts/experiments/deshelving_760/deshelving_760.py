@@ -14,11 +14,15 @@ class DeshelvingRate(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('DeshelvingRate', 'scan'))
     exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.append(('Modes', 'state_detection_mode'))
 
-    exp_parameters.append(('StateDetection', 'repititions'))
-    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('StateDetection', 'points_per_histogram'))
-    exp_parameters.append(('StateDetection', 'doppler_counts_threshold'))
+    exp_parameters.append(('ShelvingStateDetection','repititions'))
+    exp_parameters.append(('StandardStateDetection','repititions'))
+    exp_parameters.append(('MLStateDetection','repititions'))
+    exp_parameters.append(('MLStateDetection','repititions'))
+    exp_parameters.append(('StandardStateDetection','points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection','state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
     exp_parameters.remove(('VariableDeshelving', 'duration'))
 
     def initialize(self, cxn, context, ident):
@@ -34,12 +38,11 @@ class DeshelvingRate(QsimExperiment):
                 break
             self.p['VariableDeshelving.duration'] = U(duration, 'ms')
             self.program_pulser(sequence)
-            counts = self.run_sequence()
-            doppler_counts = counts[0::2]
-            deshelving_errors = np.where(doppler_counts <= self.p.StateDetection.doppler_counts_threshold)
+            [doppler_counts, detection_counts] = self.run_sequence(num=2, max_runs=500)
+            deshelving_errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
             print deshelving_errors
-            detection_counts = np.delete(counts[1::2], deshelving_errors)
-            if i % self.p.StateDetection.points_per_histogram == 0:
+            detection_counts = np.delete(detection_counts, deshelving_errors)
+            if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(detection_counts)
                 self.plot_hist(hist)
             pop = self.get_pop(detection_counts)

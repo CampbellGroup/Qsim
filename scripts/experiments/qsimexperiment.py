@@ -99,22 +99,35 @@ class QsimExperiment(experiment):
         pulse_sequence = pulse_sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
 
-    def run_sequence(self, max_runs=1000):
+    def run_sequence(self, max_runs=1000, num = 1):
         counts = np.array([])
-        for i in range(int(self.p.StateDetection.repititions)/max_runs):
+        
+        self.state_detection_mode = self.p.Modes.state_detection_mode
+        if self.state_detection_mode == 'Shelving':
+            reps = self.p.ShelvingStateDetection.repititions
+        elif self.state_detection_mode == 'Standard':
+            reps = self.p.StandardStateDetection.repititions
+        elif self.state_detection_mode == 'ML':
+            reps = self.p.MLStateDetection.repititions
+            
+        for i in range(int(reps)/max_runs):
             self.pulser.start_number(max_runs)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             self.pulser.reset_readout_counts()
-        if int(self.p.StateDetection.repititions) % max_runs is not 0:
-            runs = int(self.p.StateDetection.repititions) % max_runs
+        if int(reps) % max_runs is not 0:
+            runs = int(reps) % max_runs
             self.pulser.start_number(runs)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             self.pulser.reset_readout_counts()
-        return counts
+
+        counts_parsed = []
+        for i in range(num):
+            counts_parsed.append(counts[i::num])
+        return counts_parsed
 
     def process_data(self, counts):
 
@@ -125,8 +138,14 @@ class QsimExperiment(experiment):
         return hist
 
     def get_pop(self, counts):
-        self.thresholdVal = self.p.StateDetection.state_readout_threshold
-        prob = float(len(np.where(counts >= self.thresholdVal)[0]))/float(len(counts))
+        self.state_detection_mode = self.p.Modes.state_detection_mode
+        if self.state_detection_mode == 'Shelving':
+            threshold = self.p.StandardStateDetection.state_readout_threshold
+        elif self.state_detection_mode == 'Standard':
+            threshold = self.p.StandardStateDetection.state_readout_threshold
+        elif self.state_detection_mode == 'ML':
+            threshold = self.p.StandardStateDetection.state_readout_threshold
+        prob = float(len(np.where(counts >= threshold)[0]))/float(len(counts))
         return prob
 
     def plot_hist(self, hist, folder_name= 'Histograms'):

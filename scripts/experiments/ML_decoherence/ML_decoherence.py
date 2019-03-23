@@ -10,9 +10,6 @@ class ML_decoherence(QsimExperiment):
     name = 'ML_decoherence'
 
     exp_parameters = []
-    exp_parameters.append(('StateDetection', 'repititions'))
-    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('StateDetection', 'points_per_histogram'))
     exp_parameters.append(('ML_decoherence', 'ML_time_scan'))
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.remove(('ML_interogation', 'duration'))
@@ -29,9 +26,7 @@ class ML_decoherence(QsimExperiment):
         for i, duration in enumerate(self.times):
             self.p['ML_interogation.duration'] = U(duration, 'us')
             self.program_pulser(sequence)
-            counts = self.run_sequence(max_runs=500)
-            counts_bright = counts[0::2]
-            counts_dark = counts[1::2]
+            [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num = 2)
             self.plot_prob(duration, counts_bright, counts_dark)
             should_break = self.update_progress(i/float(len(self.times)))
             if should_break:

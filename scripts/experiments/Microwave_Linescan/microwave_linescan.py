@@ -15,11 +15,7 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
-    exp_parameters.append(('StateDetection', 'repititions'))
-    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
     exp_parameters.append(('MicrowaveLinescan', 'scan'))
-
-    exp_parameters.append(('StateDetection', 'points_per_histogram'))
 
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
@@ -28,6 +24,15 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.remove(('MicrowaveInterogation', 'detuning')) 
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+
+    exp_parameters.append(('Modes', 'state_detection_mode'))
+    exp_parameters.append(('ShelvingStateDetection','repititions'))
+    exp_parameters.append(('StandardStateDetection','repititions'))
+    exp_parameters.append(('StandardStateDetection','points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection','state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling','doppler_counts_threshold'))
+    exp_parameters.append(('MLStateDetection','repititions'))
+
 
     
     def initialize(self, cxn, context, ident):
@@ -60,8 +65,8 @@ class MicrowaveLineScan(QsimExperiment):
                 break
             self.p['MicrowaveInterogation.detuning'] = U(detuning, 'kHz')
             self.program_pulser(sequence)
-            counts = self.run_sequence()
-            if i % self.p.StateDetection.points_per_histogram == 0:
+            [counts] = self.run_sequence()
+            if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
             pop = self.get_pop(counts)

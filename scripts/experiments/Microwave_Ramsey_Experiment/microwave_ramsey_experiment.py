@@ -14,13 +14,19 @@ class MicrowaveRamseyExperiment(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
-    exp_parameters.append(('StateDetection', 'repititions'))
-    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
     exp_parameters.append(('MicrowaveInterogation', 'duration'))
     exp_parameters.append(('MicrowaveInterogation', 'detuning'))
     exp_parameters.append(('MicrowaveDelay', 'delay_time'))
-    exp_parameters.append(('StateDetection', 'points_per_histogram'))
 
+    exp_parameters.append(('Modes', 'state_detection_mode'))
+    exp_parameters.append(('ShelvingStateDetection','repititions'))
+    exp_parameters.append(('StandardStateDetection','repititions'))
+    exp_parameters.append(('StandardStateDetection','points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection','state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling','doppler_counts_threshold'))
+    exp_parameters.append(('MLStateDetection','repititions'))
+
+    
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('EmptySequence', 'duration'))
@@ -39,8 +45,9 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                 break
             self.p['EmptySequence.duration'] = U(dark_time, 'us')
             self.program_pulser(sequence)
-            counts = self.run_sequence()
-            if i % self.p.StateDetection.points_per_histogram == 0:
+            [counts] = self.run_sequence()
+            print counts
+            if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
             pop = self.get_pop(counts)

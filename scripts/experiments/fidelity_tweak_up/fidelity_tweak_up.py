@@ -14,10 +14,7 @@ class fidelity_tweak_up(QsimExperiment):
     name = 'Fidelity Tweak Up'
 
     exp_parameters = []
-    exp_parameters.append(('StateDetection', 'repititions'))
-    exp_parameters.append(('StateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('StateDetection', 'points_per_histogram'))
-    exp_parameters.append(('StateDetection', 'mode'))
+
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
@@ -25,8 +22,14 @@ class fidelity_tweak_up(QsimExperiment):
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.remove(('MicrowaveInterogation', 'detuning')) 
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+    exp_parameters.append(('Modes', 'state_detection_mode'))
+    exp_parameters.append(('ShelvingStateDetection','repititions'))
+    exp_parameters.append(('StandardStateDetection','repititions'))
+    exp_parameters.append(('StandardStateDetection','points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection','state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling','doppler_counts_threshold'))
+    exp_parameters.append(('MLStateDetection','repititions'))
 
-    
     def initialize(self, cxn, context, ident):
         self.ident = ident
 
@@ -52,24 +55,22 @@ class fidelity_tweak_up(QsimExperiment):
         self.program_pulser(sequence)
         while True:
             i += 1
-            if self.p.StateDetection.mode == 'Shelving':
-                counts = self.run_sequence(max_runs=250)
-                counts_doppler_bright = counts[0::4]
-                
-                bright_errors = np.where(counts_doppler_bright <= self.p.StateDetection.state_readout_threshold)
-                counts_bright = counts[1::4]
+            if self.p.Modes.state_detection_mode == 'Shelving':
+                points_per_hist = self.p.StandardStateDetection.points_per_histogram
+                [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num = 4)
+                print counts_doppler_bright
+                bright_errors = np.where(counts_doppler_bright <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
                 counts_bright = np.delete(counts_bright, bright_errors)
-                print len(counts_bright)
-                counts_doppler_dark = counts[2::4]
-                dark_errors = np.where(counts_doppler_dark <= self.p.StateDetection.state_readout_threshold)
-                counts_dark = counts[3::4]
+                
+                dark_errors = np.where(counts_doppler_dark <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
                 counts_dark = np.delete(counts_dark, dark_errors)
+                
                 print dark_errors, bright_errors
             else:
-                counts = self.run_sequence(max_runs=500)
-                counts_bright = counts[0::2]
-                counts_dark = counts[1::2]
-            if i % self.p.StateDetection.points_per_histogram == 0:
+                points_per_hist = self.p.StandardStateDetection.points_per_histogram
+                [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num = 2)
+
+            if i % points_per_hist == 0:
                 hist_bright = self.process_data(counts_bright)
                 hist_dark = self.process_data(counts_dark)
                 self.plot_hist(hist_bright)
