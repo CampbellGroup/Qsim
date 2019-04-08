@@ -12,6 +12,7 @@ class bright_state_pumping(pulse_sequence):
                            ('Transitions', 'main_cooling_369'),
                            ('MicrowaveInterogation', 'duration'),
                            ('MicrowaveInterogation', 'detuning'),
+                           ('MicrowaveInterogation', 'power'),
                            ('Line_Selection', 'qubit'),
                            ('Transitions', 'qubit_0'),
                            ('Transitions', 'qubit_plus'),
@@ -81,6 +82,6 @@ class bright_state_pumping(pulse_sequence):
                         self.start + p.OpticalPumping.duration,
                         p.MicrowaveInterogation.duration,
                         DDS_freq,
-                        U(6.0, 'dBm'))
+                        p.MicrowaveInterogation.power)
 
             self.end = self.start + p.OpticalPumping.duration + p.MicrowaveInterogation.duration

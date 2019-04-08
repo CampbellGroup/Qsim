@@ -2,6 +2,7 @@ import labrad
 from Qsim.scripts.pulse_sequences.microwave_ramsey_point import microwave_ramsey_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
+import numpy as np
 
 
 class MicrowaveRamseyExperiment(QsimExperiment):
@@ -39,14 +40,21 @@ class MicrowaveRamseyExperiment(QsimExperiment):
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
         self.setup_grapher('Microwave Ramsey Experiment')
         self.dark_time = self.get_scan_list(self.p.MicrowaveDelay.delay_time, 'us')
+        mode  = self.p.Modes.state_detection_mode
+        print 'Experiment', mode
         for i, dark_time in enumerate(self.dark_time):
             should_break = self.update_progress(i/float(len(self.dark_time)))
             if should_break:
                 break
             self.p['EmptySequence.duration'] = U(dark_time, 'us')
             self.program_pulser(sequence)
-            [counts] = self.run_sequence()
-            print counts
+            if mode == 'Shelving':
+                [doppler_counts, detection_counts] = self.run_sequence(max_runs = 500, num = 2)
+                print doppler_counts, detection_counts
+                errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
+                counts = np.delete(detection_counts, errors)
+            else:
+                [counts] = self.run_sequence()
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)

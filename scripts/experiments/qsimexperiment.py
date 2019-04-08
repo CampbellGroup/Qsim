@@ -101,7 +101,6 @@ class QsimExperiment(experiment):
 
     def run_sequence(self, max_runs=1000, num = 1):
         counts = np.array([])
-        
         self.state_detection_mode = self.p.Modes.state_detection_mode
         if self.state_detection_mode == 'Shelving':
             reps = self.p.ShelvingStateDetection.repititions

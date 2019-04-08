@@ -6,6 +6,7 @@ class microwave_interogation(pulse_sequence):
     required_parameters = [
                            ('MicrowaveInterogation', 'duration'),
                            ('MicrowaveInterogation', 'detuning'),
+                           ('MicrowaveInterogation', 'power'),
                            ('Line_Selection', 'qubit'),
                            ('Transitions', 'qubit_0'),
                            ('Transitions', 'qubit_plus'),
@@ -28,5 +29,5 @@ class microwave_interogation(pulse_sequence):
                     self.start,
                     p.MicrowaveInterogation.duration,
                     DDS_freq,
-                    U(6.0, 'dBm'))
+                    p.MicrowaveInterogation.power)
         self.end = self.start + p.MicrowaveInterogation.duration

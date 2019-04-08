@@ -51,7 +51,6 @@ class MicrowaveRabiFlopping(QsimExperiment):
                 [doppler_counts, detection_counts] = self.run_sequence(max_runs = 500, num = 2)
                 errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
-                print errors
             else:
                 [counts] = self.run_sequence()
             if i % self.p.StandardStateDetection.points_per_histogram == 0:

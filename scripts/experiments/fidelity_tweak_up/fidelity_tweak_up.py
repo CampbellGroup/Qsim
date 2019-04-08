@@ -58,14 +58,14 @@ class fidelity_tweak_up(QsimExperiment):
             if self.p.Modes.state_detection_mode == 'Shelving':
                 points_per_hist = self.p.StandardStateDetection.points_per_histogram
                 [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num = 4)
-                print counts_doppler_bright
                 bright_errors = np.where(counts_doppler_bright <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
                 counts_bright = np.delete(counts_bright, bright_errors)
                 
                 dark_errors = np.where(counts_doppler_dark <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
                 counts_dark = np.delete(counts_dark, dark_errors)
                 
-                print dark_errors, bright_errors
+                print 'Dark Doppler Errors:', dark_errors
+                print 'Bright Doppler Errors:', bright_errors
             else:
                 points_per_hist = self.p.StandardStateDetection.points_per_histogram
                 [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num = 2)
