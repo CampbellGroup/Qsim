@@ -14,8 +14,12 @@ class shelving_point(pulse_sequence):
     def sequence(self):
         self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)
+        self.addSequence(turn_off_all)
         self.addSequence(bright_state_pumping)
+        self.addSequence(turn_off_all)
         self.addSequence(shelving)
-        self.addSequence(empty_sequence)
+        self.addSequence(turn_off_all)
+#        self.addSequence(empty_sequence)
         self.addSequence(shelving_state_detection)
+        self.addSequence(turn_off_all)
         self.addSequence(deshelving)
