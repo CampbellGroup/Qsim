@@ -39,7 +39,7 @@ class ShelvingRate(QsimExperiment):
                 break
             self.p['Shelving.duration'] = U(duration, 'ms')
             self.program_pulser(sequence)
-            [doppler_counts, detection_counts] = self.run_sequence(num = 2)
+            [doppler_counts, detection_counts] = self.run_sequence(num = 2, max_runs = 500)
             
             deshelving_errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
             print deshelving_errors
