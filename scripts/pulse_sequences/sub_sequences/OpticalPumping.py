@@ -1,6 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from labrad.units import WithUnit as U
 
+
 class optical_pumping(pulse_sequence):
 
     required_parameters = [
@@ -14,12 +15,12 @@ class optical_pumping(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-
+        extra_935 = U(100.0, 'us')
         self.addDDS('OpticalPumpingSP',
                     self.start,
                     p.OpticalPumping.duration,
                     U(110.0 + 4.0, 'MHz'),
-                    U(-18.4, 'dBm'))
+                    U(-15.9, 'dBm'))
 
         self.addDDS('369DP',
                     self.start,
@@ -29,7 +30,14 @@ class optical_pumping(pulse_sequence):
 
         self.addDDS('935SP',
                     self.start,
-                    p.OpticalPumping.duration,
+                    p.OpticalPumping.duration + extra_935,
                     U(320.0, 'MHz'),
                     p.OpticalPumping.repump_power)
-        self.end = self.start + p.OpticalPumping.duration
+
+        self.addDDS('760SP',
+                    self.start,
+                    p.OpticalPumping.duration,
+                    U(320.0, 'MHz'),
+                    U(-2.0,  'dBm'))
+
+        self.end = self.start + p.OpticalPumping.duration + extra_935

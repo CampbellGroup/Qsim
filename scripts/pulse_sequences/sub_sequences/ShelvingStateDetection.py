@@ -30,7 +30,7 @@ class shelving_state_detection(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.ShelvingStateDetection.duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.ShelvingStateDetection.detuning,
+                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.ShelvingStateDetection.detuning/2.0,
                     p.ShelvingStateDetection.CW_power)
             
         self.addDDS('DopplerCoolingSP',

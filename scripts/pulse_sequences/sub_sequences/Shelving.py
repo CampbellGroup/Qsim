@@ -40,6 +40,7 @@ class shelving(pulse_sequence):
                     U(250.0, 'MHz'),
                     p.Shelving.power)
 
+<<<<<<< HEAD
 #        if p.Shelving.duration > shutterlag:
 #            self.addTTL('DopplerCoolingShutter',
 #                        self.start - shutterlag,
@@ -47,6 +48,15 @@ class shelving(pulse_sequence):
 #            self.addTTL('OpticalPumpingShutter',
 #                        self.start - shutterlag,
 #                        p.Shelving.duration)
+=======
+        #if p.Shelving.duration > shutterlag:
+        #    self.addTTL('DopplerCoolingShutter',
+        #                self.start - shutterlag,
+        #                p.Shelving.duration)
+        #    self.addTTL('OpticalPumpingShutter',
+        #                self.start - shutterlag,
+        #                p.Shelving.duration)
+>>>>>>> CHR/Knill
         
         self.addTTL('760TTL', self.start, p.Shelving.duration)
         self.end = self.start + p.Shelving.duration

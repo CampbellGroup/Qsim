@@ -14,9 +14,10 @@ class BrightStateDetection(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('BrightStateDetection', 'RunContinuous'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection','repititions'))
-    exp_parameters.append(('StandardStateDetection','repititions'))
-    exp_parameters.append(('MLStateDetection','repititions'))
+    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+    exp_parameters.append(('Modes', 'state_detection_mode'))
+    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('MLStateDetection', 'repititions'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -49,7 +50,7 @@ class BrightStateDetection(QsimExperiment):
                 if self.p != old_params:
                     self.program_pulser(sequence)
         else:
-            counts = self.program_pulser()
+            [counts] = self.program_pulser()
             hist = self.process_data(counts)
             self.setup_hist_datavault()
             self.plot_hist(hist)

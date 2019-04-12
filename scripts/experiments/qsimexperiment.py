@@ -74,14 +74,14 @@ class QsimExperiment(experiment):
         self.grapher.plot(self.dataset, tab, False)
 
     def update_progress(self, progress):
-            if progress >= 1.0:
-                progress = 1.0
-            elif progress <= 0.0:
-                progress = 0.0
+        if progress >= 1.0:
+            progress = 1.0
+        elif progress <= 0.0:
+            progress = 0.0
 
-            should_stop = self.pause_or_stop()
-            self.sc.script_set_progress(self.ident, 100*progress)
-            return should_stop
+        should_stop = self.pause_or_stop()
+        self.sc.script_set_progress(self.ident, 100*progress)
+        return should_stop
 
     def get_scan_list(self, scan, units):
         if units is None:
@@ -99,7 +99,7 @@ class QsimExperiment(experiment):
         pulse_sequence = pulse_sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
 
-    def run_sequence(self, max_runs=1000, num = 1):
+    def run_sequence(self, max_runs=1000, num=1):
         counts = np.array([])
         self.state_detection_mode = self.p.Modes.state_detection_mode
         if self.state_detection_mode == 'Shelving':
@@ -108,14 +108,15 @@ class QsimExperiment(experiment):
             reps = self.p.StandardStateDetection.repititions
         elif self.state_detection_mode == 'ML':
             reps = self.p.MLStateDetection.repititions
-            
+
         for i in range(int(reps)/max_runs):
             self.pulser.start_number(max_runs)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             self.pulser.reset_readout_counts()
-        if int(reps) % max_runs is not 0:
+
+        if int(reps) % max_runs != 0:
             runs = int(reps) % max_runs
             self.pulser.start_number(runs)
             self.pulser.wait_sequence_done()
@@ -131,7 +132,7 @@ class QsimExperiment(experiment):
     def process_data(self, counts):
 
         bins = []
-        bins = list(np.arange(0, np.max(counts) + 1,1))
+        bins = list(np.arange(0, np.max(counts) + 1, 1))
         events = [list(counts).count(i) for i in bins]
         hist = np.column_stack((bins, events))
         return hist
@@ -147,7 +148,7 @@ class QsimExperiment(experiment):
         prob = float(len(np.where(counts >= threshold)[0]))/float(len(counts))
         return prob
 
-    def plot_hist(self, hist, folder_name= 'Histograms'):
+    def plot_hist(self, hist, folder_name='Histograms'):
         self.dv.cd(['', folder_name], True, context=self.hist_ctx)
         self.dataset_hist = self.dv.new('Histogram', [('run', 'arb u')],
                                         [('Counts', 'Counts', 'num')], context=self.hist_ctx)
