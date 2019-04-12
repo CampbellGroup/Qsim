@@ -18,13 +18,12 @@ class standard_state_detection(pulse_sequence):
         self.addTTL('ReadoutCount',
                     self.start,
                     p.StandardStateDetection.duration)
-        
+
         self.addDDS('935SP',
                     self.start,
                     p.StandardStateDetection.duration,
                     U(320.0, 'MHz'),
                     p.StandardStateDetection.repump_power)
-
 
         self.addTTL('935EOM', self.start, p.StandardStateDetection.duration)
 
@@ -37,7 +36,7 @@ class standard_state_detection(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.StandardStateDetection.duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0 - 6.7/2.0, 'MHz') + p.StandardStateDetection.detuning,
+                    p.Transitions.main_cooling_369/2.0 + U(200.0 - 6.7/2.0, 'MHz') + p.StandardStateDetection.detuning/2.0,
                     p.StandardStateDetection.CW_power)
 
         self.end = self.start + p.StandardStateDetection.duration
