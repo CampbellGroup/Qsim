@@ -7,28 +7,26 @@ from sub_sequences.Shelving import shelving
 from sub_sequences.Deshelving import deshelving
 from sub_sequences.TurnOffAll import turn_off_all
 
+
 class shelving_point(pulse_sequence):
 
     required_subsequences = [turn_off_all, shelving_doppler_cooling, shelving, deshelving, shelving_state_detection, empty_sequence, bright_state_pumping]
 
     def sequence(self):
         self.addSequence(turn_off_all)
-<<<<<<< HEAD
         self.addSequence(shelving_doppler_cooling)
+        
         self.addSequence(turn_off_all)
-=======
-        self.addSequence(shelving_doppler_cooling) #gets readout counts for doppler cooling error detection 
->>>>>>> CHR/Knill
         self.addSequence(bright_state_pumping)
+        
         self.addSequence(turn_off_all)
         self.addSequence(shelving)
-<<<<<<< HEAD
+        
         self.addSequence(turn_off_all)
-#        self.addSequence(empty_sequence)
-        self.addSequence(shelving_state_detection)
-        self.addSequence(turn_off_all)
-=======
         self.addSequence(empty_sequence)
-        self.addSequence(shelving_state_detection) #gets readout counts for detection 
->>>>>>> CHR/Knill
+
+        self.addSequence(turn_off_all)
+        self.addSequence(shelving_state_detection)
+
+        self.addSequence(turn_off_all)
         self.addSequence(deshelving)

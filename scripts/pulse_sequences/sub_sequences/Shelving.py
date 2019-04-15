@@ -1,6 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from labrad.units import WithUnit as U
 
+
 class shelving(pulse_sequence):
 
     required_parameters = [
@@ -14,13 +15,12 @@ class shelving(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        shutterlag = U(8.0, 'ms')
+        #shutterlag = U(8.0, 'ms')
         self.addDDS('369DP',
                     self.start,
                     p.Shelving.duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
                     p.Shelving.assist_power)
-
 
         self.addDDS('DopplerCoolingSP',
                     self.start,
@@ -40,23 +40,5 @@ class shelving(pulse_sequence):
                     U(250.0, 'MHz'),
                     p.Shelving.power)
 
-<<<<<<< HEAD
-#        if p.Shelving.duration > shutterlag:
-#            self.addTTL('DopplerCoolingShutter',
-#                        self.start - shutterlag,
-#                        p.Shelving.duration)
-#            self.addTTL('OpticalPumpingShutter',
-#                        self.start - shutterlag,
-#                        p.Shelving.duration)
-=======
-        #if p.Shelving.duration > shutterlag:
-        #    self.addTTL('DopplerCoolingShutter',
-        #                self.start - shutterlag,
-        #                p.Shelving.duration)
-        #    self.addTTL('OpticalPumpingShutter',
-        #                self.start - shutterlag,
-        #                p.Shelving.duration)
->>>>>>> CHR/Knill
-        
         self.addTTL('760TTL', self.start, p.Shelving.duration)
         self.end = self.start + p.Shelving.duration
