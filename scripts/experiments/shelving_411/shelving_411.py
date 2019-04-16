@@ -18,12 +18,17 @@ class ShelvingRate(QsimExperiment):
     exp_parameters.remove(('Shelving', 'duration'))
     exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection','repititions'))
-    exp_parameters.append(('StandardStateDetection','repititions'))
-    exp_parameters.append(('StandardStateDetection','points_per_histogram'))
-    exp_parameters.append(('StandardStateDetection','state_readout_threshold'))
-    exp_parameters.append(('ShelvingDopplerCooling','doppler_counts_threshold'))
-    exp_parameters.append(('MLStateDetection','repititions'))
+    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('Shelving', 'freq_lower_ramp'))
+    exp_parameters.append(('Shelving', 'freq_upper_ramp'))
+    exp_parameters.append(('MLStateDetection', 'repititions'))
+    exp_parameters.append(('Pi_times', 'qubit_0'))
+    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
+    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
 
     def initialize(self, cxn, context, ident):
@@ -32,6 +37,8 @@ class ShelvingRate(QsimExperiment):
     def run(self, cxn, context):
         self.setup_datavault('time', 'probability')
         self.setup_grapher('ShelvingRate')
+        self.p['MicrowaveInterogation.duration'] = self.p.Pi_times.qubit_0
+        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
         self.times = self.get_scan_list(self.p.ShelvingRate.scan, 'ms')
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i/float(len(self.times)))
