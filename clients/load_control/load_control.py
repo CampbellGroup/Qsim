@@ -6,7 +6,7 @@ from common.lib.clients.connection import connection
 from PyQt4 import QtGui
 from pygame import mixer
 
-SIGNALID = 123456
+SIGNALID = 112983
 
 
 class LoadControl(QtGui.QWidget):
@@ -43,7 +43,7 @@ class LoadControl(QtGui.QWidget):
             yield self.reg.cd(['', 'settings'])
             self.settings = yield self.reg.dir()
             self.settings = self.settings[1]
-        except:
+        except ImportError:
             self.settings = []
         yield self.setup_listeners()
         yield self.initializeGUI()
@@ -85,7 +85,8 @@ class LoadControl(QtGui.QWidget):
 
     @inlineCallbacks
     def on_new_counts(self, signal, pmt_value):
-        disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold') #this throws error on closeout since listner is yielding to server
+        pass
+        disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')  # this throws error on closeout since listner is yielding to server
         switch_on = self.shutter_widget.TTLswitch.isChecked()
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(False)

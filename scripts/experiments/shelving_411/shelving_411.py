@@ -30,7 +30,6 @@ class ShelvingRate(QsimExperiment):
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
-
     def initialize(self, cxn, context, ident):
         self.ident = ident
 

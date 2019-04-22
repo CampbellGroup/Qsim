@@ -97,7 +97,7 @@ class QSIM_GUI(QtGui.QMainWindow):
 
     def makeScriptScannerWidget(self, reactor, cxn):
         from common.lib.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
-        scriptscanner = script_scanner_gui(reactor, cxn = cxn)
+        scriptscanner = script_scanner_gui(reactor, cxn=cxn)
         return scriptscanner
 
     def makeWavemeterWidget(self, reactor, cxn):
@@ -126,7 +126,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.addWidget(cameraswitch(reactor, cxn),   2, 0, 1, 1)
         gridLayout.addWidget(switchclient(reactor, cxn),   0, 0, 1, 1)
         gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 2, 1)
-        gridLayout.addWidget(LoadControl(reactor, cxn),    2, 1, 2, 1)
+        gridLayout.addWidget(LoadControl(reactor),    2, 1, 2, 1)
 #        gridLayout.addWidget(LoadIndicator(reactor),       3, 1, 2, 1)
         gridLayout.setSpacing(1)
         widget.setLayout(gridLayout)
@@ -135,8 +135,9 @@ class QSIM_GUI(QtGui.QMainWindow):
     def closeEvent(self, x):
         self.reactor.stop()
 
-if __name__=="__main__":
-    a = QtGui.QApplication( sys.argv )
+
+if __name__ == "__main__":
+    a = QtGui.QApplication(sys.argv)
     clipboard = a.clipboard()
     import qt4reactor
     qt4reactor.install()

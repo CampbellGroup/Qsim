@@ -62,14 +62,14 @@ class shelving(pulse_sequence):
                         dt,
                         p.Shelving.freq_lower_ramp,
                         p.Shelving.power,
-                        ramp_rate=U(dF/dt, 'MHz'))
+                        ramp_rate=U(dF/dt['ms'], 'MHz'))
 
             self.addDDS('411SP',
                         self.start + (2*step+3)*dt,
                         dt,
                         p.Shelving.freq_upper_ramp,
                         p.Shelving.power,
-                        ramp_rate=U(dF/dt, 'MHz'))
+                        ramp_rate=U(dF/dt['ms'], 'MHz'))
 
         self.addTTL('760TTL', self.start, p.Shelving.duration)
         self.end = self.start + p.Shelving.duration
