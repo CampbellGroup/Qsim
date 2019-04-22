@@ -26,6 +26,8 @@ class TimeHarpServer(LabradServer):
     Time harp fast time tagging server.
     """
 
+    name = 'TimeHarpServer'
+
     def initServer(self):
         # load timeharp dll file
         dll_path = 'C:\Windows\System32\TH260Lib.DLL'
@@ -35,18 +37,18 @@ class TimeHarpServer(LabradServer):
     def get_errors(self, c):
         func = self.thdll.TH260_GetErrorString
         func.restype = ctypes.c_int
-        errstring = ctypes.c_char*40
-        errcode = ctypes.c_int
+        errstring = ctypes.create_string_buffer(40)
+        errcode = ctypes.c_int()
         yield func(errstring, errcode)
-        returnValue(errstring, errcode)
+        returnValue((errstring.value, errcode.value))
 
     @setting(2, "get_version")
     def get_version(self, c):
         func = self.thdll.TH260_GetLibraryVersion
         func.restype = ctypes.c_int
-        vers_string = ctypes.c_char*8
+        vers_string = ctypes.create_string_buffer(8)
         yield func(vers_string)
-        returnValue(vers_string)
+        returnValue(vers_string.value)
 
 
 if __name__ == "__main__":
