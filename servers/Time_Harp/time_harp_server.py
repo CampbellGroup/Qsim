@@ -67,7 +67,7 @@ class TimeHarpServer(LabradServer):
         func = self.thdll.TH260_CloseDevice
         func.restype = ctypes.c_int
         output = yield func(self.device_index)
-        if output.value == 0:
+        if output == 0:
             returnValue('Success!')
         else:
             returnValue('Failure')
@@ -80,7 +80,7 @@ class TimeHarpServer(LabradServer):
             func = self.thdll.TH260_Initialize
             func.restype = ctypes.c_int
             output = func(self.device_index, mode)
-            if output.value == 0:
+            if output == 0:
                 returnValue('Success!')
             else:
                 returnValue('Failure')
@@ -94,7 +94,7 @@ class TimeHarpServer(LabradServer):
         partno = ctypes.create_string_buffer(8)
         version = ctypes.create_string_buffer(16)
         output = yield func(self.device_index, model, partno, version)
-        if output.value == 0:
+        if output == 0:
             returnValue((model.value, partno.value, version.value))
         else:
             returnValue('Failure')
@@ -105,7 +105,7 @@ class TimeHarpServer(LabradServer):
         func.restype = ctypes.c_int
         serial = ctypes.create_string_buffer(8)
         output = yield func(self.device_index, serial)
-        if output.value == 0:
+        if output == 0:
             returnValue('Success!')
         else:
             returnValue('Failure')
@@ -116,7 +116,7 @@ class TimeHarpServer(LabradServer):
         func.restype = ctypes.c_int
         flags = ctypes.c_int()
         output = yield func(self.device_index, flags)
-        if output.value == 0:
+        if output == 0:
             returnValue(flags.value)
         else:
             returnValue('Failure')
@@ -129,7 +129,7 @@ class TimeHarpServer(LabradServer):
         resolution = ctypes.c_double()
         bin_steps = ctypes.c_int()
         output = yield func(self.device_index, resolution, bin_steps)
-        if output.value == 0:
+        if output == 0:
             returnValue((resolution.value, bin_steps.value))
         else:
             returnValue('Failure')
@@ -141,7 +141,7 @@ class TimeHarpServer(LabradServer):
         func.restype = ctypes.c_int
         n_channels = ctypes.c_int()
         output = yield func(self.device_index, n_channels)
-        if output.value == 0:
+        if output == 0:
             returnValue(n_channels.value)
         else:
             returnValue('Failure')
@@ -153,7 +153,25 @@ class TimeHarpServer(LabradServer):
         func.restype = ctypes.c_int
         mode = ctypes.c_int(mode)
         output = yield func(self.device_index, mode)
-        if output.value == 0:
+        if output == 0:
+            returnValue('Success!')
+        else:
+            returnValue('Failure')
+
+    @setting(12, "set_sync_div", division='w')
+    def set_sync_div(self, c, division):
+        """
+            The sync divider must be used to keep the effective sync rate at values < 40 MHz.
+            It should only be used with sync sources of stable period. The readings obtained with TH260_GetCountRate
+            are corrected for the divider setting and deliver the external (undivided) rate. When the sync input is used
+            for a detector signal the divider should be set to 1
+            division: (1, 2, 4, .., SYNCDIVMAX)
+        """
+        func = self.thdll.TH260_SetSyncDiv
+        func.restype = ctypes.c_int
+        div = ctypes.c_int(division)
+        output = yield func(self.device_index, div)
+        if output == 0:
             returnValue('Success!')
         else:
             returnValue('Failure')
