@@ -20,8 +20,7 @@ class ML_interogation(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.ML_interogation.repump_power)
 
-        self.addTTL('935EOM', self.start + U(0.3, 'us'), p.ML_interogation.duration - U(0.5, 'us'))
-
+        self.addTTL('TimeHarpPMT', self.start, p.ML_interogation.duration)
         self.addDDS('ModeLockedSP',
                     self.start,
                     p.ML_interogation.duration,
