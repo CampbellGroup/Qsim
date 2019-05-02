@@ -1,4 +1,4 @@
-﻿"""
+"""
 ### BEGIN NODE INFO
 [info]
 name = Time Harp Server
@@ -795,7 +795,12 @@ class TimeHarpServer(LabradServer):
     @setting(44, holdofftime='w')
     def set_marker_hold_off_time(self, c, holdofftime):
         """
-
+        holdofftime: desired holdoff time for marker signals in ns
+                      min=0
+                      max=25500
+        Note: After receiving a marker the system will suppress subsequent markers for the duration of holdofftime (ns).
+        This can be used to suppress glitches on the marker signals. This is only a workaround for poor signals.
+        Try to solve the problem at its origin, i.e. the quality of marker source and cabling.
         """
         func = self.thdll.TH260_SetMarkerHoldoffTime
         func.restype = ctypes.c_int
