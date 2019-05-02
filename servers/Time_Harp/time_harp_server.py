@@ -16,11 +16,15 @@ timeout = 20000000
 ### END NODE INFO
 """
 
-from labrad.server import LabradServer, setting
+from labrad.server import LabradServer, setting, Signal
 from twisted.internet.defer import returnValue, inlineCallbacks
+from twisted.internet.task import LoopingCall
 import numpy as np
 from labrad.units import WithUnit as U
 import ctypes
+
+UPDATESYNC = 714427
+UPDATECOUNT = 173412
 
 
 class TimeHarpServer(LabradServer):
@@ -29,6 +33,9 @@ class TimeHarpServer(LabradServer):
     """
 
     name = 'TimeHarpServer'
+
+    syncratechanged = Signal(UPDATESYNC, 'signal__sync_rate_changed', 'v')
+    countratechanged = Signal(UPDATECOUNT, 'signal__count_rate_changed', 'v')
 
     def initServer(self):
         # load timeharp dll file
@@ -40,6 +47,20 @@ class TimeHarpServer(LabradServer):
         self.open_device()
         print 'Initializing TH260...'
         self.initialize(0)
+        self.timeInterval = 0.2
+        self.loop = LoopingCall(self.main_loop)
+        self.loopDone = self.loop.start(self.timeInterval, now=True)
+
+    @inlineCallbacks
+    def main_loop(self):
+        syncrate = yield self.get_sync_rate()
+        countrate = yield self.get_count_rate(0)
+        self.update_signals(syncrate, countrate)
+
+    def update_signals(self, syncrate, countrate):
+
+        self.syncratechanged(self.syncrate)
+        self.countratechanged(self.countrate)
 
     def get_errors(self, errorbit):
         """
@@ -795,7 +816,12 @@ class TimeHarpServer(LabradServer):
     @setting(44, holdofftime='w')
     def set_marker_hold_off_time(self, c, holdofftime):
         """
-
+        holdofftime: desired holdoff time for marker signals in ns
+                      min=0
+                      max=25500
+        Note: After receiving a marker the system will suppress subsequent markers for the duration of holdofftime (ns).
+        This can be used to suppress glitches on the marker signals. This is only a workaround for poor signals.
+        Try to solve the problem at its origin, i.e. the quality of marker source and cabling.
         """
         func = self.thdll.TH260_SetMarkerHoldoffTime
         func.restype = ctypes.c_int
