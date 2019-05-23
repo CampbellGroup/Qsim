@@ -31,11 +31,11 @@ class ion_position_tracker(QsimExperiment):
         self.exposure = self.cam.get_exposure_time
         self.grapher = cxn.grapher
 
-
     def run(self, cxn, context):
         elapsed = WithUnit(0.0, 's')
-        self.dv.cd(['','Ion Location Tracker'],True)
-        self.dataset = self.dv.new('ion position', [('Time', 's')], [('X Location','X Location','um'), ('Y Location','Y Location','um')])
+        self.dv.cd(['', 'Ion Location Tracker'], True)
+        self.dataset = self.dv.new('ion position', [('Time', 's')],
+                                   [('X Location', 'X Location', 'um'), ('Y Location', 'Y Location', 'um')])
         self.grapher.plot(self.dataset, 'Drift Tracker', False)
         self.set_scannable_parameters()
         self.set_exp_settings()
@@ -58,11 +58,11 @@ class ion_position_tracker(QsimExperiment):
         self.cam.start_live_display()
 
     def set_scannable_parameters(self):
-        center_y = self.p.images.image_center_x['pix'] #  switched for same reason
+        center_y = self.p.images.image_center_x['pix']  # switched for same reason
         center_x = self.p.images.image_center_y['pix']
         height = self.p.images.image_width['pix']
         width = self.p.images.image_height['pix']  # switched due to transpose of camera data
-        self.x_pixel_range = [int(center_x - width/2), int(center_x + width/2)] # rounds image size
+        self.x_pixel_range = [int(center_x - width/2), int(center_x + width/2)]  # rounds image size
         self.y_pixel_range = [int(center_y - height/2), int(center_y + height/2)]
         self.image_x_length = self.x_pixel_range[-1] - self.x_pixel_range[0] + 1
         self.image_y_length = self.y_pixel_range[-1] - self.y_pixel_range[0] + 1
@@ -74,8 +74,8 @@ class ion_position_tracker(QsimExperiment):
         self.cam.abort_acquisition()
         self.cam.set_image_region([1, 1, hor_min, hor_max, ver_min, ver_max])
         self.cam.start_live_display()
-        
-    
+
+
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner

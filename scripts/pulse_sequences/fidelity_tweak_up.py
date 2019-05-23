@@ -13,7 +13,8 @@ from sub_sequences.MicrowaveInterogation import microwave_interogation
 
 class fidelity_tweak_up(pulse_sequence):
 
-    required_subsequences = [shelving, shelving_doppler_cooling, doppler_cooling, standard_state_detection,shelving_state_detection, ml_state_detection, 
+    required_subsequences = [shelving, shelving_doppler_cooling, doppler_cooling, standard_state_detection,
+                             shelving_state_detection, ml_state_detection, 
                              turn_off_all, bright_state_pumping, optical_pumping, microwave_interogation]
 
     required_parameters = [

@@ -25,8 +25,6 @@ class standard_state_detection(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.StandardStateDetection.repump_power)
 
-        self.addTTL('935EOM', self.start, p.StandardStateDetection.duration)
-
         self.addDDS('StateDetectionSP',
                     self.start,
                     p.StandardStateDetection.duration,

@@ -3,6 +3,7 @@ from sub_sequences.DopplerCooling import doppler_cooling
 from sub_sequences.DipoleInterogation import dipole_interogation
 from sub_sequences.TurnOffAll import turn_off_all
 
+
 class interleaved_point(pulse_sequence):
 
     required_subsequences = [turn_off_all, doppler_cooling, dipole_interogation]

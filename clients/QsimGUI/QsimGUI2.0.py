@@ -34,7 +34,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         wavemeter = self.makeWavemeterWidget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
-        Tsunami = self.makeTsunamiWidget(reactor, cxn)
+        Ultrafast = self.makeUltrafastWidget(reactor, cxn)
         Pulser = self.makePulserWidget(reactor, cxn)
         Config = self.makeConfigWidget(reactor, cxn)
         Keithley = self.makeKeithleyWidget(reactor, cxn)
@@ -47,7 +47,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(Pulser, '&Pulser')
         self.tabWidget.addTab(Config, '&Config')
-        self.tabWidget.addTab(Tsunami, '&Tsunami')
+        self.tabWidget.addTab(Ultrafast, '&Ultrafast')
         self.tabWidget.addTab(Keithley, '&Keithley')
         self.tabWidget.setMovable(True)
 
@@ -82,16 +82,21 @@ class QSIM_GUI(QtGui.QMainWindow):
         widget = CONFIG_EDITOR(reactor, cxn)
         return widget
 
-    def makeTsunamiWidget(self, reactor, cxn):
+    def makeUltrafastWidget(self, reactor, cxn):
         twidget = QtGui.QWidget()
         from common.lib.clients.evPump.evPumpClient import eVPumpClient
         from common.lib.clients.bristol.bristol_client import bristol_client
+        from Qsim.clients.time_harp_client.time_harp_client import TimeHarpClient
         gridLayout = QtGui.QGridLayout()
         evpump = eVPumpClient(reactor)
-        evpump.setMinimumHeight(700)
+        evpump.setMaximumHeight(500)
         bristol = bristol_client(reactor)
-        gridLayout.addWidget(evpump)
-        gridLayout.addWidget(bristol)
+        timeharp = TimeHarpClient(reactor, cxn)
+        timeharp.setMaximumHeight(620)
+        bristol.setMaximumHeight(200)
+        gridLayout.addWidget(evpump, 0, 0)
+        gridLayout.addWidget(bristol, 1, 0, 1, 2)
+        gridLayout.addWidget(timeharp, 0, 1)
         twidget.setLayout(gridLayout)
         return twidget
 

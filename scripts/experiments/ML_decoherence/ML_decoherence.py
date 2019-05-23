@@ -2,7 +2,6 @@ import labrad
 from Qsim.scripts.pulse_sequences.ML_decoherence import ML_decoherence as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
-import numpy as np
 
 
 class ML_decoherence(QsimExperiment):
@@ -11,6 +10,13 @@ class ML_decoherence(QsimExperiment):
 
     exp_parameters = []
     exp_parameters.append(('ML_decoherence', 'ML_time_scan'))
+    exp_parameters.append(('Modes', 'state_detection_mode'))
+    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('MLStateDetection', 'repititions'))
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.remove(('ML_interogation', 'duration'))
 
@@ -26,7 +32,7 @@ class ML_decoherence(QsimExperiment):
         for i, duration in enumerate(self.times):
             self.p['ML_interogation.duration'] = U(duration, 'us')
             self.program_pulser(sequence)
-            [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num = 2)
+            [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num=2)
             self.plot_prob(duration, counts_bright, counts_dark)
             should_break = self.update_progress(i/float(len(self.times)))
             if should_break:

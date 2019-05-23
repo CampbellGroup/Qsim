@@ -38,6 +38,6 @@ class ml_state_detection(pulse_sequence):
 
         self.addTTL('TimeHarpPMT',
                     self.start,
-                    p.MLStateDetection)
+                    p.MLStateDetection.duration)
 
         self.end = self.start + p.MLStateDetection.duration

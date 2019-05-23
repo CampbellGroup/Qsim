@@ -3,7 +3,7 @@ from Qsim.scripts.pulse_sequences.fidelity_tweak_up import fidelity_tweak_up as 
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 from labrad.units import WithUnit as U
-
+import time
 
 class fidelity_tweak_up(QsimExperiment):
     """
@@ -64,12 +64,32 @@ class fidelity_tweak_up(QsimExperiment):
                 print 'Dark Doppler Errors:', len(dark_errors[0])
                 print 'Bright Doppler Errors:', len(bright_errors[0])
                 print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
-            else:
+            elif self.p.Modes.state_detection_mode == 'Standard':
                 points_per_hist = self.p.StandardStateDetection.points_per_histogram
                 [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num=2)
 
+            elif self.p.Modes.state_detection_mode == 'ML':
+                self.timeharp.start_measure(500)
+                points_per_hist = self.p.StandardStateDetection.points_per_histogram
+                [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num=2)
+                time.sleep(1)
+                data = self.timeharp.read_fifo(131072)
+                stamps = data[0]
+                data_length = data[1]
+                stamps = stamps[0:data_length]
+                timetags = self.convert_timetags(stamps)
+                while data_length > 0:
+                    data = self.timeharp.read_fifo(131072)
+                    stamps = data[0]
+                    data_length = data[1]
+                    stamps = stamps[0:data_length]
+                    timetags += self.convert_timetags(stamps)
+                print 'timeharp len', len(timetags), 'Pulser len', np.sum(counts_bright) + np.sum(counts_dark)
+                self.timeharp.stop_measure()
+
             if i % points_per_hist == 0:
                 hist_bright = self.process_data(counts_bright)
+                #print hist_bright
                 hist_dark = self.process_data(counts_dark)
                 self.plot_hist(hist_bright)
                 self.plot_hist(hist_dark)
@@ -101,6 +121,7 @@ class fidelity_tweak_up(QsimExperiment):
                     prob_bright - prob_dark)
 
 
+        
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
