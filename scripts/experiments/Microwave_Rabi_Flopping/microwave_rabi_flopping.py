@@ -19,13 +19,14 @@ class MicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection','repititions'))
-    exp_parameters.append(('StandardStateDetection','repititions'))
-    exp_parameters.append(('StandardStateDetection','points_per_histogram'))
-    exp_parameters.append(('StandardStateDetection','state_readout_threshold'))
-    exp_parameters.append(('ShelvingDopplerCooling','doppler_counts_threshold'))
-    exp_parameters.append(('MLStateDetection','repititions'))
-
+    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('MLStateDetection', 'repititions'))
+    exp_parameters.append(('bf_fluorescence', 'crop_start_time'))
+    exp_parameters.append(('bf_fluorescence', 'crop_stop_time'))
 
     exp_parameters.extend(sequence.all_required_parameters())
 
@@ -48,7 +49,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
             self.p['MicrowaveInterogation.duration'] = U(duration, 'us')
             self.program_pulser(sequence)
             if mode == 'Shelving':
-                [doppler_counts, detection_counts] = self.run_sequence(max_runs = 500, num = 2)
+                [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
                 errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
             else:

@@ -18,12 +18,11 @@ class fidelity_tweak_up(pulse_sequence):
                              turn_off_all, bright_state_pumping, optical_pumping, microwave_interogation]
 
     required_parameters = [
-                           ('BrightStatePumping', 'bright_prep_method'),('Modes', 'state_detection_mode'),
+                           ('Modes', 'state_detection_mode')
                            ]
 
     def sequence(self):
 
-        bright_prep = self.parameters.BrightStatePumping.bright_prep_method
         mode = self.parameters.Modes.state_detection_mode
 
         self.addSequence(turn_off_all)

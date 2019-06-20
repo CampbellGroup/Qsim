@@ -116,25 +116,52 @@ class QsimExperiment(experiment):
         elif self.state_detection_mode == 'ML':
             reps = self.p.MLStateDetection.repititions
 
-        for i in range(int(reps)/max_runs):
-            self.pulser.start_number(max_runs)
-            self.pulser.wait_sequence_done()
-            self.pulser.stop_sequence()
-            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
-            self.pulser.reset_readout_counts()
+        if self.state_detection_mode == 'ML':
+            for iteration in range(int(reps)):
+                self.timeharp.start_measure(60000)
+                self.pulser.start_single()
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                self.pulser.reset_readout_counts()
+                time.sleep(0.1)
+                self.timeharp.stop_measure()
+                data = self.timeharp.read_fifo(131072)
+                stamps = data[0]
+                data_length = data[1]
+                stamps = stamps[0:data_length]
+                timetags = self.convert_timetags(stamps)
+                while data_length > 0:
+                    data = self.timeharp.read_fifo(131072)
+                    stamps = data[0]
+                    data_length = data[1]
+                    stamps = stamps[0:data_length]
+                    timetags += self.convert_timetags(stamps)
+                low = self.p.bf_fluorescence.crop_start_time['ns']
+                high = self.p.bf_fluorescence.crop_stop_time['ns']
+                cropped_timetags = sum([low <= item <= high for item in timetags])
+                counts = np.concatenate((counts, np.array([cropped_timetags])))
+            return [counts]
 
-        if int(reps) % max_runs != 0:
-            runs = int(reps) % max_runs
-            self.pulser.start_number(runs)
-            self.pulser.wait_sequence_done()
-            self.pulser.stop_sequence()
-            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
-            self.pulser.reset_readout_counts()
+        else:
+            for i in range(int(reps)/max_runs):
+                self.pulser.start_number(max_runs)
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+                self.pulser.reset_readout_counts()
 
-        counts_parsed = []
-        for i in range(num):
-            counts_parsed.append(counts[i::num])
-        return counts_parsed
+            if int(reps) % max_runs != 0:
+                runs = int(reps) % max_runs
+                self.pulser.start_number(runs)
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+                self.pulser.reset_readout_counts()
+
+            counts_parsed = []
+            for i in range(num):
+                counts_parsed.append(counts[i::num])
+            return counts_parsed
 
     def process_data(self, counts):
 
@@ -182,7 +209,7 @@ class QsimExperiment(experiment):
     def convert_timetags(self, data):
         timetags = []
         for i, stamp in enumerate(data):
-            timetag = (stamp >> 10) & 2**15 - 1
+            timetag = (stamp >> 10) & (2**15 - 1)
             timetag = timetag*25./1000.  # time in nanoseconds
             if timetag != 0:
                 timetags.append(timetag)

@@ -14,9 +14,9 @@ class ml_state_detection(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addTTL('ReadoutCount',
-                    self.start,
-                    p.MLStateDetection.duration)
+        #self.addTTL('ReadoutCount',
+        #            self.start,
+        #            p.MLStateDetection.duration)
 
         self.addDDS('935SP',
                     self.start,
@@ -27,13 +27,13 @@ class ml_state_detection(pulse_sequence):
         self.addDDS('ModeLockedSP',
                     self.start,
                     p.MLStateDetection.duration,
-                    U(192.0, 'MHz'),
+                    U(200.0, 'MHz'),
                     p.MLStateDetection.ML_power)
 
         self.addDDS('369DP',
                     self.start,
                     p.MLStateDetection.duration,
-                    U(100.0, 'MHz'),
+                    U(200.0, 'MHz'),
                     U(-46.0, 'dBm'))
 
         self.addTTL('TimeHarpPMT',

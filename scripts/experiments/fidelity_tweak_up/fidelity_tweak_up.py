@@ -1,9 +1,11 @@
 import labrad
 from Qsim.scripts.pulse_sequences.fidelity_tweak_up import fidelity_tweak_up as sequence
+from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as bright_prep_seq
+from Qsim.scripts.pulse_sequences.dark_state_preperation import dark_state_preperation as dark_prep_seq
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 from labrad.units import WithUnit as U
-import time
+
 
 class fidelity_tweak_up(QsimExperiment):
     """
@@ -29,6 +31,8 @@ class fidelity_tweak_up(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
     exp_parameters.append(('MLStateDetection', 'repititions'))
+    exp_parameters.append(('bf_fluorescence', 'crop_start_time'))
+    exp_parameters.append(('bf_fluorescence', 'crop_stop_time'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -49,7 +53,8 @@ class fidelity_tweak_up(QsimExperiment):
         self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
         self.setup_prob_datavault()
         i = 0
-        self.program_pulser(sequence)
+        if self.p.state_detection_mode != 'ML':
+            self.program_pulser(sequence)
         while True:
             i += 1
             if self.p.Modes.state_detection_mode == 'Shelving':
@@ -69,27 +74,14 @@ class fidelity_tweak_up(QsimExperiment):
                 [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num=2)
 
             elif self.p.Modes.state_detection_mode == 'ML':
-                self.timeharp.start_measure(500)
                 points_per_hist = self.p.StandardStateDetection.points_per_histogram
-                [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num=2)
-                time.sleep(1)
-                data = self.timeharp.read_fifo(131072)
-                stamps = data[0]
-                data_length = data[1]
-                stamps = stamps[0:data_length]
-                timetags = self.convert_timetags(stamps)
-                while data_length > 0:
-                    data = self.timeharp.read_fifo(131072)
-                    stamps = data[0]
-                    data_length = data[1]
-                    stamps = stamps[0:data_length]
-                    timetags += self.convert_timetags(stamps)
-                print 'timeharp len', len(timetags), 'Pulser len', np.sum(counts_bright) + np.sum(counts_dark)
-                self.timeharp.stop_measure()
+                self.program_pulser(bright_prep_seq)
+                [counts_bright] = self.run_sequence()
+                self.program_pulser(dark_prep_seq)
+                [counts_dark] = self.run_sequence()
 
             if i % points_per_hist == 0:
                 hist_bright = self.process_data(counts_bright)
-                #print hist_bright
                 hist_dark = self.process_data(counts_dark)
                 self.plot_hist(hist_bright)
                 self.plot_hist(hist_dark)
@@ -121,7 +113,6 @@ class fidelity_tweak_up(QsimExperiment):
                     prob_bright - prob_dark)
 
 
-        
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner

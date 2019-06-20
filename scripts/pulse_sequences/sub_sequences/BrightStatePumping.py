@@ -27,9 +27,9 @@ class bright_state_pumping(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        
+        self.end = self.start + p.BrightStatePumping.duration
+
         if p.BrightStatePumping.bright_prep_method == 'Doppler Cooling':
-            
             self.addDDS('DopplerCoolingSP',
                         self.start,
                         p.BrightStatePumping.duration,
@@ -47,6 +47,7 @@ class bright_state_pumping(pulse_sequence):
                         p.BrightStatePumping.duration,
                         U(320.0, 'MHz'),
                         p.BrightStatePumping.repump_power)
+
             self.end = self.start + p.BrightStatePumping.duration
 
         elif p.BrightStatePumping.bright_prep_method == 'Microwave':

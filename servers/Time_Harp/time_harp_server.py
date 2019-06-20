@@ -771,11 +771,9 @@ class TimeHarpServer(LabradServer):
         """
         func = self.thdll.TH260_ReadFiFo
         func.restype = ctypes.c_int
-        #buffer_array = (ctypes.c_uint*count)()
-        buffer_array = np.zeros((count,), dtype=np.uint32)
+        buffer_array = (ctypes.c_uint*count)()
         count = ctypes.c_int(count)
         nactual = ctypes.c_int()
-        #error = yield func(self.device_index, ctypes.byref(buffer_array), count, ctypes.byref(nactual))
         error = yield func(self.device_index, buffer_array.ctypes.data_as(ctypes.POINTER(ctypes.c_uint)), count, ctypes.byref(nactual))
         if error == 0:
             returnValue((np.array(buffer_array), nactual.value))
