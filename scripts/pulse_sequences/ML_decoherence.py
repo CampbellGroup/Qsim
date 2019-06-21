@@ -18,6 +18,7 @@ class ML_decoherence(pulse_sequence):
         self.addSequence(bright_state_pumping)
         self.addSequence(ML_interogation)
         self.addSequence(standard_state_detection)
+        
         self.addSequence(doppler_cooling)
         self.addSequence(optical_pumping)
         self.addSequence(ML_interogation)

@@ -29,5 +29,3 @@ class bright_state_preperation(pulse_sequence):
             self.addSequence(standard_state_detection)
         elif mode == 'Shelving':
             self.addSequence(shelving_state_detection)
-        elif mode == 'ML':
-            self.addSequence(ml_state_detection)

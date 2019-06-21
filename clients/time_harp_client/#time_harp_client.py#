@@ -263,10 +263,6 @@ class TimeHarpClient(QtGui.QWidget):
 #       for hist in hist_array:
         self.dataset_hist = yield self.data_vault.new('Histogram', [('run', 'arb u')],
                                                       [('Counts', 'Counts', 'num')])
-        bins = []
-        bins = list(np.arange(0, len(hist), 1))
-        to_save = np.column_stack((bins, hist))
-        print hist
         yield self.data_vault.add(hist)
         yield self.grapher.plot(self.dataset_hist, 'TimeHarp', False)
         yield self.pulser.amplitude('935SP', init_935_power)
