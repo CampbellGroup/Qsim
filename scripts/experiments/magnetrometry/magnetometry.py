@@ -1,6 +1,5 @@
 import labrad
-import labrad.units as U
-from labrad.units import V, A
+from labrad.units import A
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.microwave_linescan.microwave_linescan import MicrowaveLinescan
 import numpy as np
@@ -8,8 +7,6 @@ from scipy.optimize import curve_fit
 
 
 class magnetometry(QsimExperiment):
-    # TODO: Add the relevant parameters (Bx, By, Bz, direction) to the parameter vault
-    # TODO: make it so self.init_currents and self.currents have units?
     # TODO: magnetometry tab in grapher
 
     name = 'magnetometry'
@@ -21,7 +18,7 @@ class magnetometry(QsimExperiment):
     exp_parameters.append(('magnetometry', 'direction'))
     exp_parameters.append(MicrowaveLinescan.all_required_parameters())
 
-    def sincsq(x, a, b, c):
+    def sincsq(x, a, b, c, d):
         return a*np.sinc(b*x - c)**2
 
     def initialize(self, cxn, context, ident):
@@ -29,34 +26,31 @@ class magnetometry(QsimExperiment):
         self.ident = ident
         self.linescan = self.make_experiment(MicrowaveLinescan)
         self.linescan.initialize(cxn, context, ident)
-        self.ks = self.cxn.keithley_2231A_30_3
-        self.init_currents = np.array(cxn.keithley_2231A_30_3.get_applied_voltage_current(2))
+        self.ks = self.cxn.Keithley_Server
+        self.init_currents = np.array(cxn.Keithley_Server.get_applied_voltage_current(2))
 
     def run(self, cxn, context):
         self.setup_datavault('current', 'center frequency') # gives the x and y names to datavault
         self.setup_grapher('magnetometry') # sets up the grapher tab
         self.setup_parameters()
         if   self.coil_direction == 'Bx':
-            x_values = self.get_scan_list(self.p.magnetometry.current_scan_x, units=None)
+            x_values = self.get_scan_list(self.p.magnetometry.current_scan_x, units=A)
         elif self.coil_direction == 'By':
-            x_values = self.get_scan_list(self.p.magnetometry.current_scan_y, units=None)
+            x_values = self.get_scan_list(self.p.magnetometry.current_scan_y, units=A)
         elif self.coil_direction == 'Bz':
-            x_values = self.get_scan_list(self.p.magnetometry.current_scan_z, units=None)
+            x_values = self.get_scan_list(self.p.magnetometry.current_scan_z, units=A)
 
         for i, current_step in enumerate(x_values):
-            self.currents[self.coil_index] = U.WithUnit(current_step, 'A')
+            self.currents[self.coil_index] = current_step
             self.ks.all_current(self.currents)
-                # run the line scan
-            dataset, should_break = self.linescan.run(cxn, context)
+            dataset, should_break = self.linescan.run(cxn, context) # run the line scan
             self.linescan.dv.add_parameter(self.coil_direction, current_step)         
-                # get the data from the linescan                      
-            fitdata = dataset.get(limit=None, startOver=True)
+            fitdata = dataset.get(limit=None, startOver=True) # get the data from the linescan   
             xdata = [i[0] for i in fitdata]
             ydata = [i[1] for i in fitdata]
                 # fit the data to a sinc^2 function
-            popt, pcov = curve_fit(sincsq, xdata, ydata) #p0=[max(ydata), 20, None]
-                # store the center position of the line
-            self.dv.add(current_step, popt[2])
+            popt, pcov = curve_fit(sincsq, xdata, ydata) #p0=[max(ydata), 20, None]   # initial guess
+            self.dv.add(current_step, popt[2]) # store the center position of the line
             if should_break:
                 return should_break
 
