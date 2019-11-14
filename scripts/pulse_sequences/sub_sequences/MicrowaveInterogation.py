@@ -16,7 +16,7 @@ class microwave_interogation(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        
+
         #select which zeeman level to prepare
         if p.Line_Selection.qubit == 'qubit_0':
             center = p.Transitions.qubit_0

@@ -33,7 +33,7 @@ class shelving(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.Shelving.repump_power)
 
-        self.addDDS('411SP',
+        self.addDDS('411DP',
                     self.start,
                     p.Shelving.duration,
                     U(250.0, 'MHz'),

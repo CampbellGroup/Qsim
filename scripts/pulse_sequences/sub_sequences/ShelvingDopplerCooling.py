@@ -8,7 +8,7 @@ class shelving_doppler_cooling(pulse_sequence):
                            ('DopplerCooling', 'cooling_power'),
                            ('DopplerCooling', 'repump_power'),
                            ('DopplerCooling', 'detuning'),
-                           ('ShelvingDopplerCooling', 'duration'),
+                           ('Shelving_Doppler_Cooling', 'duration'),
                            ('Transitions', 'main_cooling_369')
                            ]
 
@@ -17,28 +17,28 @@ class shelving_doppler_cooling(pulse_sequence):
 
         self.addDDS('DopplerCoolingSP',
                     self.start,
-                    p.ShelvingDopplerCooling.duration,
+                    p.Shelving_Doppler_Cooling.duration,
                     U(110.0, 'MHz'),
                     U(-20.8, 'dBm'))
 
         self.addDDS('369DP',
                     self.start,
-                    p.ShelvingDopplerCooling.duration,
+                    p.Shelving_Doppler_Cooling.duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
                     p.DopplerCooling.cooling_power)
 
         self.addDDS('935SP',
                     self.start,
-                    p.ShelvingDopplerCooling.duration,
+                    p.Shelving_Doppler_Cooling.duration,
                     U(320.0, 'MHz'),
                     p.DopplerCooling.repump_power)
 
         self.addDDS('760SP',
                     self.start,
-                    p.ShelvingDopplerCooling.duration,
+                    p.Shelving_Doppler_Cooling.duration,
                     U(320.0, 'MHz'),
                     U(-2.0,  'dBm'))
 
-        self.addTTL('ReadoutCount', self.start, p.ShelvingDopplerCooling.duration)
-    
-        self.end = self.start + p.ShelvingDopplerCooling.duration
+        self.addTTL('ReadoutCount', self.start, p.Shelving_Doppler_Cooling.duration)
+
+        self.end = self.start + p.Shelving_Doppler_Cooling.duration

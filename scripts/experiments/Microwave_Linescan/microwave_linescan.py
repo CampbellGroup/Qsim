@@ -2,6 +2,7 @@ import labrad
 from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
+import numpy as np
 
 
 class MicrowaveLineScan(QsimExperiment):
@@ -20,21 +21,22 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
-    
+
     exp_parameters.extend(sequence.all_required_parameters())
-    exp_parameters.remove(('MicrowaveInterogation', 'detuning')) 
+    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
+    exp_parameters.append(('bf_fluorescence', 'crop_start_time'))
+    exp_parameters.append(('bf_fluorescence', 'crop_stop_time'))
+
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection','repititions'))
-    exp_parameters.append(('StandardStateDetection','repititions'))
-    exp_parameters.append(('StandardStateDetection','points_per_histogram'))
-    exp_parameters.append(('StandardStateDetection','state_readout_threshold'))
-    exp_parameters.append(('ShelvingDopplerCooling','doppler_counts_threshold'))
-    exp_parameters.append(('MLStateDetection','repititions'))
+    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('MLStateDetection', 'repititions'))
 
-
-    
     def initialize(self, cxn, context, ident):
         self.ident = ident
 
@@ -44,7 +46,7 @@ class MicrowaveLineScan(QsimExperiment):
         qubit = self.p.Line_Selection.qubit
         self.setup_grapher('Microwave Linescan ' + qubit)
         self.detunings = self.get_scan_list(self.p.MicrowaveLinescan.scan, 'kHz')
-
+        mode = self.p.Modes.state_detection_mode
         if qubit == 'qubit_0':
             center = self.p.Transitions.qubit_0
             pi_time = self.p.Pi_times.qubit_0
@@ -58,20 +60,55 @@ class MicrowaveLineScan(QsimExperiment):
             pi_time = self.p.Pi_times.qubit_minus
 
         self.p['MicrowaveInterogation.duration'] = pi_time
-        
+
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
                 break
             self.p['MicrowaveInterogation.detuning'] = U(detuning, 'kHz')
             self.program_pulser(sequence)
-            [counts] = self.run_sequence()
+            if mode == 'Shelving':
+                [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
+                errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
+                counts = np.delete(detection_counts, errors)
+            if mode == 'Standard':
+                [counts] = self.run_sequence()
+            elif mode == 'ML':
+                [counts, allCounts] = self.run_ML_sequence()
+                print counts
+                self.dv.add(detuning + center['kHz'], sum(counts))
+                continue
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
             pop = self.get_pop(counts)
-            
+
             self.dv.add(detuning + center['kHz'], pop)
+
+    def run_ML_sequence(self, max_runs=1000, num=1):
+        reps = self.p.MLStateDetection.repititions
+        counts = np.array([])
+        allCounts = np.array([])
+
+        for iteration in [0]:  # range(int(reps)):
+            self.timeharp.start_measure(60000)
+            self.pulser.start_number(int(reps))
+            self.pulser.wait_sequence_done()
+            self.timeharp.stop_measure()
+            data = self.timeharp.read_fifo(2048)
+            stamps = data[0]
+            data_length = data[1]
+            stamps = stamps[0:data_length]
+            timetags = self.convert_timetags(stamps)
+            low = self.p.bf_fluorescence.crop_start_time['ns']
+            high = self.p.bf_fluorescence.crop_stop_time['ns']
+            cropped_timetags = sum([low <= item <= high for item in timetags])
+            all_timetags = sum([0.0 <= item <= 12.5 for item in timetags])
+            counts = np.concatenate((counts, np.array([cropped_timetags])))
+            allCounts = np.concatenate((allCounts, np.array([all_timetags])))
+        self.pulser.stop_sequence()
+        return [counts, allCounts]
+
 
     def finalize(self, cxn, context):
         pass

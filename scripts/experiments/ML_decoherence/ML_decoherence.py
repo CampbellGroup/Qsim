@@ -29,6 +29,7 @@ class ML_decoherence(QsimExperiment):
 
         self.setup_prob_datavault()
         self.times = self.get_scan_list(self.p.ML_decoherence.ML_time_scan, 'us')
+        self.p['Modes.state_detection_mode'] = 'Standard'
         for i, duration in enumerate(self.times):
             self.p['ML_interogation.duration'] = U(duration, 'us')
             self.program_pulser(sequence)

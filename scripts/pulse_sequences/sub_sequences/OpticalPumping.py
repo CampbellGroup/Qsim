@@ -15,7 +15,7 @@ class optical_pumping(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        extra_935 = U(100.0, 'us')
+        shutterlag = U(1.0, 'ms')
         self.addDDS('OpticalPumpingSP',
                     self.start,
                     p.OpticalPumping.duration,
@@ -30,7 +30,7 @@ class optical_pumping(pulse_sequence):
 
         self.addDDS('935SP',
                     self.start,
-                    p.OpticalPumping.duration + extra_935,
+                    p.OpticalPumping.duration,
                     U(320.0, 'MHz'),
                     p.OpticalPumping.repump_power)
 
@@ -40,4 +40,9 @@ class optical_pumping(pulse_sequence):
                     U(320.0, 'MHz'),
                     U(-2.0,  'dBm'))
 
-        self.end = self.start + p.OpticalPumping.duration + extra_935
+        if p.OpticalPumping.duration > shutterlag:
+            self.addTTL('ShelvingShutter',
+                        self.start,
+                        p.OpticalPumping.duration)
+
+        self.end = self.start + p.OpticalPumping.duration

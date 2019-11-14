@@ -23,6 +23,7 @@ class Pulsed_delay_stage_scan(QsimExperiment):
     exp_parameters.append(('MLStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('bf_fluorescence', 'crop_start_time'))
     exp_parameters.append(('bf_fluorescence', 'crop_stop_time'))
+    exp_parameters.append(('Delaystagescan', 'state_prep'))
     exp_parameters.extend(ml_interrogation_point.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -32,6 +33,8 @@ class Pulsed_delay_stage_scan(QsimExperiment):
         self.chan = 2
         self.keithley = self.cxn.keithley_2230g_server
         self.keithley.select_device(0)
+
+        #self.piezo_server = self.cxn.piezo_server
 
         self.init_ML_power = self.pulser.amplitude('ModeLockedSP')
         self.init_cooling_freq = self.pulser.frequency('369DP')
@@ -44,10 +47,7 @@ class Pulsed_delay_stage_scan(QsimExperiment):
         self.set_scannable_parameters()
         self.keithley.gpib_write('Apply CH2,' + str(self.init_volt) + 'V')
         self.keithley.output(self.chan, True)
-        # this is real laser detuning
-        self.pulser.frequency('369DP', self.cooling_center + self.detuning/2.0)
-        self.pulser.amplitude('369DP', self.cooling_power)
-        self.pulser.amplitude('ModeLockedSP', self.ML_power)
+        #self.piezo_server.set_voltage(self.chan, U(self.init_volt, 'V'))
         self.path = self.setup_datavault('Volts', 'counts')
         self.setup_grapher('Ramsey Delay Stage Piezo Scan')
 
@@ -60,9 +60,10 @@ class Pulsed_delay_stage_scan(QsimExperiment):
         for i, volt in enumerate(self.x_values):
             should_break = self.update_progress(i/float(len(self.x_values)))
             if should_break:
-                break                
+                break
             # we write direct GPIB for speed
             self.keithley.gpib_write('APPLy CH2,' + str(volt) + 'V')
+            # self.piezo_server.set_voltage(self.chan, U(volt, 'V'))
             time.sleep(0.1)
             # once delay stage is set, program sequence to interrogate and get counts
             self.program_pulser(ml_interrogation_point)
@@ -111,13 +112,9 @@ class Pulsed_delay_stage_scan(QsimExperiment):
         cropped_timetags = sum([low <= item <= high for item in timetags])
         return cropped_timetags
 
-
     def finalize(self, cxn, context):
-        self.pulser.frequency('369DP', self.init_cooling_freq)
-        self.pulser.amplitude('369DP', self.init_cooling_power)
-        self.pulser.amplitude('ModeLockedSP', self.init_ML_power)
         self.keithley.gpib_write('Apply CH2,' + str(self.init_volt) + 'V')
-
+        #self.piezo_server.set_voltage(self.chan, U(self.init_volt, 'V'))
 
 if __name__ == '__main__':
     cxn = labrad.connect()

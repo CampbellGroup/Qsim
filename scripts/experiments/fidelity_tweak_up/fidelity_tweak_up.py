@@ -1,7 +1,5 @@
 import labrad
 from Qsim.scripts.pulse_sequences.fidelity_tweak_up import fidelity_tweak_up as sequence
-from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as bright_prep_seq
-from Qsim.scripts.pulse_sequences.dark_state_preperation import dark_state_preperation as dark_prep_seq
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 from labrad.units import WithUnit as U
@@ -20,19 +18,15 @@ class fidelity_tweak_up(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
+    exp_parameters.append(('MicrowaveInterogation', 'repititions'))
 
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
-    exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+
     exp_parameters.append(('StandardStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
-    exp_parameters.append(('MLStateDetection', 'repititions'))
-    exp_parameters.append(('bf_fluorescence', 'crop_start_time'))
-    exp_parameters.append(('bf_fluorescence', 'crop_stop_time'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -40,6 +34,7 @@ class fidelity_tweak_up(QsimExperiment):
     def run(self, cxn, context):
 
         qubit = self.p.Line_Selection.qubit
+        reps = self.p.MicrowaveInterogation.repititions
         if qubit == 'qubit_0':
             pi_time = self.p.Pi_times.qubit_0
 
@@ -49,42 +44,24 @@ class fidelity_tweak_up(QsimExperiment):
         elif qubit == 'qubit_minus':
             pi_time = self.p.Pi_times.qubit_minus
 
-        self.p['MicrowaveInterogation.duration'] = pi_time
+        self.p['MicrowaveInterogation.duration'] = reps*pi_time
         self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+        self.p['Modes.state_detection_mode'] = 'Standard'
+
         self.setup_prob_datavault()
         i = 0
-        if self.p.state_detection_mode != 'ML':
-            self.program_pulser(sequence)
+        self.program_pulser(sequence)
         while True:
             i += 1
-            if self.p.Modes.state_detection_mode == 'Shelving':
-                points_per_hist = self.p.StandardStateDetection.points_per_histogram
-                [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num=4)
-                bright_errors = np.where(counts_doppler_bright <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
-                counts_bright = np.delete(counts_bright, bright_errors)
-
-                dark_errors = np.where(counts_doppler_dark <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
-                counts_dark = np.delete(counts_dark, dark_errors)
-
-                print 'Dark Doppler Errors:', len(dark_errors[0])
-                print 'Bright Doppler Errors:', len(bright_errors[0])
-                print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
-            elif self.p.Modes.state_detection_mode == 'Standard':
-                points_per_hist = self.p.StandardStateDetection.points_per_histogram
-                [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num=2)
-
-            elif self.p.Modes.state_detection_mode == 'ML':
-                points_per_hist = self.p.StandardStateDetection.points_per_histogram
-                self.program_pulser(bright_prep_seq)
-                [counts_bright] = self.run_sequence()
-                self.program_pulser(dark_prep_seq)
-                [counts_dark] = self.run_sequence()
+            points_per_hist = self.p.StandardStateDetection.points_per_histogram
+            [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num=2)
 
             if i % points_per_hist == 0:
                 hist_bright = self.process_data(counts_bright)
                 hist_dark = self.process_data(counts_dark)
                 self.plot_hist(hist_bright)
                 self.plot_hist(hist_dark)
+
             self.plot_prob(i, counts_bright, counts_dark)
             should_break = self.update_progress(np.random.random())
             old_params = dict(self.p.iteritems())

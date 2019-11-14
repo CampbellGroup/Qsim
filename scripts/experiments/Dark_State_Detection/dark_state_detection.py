@@ -17,6 +17,8 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -35,7 +37,14 @@ class DarkStateDetection(QsimExperiment):
             while True:
                 i += 1
                 [counts] = self.run_sequence()
-                print counts
+                if self.p.Modes.state_detection_mode == 'Shelving':
+                    [counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=500, num=2)
+                    dark_errors = np.where(counts_doppler_dark <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
+                    counts_dark = np.delete(counts_dark, dark_errors)
+
+                    print 'Dark Doppler Errors:', len(dark_errors[0])
+                    counts = counts_dark
+
                 hist = self.process_data(counts)
                 if i % self.p.StandardStateDetection.points_per_histogram == 0:
                     self.setup_hist_datavault()

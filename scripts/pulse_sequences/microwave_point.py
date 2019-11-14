@@ -26,9 +26,9 @@ class microwave_point(pulse_sequence):
     def sequence(self):
         p = self.parameters
         mode = p.Modes.state_detection_mode
-        self.end = U(10.0, 'us')
-        self.addSequence(turn_off_all)
 
+        self.addSequence(turn_off_all)
+        
         if mode == 'Shelving':
             self.addSequence(shelving_doppler_cooling)
         else:

@@ -5,7 +5,7 @@ from labrad.units import WithUnit
 
 class turn_off_all(pulse_sequence):
         def sequence(self):
-                dur = WithUnit(30., 'us')
+                dur = WithUnit(1., 'us')
                 for channel in hc.ddsDict.keys():
                         if channel not in ['RF_Drive']:
                                 self.addDDS(channel, self.start, dur,
