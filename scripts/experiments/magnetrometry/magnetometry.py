@@ -19,7 +19,7 @@ class magnetometry(QsimExperiment):
     exp_parameters.append(MicrowaveLinescan.all_required_parameters())
 
     def sincsq(x, a, b, c, d):
-        return a*np.sinc(b*x - c)**2
+        return a*np.sinc(b*x - c)**2 + d
 
     def initialize(self, cxn, context, ident):
         self.coil_names = {'Bx': 0, 'By': 1, 'Bz': 2}
@@ -30,7 +30,7 @@ class magnetometry(QsimExperiment):
         self.init_currents = np.array(cxn.Keithley_Server.get_applied_voltage_current(2))
 
     def run(self, cxn, context):
-        self.setup_datavault('current', 'center frequency') # gives the x and y names to datavault
+        self.setup_datavault('current (A)', 'center frequency (MHz)') # gives the x and y names to datavault
         self.setup_grapher('magnetometry') # sets up the grapher tab
         self.setup_parameters()
         if   self.coil_direction == 'Bx':
@@ -45,7 +45,8 @@ class magnetometry(QsimExperiment):
             self.ks.all_current(self.currents)
             dataset, should_break = self.linescan.run(cxn, context) # run the line scan
             self.linescan.dv.add_parameter(self.coil_direction, current_step)         
-            fitdata = dataset.get(limit=None, startOver=True) # get the data from the linescan   
+            fitdata = dataset.getData(limit=None, start=0) # get the data from the linescan   
+            #fitdata = dv.get(limit=None, startOver=True)    #may be that we need to navigate to the saved file in the datavault.
             xdata = [i[0] for i in fitdata]
             ydata = [i[1] for i in fitdata]
                 # fit the data to a sinc^2 function
