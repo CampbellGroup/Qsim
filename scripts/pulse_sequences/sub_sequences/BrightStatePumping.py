@@ -22,7 +22,9 @@ class bright_state_pumping(pulse_sequence):
                            ('OpticalPumping', 'duration'),
                            ('OpticalPumping', 'power'),
                            ('OpticalPumping', 'detuning'),
-                           ('OpticalPumping', 'repump_power')
+                           ('OpticalPumping', 'repump_power'),
+                           ('Pi_times', 'qubit_0'),
+                           ('Pi_times', 'qubit_minus'),
                            ]
 
     def sequence(self):
@@ -87,7 +89,8 @@ class bright_state_pumping(pulse_sequence):
                             self.start + p.OpticalPumping.duration,
                             p.MicrowaveInterogation.duration,
                             DDS_freq,
-                            p.MicrowaveInterogation.power)
+                            p.MicrowaveInterogation.power,
+                            U(0.0, 'deg'))
                 self.end = self.start + p.OpticalPumping.duration + p.MicrowaveInterogation.duration
 
             elif p.MicrowaveInterogation.knill_sequence == 'on':
@@ -128,3 +131,45 @@ class bright_state_pumping(pulse_sequence):
                             U(30.0, 'deg'))
 
                 self.end = self.start + p.OpticalPumping.duration + 5*p.MicrowaveInterogation.duration
+
+        elif p.BrightStatePumping.bright_prep_method == 'Double_Microwave':
+
+            center_0 = p.Transitions.qubit_0
+            center_minus = p.Transitions.qubit_minus
+
+            self.addDDS('OpticalPumpingSP',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        U(110.0 + 4.0, 'MHz'),
+                        U(-15.9, 'dBm'))
+
+            self.addDDS('369DP',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        p.Transitions.main_cooling_369/2 + U(200.0 - 4.0/2.0, 'MHz') + p.OpticalPumping.detuning/2.0,
+                        p.OpticalPumping.power)
+
+            self.addDDS('935SP',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        U(320.0, 'MHz'),
+                        p.OpticalPumping.repump_power)
+
+            DDS_freq_center_0 = U(197.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_0)
+            DDS_freq_center_minus = U(197.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_minus)
+
+            self.addDDS('Microwave_qubit',
+                        self.start + p.OpticalPumping.duration,
+                        p.Pi_times.qubit_0,
+                        DDS_freq_center_0,
+                        p.MicrowaveInterogation.power,
+                        U(0.0, 'deg'))
+
+            self.addDDS('Microwave_qubit',
+                        self.start + p.OpticalPumping.duration + p.Pi_times.qubit_0,
+                        p.Pi_times.qubit_minus,
+                        DDS_freq_center_minus,
+                        p.MicrowaveInterogation.power,
+                        U(0.0, 'deg'))
+
+            self.end = self.start + p.OpticalPumping.duration + p.Pi_times.qubit_0 + p.Pi_times.qubit_minus

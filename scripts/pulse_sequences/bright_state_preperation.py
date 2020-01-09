@@ -5,12 +5,15 @@ from sub_sequences.ShelvingStateDetection import shelving_state_detection
 from sub_sequences.MLStateDetection import ml_state_detection
 from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.BrightStatePumping import bright_state_pumping
+from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
+from sub_sequences.Shelving import shelving
 
 
 class bright_state_preperation(pulse_sequence):
 
     required_subsequences = [doppler_cooling, standard_state_detection, ml_state_detection,
-                             shelving_state_detection, turn_off_all, bright_state_pumping]
+                             shelving_state_detection, turn_off_all, bright_state_pumping,
+                             shelving_doppler_cooling, shelving]
     required_parameters = [
         ('Modes', 'state_detection_mode')]
 
@@ -19,7 +22,10 @@ class bright_state_preperation(pulse_sequence):
         mode = self.parameters.Modes.state_detection_mode
 
         self.addSequence(turn_off_all)
-        self.addSequence(doppler_cooling)
+        if mode == 'Standard':
+            self.addSequence(doppler_cooling)
+        elif mode == 'Shelving':
+            self.addSequence(shelving_doppler_cooling)
 
         self.addSequence(turn_off_all)
         self.addSequence(bright_state_pumping)
@@ -28,4 +34,5 @@ class bright_state_preperation(pulse_sequence):
         if mode == 'Standard':
             self.addSequence(standard_state_detection)
         elif mode == 'Shelving':
+            self.addSequence(shelving)
             self.addSequence(shelving_state_detection)

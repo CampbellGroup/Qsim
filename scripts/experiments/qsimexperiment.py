@@ -1,6 +1,5 @@
 from common.lib.servers.script_scanner.scan_methods import experiment
 import numpy as np
-import time
 
 
 class QsimExperiment(experiment):
@@ -52,12 +51,6 @@ class QsimExperiment(experiment):
             self.grapher = self.cxn.servers['grapher']
         except KeyError as error:
             error_message = error + '\n' + "Grapher is not running"
-            raise KeyError(error_message)
-
-        try:
-            self.timeharp = self.cxn.servers['timeharpserver']
-        except KeyError as error:
-            error_message = str(error) + '\n' + "TimeHarp is not running"
             raise KeyError(error_message)
 
     def setup_datavault(self, x_axis, y_axis):
@@ -113,55 +106,26 @@ class QsimExperiment(experiment):
             reps = self.p.ShelvingStateDetection.repititions
         elif self.state_detection_mode == 'Standard':
             reps = self.p.StandardStateDetection.repititions
-        elif self.state_detection_mode == 'ML':
-            reps = self.p.MLStateDetection.repititions
 
-        if self.state_detection_mode == 'ML':
-            for iteration in range(int(reps)):
-                self.timeharp.start_measure(60000)
-                self.pulser.start_single()
-                self.pulser.wait_sequence_done()
-                self.pulser.stop_sequence()
-                self.pulser.reset_readout_counts()
-                time.sleep(0.1)
-                self.timeharp.stop_measure()
-                data = self.timeharp.read_fifo(131072)
-                stamps = data[0]
-                data_length = data[1]
-                stamps = stamps[0:data_length]
-                timetags = self.convert_timetags(stamps)
-                while data_length > 0:
-                    data = self.timeharp.read_fifo(131072)
-                    stamps = data[0]
-                    data_length = data[1]
-                    stamps = stamps[0:data_length]
-                    timetags += self.convert_timetags(stamps)
-                low = self.p.bf_fluorescence.crop_start_time['ns']
-                high = self.p.bf_fluorescence.crop_stop_time['ns']
-                cropped_timetags = sum([low <= item <= high for item in timetags])
-                counts = np.concatenate((counts, np.array([cropped_timetags])))
-            return [counts]
+        for i in range(int(reps)/max_runs):
+            self.pulser.start_number(max_runs)
+            self.pulser.wait_sequence_done()
+            self.pulser.stop_sequence()
+            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+            self.pulser.reset_readout_counts()
 
-        else:
-            for i in range(int(reps)/max_runs):
-                self.pulser.start_number(max_runs)
-                self.pulser.wait_sequence_done()
-                self.pulser.stop_sequence()
-                counts = np.concatenate((counts, self.pulser.get_readout_counts()))
-                self.pulser.reset_readout_counts()
+        if int(reps) % max_runs != 0:
+            runs = int(reps) % max_runs
+            self.pulser.start_number(runs)
+            self.pulser.wait_sequence_done()
+            self.pulser.stop_sequence()
+            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+            self.pulser.reset_readout_counts()
 
-            if int(reps) % max_runs != 0:
-                runs = int(reps) % max_runs
-                self.pulser.start_number(runs)
-                self.pulser.wait_sequence_done()
-                self.pulser.stop_sequence()
-                counts = np.concatenate((counts, self.pulser.get_readout_counts()))
-                self.pulser.reset_readout_counts()
-
-            counts_parsed = []
-            for i in range(num):
-                counts_parsed.append(counts[i::num])
-            return counts_parsed
+        counts_parsed = []
+        for i in range(num):
+            counts_parsed.append(counts[i::num])
+        return counts_parsed
 
     def process_data(self, counts):
 
@@ -174,46 +138,20 @@ class QsimExperiment(experiment):
     def get_pop(self, counts):
         self.state_detection_mode = self.p.Modes.state_detection_mode
         if self.state_detection_mode == 'Shelving':
-            threshold = self.p.StandardStateDetection.state_readout_threshold
+            threshold = self.p.ShelvingStateDetection.state_readout_threshold
         elif self.state_detection_mode == 'Standard':
             threshold = self.p.StandardStateDetection.state_readout_threshold
-        elif self.state_detection_mode == 'ML':
-            threshold = self.p.MLStateDetection.state_readout_threshold
         prob = float(len(np.where(counts >= threshold)[0]))/float(len(counts))
         return prob
 
-    def plot_hist(self, hist, folder_name='Histograms'):
+    def plot_hist(self, hist, folder_name='Histograms', create_new=True):
         self.dv.cd(['', folder_name], True, context=self.hist_ctx)
-        self.dataset_hist = self.dv.new('Histogram', [('run', 'arb u')],
-                                        [('Counts', 'Counts', 'num')], context=self.hist_ctx)
+        if create_new:
+            self.dataset_hist = self.dv.new(folder_name, [('run', 'arb u')],
+                                            [('Counts', 'Counts', 'num')], context=self.hist_ctx)
         self.dv.add(hist, context=self.hist_ctx)
-        self.grapher.plot(self.dataset_hist, 'Histogram', False)
-
-    def get_timeharp_timetags(self, measure_time, buffer_size=131072):
-        self.timeharp.start_measure(measure_time)
-        time.sleep(measure_time/1000.)
-        data = self.timeharp.read_fifo(buffer_size)
-        stamps = data[0]
-        data_length = data[1]
-        stamps = stamps[0:data_length]
-        timetags = self.convert_timetags(stamps)
-        while data_length > 0:
-            data = self.timeharp.read_fifo(buffer_size)
-            stamps = data[0]
-            data_length = data[1]
-            stamps = stamps[0:data_length]
-            timetags += self.convert_timetags(stamps)
-        self.timeharp.stop_measure()
-        return timetags
-
-    def convert_timetags(self, data):
-        timetags = []
-        for i, stamp in enumerate(data):
-            timetag = (stamp >> 10) & (2**15 - 1)
-            timetag = timetag*25./1000.  # time in nanoseconds
-            if timetag != 0:
-                timetags.append(timetag)
-        return timetags
+        if create_new:
+            self.grapher.plot(self.dataset_hist, 'Histogram', False)
 
     def _finalize(self, cxn, context):
         self.pmt.set_mode(self.init_mode)

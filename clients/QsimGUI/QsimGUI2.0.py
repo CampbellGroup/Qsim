@@ -108,9 +108,12 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeWavemeterWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
+        from common.lib.clients.piezo_client.Piezo_Client import Piezo_Client
         gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
+        pzclient = Piezo_Client(reactor)
         gridLayout.addWidget(wavemeter)
+        gridLayout.addWidget(pzclient)
         wavemeter.setMaximumHeight(820)
         widget.setLayout(gridLayout)
         return widget

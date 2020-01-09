@@ -122,7 +122,7 @@ class TimeHarpClient(QtGui.QWidget):
         self.count_zero_spinbox = timeharp_spinbox(-40, 0.0, self.change_count, init_settings[2], 'mV')
         self.measure_time_spinbox = timeharp_spinbox(1.0, 10000.0, self.change_measure_time, init_settings[3], 'ms')
         self.count_offset_spinbox = timeharp_spinbox(0.0, 10000.0, self.change_count_offset, init_settings[7], 'ns')
-        self.sync_offset_spinbox = timeharp_spinbox(0.0, 10000.0, self.change_sync_offset, init_settings[8], 'ps')
+        self.sync_offset_spinbox = timeharp_spinbox(0.0, 100000.0, self.change_sync_offset, init_settings[8], 'ps')
         self.histo_iter_spinbox = timeharp_spinbox(0.0, 50000.0, self.change_histo_iterations, init_settings[10])
 
         print 'creating dropdowns'
@@ -236,8 +236,7 @@ class TimeHarpClient(QtGui.QWidget):
     @inlineCallbacks
     def on_hist_pressed(self, value):
         self.setDisabled(True)
-        i = 0
-        iterations = self.histo_iter_spinbox.value()
+        print 'disabled'
         init_935_power = yield self.pulser.amplitude('935SP')
         init_369DP_power = yield self.pulser.amplitude('369DP')
         yield self.pulser.amplitude('369DP', self.U(-46.0, 'dBm'))
@@ -250,15 +249,13 @@ class TimeHarpClient(QtGui.QWidget):
         bins = range(32768)
         yield self.data_vault.cd(['', 'TimeHarp_histograms'], True)
         total_hist = []
-        while i < iterations:
-            yield self.server.start_measure(int(measure_time))
-            time.sleep(measure_time/1000.)
-            yield self.server.stop_measure()
-            data = yield self.server.get_histogram(0, 1, data_length)
-            hist = np.column_stack((binning*25*np.array(bins)/1000., data))
-            hist = hist.astype(float)
-            total_hist.append(sum(hist[:, 1]))
-            i += 1
+        yield self.server.start_measure(int(measure_time))
+        time.sleep(measure_time/1000.)
+        yield self.server.stop_measure()
+        data = yield self.server.get_histogram(0, 1, data_length)
+        hist = np.column_stack((binning*25*np.array(bins)/1000., data))
+        hist = hist.astype(float)
+        total_hist.append(sum(hist[:, 1]))
 
 #       for hist in hist_array:
         self.dataset_hist = yield self.data_vault.new('Histogram', [('run', 'arb u')],

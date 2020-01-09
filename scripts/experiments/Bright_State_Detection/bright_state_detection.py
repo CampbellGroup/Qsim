@@ -1,5 +1,6 @@
 import labrad
 from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as sequence
+from Qsim.scripts.pulse_sequences.bright_state_preperation_interleaved import bright_state_preperation_interleaved as interleaved_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 
@@ -15,9 +16,10 @@ class BrightStateDetection(QsimExperiment):
     exp_parameters.append(('BrightStateDetection', 'RunContinuous'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
-    exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('StandardStateDetection', 'repititions'))
-    exp_parameters.append(('MLStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
+    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -32,10 +34,20 @@ class BrightStateDetection(QsimExperiment):
         self.setup_prob_datavault()
         if self.p.BrightStateDetection.RunContinuous is True:
             i = 0
-            self.program_pulser(sequence)
+            if self.p.BrightStateDetection.InterleavedSequence == 'Off':
+                self.program_pulser(sequence)
+            elif self.p.BrightStateDetection.InterleavedSequence == 'On':
+                self.program_pulser(interleaved_sequence)
             while True:
                 i += 1
-                counts = self.run_sequence()
+                if self.p.Modes.state_detection_mode == 'Shelving':
+                    [counts_doppler_bright, counts_bright] = self.run_sequence(max_runs=500, num=2)
+                    bright_errors = np.where(counts_doppler_bright <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
+                    counts_bright = np.delete(counts_bright, bright_errors)
+
+                    print 'Bright Doppler Errors:', len(bright_errors[0])
+                    counts = counts_bright
+
                 hist = self.process_data(counts)
                 if i % self.p.StandardStateDetection.points_per_histogram == 0:
                     self.setup_hist_datavault()
@@ -50,12 +62,12 @@ class BrightStateDetection(QsimExperiment):
                 if self.p != old_params:
                     self.program_pulser(sequence)
         else:
-            [counts] = self.program_pulser()
+            counts = self.program_pulser()
             hist = self.process_data(counts)
             self.setup_hist_datavault()
             self.plot_hist(hist)
             self.plot_prob(0, hist)
- 
+
     def setup_hist_datavault(self):
         self.dv.cd(['', 'Bright_State_Detection'],
                    True, context=self.hist_ctx)
@@ -85,8 +97,7 @@ class BrightStateDetection(QsimExperiment):
         self.rsg.plot(self.dataset_hist, 'Histogram', False)
 
     def plot_prob(self, num, counts):
-        self.thresholdVal = self.p.StateDetection.state_readout_threshold
-        prob = len(np.where(counts >= self.thresholdVal)[0])/float(len(counts))
+        prob = self.get_pop(counts)
         self.dv.add(num, prob, context=self.prob_ctx)
 
 
