@@ -36,7 +36,7 @@ class Pulsed_delay_stage_scan(QsimExperiment):
 
         #self.piezo_server = self.cxn.piezo_server
 
-        self.init_ML_power = self.pulser.amplitude('ModeLockedSP')
+#        self.init_ML_power = self.pulser.amplitude('ModeLockedSP')
         self.init_cooling_freq = self.pulser.frequency('369DP')
         self.init_cooling_power = self.pulser.amplitude('369DP')
 

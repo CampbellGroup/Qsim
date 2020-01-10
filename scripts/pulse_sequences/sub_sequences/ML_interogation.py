@@ -21,9 +21,9 @@ class ML_interogation(pulse_sequence):
                     p.ML_interogation.repump_power)
 
         self.addTTL('TimeHarpPMT', self.start, p.ML_interogation.duration)
-        self.addDDS('ModeLockedSP',
-                    self.start,
-                    p.ML_interogation.duration,
-                    p.ML_interogation.frequency,
-                    p.ML_interogation.power)
+#        self.addDDS('ModeLockedSP',
+#                    self.start,
+#                    p.ML_interogation.duration,
+#                    p.ML_interogation.frequency,
+#                    p.ML_interogation.power)
         self.end = self.start + p.ML_interogation.duration

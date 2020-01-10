@@ -10,15 +10,15 @@ class wavemeter_linescan(QsimExperiment):
 
     exp_parameters = []
 
-
-
     exp_parameters.append(('Transitions', 'repump_935'))
     exp_parameters.append(('Transitions', 'repump_760'))
     exp_parameters.append(('Transitions', 'shelving_411'))
+    exp_parameters.append(('Transitions', 'Hudson'))
 
     exp_parameters.append(('wavemeterscan', 'scan_range_935'))
     exp_parameters.append(('wavemeterscan', 'scan_range_411'))
     exp_parameters.append(('wavemeterscan', 'scan_range_760'))
+    exp_parameters.append(('wavemeterscan', 'scan_range_Hudson'))
 
     exp_parameters.append(('wavemeterscan', 'lasername'))
 
@@ -28,7 +28,10 @@ class wavemeter_linescan(QsimExperiment):
 
         self.ident = ident
         self.cxnwlm = labrad.connect('10.97.112.2', password='lab')
+        self.cxnhudwlm = labrad.connect('10.97.111.8', password='lab')
         self.wm = self.cxnwlm.multiplexerserver
+        if self.p.wavemeterscan.lasername == 'Hudson':
+            self.wm = self.cxnhudwlm.multiplexerserver
 
     def run(self, cxn, context):
 
@@ -48,9 +51,9 @@ class wavemeter_linescan(QsimExperiment):
 
         self.wm.set_pid_course(self.dac_port, str(self.centerfrequency['THz']))
         time.sleep(5*delay)
-            
+
         for i in range(100):
-            progress = (100+ i)/200.0
+            progress = (100 + i)/200.0
             self.take_data(progress, delay)
             self.wm.set_pid_course(self.dac_port, str(high_x[i]))
 
@@ -96,6 +99,12 @@ class wavemeter_linescan(QsimExperiment):
             self.scan_range = self.p.wavemeterscan.scan_range_411
             self.channel = 2
             self.dac_port = 3
+
+        elif self.p.wavemeterscan.lasername == 'Hudson':
+            self.centerfrequency = self.p.Transitions.Hudson
+            self.scan_range = self.p.wavemeterscan.scan_range_Hudson
+            self.channel = 14
+            self.dac_port = 8
 
         self.wait_time = self.p.wavemeterscan.rail_wait_time
 

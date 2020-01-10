@@ -1,4 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveInterogation import microwave_interogation
+from Qsim.scripts.pulse_sequences.sub_sequences.DoubleMicrowaveInterogation import double_microwave_sequence
+from Qsim.scripts.pulse_sequences.sub_sequences.OpticalPumping import optical_pumping
 from labrad.units import WithUnit as U
 
 
@@ -10,22 +13,10 @@ class bright_state_pumping(pulse_sequence):
                            ('BrightStatePumping', 'detuning'),
                            ('BrightStatePumping', 'duration'),
                            ('BrightStatePumping', 'bright_prep_method'),
-                           ('MicrowaveInterogation', 'knill_sequence'),
                            ('Transitions', 'main_cooling_369'),
-                           ('MicrowaveInterogation', 'duration'),
-                           ('MicrowaveInterogation', 'detuning'),
-                           ('MicrowaveInterogation', 'power'),
-                           ('Line_Selection', 'qubit'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus'),
-                           ('OpticalPumping', 'duration'),
-                           ('OpticalPumping', 'power'),
-                           ('OpticalPumping', 'detuning'),
-                           ('OpticalPumping', 'repump_power'),
-                           ('Pi_times', 'qubit_0'),
-                           ('Pi_times', 'qubit_minus'),
                            ]
+
+    required_subsequences = [optical_pumping, microwave_interogation, double_microwave_sequence]
 
     def sequence(self):
         p = self.parameters
@@ -53,123 +44,10 @@ class bright_state_pumping(pulse_sequence):
             self.end = self.start + p.BrightStatePumping.duration
 
         elif p.BrightStatePumping.bright_prep_method == 'Microwave':
+            self.addSequence(optical_pumping)
+            self.addSequence(microwave_interogation)
 
-            if p.Line_Selection.qubit == 'qubit_0':
-                center = p.Transitions.qubit_0
-
-            elif p.Line_Selection.qubit == 'qubit_plus':
-                center = p.Transitions.qubit_plus
-
-            elif p.Line_Selection.qubit == 'qubit_minus':
-                center = p.Transitions.qubit_minus
-
-            self.addDDS('OpticalPumpingSP',
-                        self.start,
-                        p.OpticalPumping.duration,
-                        U(110.0 + 4.0, 'MHz'),
-                        U(-15.9, 'dBm'))
-
-            self.addDDS('369DP',
-                        self.start,
-                        p.OpticalPumping.duration,
-                        p.Transitions.main_cooling_369/2 + U(200.0 - 4.0/2.0, 'MHz') + p.OpticalPumping.detuning/2.0,
-                        p.OpticalPumping.power)
-
-            self.addDDS('935SP',
-                        self.start,
-                        p.OpticalPumping.duration,
-                        U(320.0, 'MHz'),
-                        p.OpticalPumping.repump_power)
-
-            DDS_freq = U(197.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
-
-            if p.MicrowaveInterogation.knill_sequence == 'off':
-
-                self.addDDS('Microwave_qubit',
-                            self.start + p.OpticalPumping.duration,
-                            p.MicrowaveInterogation.duration,
-                            DDS_freq,
-                            p.MicrowaveInterogation.power,
-                            U(0.0, 'deg'))
-                self.end = self.start + p.OpticalPumping.duration + p.MicrowaveInterogation.duration
-
-            elif p.MicrowaveInterogation.knill_sequence == 'on':
-
-                self.addDDS('Microwave_qubit',
-                            self.start + p.OpticalPumping.duration,
-                            p.MicrowaveInterogation.duration,
-                            DDS_freq,
-                            p.MicrowaveInterogation.power,
-                            U(30.0, 'deg'))
-
-                self.addDDS('Microwave_qubit',
-                            self.start + p.OpticalPumping.duration + p.MicrowaveInterogation.duration,
-                            p.MicrowaveInterogation.duration,
-                            DDS_freq,
-                            p.MicrowaveInterogation.power,
-                            U(0.0, 'deg'))
-
-                self.addDDS('Microwave_qubit',
-                            self.start + p.OpticalPumping.duration + 2*p.MicrowaveInterogation.duration,
-                            p.MicrowaveInterogation.duration,
-                            DDS_freq,
-                            p.MicrowaveInterogation.power,
-                            U(90.0, 'deg'))
-
-                self.addDDS('Microwave_qubit',
-                            self.start + p.OpticalPumping.duration + 3*p.MicrowaveInterogation.duration,
-                            p.MicrowaveInterogation.duration,
-                            DDS_freq,
-                            p.MicrowaveInterogation.power,
-                            U(0.0, 'deg'))
-
-                self.addDDS('Microwave_qubit',
-                            self.start + p.OpticalPumping.duration + 4*p.MicrowaveInterogation.duration,
-                            p.MicrowaveInterogation.duration,
-                            DDS_freq,
-                            p.MicrowaveInterogation.power,
-                            U(30.0, 'deg'))
-
-                self.end = self.start + p.OpticalPumping.duration + 5*p.MicrowaveInterogation.duration
-
+        # double microwave is programmed separately b/c PI_times are hard coded, not variable
         elif p.BrightStatePumping.bright_prep_method == 'Double_Microwave':
-
-            center_0 = p.Transitions.qubit_0
-            center_minus = p.Transitions.qubit_minus
-
-            self.addDDS('OpticalPumpingSP',
-                        self.start,
-                        p.OpticalPumping.duration,
-                        U(110.0 + 4.0, 'MHz'),
-                        U(-15.9, 'dBm'))
-
-            self.addDDS('369DP',
-                        self.start,
-                        p.OpticalPumping.duration,
-                        p.Transitions.main_cooling_369/2 + U(200.0 - 4.0/2.0, 'MHz') + p.OpticalPumping.detuning/2.0,
-                        p.OpticalPumping.power)
-
-            self.addDDS('935SP',
-                        self.start,
-                        p.OpticalPumping.duration,
-                        U(320.0, 'MHz'),
-                        p.OpticalPumping.repump_power)
-
-            DDS_freq_center_0 = U(197.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_0)
-            DDS_freq_center_minus = U(197.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_minus)
-
-            self.addDDS('Microwave_qubit',
-                        self.start + p.OpticalPumping.duration,
-                        p.Pi_times.qubit_0,
-                        DDS_freq_center_0,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-
-            self.addDDS('Microwave_qubit',
-                        self.start + p.OpticalPumping.duration + p.Pi_times.qubit_0,
-                        p.Pi_times.qubit_minus,
-                        DDS_freq_center_minus,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-
-            self.end = self.start + p.OpticalPumping.duration + p.Pi_times.qubit_0 + p.Pi_times.qubit_minus
+            self.addSequence(optical_pumping)
+            self.addSequence(double_microwave_sequence)

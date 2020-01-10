@@ -7,6 +7,7 @@ class shelving(pulse_sequence):
     required_parameters = [
                            ('Shelving', 'duration'),
                            ('Shelving', 'power'),
+                           ('Shelving', 'detuning'),
                            ('Shelving', 'assist_power'),
                            ('Shelving', 'repump_power'),
                            ('Transitions', 'main_cooling_369'),
@@ -15,17 +16,19 @@ class shelving(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
+        shutterlag = U(2.0, 'ms')
+
         self.addDDS('369DP',
                     self.start,
                     p.Shelving.duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                    p.Shelving.assist_power)
+                    U(-46.0, 'dBm'))
 
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.Shelving.duration,
                     U(110.0, 'MHz'),
-                    U(-9.0, 'dBm'))
+                    U(-46.0, 'dBm'))  # shelving assist hard coded to 0 for leakthrough concerns
 
         self.addDDS('935SP',
                     self.start,
@@ -36,9 +39,12 @@ class shelving(pulse_sequence):
         self.addDDS('411DP',
                     self.start,
                     p.Shelving.duration,
-                    U(250.0, 'MHz'),
+                    U(250.0, 'MHz') + p.Shelving.detuning/2.0,
                     p.Shelving.power)
 
-        self.addTTL('411TTL', self.start, p.Shelving.duration)
+        if p.Shelving.duration > shutterlag:
+            self.addTTL('ShelvingShutter',
+                        self.start,
+                        p.Shelving.duration)
 
         self.end = self.start + p.Shelving.duration

@@ -16,11 +16,9 @@ class InterleavedLinescan(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('InterleavedLinescan', 'repititions'))
     exp_parameters.append(('InterleavedLinescan', 'line_scan'))
-    exp_parameters.append(('InterleavedLinescan', 'use_calibration'))
 
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
-    exp_parameters.append(('AOM_fitting', 'Center_Frequency'))
 
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.remove(('DipoleInterogation', 'frequency'))
@@ -45,9 +43,6 @@ class InterleavedLinescan(QsimExperiment):
 
     def program_pulser(self, freq, detuning):
         self.p['DipoleInterogation.frequency'] = freq
-        if self.p.InterleavedLinescan.use_calibration:
-            cal_power = self.map_power(self.init_power, freq)
-            self.p['DipoleInterogation.interogation_power'] = cal_power
         pulse_sequence = sequence(self.p)
         pulse_sequence.programSequence(self.pulser)
         self.pulser.start_number(int(self.p.InterleavedLinescan.repititions))
@@ -58,14 +53,14 @@ class InterleavedLinescan(QsimExperiment):
         self.pulser.reset_timetags()
         self.dv.add(detuning, counts)
 
-    def map_power(self, power, freq):
-        low = 0.0
-        coeff = list(self.reg.get('AOM_calibration'))
-        low = np.polyval(coeff, freq['MHz'] - 192.0)
-        dB_increase = WithUnit(np.log10(1/low), 'dBm')
-        adj_power = power + 15.0*abs(dB_increase)
-        if adj_power > WithUnit(-5.0, 'dBm'):
-            adj_power = WithUnit(-5.0, 'dBm')
+#    def map_power(self, power, freq):
+#        low = 0.0
+#        coeff = list(self.reg.get('AOM_calibration'))
+#        low = np.polyval(coeff, freq['MHz'] - 192.0)
+#        dB_increase = WithUnit(np.log10(1/low), 'dBm')
+#        adj_power = power + 15.0*abs(dB_increase)
+#        if adj_power > WithUnit(-5.0, 'dBm'):
+#            adj_power = WithUnit(-5.0, 'dBm')
 
     def finalize(self, cxn, context):
         pass

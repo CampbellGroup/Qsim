@@ -2,9 +2,9 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from sub_sequences.DopplerCooling import doppler_cooling
 from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.TurnOffAll import turn_off_all
-from sub_sequences.BrightStatePumping import bright_state_pumping
 from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.MicrowaveInterogation import microwave_interogation
+from BrightStatePumping import bright_state_pumping
 
 
 class fidelity_tweak_up(pulse_sequence):

@@ -24,11 +24,11 @@ class ml_state_detection(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.MLStateDetection.repump_power)
 
-        self.addDDS('ModeLockedSP',
-                    self.start,
-                    p.MLStateDetection.duration,
-                    U(200.0, 'MHz'),
-                    p.MLStateDetection.ML_power)
+#        self.addDDS('ModeLockedSP',
+#                    self.start,
+#                    p.MLStateDetection.duration,
+#                    U(200.0, 'MHz'),
+#                    p.MLStateDetection.ML_power)
 
         self.addDDS('369DP',
                     self.start,

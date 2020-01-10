@@ -109,7 +109,6 @@ class MicrowaveLineScan(QsimExperiment):
         self.pulser.stop_sequence()
         return [counts, allCounts]
 
-
     def finalize(self, cxn, context):
         pass
 

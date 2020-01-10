@@ -141,6 +141,7 @@ class QsimExperiment(experiment):
             threshold = self.p.ShelvingStateDetection.state_readout_threshold
         elif self.state_detection_mode == 'Standard':
             threshold = self.p.StandardStateDetection.state_readout_threshold
+        print threshold
         prob = float(len(np.where(counts >= threshold)[0]))/float(len(counts))
         return prob
 

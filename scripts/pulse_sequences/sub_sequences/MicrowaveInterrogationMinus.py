@@ -8,8 +8,6 @@ class microwave_interogation_minus(pulse_sequence):
                            ('MicrowaveInterogation', 'duration'),
                            ('MicrowaveInterogation', 'detuning'),
                            ('MicrowaveInterogation', 'power'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
                            ('Transitions', 'qubit_minus'),
                            ('Pi_times', 'qubit_minus')
                            ]
@@ -17,13 +15,13 @@ class microwave_interogation_minus(pulse_sequence):
     def sequence(self):
         p = self.parameters
         center = p.Transitions.qubit_minus
-        DDS_freq = U(197.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
-        duration = p.Pi_times.qubit_minus
+        DDS_freq = U(317.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        pi_time = p.Pi_times.qubit_minus
 
         self.addDDS('Microwave_qubit',
                     self.start,
-                    duration,
+                    pi_time,
                     DDS_freq,
                     p.MicrowaveInterogation.power)
 
-        self.end = self.start + p.MicrowaveInterogation.duration
+        self.end = self.start + pi_time

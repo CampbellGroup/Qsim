@@ -1,16 +1,17 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from labrad.units import WithUnit as U
 
+
 class deshelving(pulse_sequence):
 
     required_parameters = [
                            ('Deshelving', 'duration'),
-                           ('Deshelving', 'power'),
+                           ('Deshelving', 'power1'),
+                           ('Deshelving', 'power2'),
                            ('DopplerCooling', 'cooling_power'),
                            ('DopplerCooling', 'detuning'),
                            ('Transitions', 'main_cooling_369'),
-                           ('Deshelving', 'repump_power')
-        
+                           ('Deshelving', 'repump_power'),
                            ]
 
     def sequence(self):
@@ -26,7 +27,7 @@ class deshelving(pulse_sequence):
                     self.start,
                     p.Deshelving.duration,
                     U(110.0, 'MHz'),
-                    U(-20.8, 'dBm'))
+                    U(-9.0, 'dBm'))
 
         self.addDDS('935SP',
                     self.start,
@@ -37,7 +38,13 @@ class deshelving(pulse_sequence):
         self.addDDS('760SP',
                     self.start,
                     p.Deshelving.duration,
-                    U(320.0, 'MHz'),
-                    p.Deshelving.power)
-        
+                    U(160.0, 'MHz'),
+                    p.Deshelving.power1)
+
+        self.addDDS('760SP2',
+                    self.start,
+                    p.Deshelving.duration,
+                    U(160.0, 'MHz'),
+                    p.Deshelving.power2)
+
         self.end = self.start + p.Deshelving.duration

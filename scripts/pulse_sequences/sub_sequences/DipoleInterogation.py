@@ -1,6 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from labrad.units import WithUnit as U
 
+
 class dipole_interogation(pulse_sequence):
 
     required_parameters = [
@@ -24,21 +25,21 @@ class dipole_interogation(pulse_sequence):
                         self.start,
                         p.DipoleInterogation.duration,
                         U(110.0, 'MHz'),
-                        U(-20.8, 'dBm'))
+                        U(-9.0, 'dBm'))
 
         if p.DipoleInterogation.interogation_laser == 'StateDetectionSP':
             self.addDDS('StateDetectionSP',
                         self.start,
                         p.DipoleInterogation.duration,
-                        U(110.0 + 6.7, 'MHz'),
-                        U(-18.7, 'dBm'))
+                        U(110.0, 'MHz'),
+                        U(-4.0, 'dBm'))
 
         if p.DipoleInterogation.interogation_laser == 'OpticalPumpingSP':
             self.addDDS('OpticalPumpingSP',
                         self.start,
                         p.DipoleInterogation.duration,
-                        U(110.0 + 4.0, 'MHz'),
-                        U(-18.4, 'dBm'))
+                        U(110.0, 'MHz'),
+                        U(-4.0, 'dBm'))
 
         self.addDDS('935SP',
                     self.start,
