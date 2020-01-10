@@ -42,7 +42,7 @@ class MicrowaveLineScan(QsimExperiment):
 
     def run(self, cxn, context):
 
-        self.setup_datavault('frequency', 'probability')  # gives the x and y names to Data Vault
+        data = self.setup_datavault('frequency', 'probability')  # gives the x and y names to Data Vault
         qubit = self.p.Line_Selection.qubit
         self.setup_grapher('Microwave Linescan ' + qubit)
         self.detunings = self.get_scan_list(self.p.MicrowaveLinescan.scan, 'kHz')
@@ -84,6 +84,8 @@ class MicrowaveLineScan(QsimExperiment):
             pop = self.get_pop(counts)
 
             self.dv.add(detuning + center['kHz'], pop)
+            
+        return data, should_break
 
     def run_ML_sequence(self, max_runs=1000, num=1):
         reps = self.p.MLStateDetection.repititions
