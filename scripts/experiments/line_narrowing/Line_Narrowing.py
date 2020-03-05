@@ -13,8 +13,7 @@ class Line_Narrowing(QsimExperiment):
     exp_parameters.append(('Line_Narrowing', 'voltage_scan_y'))
     exp_parameters.append(('Line_Narrowing', 'voltage_scan_z'))
     exp_parameters.append(('Line_Narrowing', 'direction'))
-    exp_parameters.append(InterleavedLinescan.all_required_parameters())
-
+    exp_parameters.extend(InterleavedLinescan.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
         self.multipole_names = {'Ex': 2, 'Ey': 0, 'Ez': 1}

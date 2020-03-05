@@ -38,7 +38,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         Pulser = self.makePulserWidget(reactor, cxn)
         Config = self.makeConfigWidget(reactor, cxn)
         Keithley = self.makeKeithleyWidget(reactor, cxn)
-        
+        PiezoBox = self.makePiezoWidget(reactor, cxn)
 
         # add tabs
         self.tabWidget = QtGui.QTabWidget()
@@ -48,9 +48,9 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(Pulser, '&Pulser')
         self.tabWidget.addTab(Config, '&Config')
         self.tabWidget.addTab(Ultrafast, '&Ultrafast')
-        self.tabWidget.addTab(Keithley, '&Keithley')
+        self.tabWidget.addTab(Keithley, '&Keithleys')
+        self.tabWidget.addTab(PiezoBox, '&Piezo Box')
         self.tabWidget.setMovable(True)
-
 
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
@@ -72,10 +72,28 @@ class QSIM_GUI(QtGui.QMainWindow):
         puls_widget.setLayout(gridLayout)
         return puls_widget
 
+    def makePiezoWidget(self, reactor, cxn):
+        qwidget = QtGui.QWidget()
+        from common.lib.clients.piezo_client.Piezo_Client import Piezo_Client
+        gridLayout = QtGui.QGridLayout()
+        pzclient = Piezo_Client(reactor)
+        gridLayout.addWidget(pzclient)
+        qwidget.setLayout(gridLayout)
+        return qwidget
+
     def makeKeithleyWidget(self, reactor, cxn):
-        from Qsim.clients.kiethley_control.kiethley_controller import kiethleyclient
-        widget = kiethleyclient(reactor, cxn)
-        return widget
+        qwidget = QtGui.QWidget()
+        from Qsim.clients.kiethley_control.kiethley_controller import kiethleyclient as oven
+        from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import kiethleyclient as bfield
+        gridLayout = QtGui.QGridLayout()
+        ovenKiethley = oven(reactor, cxn)
+        bfieldKiethley = bfield(reactor, cxn)
+        ovenKiethley.setMaximumHeight(200)
+        bfieldKiethley.setMaximumHeight(400)
+        gridLayout.addWidget(ovenKiethley, 0, 0, 2, 0)
+        gridLayout.addWidget(bfieldKiethley, 1, 0, 2, 1)
+        qwidget.setLayout(gridLayout)
+        return qwidget
 
     def makeConfigWidget(self, reactor, cxn):
         from common.lib.clients.config_editor.config_editor import CONFIG_EDITOR
@@ -108,13 +126,10 @@ class QSIM_GUI(QtGui.QMainWindow):
     def makeWavemeterWidget(self, reactor, cxn):
         widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
-        from common.lib.clients.piezo_client.Piezo_Client import Piezo_Client
         gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
-        pzclient = Piezo_Client(reactor)
         gridLayout.addWidget(wavemeter)
-        gridLayout.addWidget(pzclient)
-        wavemeter.setMaximumHeight(820)
+        wavemeter.setMaximumHeight(900)
         widget.setLayout(gridLayout)
         return widget
 

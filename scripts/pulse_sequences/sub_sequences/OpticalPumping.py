@@ -9,40 +9,115 @@ class optical_pumping(pulse_sequence):
                            ('OpticalPumping', 'power'),
                            ('OpticalPumping', 'detuning'),
                            ('OpticalPumping', 'repump_power'),
+                           ('OpticalPumping', 'method'),
+                           ('OpticalPumping', 'quadrupole_op_duration'),
                            ('Transitions', 'main_cooling_369'),
-                           ('DopplerCooling', 'detuning')
+                           ('DopplerCooling', 'detuning'),
+                           ('Shelving', 'detuning')
     ]
 
     def sequence(self):
         p = self.parameters
-        shutterlag = U(1.0, 'ms')
-        self.addDDS('OpticalPumpingSP',
-                    self.start,
-                    p.OpticalPumping.duration,
-                    U(110.0, 'MHz'),
-                    U(-4.0, 'dBm'))
+        opMethod = p.OpticalPumping.method
+        opDDS411 = p.Shelving.detuning + U(95.5, 'MHz')
 
-        self.addDDS('369DP',
-                    self.start,
-                    p.OpticalPumping.duration,
-                    p.Transitions.main_cooling_369/2 + U(200.0, 'MHz') + p.OpticalPumping.detuning/2.0,
-                    p.OpticalPumping.power)
-
-        self.addDDS('935SP',
-                    self.start,
-                    p.OpticalPumping.duration,
-                    U(320.0, 'MHz'),
-                    p.OpticalPumping.repump_power)
-
-        self.addDDS('760SP',
-                    self.start,
-                    p.OpticalPumping.duration,
-                    U(320.0, 'MHz'),
-                    U(-2.0,  'dBm'))
-
-        if p.OpticalPumping.duration > shutterlag:
-            self.addTTL('ShelvingShutter',
+        if opMethod == 'Standard':
+            self.addDDS('OpticalPumpingSP',
                         self.start,
-                        p.OpticalPumping.duration)
+                        p.OpticalPumping.duration,
+                        U(110.0, 'MHz'),
+                        U(-4.0, 'dBm'))
 
-        self.end = self.start + p.OpticalPumping.duration
+            self.addDDS('369DP',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        p.Transitions.main_cooling_369/2 + U(200.0, 'MHz') + p.OpticalPumping.detuning/2.0,
+                        p.OpticalPumping.power)
+
+            self.addDDS('935SP',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        U(320.0, 'MHz'),
+                        p.OpticalPumping.repump_power)
+
+            self.addDDS('760SP',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        U(160.0, 'MHz'),
+                        U(-2.0,  'dBm'))
+
+            self.end = self.start + p.OpticalPumping.duration
+
+        if opMethod == 'QuadrupoleOnly':
+            self.addDDS('935SP',
+                        self.start,
+                        p.OpticalPumping.quadrupole_op_duration,
+                        U(320.0, 'MHz'),
+                        p.OpticalPumping.repump_power)
+
+            self.addDDS('760SP',
+                        self.start,
+                        p.OpticalPumping.quadrupole_op_duration,
+                        U(160.0, 'MHz'),
+                        U(-2.0,  'dBm'))
+
+            self.addDDS('760SP2',
+                        self.start,
+                        p.OpticalPumping.quadrupole_op_duration,
+                        U(160.0, 'MHz'),
+                        U(6.0,  'dBm'))
+
+            self.addDDS('411DP',
+                        self.start,
+                        p.OpticalPumping.quadrupole_op_duration,
+                        U(250.0, 'MHz'),
+                        U(-6.8, 'dBm'))
+
+            self.addTTL('976SP',
+                        self.start,
+                        p.OpticalPumping.quadrupole_op_duration)
+
+            self.end = self.start + p.OpticalPumping.quadrupole_op_duration
+
+        if opMethod == 'Both':
+            self.addDDS('OpticalPumpingSP',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        U(110.0, 'MHz'),
+                        U(-4.0, 'dBm'))
+
+            self.addDDS('369DP',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        p.Transitions.main_cooling_369/2 + U(200.0, 'MHz') + p.OpticalPumping.detuning/2.0,
+                        p.OpticalPumping.power)
+
+            self.addDDS('935SP',
+                        self.start,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        U(320.0, 'MHz'),
+                        p.OpticalPumping.repump_power)
+
+            self.addDDS('760SP',
+                        self.start,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        U(160.0, 'MHz'),
+                        U(-2.0,  'dBm'))
+
+            self.addDDS('760SP2',
+                        self.start,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        U(160.0, 'MHz'),
+                        U(6.0,  'dBm'))
+
+            self.addDDS('411DP',
+                        self.start + p.OpticalPumping.duration,
+                        p.OpticalPumping.quadrupole_op_duration,
+                        opDDS411,
+                        U(-6.8, 'dBm'))
+
+            self.addTTL('976SP',
+                        self.start,
+                        p.OpticalPumping.quadrupole_op_duration + p.OpticalPumping.duration)
+
+            self.end = self.start + p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration

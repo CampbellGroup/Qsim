@@ -4,6 +4,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveSequenceStandard import
 from Qsim.scripts.pulse_sequences.sub_sequences.BB1MicrowaveSequence import bb1_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.UberKnillSequence import uber_knill_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoSequence import spin_echo_sequence
+from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoKnillSequence import spin_echo_knill_sequence
 
 
 class microwave_interogation(pulse_sequence):
@@ -18,7 +19,7 @@ class microwave_interogation(pulse_sequence):
                            ('Transitions', 'qubit_plus'),
                            ('Transitions', 'qubit_minus')
                            ]
-    required_subsequences = [knill_sequence, microwave_sequence_standard, bb1_sequence, spin_echo_sequence, uber_knill_sequence]
+    required_subsequences = [knill_sequence, microwave_sequence_standard, bb1_sequence, spin_echo_sequence, uber_knill_sequence, spin_echo_knill_sequence]
 
     def sequence(self):
         p = self.parameters
@@ -37,3 +38,6 @@ class microwave_interogation(pulse_sequence):
 
         elif p.MicrowaveInterogation.pulse_sequence == 'UberKnill':
             self.addSequence(uber_knill_sequence)
+
+        elif p.MicrowaveInterogation.pulse_sequence == 'SpinEchoKnill':
+            self.addSequence(spin_echo_knill_sequence)

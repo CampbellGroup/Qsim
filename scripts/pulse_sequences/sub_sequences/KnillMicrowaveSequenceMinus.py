@@ -21,7 +21,7 @@ class knill_sequence_minus(pulse_sequence):
         #  just prepares the mF = -1 state 
         center = p.Transitions.qubit_minus
         pi_time = p.Pi_times.qubit_minus
-        DDS_freq = U(317.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
 
         self.addDDS('Microwave_qubit',
                     self.start,

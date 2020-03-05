@@ -38,7 +38,7 @@ class bb1_sequence(pulse_sequence):
             pi_time = p.Pi_times.qubit_minus
             theta = (np.pi*p.MicrowaveInterogation.duration/pi_time) % (4*np.pi)
 
-        DDS_freq = U(317.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
         phi1 = np.arccos(-theta/(4*np.pi))*180/np.pi
         phi2 = 3*phi1
 

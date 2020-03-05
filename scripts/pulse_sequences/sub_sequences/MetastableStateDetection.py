@@ -38,10 +38,10 @@ class metastable_state_detection(pulse_sequence):
                     U(110.0, 'MHz'),
                     U(-9.0, 'dBm'))
 
-        self.addDDS('760SP',
-                    self.start,
-                    p.MetastableStateDetection.duration,
-                    U(160.0, 'MHz'),
-                    p.Deshelving.power1)
+        #self.addDDS('760SP',
+        #            self.start,
+        #            p.MetastableStateDetection.duration,
+        #            U(160.0, 'MHz'),
+        #            p.Deshelving.power1)
 
         self.end = self.start + p.MetastableStateDetection.duration

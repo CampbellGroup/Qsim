@@ -30,7 +30,7 @@ class knill_sequence(pulse_sequence):
         elif p.Line_Selection.qubit == 'qubit_minus':
             center = p.Transitions.qubit_minus
 
-        DDS_freq = U(317.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
 
         self.addDDS('Microwave_qubit',
                     self.start,

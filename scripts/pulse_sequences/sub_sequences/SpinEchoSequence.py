@@ -35,12 +35,12 @@ class spin_echo_sequence(pulse_sequence):
             center = p.Transitions.qubit_minus
             pi_time = p.Pi_times.qubit_minus
 
-        DDS_freq = U(317.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
 
         # pi/2 pulse around X
         self.addDDS('Microwave_qubit',
                     self.start,
-                    pi_time/2.0,
+                    p.MicrowaveInterogation.duration/2.0,
                     DDS_freq,
                     p.MicrowaveInterogation.power,
                     U(0.0, 'deg'))
@@ -48,7 +48,7 @@ class spin_echo_sequence(pulse_sequence):
         # pi pulse around Y
         self.addDDS('Microwave_qubit',
                     self.start + pi_time/2.0,
-                    pi_time,
+                    p.MicrowaveInterogation.duration,
                     DDS_freq,
                     p.MicrowaveInterogation.power,
                     U(90.0, 'deg'))
@@ -56,8 +56,9 @@ class spin_echo_sequence(pulse_sequence):
         # pi/2 pulse around X
         self.addDDS('Microwave_qubit',
                     self.start + 3*pi_time/2.0,
-                    pi_time/2.0,
+                    p.MicrowaveInterogation.duration/2.0,
                     DDS_freq,
                     p.MicrowaveInterogation.power,
                     U(0.0, 'deg'))
-        self.end = self.start + 2*pi_time
+
+        self.end = self.start + 2*p.MicrowaveInterogation.duration

@@ -18,7 +18,6 @@ class shelving_fidelity(pulse_sequence):
                            ]
 
     def sequence(self):
-
         self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)
         self.addSequence(turn_off_all)

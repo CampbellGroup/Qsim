@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <option name="TRACKING_ENABLED" value="true" />
+    <list default="true" id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/DAC Characteristics.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Ipython-Notebooks/DAC Characteristics.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/Neutral Fluorescence.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Ipython-Notebooks/Neutral Fluorescence.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/Untitled1.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Ipython-Notebooks/Untitled1.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/Untitled13.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/Untitled3.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clients/QsimGUI/QsimGUI2.0.py" beforeDir="false" afterPath="$PROJECT_DIR$/clients/QsimGUI/QsimGUI2.0.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Linescan/metastable_microwave_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Linescan/metastable_microwave_linescan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/line_narrowing/Line_Narrowing.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/line_narrowing/Line_Narrowing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/pulser_phase_diagnostic.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/pulser_phase_diagnostic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/#Shelving.py#" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,11 +28,27 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="ShelveChangesManager" show_recycled="false">
-    <option name="remove_strategy" value="false" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1XBG1DmooketltAPKqlmsXzIbQi" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+      <changelist id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="" />
       <created>1488816643992</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -22,11 +56,10 @@
     </task>
     <servers />
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager />
-    <watches-manager />
+  <component name="WindowStateProjectService">
+    <state x="623" y="144" key="SettingsEditor" timestamp="1580513048327">
+      <screen x="0" y="0" width="1920" height="1053" />
+    </state>
+    <state x="623" y="144" key="SettingsEditor/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1580513048327" />
   </component>
 </project>

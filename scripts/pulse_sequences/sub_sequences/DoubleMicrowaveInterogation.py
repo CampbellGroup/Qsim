@@ -14,20 +14,20 @@ class double_microwave_sequence(pulse_sequence):
                            ('Transitions', 'qubit_plus'),
                            ('Transitions', 'qubit_minus'),
                            ('Pi_times', 'qubit_0'),
-                           ('Pi_times', 'qubit_minus'),
+                           ('Pi_times', 'qubit_plus'),
                            ]
 
     def sequence(self):
         p = self.parameters
 
         center_0 = p.Transitions.qubit_0
-        center_minus = p.Transitions.qubit_minus
+        center_plus = p.Transitions.qubit_plus
 
         pi_time_0 = p.Pi_times.qubit_0
-        pi_time_minus = p.Pi_times.qubit_minus
+        pi_time_plus = p.Pi_times.qubit_plus
 
-        DDS_0 = U(317.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_0)
-        DDS_minus = U(317.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_minus)
+        DDS_0 = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_0)
+        DDS_plus = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_plus)
 
         if p.MicrowaveInterogation.pulse_sequence == 'standard':
             self.addDDS('Microwave_qubit',
@@ -37,10 +37,10 @@ class double_microwave_sequence(pulse_sequence):
                         p.MicrowaveInterogation.power)
             self.addDDS('Microwave_qubit',
                         self.start + pi_time_0,
-                        pi_time_minus,
-                        DDS_minus,
+                        pi_time_plus,
+                        DDS_plus,
                         p.MicrowaveInterogation.power)
-            self.end = self.start + pi_time_0 + pi_time_minus
+            self.end = self.start + pi_time_0 + pi_time_plus
 
         elif p.MicrowaveInterogation.pulse_sequence == 'knill':
             self.addDDS('Microwave_qubit',
@@ -76,33 +76,33 @@ class double_microwave_sequence(pulse_sequence):
 
             self.addDDS('Microwave_qubit',
                         self.start + 5*pi_time_0,
-                        pi_time_minus,
-                        DDS_minus,
+                        pi_time_plus,
+                        DDS_plus,
                         p.MicrowaveInterogation.power,
                         U(30.0, 'deg'))
             self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0 + pi_time_minus,
-                        pi_time_minus,
-                        DDS_minus,
+                        self.start + 5*pi_time_0 + pi_time_plus,
+                        pi_time_plus,
+                        DDS_plus,
                         p.MicrowaveInterogation.power,
                         U(0.0, 'deg'))
             self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0 + 2*pi_time_minus,
-                        pi_time_minus,
-                        DDS_minus,
+                        self.start + 5*pi_time_0 + 2*pi_time_plus,
+                        pi_time_plus,
+                        DDS_plus,
                         p.MicrowaveInterogation.power,
                         U(90.0, 'deg'))
             self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0 + 3*pi_time_minus,
-                        pi_time_minus,
-                        DDS_minus,
+                        self.start + 5*pi_time_0 + 3*pi_time_plus,
+                        pi_time_plus,
+                        DDS_plus,
                         p.MicrowaveInterogation.power,
                         U(0.0, 'deg'))
             self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0 + 4*pi_time_minus,
-                        pi_time_minus,
-                        DDS_minus,
+                        self.start + 5*pi_time_0 + 4*pi_time_plus,
+                        pi_time_plus,
+                        DDS_plus,
                         p.MicrowaveInterogation.power,
                         U(30.0, 'deg'))
 
-            self.end = self.start + 5*pi_time_0 + 5*pi_time_minus
+            self.end = self.start + 5*pi_time_0 + 5*pi_time_plus

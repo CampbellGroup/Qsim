@@ -2,6 +2,7 @@ import labrad
 from Qsim.scripts.pulse_sequences.shelving_fidelity import shelving_fidelity as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
+from Qsim.scripts.experiments.shelving_411.shelving_411 import ShelvingRate
 from Qsim.scripts.experiments.Microwave_Ramsey_Experiment.microwave_ramsey_experiment import MicrowaveRamseyExperiment
 import numpy as np
 from labrad.units import WithUnit as U
@@ -23,7 +24,7 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
-    exp_parameters.append(('ShelvingFidelity', 'drift_track_iterations'))
+    #exp_parameters.append(('ShelvingFidelity', 'drift_track_iterations'))
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
@@ -79,22 +80,23 @@ class shelving_fidelity(QsimExperiment):
 
             self.plot_prob(i, counts_bright, counts_dark)
 
-            if i % self.p.ShelvingFidelity.drift_track_iterations == 0:
-                drift_context = self.sc.context()
+            #if i % self.p.ShelvingFidelity.drift_track_iterations == 0:
+                #drift_context = self.sc.context()
 
-                init_sequence = self.p.MicrowaveInterogation.pulse_sequence
-                self.p.MicrowaveInterogation.pulse_sequence = 'standard'
+                #init_sequence = self.p.MicrowaveInterogation.pulse_sequence
+                #self.p.MicrowaveInterogation.pulse_sequence = 'standard'
 
-                self.linescan = self.make_experiment(InterleavedLinescan)
-                self.linescan.initialize(self.cxn, drift_context, self.ident)
-                self.linescan.run(self.cxn, drift_context)
+                #self.linescan = self.make_experiment(InterleavedLinescan)
+                #self.linescan.initialize(self.cxn, drift_context, self.ident)
+                #self.linescan.run(self.cxn, drift_context)
 
-                self.ramsey = self.make_experiment(MicrowaveRamseyExperiment)
-                self.ramsey.initialize(self.cxn, drift_context, self.ident)
-                self.ramsey.run(self.cxn, drift_context)
+                #self.shelving_rate = self.make_experiment(ShelvingRate)
+                #self.shelving_rate.initialize(self.cxn, drift_context, self.ident)
+                #self.shelving_rate.run(self.cxn, drift_context)
 
-                self.p.MicrowaveInterogation.pulse_sequence = init_sequence
-                self.program_pulser(sequence)
+                #self.sc.pause_script(self.ident, True)
+                #self.p.MicrowaveInterogation.pulse_sequence = init_sequence
+                #self.program_pulser(sequence)
 
     def setup_prob_datavault(self):
         self.dv_context = self.dv.context()

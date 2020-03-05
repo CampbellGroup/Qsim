@@ -18,17 +18,28 @@ class shelving(pulse_sequence):
         p = self.parameters
         shutterlag = U(2.0, 'ms')
 
+        # variable amount of assist time put in so that when we try to prepare the
+        # metastable qubit, the first photon will benefit from |1> preparation,
+        # but additonal scattering events wont leave the ion stuck in the |0>
+        if p.Shelving.duration['ms'] > 20.0:
+            assist_start = self.start + U(10.0, 'ms')
+            assist_duration = p.Shelving.duration - U(10.0, 'ms')
+
+        elif p.Shelving.duration['ms'] <= 20.0:
+            assist_start = self.start
+            assist_duration = p.Shelving.duration
+
         self.addDDS('369DP',
-                    self.start,
-                    p.Shelving.duration,
+                    assist_start,
+                    assist_duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                    U(-46.0, 'dBm'))
+                    p.Shelving.assist_power)
 
         self.addDDS('DopplerCoolingSP',
-                    self.start,
-                    p.Shelving.duration,
+                    assist_start,
+                    assist_duration,
                     U(110.0, 'MHz'),
-                    U(-46.0, 'dBm'))  # shelving assist hard coded to 0 for leakthrough concerns
+                    U(-9.0, 'dBm'))
 
         self.addDDS('935SP',
                     self.start,
