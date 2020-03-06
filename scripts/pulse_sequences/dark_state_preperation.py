@@ -6,7 +6,7 @@ from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.ShelvingStateDetection import shelving_state_detection
 from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from sub_sequences.Shelving import shelving
-from sub_sequences.MLStateDetection import ml_state_detection
+from deprecated.deprecated_sub_sequences.MLStateDetection import ml_state_detection
 
 
 class dark_state_preperation(pulse_sequence):

@@ -1,6 +1,6 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.Raman411Interogation import raman_411_interogation
+from deprecated.deprecated_sub_sequences.Raman411Interogation import raman_411_interogation
 from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.MicrowaveInterogation import microwave_interogation

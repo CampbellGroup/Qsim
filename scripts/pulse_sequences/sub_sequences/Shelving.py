@@ -47,11 +47,9 @@ class shelving(pulse_sequence):
                     U(320.0, 'MHz'),
                     p.Shelving.repump_power)
 
-        self.addDDS('411DP',
+        self.addTTL('411TTL',
                     self.start,
-                    p.Shelving.duration,
-                    U(250.0, 'MHz'),
-                    p.Shelving.power)
+                    p.Shelving.duration)
 
         if p.Shelving.duration > shutterlag:
             self.addTTL('ShelvingShutter',
