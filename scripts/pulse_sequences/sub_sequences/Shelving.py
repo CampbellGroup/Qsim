@@ -6,8 +6,6 @@ class shelving(pulse_sequence):
 
     required_parameters = [
                            ('Shelving', 'duration'),
-                           ('Shelving', 'power'),
-                           ('Shelving', 'detuning'),
                            ('Shelving', 'assist_power'),
                            ('Shelving', 'repump_power'),
                            ('Transitions', 'main_cooling_369'),

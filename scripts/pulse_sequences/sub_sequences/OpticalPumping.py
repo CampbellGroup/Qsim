@@ -11,6 +11,7 @@ class optical_pumping(pulse_sequence):
                            ('OpticalPumping', 'repump_power'),
                            ('OpticalPumping', 'method'),
                            ('OpticalPumping', 'quadrupole_op_duration'),
+                           ('OpticalPumping', 'quadrupole_op_detuning'),
                            ('Transitions', 'main_cooling_369'),
                            ('DopplerCooling', 'detuning'),
     ]
@@ -68,7 +69,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('411DP',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration,
-                        U(200.0, 'MHz'),
+                        U(200.0, 'MHz') + p.OpticalPumping.quadrupole_op_detuning,
                         U(-6.8, 'dBm'))
 
             self.addTTL('976SP',
@@ -111,7 +112,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('411DP',
                         self.start + p.OpticalPumping.duration,
                         p.OpticalPumping.quadrupole_op_duration,
-                        U(200.0, 'MHz'),
+                        U(200.0, 'MHz') + p.OpticalPumping.quadrupole_op_detuning,
                         U(-6.8, 'dBm'))
 
             self.addTTL('976SP',
