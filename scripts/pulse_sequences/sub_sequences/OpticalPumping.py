@@ -13,13 +13,11 @@ class optical_pumping(pulse_sequence):
                            ('OpticalPumping', 'quadrupole_op_duration'),
                            ('Transitions', 'main_cooling_369'),
                            ('DopplerCooling', 'detuning'),
-                           ('Shelving', 'detuning')
     ]
 
     def sequence(self):
         p = self.parameters
         opMethod = p.OpticalPumping.method
-        opDDS411 = p.Shelving.detuning + U(95.5, 'MHz')
 
         if opMethod == 'Standard':
             self.addDDS('OpticalPumpingSP',
@@ -70,7 +68,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('411DP',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration,
-                        U(250.0, 'MHz'),
+                        U(200.0, 'MHz'),
                         U(-6.8, 'dBm'))
 
             self.addTTL('976SP',
@@ -113,7 +111,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('411DP',
                         self.start + p.OpticalPumping.duration,
                         p.OpticalPumping.quadrupole_op_duration,
-                        opDDS411,
+                        U(200.0, 'MHz'),
                         U(-6.8, 'dBm'))
 
             self.addTTL('976SP',
