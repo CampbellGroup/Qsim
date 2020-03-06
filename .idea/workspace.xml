@@ -2,82 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/testexp/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Qsim.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Qsim.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/.#plotlorentzian369.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/datavaultplot.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_random/datavaultplot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/AOM_fitting/AOM_fitting_experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/AOM_fitting/AOM_fitting_experiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/AOM_fitting/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/DDS_LineScan/DDS_LineScan.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/DDS_LineScan/DDS_LineScan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/DDS_LineScan/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/AOM_fitting/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/DDS_line_narrowing/#DDS_Line_Narrowing.py#" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/DDS_line_narrowing/#DDS_Line_Narrowing.py#" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/DDS_line_narrowing/DDS_Line_Narrowing.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/DDS_line_narrowing/DDS_Line_Narrowing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/DDS_line_narrowing/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/DDS_LineScan/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Delay_stage_scan/Delay_stage_scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Delay_stage_scan/Delay_stage_scan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Delay_stage_scan/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/DDS_line_narrowing/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Hopping_rate/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Delay_stage_scan/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Hopping_rate/hopping_rate_experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Hopping_rate/hopping_rate_experiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Lifetime_Measurement/Lifetime_Measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Lifetime_Measurement/Lifetime_Measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Lifetime_Measurement/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Hopping_rate/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/ML_Piezo_scan/ML_Piezo_scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/ML_Piezo_scan/ML_Piezo_scan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/ML_Piezo_scan/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Lifetime_Measurement/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/ML_decoherence/ML_decoherence.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/ML_decoherence/ML_decoherence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/ML_decoherence/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/ML_Piezo_scan/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/ML_fidelity_tweak_up/#ML_fidelity_tweak_up.py#" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/ML_fidelity_tweak_up/#ML_fidelity_tweak_up.py#" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/ML_fidelity_tweak_up/ML_fidelity_tweak_up.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/ML_fidelity_tweak_up/ML_fidelity_tweak_up.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/ML_fidelity_tweak_up/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/ML_decoherence/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/MM_sideband_reduction/MM_sideband_reduction.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/MM_sideband_reduction/MM_sideband_reduction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/MM_sideband_reduction/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/ML_fidelity_tweak_up/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Transition/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/MM_sideband_reduction/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Transition/metastable_transition.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Metastable_Transition/metastable_transition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Pulsed_delay_stage_scan/Pulsed_delay_stage_scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Pulsed_delay_stage_scan/Pulsed_delay_stage_scan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Pulsed_delay_stage_scan/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Metastable_Transition/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Raman_411_Scan/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Pulsed_delay_stage_scan/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Raman_411_Scan/raman411scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Raman_411_Scan/raman411scan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/TD_Flourescence/TD_flourescence.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/TD_Flourescence/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Raman_411_Scan/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Test_Pulse_Sequence/Test_Pulse_Sequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Test_Pulse_Sequence/Test_Pulse_Sequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Test_Pulse_Sequence/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/Test_Pulse_Sequence/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/TimeHarp_Interleaved/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/TimeHarp_Interleaved/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/TimeHarp_Interleaved/timeharp_interleaved.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/TimeHarp_Interleaved/timeharp_interleaved.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/bf_fluorescence/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/bf_fluorescence/bf_fluorescence.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/bf_fluorescence/bf_fluorescence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/hyperfine_ramsey_scan/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/bf_fluorescence/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/hyperfine_ramsey_scan/hyperfine_ramsey_scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/hyperfine_ramsey_scan/hyperfine_ramsey_scan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/pulse_runner/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/hyperfine_ramsey_scan/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/pulse_runner/pulse_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/pulse_runner/pulse_runner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/scan_multipole/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/pulse_runner/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/scan_multipole/scan_multipole.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/scan_multipole/scan_multipole.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/test_760/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/scan_multipole/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/test_760/test_760.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/test_760/test_760.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/test_DDS_channels/DDS_test_channels.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/test_DDS_channels/DDS_test_channels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/test_DDS_channels/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/test_760/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/testexp/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/test_DDS_channels/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/testexp/testexperiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/testexp/testexperiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/kittykat.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_random/kittykat.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/plotlorentzian369.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_random/plotlorentzian369.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/plotlorentzian935.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_random/plotlorentzian935.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/#bright_state_preperation_interleaved.py#" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/.#bright_state_preperation_interleaved.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation_interleaved.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation_interleaved.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/raman_411_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/raman_411_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/#BrightStateMicrowave.py#" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/#MLStateDetection.py#" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/#ShelvingDopplerCooling.py#" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/.#BrightStateMicrowave.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Interogation411.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/Interogation411.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MLStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/MLStateDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ML_interogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/ML_interogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Raman411Interogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/Raman411Interogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RecordTimeTags.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/RecordTimeTags.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/rigolDG1022A_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_random/rigolDG1022A_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/ticklescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_random/ticklescan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/raman_411_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/raman_411_point.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,6 +40,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_sub_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_random" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
@@ -130,13 +57,32 @@
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
     </task>
+    <task id="LOCAL-00001" summary="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM">
+      <created>1583456819008</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1583456819008</updated>
+    </task>
+    <task id="LOCAL-00002" summary="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM">
+      <created>1583456841265</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1583456841265</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM" />
+    <option name="LAST_COMMIT_MESSAGE" value="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2" timestamp="1583456818841">
+    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2" timestamp="1583456841171">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583456818841" />
+    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583456841171" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
