@@ -9,7 +9,8 @@ class shelving(pulse_sequence):
         ('Shelving', 'assist_power'),
         ('Shelving', 'repump_power'),
         ('Transitions', 'main_cooling_369'),
-        ('DopplerCooling', 'detuning')
+        ('DopplerCooling', 'detuning'),
+        ('ddsDefaults', 'doppler_cooling_freq')
     ]
 
     def sequence(self):
@@ -36,7 +37,7 @@ class shelving(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     assist_start,
                     assist_duration,
-                    U(110.0, 'MHz'),
+                    p.ddsDefaults.doppler_cooling_freq,
                     U(-9.0, 'dBm'))
 
         self.addDDS('935SP',

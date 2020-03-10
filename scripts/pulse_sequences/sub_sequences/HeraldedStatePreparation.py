@@ -5,15 +5,16 @@ from labrad.units import WithUnit as U
 class heralded_state_preparation(pulse_sequence):
 
     required_parameters = [
-                           ('MetastableStateDetection', 'duration'),
-                           ('MetastableStateDetection', 'repump_power'),
-                           ('MetastableStateDetection', 'detuning'),
-                           ('MetastableStateDetection', 'CW_power'),
-                           ('Deshelving', 'power1'),
-                           ('Transitions', 'main_cooling_369'),
-                           ('Transitions', 'MetastableQubit'),
-                           ('Pi_times', 'metastable_qubit'),
-                           ('HeraldedStatePreparation', 'deshelving_duration'),
+        ('MetastableStateDetection', 'duration'),
+        ('MetastableStateDetection', 'repump_power'),
+        ('MetastableStateDetection', 'detuning'),
+        ('MetastableStateDetection', 'CW_power'),
+        ('Deshelving', 'power1'),
+        ('Transitions', 'main_cooling_369'),
+        ('Transitions', 'MetastableQubit'),
+        ('Pi_times', 'metastable_qubit'),
+        ('HeraldedStatePreparation', 'deshelving_duration'),
+        ('ddsDefaults', 'doppler_cooling_freq')
                             ]
 
     def sequence(self):
@@ -54,7 +55,7 @@ class heralded_state_preparation(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
                     p.MetastableStateDetection.duration,
-                    U(110.0, 'MHz'),
+                    p.ddsDefaults.doppler_cooling_freq,
                     U(-9.0, 'dBm'))
 
         self.end = self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration

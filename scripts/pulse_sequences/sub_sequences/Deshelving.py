@@ -5,13 +5,15 @@ from labrad.units import WithUnit as U
 class deshelving(pulse_sequence):
 
     required_parameters = [
-                           ('Deshelving', 'duration'),
-                           ('Deshelving', 'power1'),
-                           ('Deshelving', 'power2'),
-                           ('DopplerCooling', 'cooling_power'),
-                           ('DopplerCooling', 'detuning'),
-                           ('Transitions', 'main_cooling_369'),
-                           ('Deshelving', 'repump_power'),
+        ('Deshelving', 'duration'),
+        ('Deshelving', 'power1'),
+        ('Deshelving', 'power2'),
+        ('DopplerCooling', 'cooling_power'),
+        ('DopplerCooling', 'detuning'),
+        ('Transitions', 'main_cooling_369'),
+        ('Deshelving', 'repump_power'),
+        ('ddsDefaults', 'doppler_cooling_freq')
+
                            ]
 
     def sequence(self):
@@ -26,7 +28,7 @@ class deshelving(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.Deshelving.duration,
-                    U(110.0, 'MHz'),
+                    p.ddsDefaults.doppler_cooling_freq,
                     U(-9.0, 'dBm'))
 
         self.addDDS('935SP',

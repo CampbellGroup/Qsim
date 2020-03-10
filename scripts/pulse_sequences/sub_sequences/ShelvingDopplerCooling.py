@@ -5,11 +5,12 @@ from labrad.units import WithUnit as U
 class shelving_doppler_cooling(pulse_sequence):
 
     required_parameters = [
-                           ('DopplerCooling', 'cooling_power'),
-                           ('DopplerCooling', 'repump_power'),
-                           ('DopplerCooling', 'detuning'),
-                           ('Shelving_Doppler_Cooling', 'duration'),
-                           ('Transitions', 'main_cooling_369')
+        ('DopplerCooling', 'cooling_power'),
+        ('DopplerCooling', 'repump_power'),
+        ('DopplerCooling', 'detuning'),
+        ('Shelving_Doppler_Cooling', 'duration'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'doppler_cooling_freq')
                            ]
 
     def sequence(self):
@@ -18,7 +19,7 @@ class shelving_doppler_cooling(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.Shelving_Doppler_Cooling.duration,
-                    U(110.0, 'MHz'),
+                    p.ddsDefaults.doppler_cooling_freq,
                     U(-9.0, 'dBm'))
 
         self.addDDS('369DP',

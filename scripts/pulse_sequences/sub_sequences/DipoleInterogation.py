@@ -5,11 +5,12 @@ from labrad.units import WithUnit as U
 class dipole_interogation(pulse_sequence):
 
     required_parameters = [
-                           ('DipoleInterogation', 'duration'),
-                           ('DipoleInterogation', 'frequency'),
-                           ('DipoleInterogation', 'power'),
-                           ('DipoleInterogation', 'repump_power'),
-                           ('DipoleInterogation', 'interogation_laser')
+        ('DipoleInterogation', 'duration'),
+        ('DipoleInterogation', 'frequency'),
+        ('DipoleInterogation', 'power'),
+        ('DipoleInterogation', 'repump_power'),
+        ('DipoleInterogation', 'interogation_laser'),
+        ('ddsDefaults', 'doppler_cooling_freq')
                            ]
 
     def sequence(self):
@@ -24,7 +25,7 @@ class dipole_interogation(pulse_sequence):
             self.addDDS('DopplerCoolingSP',
                         self.start,
                         p.DipoleInterogation.duration,
-                        U(110.0, 'MHz'),
+                        p.ddsDefaults.doppler_cooling_freq,
                         U(-9.0, 'dBm'))
 
         if p.DipoleInterogation.interogation_laser == 'StateDetectionSP':

@@ -5,11 +5,12 @@ from labrad.units import WithUnit as U
 class shelving_state_detection(pulse_sequence):
 
     required_parameters = [
-                           ('ShelvingStateDetection', 'duration'),
-                           ('ShelvingStateDetection', 'repump_power'),
-                           ('ShelvingStateDetection', 'detuning'),
-                           ('ShelvingStateDetection', 'CW_power'),
-                           ('Transitions', 'main_cooling_369'),
+        ('ShelvingStateDetection', 'duration'),
+        ('ShelvingStateDetection', 'repump_power'),
+        ('ShelvingStateDetection', 'detuning'),
+        ('ShelvingStateDetection', 'CW_power'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'doppler_cooling_freq')
                             ]
 
     def sequence(self):
@@ -34,7 +35,7 @@ class shelving_state_detection(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.ShelvingStateDetection.duration,
-                    U(110.0, 'MHz'),
+                    p.ddsDefaults.doppler_cooling_freq,
                     U(-9.0, 'dBm'))
 
         self.end = self.start + p.ShelvingStateDetection.duration
