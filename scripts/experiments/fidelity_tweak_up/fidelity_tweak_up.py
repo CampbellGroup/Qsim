@@ -27,7 +27,6 @@ class fidelity_tweak_up(QsimExperiment):
     # hide some parameters
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
-    exp_parameters.remove(('ddsDefaults', 'qubit_dds_freq'))
 
 
     def initialize(self, cxn, context, ident):
