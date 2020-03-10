@@ -10,7 +10,9 @@ class dipole_interogation(pulse_sequence):
         ('DipoleInterogation', 'power'),
         ('DipoleInterogation', 'repump_power'),
         ('DipoleInterogation', 'interogation_laser'),
-        ('ddsDefaults', 'doppler_cooling_freq')
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'optical_pumping_freq'),
+        ('ddsDefaults', 'state_detection_freq')
                            ]
 
     def sequence(self):
@@ -32,14 +34,14 @@ class dipole_interogation(pulse_sequence):
             self.addDDS('StateDetectionSP',
                         self.start,
                         p.DipoleInterogation.duration,
-                        U(110.0, 'MHz'),
+                        p.ddsDefaults.state_detection_freq,
                         U(-4.0, 'dBm'))
 
         if p.DipoleInterogation.interogation_laser == 'OpticalPumpingSP':
             self.addDDS('OpticalPumpingSP',
                         self.start,
                         p.DipoleInterogation.duration,
-                        U(110.0, 'MHz'),
+                        p.ddsDefaults.optical_pumping_freq,
                         U(-4.0, 'dBm'))
 
         self.addDDS('935SP',

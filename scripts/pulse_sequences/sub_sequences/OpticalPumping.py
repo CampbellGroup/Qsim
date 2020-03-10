@@ -5,15 +5,15 @@ from labrad.units import WithUnit as U
 class optical_pumping(pulse_sequence):
 
     required_parameters = [
-                           ('OpticalPumping', 'duration'),
-                           ('OpticalPumping', 'power'),
-                           ('OpticalPumping', 'detuning'),
-                           ('OpticalPumping', 'repump_power'),
-                           ('OpticalPumping', 'method'),
-                           ('OpticalPumping', 'quadrupole_op_duration'),
-                           ('OpticalPumping', 'quadrupole_op_detuning'),
-                           ('Transitions', 'main_cooling_369'),
-                           ('DopplerCooling', 'detuning'),
+        ('OpticalPumping', 'duration'),
+        ('OpticalPumping', 'power'),
+        ('OpticalPumping', 'detuning'),
+        ('OpticalPumping', 'repump_power'),
+        ('OpticalPumping', 'method'),
+        ('OpticalPumping', 'quadrupole_op_duration'),
+        ('OpticalPumping', 'quadrupole_op_detuning'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'optical_pumping_freq')
     ]
 
     def sequence(self):
@@ -24,7 +24,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('OpticalPumpingSP',
                         self.start,
                         p.OpticalPumping.duration,
-                        U(110.0, 'MHz'),
+                        p.ddsDefaults.optical_pumping_freq,
                         U(-4.0, 'dBm'))
 
             self.addDDS('369DP',
@@ -82,7 +82,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('OpticalPumpingSP',
                         self.start,
                         p.OpticalPumping.duration,
-                        U(110.0, 'MHz'),
+                        p.ddsDefaults.optical_pumping_freq,
                         U(-4.0, 'dBm'))
 
             self.addDDS('369DP',
