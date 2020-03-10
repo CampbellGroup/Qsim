@@ -15,6 +15,7 @@ class double_microwave_sequence(pulse_sequence):
                            ('Transitions', 'qubit_minus'),
                            ('Pi_times', 'qubit_0'),
                            ('Pi_times', 'qubit_plus'),
+                           ('ddsDefaults', 'qubit_dds_freq')
                            ]
 
     def sequence(self):
@@ -26,8 +27,8 @@ class double_microwave_sequence(pulse_sequence):
         pi_time_0 = p.Pi_times.qubit_0
         pi_time_plus = p.Pi_times.qubit_plus
 
-        DDS_0 = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_0)
-        DDS_plus = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center_plus)
+        DDS_0 = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center_0)
+        DDS_plus = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center_plus)
 
         if p.MicrowaveInterogation.pulse_sequence == 'standard':
             self.addDDS('Microwave_qubit',

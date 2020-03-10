@@ -5,17 +5,18 @@ from labrad.units import WithUnit as U
 class spin_echo_knill_sequence(pulse_sequence):
 
     required_parameters = [
-                           ('MicrowaveInterogation', 'duration'),
-                           ('MicrowaveInterogation', 'detuning'),
-                           ('MicrowaveInterogation', 'power'),
-                           ('Line_Selection', 'qubit'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus'),
-                           ('Pi_times', 'qubit_0'),
-                           ('Pi_times', 'qubit_minus'),
-                           ('Pi_times', 'qubit_plus'),
-                           ]
+        ('MicrowaveInterogation', 'duration'),
+        ('MicrowaveInterogation', 'detuning'),
+        ('MicrowaveInterogation', 'power'),
+        ('Line_Selection', 'qubit'),
+        ('Transitions', 'qubit_0'),
+        ('Transitions', 'qubit_plus'),
+        ('Transitions', 'qubit_minus'),
+        ('Pi_times', 'qubit_0'),
+        ('Pi_times', 'qubit_minus'),
+        ('Pi_times', 'qubit_plus'),
+        ('ddsDefaults', 'qubit_dds_freq')
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -31,7 +32,7 @@ class spin_echo_knill_sequence(pulse_sequence):
             center = p.Transitions.qubit_minus
             pi_time = p.Pi_times.qubit_minus
 
-        DDS_freq = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
         phases = [30.0, 0.0, 90.0, 0.0, 30.0]
 
         # pi_pulse 1

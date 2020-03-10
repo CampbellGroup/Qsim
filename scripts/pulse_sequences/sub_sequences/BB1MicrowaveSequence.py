@@ -19,7 +19,8 @@ class bb1_sequence(pulse_sequence):
                            ('Pi_times', 'qubit_0'),
                            ('Pi_times', 'qubit_minus'),
                            ('Pi_times', 'qubit_plus'),
-                           ]
+                           ('ddsDefaults', 'qubit_dds_freq')
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -38,7 +39,7 @@ class bb1_sequence(pulse_sequence):
             pi_time = p.Pi_times.qubit_minus
             theta = (np.pi*p.MicrowaveInterogation.duration/pi_time) % (4*np.pi)
 
-        DDS_freq = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
         phi1 = np.arccos(-theta/(4*np.pi))*180/np.pi
         phi2 = 3*phi1
 
