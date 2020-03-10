@@ -1,19 +1,19 @@
 import labrad
 from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as sequence
-from Qsim.scipts.pulse_sequences.dark_state_preparation import dark_state_preparation as shelving_sequence
+from Qsim.scripts.pulse_sequences.dark_state_preperation import dark_state_preperation as shelving_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 
 
 class BrightStateDetection(QsimExperiment):
     """
-    Doppler cool ion the readout bright fidelity
+    Perform preparation of the bright state for either shelving or standard detection,
+    and plot histograms and readout fidelity of the bright state continuously
     """
 
     name = 'Bright State Detection'
 
     exp_parameters = []
-    exp_parameters.append(('BrightStateDetection', 'RunContinuous'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'repititions'))

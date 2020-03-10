@@ -3,10 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/#bright_state_detection.py#" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/.#bright_state_detection.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation_interleaved.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/bright_state_preperation_interleaved.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583876218700</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="changed bright state preparation to work with shelving and standard detection">
+      <created>1583881903079</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1583881903079</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -162,21 +168,24 @@
     <MESSAGE value="small fixes, lingering print statements" />
     <MESSAGE value="added doppler_cooling_freq from registry to all subsequences" />
     <MESSAGE value="added additional parameters to ddsDefaults" />
-    <option name="LAST_COMMIT_MESSAGE" value="added additional parameters to ddsDefaults" />
+    <MESSAGE value="changed bright state preparation to work with shelving and standard detection" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed bright state preparation to work with shelving and standard detection" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2" timestamp="1583876218616">
+    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2" timestamp="1583881902981">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
+    <state x="2527" y="136" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583881902981" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="623" y="144" key="SettingsEditor/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1580513048327" />
     <state x="2543" y="148" key="SettingsEditor/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583455025933" />
-    <state x="2492" y="379" key="com.intellij.ide.util.TipDialog" timestamp="1583454979065">
+    <state x="2492" y="379" key="com.intellij.ide.util.TipDialog" timestamp="1583883398539">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
+    <state x="2492" y="379" key="com.intellij.ide.util.TipDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583883398539" />
     <state x="2492" y="379" key="com.intellij.ide.util.TipDialog/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583454979065" />
   </component>
 </project>
