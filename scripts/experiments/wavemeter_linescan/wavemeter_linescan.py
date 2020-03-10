@@ -14,10 +14,14 @@ class wavemeter_linescan(QsimExperiment):
     exp_parameters.append(('Transitions', 'repump_760'))
     exp_parameters.append(('Transitions', 'shelving_411'))
     exp_parameters.append(('Transitions', 'Hudson'))
+    exp_parameters.append(('Transitions', 'repump_760_repump'))
+    exp_parameters.append(('Transitions', 'repump_976'))
 
     exp_parameters.append(('wavemeterscan', 'scan_range_935'))
     exp_parameters.append(('wavemeterscan', 'scan_range_411'))
     exp_parameters.append(('wavemeterscan', 'scan_range_760'))
+    exp_parameters.append(('wavemeterscan', 'scan_range_760_repump'))
+    exp_parameters.append(('wavemeterscan', 'scan_range_976'))
     exp_parameters.append(('wavemeterscan', 'scan_range_Hudson'))
 
     exp_parameters.append(('wavemeterscan', 'lasername'))
@@ -62,7 +66,10 @@ class wavemeter_linescan(QsimExperiment):
 
         if len(self.tempdata) > 0:
             self.tempdata.sort()
-            self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
+            if self.p.wavemeterscan.lasername in ['760', '760 (Repump)']:
+                self.setup_grapher('760_linescan')
+            else:
+                self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
             self.dv.add(self.tempdata)
 
     def take_data(self, progress, delay):
@@ -88,11 +95,23 @@ class wavemeter_linescan(QsimExperiment):
             self.channel = 4
             self.dac_port = 7
 
+        if self.p.wavemeterscan.lasername == '976':
+            self.centerfrequency = self.p.Transitions.repump_976
+            self.scan_range = self.p.wavemeterscan.scan_range_976
+            self.channel = 7
+            self.dac_port = 4
+
         elif self.p.wavemeterscan.lasername == '760':
             self.centerfrequency = self.p.Transitions.repump_760
             self.scan_range = self.p.wavemeterscan.scan_range_760
             self.channel = 5
             self.dac_port = 5
+
+        elif self.p.wavemeterscan.lasername == '760 (Repump)':
+            self.centerfrequency = self.p.Transitions.repump_760
+            self.scan_range = self.p.wavemeterscan.scan_range_760_repump
+            self.channel = 3
+            self.dac_port = 6
 
         elif self.p.wavemeterscan.lasername == '411':
             self.centerfrequency = self.p.Transitions.shelving_411
