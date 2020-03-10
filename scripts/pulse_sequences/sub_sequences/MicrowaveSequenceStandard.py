@@ -11,7 +11,8 @@ class microwave_sequence_standard(pulse_sequence):
                            ('Line_Selection', 'qubit'),
                            ('Transitions', 'qubit_0'),
                            ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus')
+                           ('Transitions', 'qubit_minus'),
+                           ('ddsDefaults', 'qubit_dds_freq')
                            ]
 
     def sequence(self):
@@ -27,7 +28,7 @@ class microwave_sequence_standard(pulse_sequence):
         elif p.Line_Selection.qubit == 'qubit_minus':
             center = p.Transitions.qubit_minus
 
-        DDS_freq = U(377.1883927, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
 
         self.addDDS('Microwave_qubit',
                     self.start,

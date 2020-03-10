@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,18 +85,26 @@
       <option name="project" value="LOCAL" />
       <updated>1583459327218</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="removing some experimental dependencies on mode-locked laser based state detection&#10;&#10;also added new lasers to wavemeter linescan">
+      <created>1583859405206</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1583859405206</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM" />
-    <option name="LAST_COMMIT_MESSAGE" value="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM" />
+    <MESSAGE value="removing some experimental dependencies on mode-locked laser based state detection&#10;&#10;also added new lasers to wavemeter linescan" />
+    <option name="LAST_COMMIT_MESSAGE" value="removing some experimental dependencies on mode-locked laser based state detection&#10;&#10;also added new lasers to wavemeter linescan" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2" timestamp="1583459327127">
+    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2" timestamp="1583859405133">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583459327127" />
+    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583859405133" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
