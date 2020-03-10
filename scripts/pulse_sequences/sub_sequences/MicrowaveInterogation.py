@@ -18,7 +18,6 @@ class microwave_interogation(pulse_sequence):
         ('Transitions', 'qubit_0'),
         ('Transitions', 'qubit_plus'),
         ('Transitions', 'qubit_minus'),
-        ('ddsDefaults', 'qubit_dds_freq')
     ]
     required_subsequences = [knill_sequence, microwave_sequence_standard, bb1_sequence, spin_echo_sequence, uber_knill_sequence, spin_echo_knill_sequence]
 
