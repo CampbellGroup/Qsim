@@ -5,11 +5,11 @@ from labrad.units import WithUnit as U
 class quadrupole_interogation(pulse_sequence):
 
     required_parameters = [
-                           ('QuadrupoleInterogation', 'duration'),
-                           ('QuadrupoleInterogation', 'detuning'),
-                           ('QuadrupoleInterogation', 'power'),
-                           ('Transitions', 'quadrupole'),
-                           ]
+        ('QuadrupoleInterogation', 'duration'),
+        ('QuadrupoleInterogation', 'detuning'),
+        ('QuadrupoleInterogation', 'power'),
+        ('Transitions', 'quadrupole'),
+    ]
 
     def sequence(self):
         p = self.parameters

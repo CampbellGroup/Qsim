@@ -5,12 +5,12 @@ from labrad.units import WithUnit as U
 class shelving(pulse_sequence):
 
     required_parameters = [
-                           ('Shelving', 'duration'),
-                           ('Shelving', 'assist_power'),
-                           ('Shelving', 'repump_power'),
-                           ('Transitions', 'main_cooling_369'),
-                           ('DopplerCooling', 'detuning')
-                           ]
+        ('Shelving', 'duration'),
+        ('Shelving', 'assist_power'),
+        ('Shelving', 'repump_power'),
+        ('Transitions', 'main_cooling_369'),
+        ('DopplerCooling', 'detuning')
+    ]
 
     def sequence(self):
         p = self.parameters

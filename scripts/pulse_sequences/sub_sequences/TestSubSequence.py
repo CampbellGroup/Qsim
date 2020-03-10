@@ -4,8 +4,8 @@ from labrad.units import WithUnit as U
 class test_sub_sequence(pulse_sequence):
 
     required_parameters = [
-                           ('TestSequence','duration'),
-                           ]
+        ('TestSequence', 'duration'),
+        ]
 
     def sequence(self):
 
