@@ -19,7 +19,7 @@ class spin_echo_sequence(pulse_sequence):
         ('Pi_times', 'qubit_0'),
         ('Pi_times', 'qubit_minus'),
         ('Pi_times', 'qubit_plus'),
-        ('ddsDefaults', 'qubit_dds_fres')
+        ('ddsDefaults', 'qubit_dds_freq')
     ]
 
     def sequence(self):

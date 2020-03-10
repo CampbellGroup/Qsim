@@ -19,14 +19,16 @@ class fidelity_tweak_up(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('MicrowaveInterogation', 'repititions'))
-
-    exp_parameters.extend(sequence.all_required_parameters())
-    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
-    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
-
     exp_parameters.append(('StandardStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.extend(sequence.all_required_parameters())
+
+    # hide some parameters
+    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
+    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+    exp_parameters.remove(('ddsDefaults', 'qubit_dds_freq'))
+
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
