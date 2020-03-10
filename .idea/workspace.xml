@@ -3,9 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DipoleInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DipoleInterogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation_interleaved.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/bright_state_preperation_interleaved.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,7 +144,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583867128572</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="added additional parameters to ddsDefaults">
+      <created>1583876218700</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1583876218700</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -153,13 +161,14 @@
     <MESSAGE value="added the microwave qubit dds in as a default frequency from the registry so that we can set the DDS to sub Hz easily" />
     <MESSAGE value="small fixes, lingering print statements" />
     <MESSAGE value="added doppler_cooling_freq from registry to all subsequences" />
-    <option name="LAST_COMMIT_MESSAGE" value="added doppler_cooling_freq from registry to all subsequences" />
+    <MESSAGE value="added additional parameters to ddsDefaults" />
+    <option name="LAST_COMMIT_MESSAGE" value="added additional parameters to ddsDefaults" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2" timestamp="1583867128487">
+    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2" timestamp="1583876218616">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583867128487" />
+    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>

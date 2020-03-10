@@ -1,12 +1,12 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.StandardStateDetection import standard_state_detection
-from sub_sequences.ShelvingStateDetection import shelving_state_detection
+from scripts.pulse_sequences.sub_sequences.DopplerCooling import doppler_cooling
+from scripts.pulse_sequences.sub_sequences.StandardStateDetection import standard_state_detection
+from scripts.pulse_sequences.sub_sequences.ShelvingStateDetection import shelving_state_detection
 from deprecated.deprecated_sub_sequences.MLStateDetection import ml_state_detection
-from sub_sequences.TurnOffAll import turn_off_all
-from BrightStatePumping import bright_state_pumping
-from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
-from sub_sequences.Shelving import shelving
+from scripts.pulse_sequences.sub_sequences.TurnOffAll import turn_off_all
+from scripts.pulse_sequences.BrightStatePumping import bright_state_pumping
+from scripts.pulse_sequences.sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
+from scripts.pulse_sequences.sub_sequences.Shelving import shelving
 
 
 class bright_state_preperation_interleaved(pulse_sequence):
