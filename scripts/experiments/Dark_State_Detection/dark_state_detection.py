@@ -18,7 +18,7 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):

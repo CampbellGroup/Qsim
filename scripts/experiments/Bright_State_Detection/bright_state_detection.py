@@ -19,7 +19,7 @@ class BrightStateDetection(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -52,13 +52,13 @@ class BrightStateDetection(QsimExperiment):
                 counts = np.delete(counts, doppler_errors)
 
             # run and process data if detection mode is standard
-            if mode == 'Standard':
-                [counts] = self.run_sequence(max_rums=1000)
+            elif mode == 'Standard':
+                [counts] = self.run_sequence(max_runs=1000)
 
             # process counts into a histogram and plot on grapher
             if i % points_per_hist == 0:
                 hist = self.process_data(counts)
-                self.plot_hist(hist)
+                self.plot_hist(hist, folder_name='Bright_State_Detection')
 
             self.plot_prob(i, counts)
 
@@ -70,18 +70,6 @@ class BrightStateDetection(QsimExperiment):
             self.p = self.parameters
             if self.p != old_params:
                 self.program_pulser(sequence)
-
-
-    def setup_hist_datavault(self):
-        self.dv.cd(['', 'Bright_State_Detection'],
-                   True, context=self.hist_ctx)
-        self.dataset_hist = self.dv.new('bright_state_prep',
-                                        [('run', 'arb u')],
-                                        [('Counts', 'Counts', 'num')],
-                                        context=self.hist_ctx)
-        for parameter in self.p:
-            self.dv.add_parameter(parameter,
-                                  self.p[parameter], context=self.hist_ctx)
 
     def setup_prob_datavault(self):
         self.dv.cd(['', 'Bright_State_Probability'],
@@ -95,10 +83,6 @@ class BrightStateDetection(QsimExperiment):
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter],
                                   context=self.prob_ctx)
-
-    def plot_hist(self, hist):
-        self.dv.add(hist, context=self.hist_ctx)
-        self.rsg.plot(self.dataset_hist, 'Histogram', False)
 
     def plot_prob(self, num, counts):
         prob = self.get_pop(counts)
