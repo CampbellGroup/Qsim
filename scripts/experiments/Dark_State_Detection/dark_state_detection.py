@@ -1,5 +1,6 @@
 import labrad
 from Qsim.scripts.pulse_sequences.dark_state_preperation import dark_state_preperation as sequence
+from Qsim.scripts.pulse_sequences.bright_state_preparation import bright_state_preperation as shelving_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 
@@ -18,6 +19,7 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
@@ -29,51 +31,48 @@ class DarkStateDetection(QsimExperiment):
         self.hist_ctx = self.dv.context()
 
     def run(self, cxn, context):
-
+        mode = self.p.Modes.state_detection_mode
         self.setup_prob_datavault()
-        if self.p.DarkStateDetection.RunContinuous is True:
-            i = 0
+        i = 0
+
+        # program the correct sequence depending on detection method
+        if mode == 'Standard':
             self.program_pulser(sequence)
-            while True:
-                i += 1
-                [counts] = self.run_sequence()
-                if self.p.Modes.state_detection_mode == 'Shelving':
-                    [counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=500, num=2)
-                    dark_errors = np.where(counts_doppler_dark <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
-                    counts_dark = np.delete(counts_dark, dark_errors)
+        elif mode == 'Shelving':
+            self.program_pulser(shelving_sequence)
 
-                    print 'Dark Doppler Errors:', len(dark_errors[0])
-                    counts = counts_dark
+        # run loop continuously until user stops experiment
+        while True:
+            i += 1
+            points_per_hist = self.p.StandardStateDetection.points_per_histogram
 
+            # run and process data if detection mode is shelving
+            if mode == 'Shelving':
+                [doppler_counts, counts] = self.run_sequence(max_runs=500, num=2)
+                doppler_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+                counts = np.delete(counts, doppler_errors)
+                print 'Mean doppler cooling counts =  ' + str(sum(doppler_counts)/len(doppler_counts))
+                print 'Deleted' + str(len(doppler_errors)) + ' experiments due to Doppler errors'
+
+            # run and process data if detection mode is standard
+            elif mode == 'Standard':
+                [counts] = self.run_sequence(max_runs=1000)
+
+            # process counts into a histogram and plot on grapher
+            if i % points_per_hist == 0:
                 hist = self.process_data(counts)
-                if i % self.p.StandardStateDetection.points_per_histogram == 0:
-                    self.setup_hist_datavault()
-                    self.plot_hist(hist)
-                self.plot_prob(i, counts)
-                should_break = self.update_progress(np.random.random())
-                if should_break:
-                    break
-                old_params = dict(self.p.iteritems())
-                self.reload_all_parameters()
-                self.p = self.parameters
-                if self.p != old_params:
-                    self.program_pulser(sequence)
-        else:
-            counts = self.program_pulser()
-            hist = self.process_data(counts)
-            self.setup_hist_datavault()
-            self.plot_hist(hist)
-            self.plot_prob(0, hist)
+                self.plot_hist(hist, folder_name='Dark_State_Detection')
 
-    def setup_hist_datavault(self):
-        self.dv.cd(['', 'Dark_State_Detection'],
-                   True, context=self.hist_ctx)
-        self.dataset_hist = self.dv.new('dark_state_prep', [('run', 'arb u')],
-                                        [('Counts', 'Counts', 'num')],
-                                        context=self.hist_ctx)
-        for parameter in self.p:
-            self.dv.add_parameter(parameter, self.p[parameter],
-                                  context=self.hist_ctx)
+            self.plot_prob(i, counts)
+
+            should_break = self.update_progress(np.random.random())
+            old_params = dict(self.p.iteritems())
+            if should_break:
+                break
+            self.reload_all_parameters()
+            self.p = self.parameters
+            if self.p != old_params:
+                self.program_pulser(sequence)
 
     def setup_prob_datavault(self):
         self.dv.cd(['', 'Dark_State_Probability'], True, context=self.prob_ctx)
@@ -86,10 +85,6 @@ class DarkStateDetection(QsimExperiment):
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter],
                                   context=self.prob_ctx)
-
-    def plot_hist(self, hist):
-        self.dv.add(hist, context=self.hist_ctx)
-        self.rsg.plot(self.dataset_hist, 'Histogram', False)
 
     def plot_prob(self, num, counts):
         prob = self.get_pop(counts)
