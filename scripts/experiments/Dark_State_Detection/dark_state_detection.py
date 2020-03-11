@@ -7,7 +7,8 @@ import numpy as np
 
 class DarkStateDetection(QsimExperiment):
     """
-    Optical pump ion dark then readout dark fidelity
+    Prepare the ion in the dark state (changes depending on the detection method),
+    and readout repeatedly in a continuous fashion until the use stops the experiment
     """
 
     name = 'Dark State Detection'
@@ -22,6 +23,7 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.extend(shelving_sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
