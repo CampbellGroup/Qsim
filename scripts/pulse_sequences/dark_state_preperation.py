@@ -6,12 +6,14 @@ from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.ShelvingStateDetection import shelving_state_detection
 from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from sub_sequences.Shelving import shelving
+from sub_sequences.Deshelving import deshelving
 
 
 class dark_state_preperation(pulse_sequence):
 
     required_subsequences = [turn_off_all, doppler_cooling, standard_state_detection,
-                             shelving_state_detection, optical_pumping, shelving, shelving_doppler_cooling]
+                             shelving_state_detection, optical_pumping, shelving, shelving_doppler_cooling,
+                             deshelving]
 
     required_parameters = [
         ('Modes', 'state_detection_mode')]
@@ -35,4 +37,5 @@ class dark_state_preperation(pulse_sequence):
         elif mode == 'Shelving':
             self.addSequence(shelving)
             self.addSequence(shelving_state_detection)
+            self.addSequence(deshelving)
 
