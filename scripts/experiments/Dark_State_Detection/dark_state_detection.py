@@ -14,7 +14,9 @@ class DarkStateDetection(QsimExperiment):
     name = 'Dark State Detection'
 
     exp_parameters = []
-    exp_parameters.append(('DarkStateDetection', 'RunContinuous'))
+    exp_parameters.append(('Pi_times', 'qubit_0'))
+    exp_parameters.append(('Pi_times', 'qubit_plus'))
+    exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'repititions'))
@@ -25,6 +27,11 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.extend(shelving_sequence.all_required_parameters())
 
+    # manually set these parameters in the experiment
+    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
+    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+
+
     def initialize(self, cxn, context, ident):
         self.ident = ident
         self.pulser = self.cxn.pulser
@@ -33,6 +40,21 @@ class DarkStateDetection(QsimExperiment):
         self.hist_ctx = self.dv.context()
 
     def run(self, cxn, context):
+
+        # choose which qubit will be driven
+        qubit = self.p.Line_Selection.qubit
+        reps = self.p.MicrowaveInterogation.repititions
+        if qubit == 'qubit_0':
+            pi_time = self.p.Pi_times.qubit_0
+        elif qubit == 'qubit_plus':
+            pi_time = self.p.Pi_times.qubit_plus
+        elif qubit == 'qubit_minus':
+            pi_time = self.p.Pi_times.qubit_minus
+
+        # fix the interrogation time to be the pi_time and the detuning to be 0
+        self.p['MicrowaveInterogation.duration'] = reps*pi_time
+        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+
         mode = self.p.Modes.state_detection_mode
         self.setup_prob_datavault()
         i = 0
