@@ -1,6 +1,6 @@
 import labrad
 from Qsim.scripts.pulse_sequences.dark_state_preperation import dark_state_preperation as sequence
-from Qsim.scripts.pulse_sequences.bright_state_preparation import bright_state_preperation as shelving_sequence
+from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as shelving_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 
