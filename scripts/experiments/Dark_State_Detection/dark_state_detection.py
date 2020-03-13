@@ -20,6 +20,7 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('MicrowaveInterogation', 'repititions')) 
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
