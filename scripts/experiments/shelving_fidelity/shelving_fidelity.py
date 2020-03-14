@@ -1,7 +1,5 @@
 import labrad
-#from Qsim.scripts.pulse_sequences.shelving_fidelity import shelving_fidelity as sequence
-from Qsim.scripts.pulse_sequences.shelving_bright_state import shelving_bright_state
-from Qsim.scripts.pulse_sequences.shelving_dark_state import shelving_dark_state
+from Qsim.scripts.pulse_sequences.shelving_fidelity import shelving_fidelity as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 #from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
 #from Qsim.scripts.experiments.shelving_411.shelving_411 import ShelvingRate
@@ -22,11 +20,12 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('MicrowaveInterogation', 'repititions'))
-    exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
-    #exp_parameters.append(('ShelvingFidelity', 'drift_track_iterations'))
+    exp_parameters.append(('ShelvingStateDetection', 'save_time_tags'))
+    exp_parameters.extend(sequence.all_required_parameters())
+
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
@@ -64,8 +63,8 @@ class shelving_fidelity(QsimExperiment):
                 self.program_pulser(sequence)
 
             [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num=4)
-            print counts_bright
-            print timetags_dark
+
+
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_bright = np.delete(counts_bright, bright_errors)
 

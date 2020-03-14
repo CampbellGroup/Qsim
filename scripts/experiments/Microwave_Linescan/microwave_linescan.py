@@ -35,7 +35,6 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
-    exp_parameters.append(('MLStateDetection', 'repititions'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -73,43 +72,15 @@ class MicrowaveLineScan(QsimExperiment):
                 counts = np.delete(detection_counts, errors)
             if mode == 'Standard':
                 [counts] = self.run_sequence()
-            elif mode == 'ML':
-                [counts, allCounts] = self.run_ML_sequence()
-                print counts
-                self.dv.add(detuning + center['kHz'], sum(counts))
-                continue
+
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
             pop = self.get_pop(counts)
 
             self.dv.add(detuning + center['kHz'], pop)
-            
-        return data, should_break
 
-    def run_ML_sequence(self, max_runs=1000, num=1):
-        reps = self.p.MLStateDetection.repititions
-        counts = np.array([])
-        allCounts = np.array([])
-
-        for iteration in [0]:  # range(int(reps)):
-            self.timeharp.start_measure(60000)
-            self.pulser.start_number(int(reps))
-            self.pulser.wait_sequence_done()
-            self.timeharp.stop_measure()
-            data = self.timeharp.read_fifo(2048)
-            stamps = data[0]
-            data_length = data[1]
-            stamps = stamps[0:data_length]
-            timetags = self.convert_timetags(stamps)
-            low = self.p.bf_fluorescence.crop_start_time['ns']
-            high = self.p.bf_fluorescence.crop_stop_time['ns']
-            cropped_timetags = sum([low <= item <= high for item in timetags])
-            all_timetags = sum([0.0 <= item <= 12.5 for item in timetags])
-            counts = np.concatenate((counts, np.array([cropped_timetags])))
-            allCounts = np.concatenate((allCounts, np.array([all_timetags])))
-        self.pulser.stop_sequence()
-        return [counts, allCounts]
+        return should_break
 
     def finalize(self, cxn, context):
         pass
