@@ -100,32 +100,66 @@ class QsimExperiment(experiment):
         pulse_sequence.programSequence(self.pulser)
 
     def run_sequence(self, max_runs=1000, num=1):
+
+        # empty arrays to store photon counts and time tags
         counts = np.array([])
+        tt = np.array([])
+
+        # decide if we will be saving time tags during shelving state detection
+        self.timetags = self.p.ShelvingStateDetection.save_time_tags
+
+        # choose state detection method and number of repetitions
         self.state_detection_mode = self.p.Modes.state_detection_mode
         if self.state_detection_mode == 'Shelving':
             reps = self.p.ShelvingStateDetection.repititions
         elif self.state_detection_mode == 'Standard':
             reps = self.p.StandardStateDetection.repititions
 
-        for i in range(int(reps)/max_runs):
-            self.pulser.start_number(max_runs)
-            self.pulser.wait_sequence_done()
-            self.pulser.stop_sequence()
-            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
-            self.pulser.reset_readout_counts()
+        # program pulser for a given number of runs of the experiment, and collect readout counts
+        if self.timetags == 'OFF':
+            for i in range(int(reps)/max_runs):
+                self.pulser.start_number(max_runs)
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+                self.pulser.reset_readout_counts()
 
-        if int(reps) % max_runs != 0:
-            runs = int(reps) % max_runs
-            self.pulser.start_number(runs)
-            self.pulser.wait_sequence_done()
-            self.pulser.stop_sequence()
-            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
-            self.pulser.reset_readout_counts()
+            if int(reps) % max_runs != 0:
+                runs = int(reps) % max_runs
+                self.pulser.start_number(runs)
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+                self.pulser.reset_readout_counts()
 
+        # add in timetags on top of readout counts if so desired
+        elif self.timetags == 'ON':
+            for i in range(int(reps) / max_runs):
+                self.pulser.start_number(max_runs)
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+                tt = np.concatenate((tt, self.pulser.get_timetags()))
+                self.pulser.reset_readout_counts()
+
+            if int(reps) % max_runs != 0:
+                runs = int(reps) % max_runs
+                self.pulser.start_number(runs)
+                self.pulser.wait_sequence_done()
+                self.pulser.stop_sequence()
+                counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+                tt = np.concatenate((tt, self.pulser.get_timetags()))
+                self.pulser.reset_readout_counts()
+
+        # parse the photon counts for each call of ReadoutCount
         counts_parsed = []
         for i in range(num):
             counts_parsed.append(counts[i::num])
-        return counts_parsed
+
+        if self.timetags == 'OFF':
+            return counts_parsed
+        elif self.timetags == 'ON'
+            return counts_parsed, tt
 
     def process_data(self, counts):
 

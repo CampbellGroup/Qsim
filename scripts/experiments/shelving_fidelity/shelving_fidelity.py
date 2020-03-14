@@ -1,9 +1,11 @@
 import labrad
-from Qsim.scripts.pulse_sequences.shelving_fidelity import shelving_fidelity as sequence
+#from Qsim.scripts.pulse_sequences.shelving_fidelity import shelving_fidelity as sequence
+from Qsim.scripts.pulse_sequences.shelving_bright_state import shelving_bright_state
+from Qsim.scripts.pulse_sequences.shelving_dark_state import shelving_dark_state
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
-from Qsim.scripts.experiments.shelving_411.shelving_411 import ShelvingRate
-from Qsim.scripts.experiments.Microwave_Ramsey_Experiment.microwave_ramsey_experiment import MicrowaveRamseyExperiment
+#from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
+#from Qsim.scripts.experiments.shelving_411.shelving_411 import ShelvingRate
+#from Qsim.scripts.experiments.Microwave_Ramsey_Experiment.microwave_ramsey_experiment import MicrowaveRamseyExperiment
 import numpy as np
 from labrad.units import WithUnit as U
 
@@ -62,14 +64,14 @@ class shelving_fidelity(QsimExperiment):
                 self.program_pulser(sequence)
 
             [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num=4)
+            print counts_bright
+            print timetags_dark
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_bright = np.delete(counts_bright, bright_errors)
 
             dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_dark = np.delete(counts_dark, dark_errors)
 
-            print 'Dark Doppler Errors:', len(dark_errors[0])
-            print 'Bright Doppler Errors:', len(bright_errors[0])
             print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
 
             hist_bright = self.process_data(counts_bright)

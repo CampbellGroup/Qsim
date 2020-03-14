@@ -20,6 +20,10 @@ class shelving_state_detection(pulse_sequence):
                     self.start,
                     p.ShelvingStateDetection.duration)
 
+        self.addTTL('TimeResolvedCount',
+                    self.start,
+                    p.ShelvingStateDetection.duration)
+
         self.addDDS('935SP',
                     self.start,
                     p.ShelvingStateDetection.duration,
