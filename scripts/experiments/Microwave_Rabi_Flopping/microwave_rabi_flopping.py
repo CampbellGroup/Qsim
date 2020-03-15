@@ -50,6 +50,9 @@ class MicrowaveRabiFlopping(QsimExperiment):
                 errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
             elif mode == 'Standard':
+                # force standard optical pumping if standard readout method used
+                # no sense in quadrupole optical pumping by accident if using standard readout
+                self.p['OpticalPumping.method'] = 'Standard'
                 [counts] = self.run_sequence()
             else:
                 print 'Detection mode not selected!!!'

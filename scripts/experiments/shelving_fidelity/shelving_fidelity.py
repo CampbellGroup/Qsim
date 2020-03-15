@@ -23,6 +23,7 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('ShelvingStateDetection', 'sequence_iterations'))
     exp_parameters.append(('Timetags', 'save_timetags'))
     exp_parameters.extend(sequence.all_required_parameters())
 
@@ -51,7 +52,7 @@ class shelving_fidelity(QsimExperiment):
         i = 0
         self.program_pulser(sequence)
 
-        while True:
+        while i < self.p.ShelvingStateDetection.sequence_iterations:
             i += 1
             should_break = self.update_progress(np.random.random())
             old_params = dict(self.p.iteritems())
@@ -64,17 +65,9 @@ class shelving_fidelity(QsimExperiment):
             if collect_timetags == 'OFF':
                 [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num=4)
             elif collect_timetags == 'ON':
-                [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark], [timetags] = self.run_sequence_with_timetags(max_runs=150, num=4)
+                [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark], timetags = self.run_sequence_with_timetags(max_runs=150, num=4)
 
-            if i == 1 and collect_timetags == 'ON':
-                import csv
-                from itertools import izip
-                pad = np.zeros(len(timetags) - len(counts_bright))
-                with open('/home/qsimexpcontrol/Desktop/parse_timetags_test_dataset.csv', 'wb') as f:
-                    writer = csv.writer(f)
-                    writer.writerow(izip(np.concatenate((counts_bright, pad)),np.concatenate((counts_dark, pad)), timetags))
-
-            # [timetags_bright, timetags_dark] = self.process_timetags(timetags, counts_bright, counts_dark)
+            [timetags_bright, timetags_dark] = self.process_timetags(timetags, counts_bright, counts_dark)
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_bright = np.delete(counts_bright, bright_errors)
 
@@ -129,9 +122,18 @@ class shelving_fidelity(QsimExperiment):
                     prob_bright - prob_dark, context=self.dv_context)
 
     def process_timetags(self, timetags, counts_bright, counts_dark):
-        #timetags_bright, timetags_dark = np.array([]), np.array([])
-        #for i, j in zip(counts_bright, counts_dark):
-        return None
+        # function should take in the timetags, and parse into a list of lists for the timetags
+        # during each  state detection sequence
+        ttBright = []
+        ttDark = []
+        tt = timetags
+        for b, d in zip(counts_bright, counts_dark):
+            tempBright = tt[:int(b)]
+            tempDark = tt[int(b):int(d + b)]
+            ttBright.append(tempBright)
+            ttDark.append(tempDark)
+            tt = tt[int(b + d):]
+        return ttBright, ttDark
 
 if __name__ == '__main__':
     cxn = labrad.connect()
