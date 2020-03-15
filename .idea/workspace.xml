@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Linescan/microwave_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Linescan/microwave_linescan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,7 +234,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584205440391</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="working on collecting timetags during shelving fidelity experiment">
+      <created>1584220134481</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1584220134481</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -252,25 +259,25 @@
     <option name="LAST_COMMIT_MESSAGE" value="working on collecting timetags during shelving fidelity experiment" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2" timestamp="1584205440327">
+    <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2" timestamp="1584220134403">
       <screen x="0" y="0" width="5760" height="1047" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
     <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583935763828" />
-    <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584205440327" />
+    <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584220134403" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="623" y="144" key="SettingsEditor/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1580513048327" />
     <state x="2543" y="148" key="SettingsEditor/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583455025933" />
-    <state x="2256" y="386" width="1086" height="443" key="Vcs.Push.Dialog.v2" timestamp="1584220128925">
+    <state x="2256" y="386" width="1086" height="443" key="Vcs.Push.Dialog.v2" timestamp="1584220138899">
       <screen x="0" y="0" width="5760" height="1047" />
     </state>
     <state x="555" y="262" width="802" height="529" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957739600" />
-    <state x="2256" y="386" width="1086" height="443" key="Vcs.Push.Dialog.v2/0.0.5760.1047@0.0.5760.1047" timestamp="1584220128925" />
+    <state x="2256" y="386" width="1086" height="443" key="Vcs.Push.Dialog.v2/0.0.5760.1047@0.0.5760.1047" timestamp="1584220138899" />
     <state x="572" y="367" key="com.intellij.ide.util.TipDialog" timestamp="1583952580723">
       <screen x="0" y="0" width="1920" height="1047" />
     </state>

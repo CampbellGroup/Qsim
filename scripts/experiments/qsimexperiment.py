@@ -147,13 +147,12 @@ class QsimExperiment(experiment):
         elif self.state_detection_mode == 'Standard':
             reps = self.p.StandardStateDetection.repititions
 
-        # program pulser for a given number of runs of the experiment, and collect readout counts
-        # if self.tt_onoff == 'OFF' or self.state_detection_mode == 'Standard':
         for i in range(int(reps) / max_runs):
             self.pulser.start_number(max_runs)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+            tt = np.concatenate((tt, self.pulser.get_timetags()))
             self.pulser.reset_readout_counts()
 
         if int(reps) % max_runs != 0:
@@ -162,36 +161,15 @@ class QsimExperiment(experiment):
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+            tt = np.concatenate((tt, self.pulser.get_timetags()))
             self.pulser.reset_readout_counts()
 
-        # add in timetags on top of readout counts if so desired
-        # elif self.tt_onoff == 'ON':
-        #    for i in range(int(reps) / max_runs):
-        #        self.pulser.start_number(max_runs)
-        #        self.pulser.wait_sequence_done()
-        #        self.pulser.stop_sequence()
-        #        counts = np.concatenate((counts, self.pulser.get_readout_counts()))
-        #        tt = np.concatenate((tt, self.pulser.get_timetags()))
-        #        self.pulser.reset_readout_counts()
-
-        #    if int(reps) % max_runs != 0:
-        #        runs = int(reps) % max_runs
-        #        self.pulser.start_number(runs)
-        #        self.pulser.wait_sequence_done()
-        #        self.pulser.stop_sequence()
-        #        counts = np.concatenate((counts, self.pulser.get_readout_counts()))
-        #        tt = np.concatenate((tt, self.pulser.get_timetags()))
-        #        self.pulser.reset_readout_counts()
-        # print tt
         # parse the photon counts for each call of ReadoutCount
         counts_parsed = []
         for i in range(num):
             counts_parsed.append(counts[i::num])
 
-        # if self.tt_onoff == 'OFF':
-        return counts_parsed
-        # elif self.tt_onoff == 'ON':
-        #   return counts_parsed, tt
+        return counts_parsed, [tt]
 
     def process_data(self, counts):
 

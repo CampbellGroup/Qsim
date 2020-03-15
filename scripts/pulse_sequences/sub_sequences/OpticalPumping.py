@@ -99,13 +99,13 @@ class optical_pumping(pulse_sequence):
 
             self.addDDS('760SP',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(5.0, 'ms'),
                         U(160.0, 'MHz'),
                         U(-2.0,  'dBm'))
 
             self.addDDS('760SP2',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(5.0, 'ms'),
                         U(160.0, 'MHz'),
                         U(6.0,  'dBm'))
 
@@ -117,6 +117,6 @@ class optical_pumping(pulse_sequence):
 
             self.addTTL('976SP',
                         self.start,
-                        p.OpticalPumping.quadrupole_op_duration + p.OpticalPumping.duration)
+                        p.OpticalPumping.quadrupole_op_duration + p.OpticalPumping.duration + U(5.0, 'ms'))
 
-            self.end = self.start + p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration
+            self.end = self.start + p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(5.0, 'ms')
