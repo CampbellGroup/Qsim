@@ -25,6 +25,8 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('ShelvingStateDetection', 'sequence_iterations'))
     exp_parameters.append(('Timetags', 'save_timetags'))
+    exp_parameters.append(('Timetags', 'lower_threshold'))
+    exp_parameters.append(('Timetags', 'upper_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
@@ -49,6 +51,7 @@ class shelving_fidelity(QsimExperiment):
         self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Shelving'
         self.setup_prob_datavault()
+        self.setup_timetags_datavault()
         i = 0
         self.program_pulser(sequence)
 
@@ -66,13 +69,20 @@ class shelving_fidelity(QsimExperiment):
                 [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num=4)
             elif collect_timetags == 'ON':
                 [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark], timetags = self.run_sequence_with_timetags(max_runs=150, num=4)
+                ttBright = []
+                [timetags_bright, timetags_dark] = self.process_timetags(timetags, counts_bright, counts_dark)
+                save_timetags = np.where(np.logical_and(counts_bright >= self.p.Timetags.lower_threshold,
+                                                        counts_bright <= self.p.Timetags.upper_threshold))
+                #for location in save_timetags[0]:
+                #    self.dv.add(counts_bright[location], np.array(timetags_bright[int(location)][0]), context=self.tt_context)
 
-            [timetags_bright, timetags_dark] = self.process_timetags(timetags, counts_bright, counts_dark)
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_bright = np.delete(counts_bright, bright_errors)
 
             dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_dark = np.delete(counts_dark, dark_errors)
+
+
 
             print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
 
@@ -113,6 +123,14 @@ class shelving_fidelity(QsimExperiment):
         self.grapher.plot(self.dataset_prob, 'Fidelity', False)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.dv_context)
+
+    def setup_timetags_datavault(self):
+        self.tt_context = self.dv.context()
+        self.dv.cd(['', 'timetagged_errors'], True, context=self.tt_context)
+        self.timetags_dataset = self.dv.new('timetagged_errors', [('counts_bright', 'num')],
+                                            [('timetags', 'bright_timetag_errors', 'list')], context = self.tt_context)
+        for parameter in self.p:
+            self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_context)
 
     def plot_prob(self, num, counts_dark, counts_bright):
         print num

@@ -172,7 +172,6 @@ class QsimExperiment(experiment):
         return counts_parsed, [tt]
 
     def process_data(self, counts):
-
         bins = []
         bins = list(np.arange(0, np.max(counts) + 1, 1))
         events = [list(counts).count(i) for i in bins]
