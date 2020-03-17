@@ -33,7 +33,7 @@ class doppler_cooling(pulse_sequence):
         self.addDDS('935SP',
                     self.start,
                     p.DopplerCooling.duration,
-                    p.ddsDefaults.repump_935_power,
+                    p.ddsDefaults.repump_935_freq,
                     p.DopplerCooling.repump_power)
 
         self.end = self.start + p.DopplerCooling.duration
