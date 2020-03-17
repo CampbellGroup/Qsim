@@ -10,8 +10,14 @@ class shelving_doppler_cooling(pulse_sequence):
         ('DopplerCooling', 'detuning'),
         ('Shelving_Doppler_Cooling', 'duration'),
         ('Transitions', 'main_cooling_369'),
-        ('ddsDefaults', 'doppler_cooling_freq')
-                           ]
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'repump_760_1_freq'),
+        ('ddsDefaults', 'repump_760_1_power'),
+        ('ddsDefaults', 'repump_760_2_freq'),
+        ('ddsDefaults', 'repump_760_2_power'),
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -20,7 +26,7 @@ class shelving_doppler_cooling(pulse_sequence):
                     self.start,
                     p.Shelving_Doppler_Cooling.duration,
                     p.ddsDefaults.doppler_cooling_freq,
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.addDDS('369DP',
                     self.start,
@@ -31,20 +37,20 @@ class shelving_doppler_cooling(pulse_sequence):
         self.addDDS('935SP',
                     self.start,
                     p.Shelving_Doppler_Cooling.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.DopplerCooling.repump_power)
 
         self.addDDS('760SP',
                     self.start,
                     p.Shelving_Doppler_Cooling.duration,
-                    U(160.0, 'MHz'),
-                    U(-2.0,  'dBm'))
+                    p.ddsDefaults.repump_760_1_freq,
+                    p.ddsDefaults.repump_760_1_power)
 
         self.addDDS('760SP2',
                     self.start,
                     p.Shelving_Doppler_Cooling.duration,
-                    U(160.0, 'MHz'),
-                    U(6.0,  'dBm'))
+                    p.ddsDefaults.repump_760_2_freq,
+                    p.ddsDefaults.repump_760_2_power)
 
         self.addTTL('ReadoutCount', self.start, p.Shelving_Doppler_Cooling.duration)
 

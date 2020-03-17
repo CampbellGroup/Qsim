@@ -13,7 +13,13 @@ class optical_pumping(pulse_sequence):
         ('OpticalPumping', 'quadrupole_op_duration'),
         ('OpticalPumping', 'quadrupole_op_detuning'),
         ('Transitions', 'main_cooling_369'),
-        ('ddsDefaults', 'optical_pumping_freq')
+        ('ddsDefaults', 'optical_pumping_freq'),
+        ('ddsDefaults', 'optical_pumping_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'repump_760_1_freq'),
+        ('ddsDefaults', 'repump_760_1_power'),
+        ('ddsDefaults', 'repump_760_2_freq'),
+        ('ddsDefaults', 'repump_760_2_power')
     ]
 
     def sequence(self):
@@ -25,7 +31,7 @@ class optical_pumping(pulse_sequence):
                         self.start,
                         p.OpticalPumping.duration,
                         p.ddsDefaults.optical_pumping_freq,
-                        U(-4.0, 'dBm'))
+                        p.ddsDefaults.optical_pumping_power)
 
             self.addDDS('369DP',
                         self.start,
@@ -36,14 +42,20 @@ class optical_pumping(pulse_sequence):
             self.addDDS('935SP',
                         self.start,
                         p.OpticalPumping.duration,
-                        U(320.0, 'MHz'),
+                        p.ddsDefaults.repump_935_freq,
                         p.OpticalPumping.repump_power)
 
             self.addDDS('760SP',
                         self.start,
                         p.OpticalPumping.duration,
-                        U(160.0, 'MHz'),
-                        U(-2.0,  'dBm'))
+                        p.ddsDefaults.repump_760_1_freq,
+                        p.ddsDefaults.repump_760_1_power)
+
+            self.addDDS('760SP2',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        p.ddsDefaults.repump_760_2_freq,
+                        p.ddsDefaults.repump_760_2_power)
 
             self.end = self.start + p.OpticalPumping.duration
 
@@ -51,20 +63,20 @@ class optical_pumping(pulse_sequence):
             self.addDDS('935SP',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration,
-                        U(320.0, 'MHz'),
+                        p.ddsDefaults.repump_935_freq,
                         p.OpticalPumping.repump_power)
 
             self.addDDS('760SP',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration,
-                        U(160.0, 'MHz'),
-                        U(-2.0,  'dBm'))
+                        p.ddsDefaults.repump_760_1_freq,
+                        p.ddsDefaults.repump_760_1_power)
 
             self.addDDS('760SP2',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration,
-                        U(160.0, 'MHz'),
-                        U(6.0,  'dBm'))
+                        p.ddsDefaults.repump_760_2_freq,
+                        p.ddsDefaults.repump_760_2_power)
 
             self.addDDS('411DP',
                         self.start,
@@ -83,7 +95,7 @@ class optical_pumping(pulse_sequence):
                         self.start,
                         p.OpticalPumping.duration,
                         p.ddsDefaults.optical_pumping_freq,
-                        U(-4.0, 'dBm'))
+                        p.ddsDefaults.optical_pumping_power)
 
             self.addDDS('369DP',
                         self.start,
@@ -94,20 +106,20 @@ class optical_pumping(pulse_sequence):
             self.addDDS('935SP',
                         self.start,
                         p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
-                        U(320.0, 'MHz'),
+                        p.ddsDefaults.repump_935_freq,
                         p.OpticalPumping.repump_power)
 
             self.addDDS('760SP',
                         self.start,
                         p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(5.0, 'ms'),
-                        U(160.0, 'MHz'),
-                        U(-2.0,  'dBm'))
+                        p.ddsDefaults.repump_760_1_freq,
+                        p.ddsDefaults.repump_760_1_power)
 
             self.addDDS('760SP2',
                         self.start,
                         p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(5.0, 'ms'),
-                        U(160.0, 'MHz'),
-                        U(6.0,  'dBm'))
+                        p.ddsDefaults.repump_760_2_freq,
+                        p.ddsDefaults.repump_760_2_power)
 
             self.addDDS('411DP',
                         self.start + p.OpticalPumping.duration,

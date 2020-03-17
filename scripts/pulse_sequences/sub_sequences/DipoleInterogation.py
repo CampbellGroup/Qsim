@@ -12,7 +12,11 @@ class dipole_interogation(pulse_sequence):
         ('DipoleInterogation', 'interogation_laser'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'optical_pumping_freq'),
-        ('ddsDefaults', 'state_detection_freq')
+        ('ddsDefaults', 'state_detection_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'optical_pumping_power'),
+        ('ddsDefaults', 'state_detection_power'),
+        ('ddsDefaults', 'repump_935_freq')
                            ]
 
     def sequence(self):
@@ -28,26 +32,26 @@ class dipole_interogation(pulse_sequence):
                         self.start,
                         p.DipoleInterogation.duration,
                         p.ddsDefaults.doppler_cooling_freq,
-                        U(-9.0, 'dBm'))
+                        p.ddsDefaults.doppler_cooling_power)
 
         if p.DipoleInterogation.interogation_laser == 'StateDetectionSP':
             self.addDDS('StateDetectionSP',
                         self.start,
                         p.DipoleInterogation.duration,
                         p.ddsDefaults.state_detection_freq,
-                        U(-4.0, 'dBm'))
+                        p.ddsDefaults.state_detection_power)
 
         if p.DipoleInterogation.interogation_laser == 'OpticalPumpingSP':
             self.addDDS('OpticalPumpingSP',
                         self.start,
                         p.DipoleInterogation.duration,
                         p.ddsDefaults.optical_pumping_freq,
-                        U(-4.0, 'dBm'))
+                        p.ddsDefaults.optical_pumping_power)
 
         self.addDDS('935SP',
                     self.start,
                     p.DipoleInterogation.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.DipoleInterogation.repump_power)
         self.addTTL('TimeResolvedCount', self.start, p.DipoleInterogation.duration)
         self.end = self.start + p.DipoleInterogation.duration

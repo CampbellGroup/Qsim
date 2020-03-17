@@ -3,9 +3,20 @@
   <component name="ChangeListManager">
     <list default="true" id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_411/shelving_411.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_411/shelving_411.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DipoleInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DipoleInterogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ZeemanOpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ZeemanOpticalPumping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -255,7 +266,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584310579328</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="attempting to save timetags that we deem to be errors to datavault">
+      <created>1584378981532</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1584378981532</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -272,14 +290,16 @@
     <MESSAGE value="working on collecting timetags during shelving fidelity experiment" />
     <MESSAGE value="working on collecting timetags during shelving fidelity experiment for error detection" />
     <MESSAGE value="timetags are now collected during state detection if so desired&#10;forced standard optical pumping method during rabi flopping if standard readout is used" />
-    <option name="LAST_COMMIT_MESSAGE" value="timetags are now collected during state detection if so desired&#10;forced standard optical pumping method during rabi flopping if standard readout is used" />
+    <MESSAGE value="attempting to save timetags that we deem to be errors to datavault" />
+    <option name="LAST_COMMIT_MESSAGE" value="attempting to save timetags that we deem to be errors to datavault" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2" timestamp="1584310579243">
-      <screen x="0" y="0" width="5760" height="1047" />
+    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2" timestamp="1584378981328">
+      <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
+    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584378981328" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
     <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583935763828" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />

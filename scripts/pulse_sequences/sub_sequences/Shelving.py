@@ -10,7 +10,10 @@ class shelving(pulse_sequence):
         ('Shelving', 'repump_power'),
         ('Transitions', 'main_cooling_369'),
         ('DopplerCooling', 'detuning'),
-        ('ddsDefaults', 'doppler_cooling_freq')
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+
     ]
 
     def sequence(self):
@@ -28,31 +31,32 @@ class shelving(pulse_sequence):
             assist_start = self.start
             assist_duration = p.Shelving.duration
 
+        # hard coded off for high fidelity experiment fears
         self.addDDS('369DP',
                     assist_start,
                     assist_duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                    p.Shelving.assist_power)
+                    U(-46.0, 'dBm'))
 
         self.addDDS('DopplerCoolingSP',
                     assist_start,
                     assist_duration,
                     p.ddsDefaults.doppler_cooling_freq,
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.addDDS('935SP',
                     self.start,
                     p.Shelving.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.Shelving.repump_power)
 
         self.addTTL('411TTL',
                     self.start,
                     p.Shelving.duration)
 
-        if p.Shelving.duration > shutterlag:
-            self.addTTL('ShelvingShutter',
-                        self.start,
-                        p.Shelving.duration)
+        #if p.Shelving.duration > shutterlag:
+        #    self.addTTL('ShelvingShutter',
+        #                self.start,
+        #                p.Shelving.duration)
 
         self.end = self.start + p.Shelving.duration

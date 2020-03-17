@@ -12,8 +12,11 @@ class deshelving(pulse_sequence):
         ('DopplerCooling', 'detuning'),
         ('Transitions', 'main_cooling_369'),
         ('Deshelving', 'repump_power'),
-        ('ddsDefaults', 'doppler_cooling_freq')
-
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'repump_760_1_freq'),
+        ('ddsDefaults', 'repump_760_2_freq'),
                            ]
 
     def sequence(self):
@@ -29,24 +32,24 @@ class deshelving(pulse_sequence):
                     self.start,
                     p.Deshelving.duration,
                     p.ddsDefaults.doppler_cooling_freq,
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.addDDS('935SP',
                     self.start,
                     p.Deshelving.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.Deshelving.repump_power)
 
         self.addDDS('760SP',
                     self.start,
                     p.Deshelving.duration,
-                    U(160.0, 'MHz'),
+                    p.ddsDefaults.repump_760_1_freq,
                     p.Deshelving.power1)
 
         self.addDDS('760SP2',
                     self.start,
                     p.Deshelving.duration,
-                    U(160.0, 'MHz'),
+                    p.ddsDefaults.repump_760_2_freq,
                     p.Deshelving.power2)
 
         self.end = self.start + p.Deshelving.duration

@@ -10,7 +10,9 @@ class shelving_state_detection(pulse_sequence):
         ('ShelvingStateDetection', 'detuning'),
         ('ShelvingStateDetection', 'CW_power'),
         ('Transitions', 'main_cooling_369'),
-        ('ddsDefaults', 'doppler_cooling_freq')
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
                             ]
 
     def sequence(self):
@@ -27,7 +29,7 @@ class shelving_state_detection(pulse_sequence):
         self.addDDS('935SP',
                     self.start,
                     p.ShelvingStateDetection.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.ShelvingStateDetection.repump_power)
 
         self.addDDS('369DP',
@@ -40,6 +42,6 @@ class shelving_state_detection(pulse_sequence):
                     self.start,
                     p.ShelvingStateDetection.duration,
                     p.ddsDefaults.doppler_cooling_freq,
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.end = self.start + p.ShelvingStateDetection.duration

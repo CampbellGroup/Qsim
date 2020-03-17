@@ -14,8 +14,12 @@ class heralded_state_preparation(pulse_sequence):
         ('Transitions', 'MetastableQubit'),
         ('Pi_times', 'metastable_qubit'),
         ('HeraldedStatePreparation', 'deshelving_duration'),
-        ('ddsDefaults', 'doppler_cooling_freq')
-                            ]
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'repump_760_1_freq'),
+        ('ddsDefaults', 'repump_760_1_power')
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -36,14 +40,14 @@ class heralded_state_preparation(pulse_sequence):
         self.addDDS('760SP',
                     self.start + p.Pi_times.metastable_qubit,
                     p.HeraldedStatePreparation.deshelving_duration,
-                    U(160.0, 'MHz'),
-                    U(-2.0, 'dBm'))
+                    p.ddsDefaults.repump_760_1_freq,
+                    p.ddsDefaults.repump_760_1_power)
 
         # detect any population in the ground state, at first here we will use the state detection parameters
         self.addDDS('935SP',
                     self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
                     p.MetastableStateDetection.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.MetastableStateDetection.repump_power)
 
         self.addDDS('369DP',
@@ -56,6 +60,6 @@ class heralded_state_preparation(pulse_sequence):
                     self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
                     p.MetastableStateDetection.duration,
                     p.ddsDefaults.doppler_cooling_freq,
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.end = self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration
