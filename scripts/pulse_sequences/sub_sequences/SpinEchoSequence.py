@@ -38,7 +38,7 @@ class spin_echo_sequence(pulse_sequence):
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
 
-        # pi/2 pulse around X
+        # rotation around X
         self.addDDS('Microwave_qubit',
                     self.start,
                     p.MicrowaveInterogation.duration/2.0,
@@ -46,20 +46,20 @@ class spin_echo_sequence(pulse_sequence):
                     p.MicrowaveInterogation.power,
                     U(0.0, 'deg'))
 
-        # pi pulse around Y
+        # rotation around Y
         self.addDDS('Microwave_qubit',
-                    self.start + pi_time/2.0,
+                    self.start + p.MicrowaveInterogation.duration/2.0,
                     p.MicrowaveInterogation.duration,
                     DDS_freq,
                     p.MicrowaveInterogation.power,
                     U(90.0, 'deg'))
 
-        # pi/2 pulse around X
+        # rotation around X
         self.addDDS('Microwave_qubit',
-                    self.start + 3*pi_time/2.0,
+                    self.start + 3.0*p.MicrowaveInterogation.duration/2.0,
                     p.MicrowaveInterogation.duration/2.0,
                     DDS_freq,
                     p.MicrowaveInterogation.power,
                     U(0.0, 'deg'))
 
-        self.end = self.start + 2*p.MicrowaveInterogation.duration
+        self.end = self.start + 2.0*p.MicrowaveInterogation.duration
