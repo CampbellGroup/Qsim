@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import os
 import sys
 
@@ -6,9 +6,10 @@ from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks
 from Qsim.clients.qtui.detachable_tab import DetachableTabWidget
 
-sys.path.append('/home/qsimexpcontrol/LabRAD/')
-sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
+sys.path.append('/home/cromes/LabRAD/')
+sys.path.append('/home/cromes/LabRAD/Qsim')
 os.environ["LABRADPASSWORD"] = "lab"
+
 
 class QSIM_GUI(QtGui.QMainWindow):
     def __init__(self, reactor, clipboard, parent=None):
@@ -20,11 +21,11 @@ class QSIM_GUI(QtGui.QMainWindow):
     @inlineCallbacks
     def connect_labrad(self):
         from common.lib.clients.connection import connection
-        cxn = connection(name = 'Qsim GUI Client')
+        cxn = connection(name='Qsim GUI Client')
         yield cxn.connect()
         self.create_layout(cxn)
 
-    #Highest level adds tabs to big GUI
+    # Highest level adds tabs to big GUI
     def create_layout(self, cxn):
         #  creates central layout
         centralWidget = QtGui.QWidget()
@@ -33,31 +34,27 @@ class QSIM_GUI(QtGui.QMainWindow):
         #  create subwidgets to be added to tabs
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         wavemeter = self.makeWavemeterWidget(reactor, cxn)
-        control = self.makeControlWidget(reactor, cxn)
-        Ultrafast = self.makeUltrafastWidget(reactor, cxn)
-        Pulser = self.makePulserWidget(reactor, cxn)
-        Config = self.makeConfigWidget(reactor, cxn)
-        Keithley = self.makeKeithleyWidget(reactor, cxn)
-        PiezoBox = self.makePiezoWidget(reactor, cxn)
+        #control = self.makeControlWidget(reactor, cxn)
+        #Tsunami = self.makeTsunamiWidget(reactor, cxn)
+        #Pulser = self.makePulserWidget(reactor, cxn)
+        # Keithley = self.makeKeithleyWidget(reactor, cxn)
 
         # add tabs
-        self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget = DetachableTabWidget()
         self.tabWidget.addTab(wavemeter, '&Wavemeter')
         self.tabWidget.addTab(script_scanner, '&Script Scanner')
-        self.tabWidget.addTab(control, '&Control')
-        self.tabWidget.addTab(Pulser, '&Pulser')
-        self.tabWidget.addTab(Config, '&Config')
-        self.tabWidget.addTab(Ultrafast, '&Ultrafast')
-        self.tabWidget.addTab(Keithley, '&Keithleys')
-        self.tabWidget.addTab(PiezoBox, '&Piezo Box')
-        self.tabWidget.setMovable(True)
+        #self.tabWidget.addTab(control, '&Control')
+        #self.tabWidget.addTab(Pulser, '&Pulser')
+        #self.tabWidget.addTab(Tsunami, '&Tsunami')
+        # self.tabWidget.addTab(Keithley, '&Keithley')
+        # self.tabWidget.setMovable(True)
 
         layout.addWidget(self.tabWidget)
         centralWidget.setLayout(layout)
         self.setCentralWidget(centralWidget)
         self.setWindowTitle('Qsim GUI')
 
-#################### Here we will connect to individual clients and add sub-tabs #####################
+    #################### Here we will connect to individual clients and add sub-tabs #####################
 
     def makePulserWidget(self, reactor, cxn):
         from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
@@ -72,49 +69,21 @@ class QSIM_GUI(QtGui.QMainWindow):
         puls_widget.setLayout(gridLayout)
         return puls_widget
 
-    def makePiezoWidget(self, reactor, cxn):
-        qwidget = QtGui.QWidget()
-        from common.lib.clients.piezo_client.Piezo_Client import Piezo_Client
-        gridLayout = QtGui.QGridLayout()
-        pzclient = Piezo_Client(reactor)
-        gridLayout.addWidget(pzclient)
-        qwidget.setLayout(gridLayout)
-        return qwidget
+    # def makeKeithleyWidget(self, reactor, cxn):
+    #    from Qsim.clients.kiethley_control.kiethley_controller import kiethleyclient
+    #    widget = kiethleyclient(reactor, cxn)
+    #    return widget
 
-    def makeKeithleyWidget(self, reactor, cxn):
-        qwidget = QtGui.QWidget()
-        from Qsim.clients.kiethley_control.kiethley_controller import kiethleyclient as oven
-        from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import kiethleyclient as bfield
-        gridLayout = QtGui.QGridLayout()
-        ovenKiethley = oven(reactor, cxn)
-        bfieldKiethley = bfield(reactor, cxn)
-        ovenKiethley.setMaximumHeight(200)
-        bfieldKiethley.setMaximumHeight(400)
-        gridLayout.addWidget(ovenKiethley, 0, 0, 2, 0)
-        gridLayout.addWidget(bfieldKiethley, 1, 0, 2, 1)
-        qwidget.setLayout(gridLayout)
-        return qwidget
-
-    def makeConfigWidget(self, reactor, cxn):
-        from common.lib.clients.config_editor.config_editor import CONFIG_EDITOR
-        widget = CONFIG_EDITOR(reactor, cxn)
-        return widget
-
-    def makeUltrafastWidget(self, reactor, cxn):
+    def makeTsunamiWidget(self, reactor, cxn):
         twidget = QtGui.QWidget()
         from common.lib.clients.evPump.evPumpClient import eVPumpClient
         from common.lib.clients.bristol.bristol_client import bristol_client
-        from Qsim.clients.time_harp_client.time_harp_client import TimeHarpClient
         gridLayout = QtGui.QGridLayout()
         evpump = eVPumpClient(reactor)
-        evpump.setMaximumHeight(500)
+        evpump.setMinimumHeight(700)
         bristol = bristol_client(reactor)
-        timeharp = TimeHarpClient(reactor, cxn)
-        timeharp.setMaximumHeight(620)
-        bristol.setMaximumHeight(200)
-        gridLayout.addWidget(evpump, 0, 0)
-        gridLayout.addWidget(bristol, 1, 0, 1, 2)
-        gridLayout.addWidget(timeharp, 0, 1)
+        gridLayout.addWidget(evpump)
+        gridLayout.addWidget(bristol)
         twidget.setLayout(gridLayout)
         return twidget
 
@@ -127,12 +96,15 @@ class QSIM_GUI(QtGui.QMainWindow):
         widget = QtGui.QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
         from Qsim.clients.single_wavemeter_channel.single_channel_wm import single_channel_wm
+        from Qsim.clients.WM_DAC_Control.wm_dac_control import wm_dac_control
         gridLayout = QtGui.QGridLayout()
         wavemeter = wavemeterclient(reactor, cxn)
-        ws7 = single_channel_wm(reactor)
+        #ws7 = single_channel_wm(reactor)
+        dac_control = wm_dac_control(reactor)
         gridLayout.addWidget(wavemeter)
-        gridLayout.addWidget(ws7)
-        wavemeter.setMaximumHeight(800)
+        gridLayout.addWidget(dac_control)
+        #gridLayout.addWidget(ws7)
+        wavemeter.setMaximumHeight(820)
         widget.setLayout(gridLayout)
         return widget
 
@@ -144,17 +116,15 @@ class QSIM_GUI(QtGui.QMainWindow):
         from common.lib.clients.switchclient.switchclient import switchclient
         from Qsim.clients.dac_control.dac_client import dacclient
         from Qsim.clients.load_control.load_control import LoadControl
-#        from Qsim.clients.load_indicator.load_indicator import LoadIndicator
 
         gridLayout = QtGui.QGridLayout()
-        gridLayout.addWidget(pmtWidget(reactor, cxn),      1, 0, 1, 1)
-        gridLayout.addWidget(RFcontrol(reactor, cxn),      3, 0, 1, 1)
-        gridLayout.addWidget(cameraswitch(reactor, cxn),   2, 0, 1, 1)
-        gridLayout.addWidget(switchclient(reactor, cxn),   0, 0, 1, 1)
-        gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 2, 1)
-        gridLayout.addWidget(LoadControl(reactor),    2, 1, 2, 1)
-#        gridLayout.addWidget(LoadIndicator(reactor),       3, 1, 2, 1)
-        gridLayout.setSpacing(1)
+        gridLayout.addWidget(pmtWidget(reactor, cxn), 1, 0, 1, 1)
+        gridLayout.addWidget(RFcontrol(reactor, cxn), 3, 0, 1, 1)
+        gridLayout.addWidget(cameraswitch(reactor, cxn), 2, 0, 1, 1)
+        gridLayout.addWidget(switchclient(reactor, cxn), 0, 0, 1, 1)
+        gridLayout.addWidget(dacclient(reactor, cxn), 0, 1, 2, 1)
+        gridLayout.addWidget(LoadControl(reactor, cxn), 2, 1, 2, 1)
+        gridLayout.setSpacing(10)
         widget.setLayout(gridLayout)
         return widget
 
@@ -166,10 +136,12 @@ if __name__ == "__main__":
     a = QtGui.QApplication(sys.argv)
     clipboard = a.clipboard()
     import qt4reactor
+
     qt4reactor.install()
     from twisted.internet import reactor
+
     QsimGUI = QSIM_GUI(reactor, clipboard)
-    QsimGUI.setWindowIcon(QtGui.QIcon('/home/qsimexpcontrol/Pictures/icons/6ions.jpg'))
+    #QsimGUI.setWindowIcon(QtGui.QIcon('/home/cromes/Pictures/gui_logo.png'))
     QsimGUI.setWindowTitle('Qsim GUI')
     QsimGUI.show()
     reactor.run()
