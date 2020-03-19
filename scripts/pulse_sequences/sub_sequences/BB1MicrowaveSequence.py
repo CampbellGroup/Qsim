@@ -29,19 +29,19 @@ class bb1_sequence(pulse_sequence):
         if p.Line_Selection.qubit == 'qubit_0':
             center = p.Transitions.qubit_0
             pi_time = p.Pi_times.qubit_0
-            theta = (np.pi*p.MicrowaveInterogation.duration/pi_time) % (4*np.pi)
+            theta = (np.pi*p.MicrowaveInterogation.duration/pi_time) % (4.0*np.pi)
         elif p.Line_Selection.qubit == 'qubit_plus':
             center = p.Transitions.qubit_plus
             pi_time = p.Pi_times.qubit_plus
-            theta = (np.pi*p.MicrowaveInterogation.duration/pi_time) % (4*np.pi)
+            theta = (np.pi*p.MicrowaveInterogation.duration/pi_time) % (4.0*np.pi)
         elif p.Line_Selection.qubit == 'qubit_minus':
             center = p.Transitions.qubit_minus
             pi_time = p.Pi_times.qubit_minus
-            theta = (np.pi*p.MicrowaveInterogation.duration/pi_time) % (4*np.pi)
+            theta = (np.pi*p.MicrowaveInterogation.duration/pi_time) % (4.0*np.pi)
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
-        phi1 = np.arccos(-theta/(4*np.pi))*180/np.pi
-        phi2 = 3*phi1
+        phi1 = np.arccos(-theta/(4.0*np.pi))*180.0/np.pi
+        phi2 = 3.0*phi1
 
         # initial attempt at rotation angle theta
         self.addDDS('Microwave_qubit',
@@ -60,14 +60,14 @@ class bb1_sequence(pulse_sequence):
                     U(phi1, 'deg'))
         self.addDDS('Microwave_qubit',
                     self.start + pi_time + p.MicrowaveInterogation.duration,
-                    2*pi_time,
+                    2.0*pi_time,
                     DDS_freq,
                     p.MicrowaveInterogation.power,
                     U(phi2, 'deg'))
         self.addDDS('Microwave_qubit',
-                    self.start + 3*pi_time + p.MicrowaveInterogation.duration,
+                    self.start + 3.0*pi_time + p.MicrowaveInterogation.duration,
                     pi_time,
                     DDS_freq,
                     p.MicrowaveInterogation.power,
                     U(phi1, 'deg'))
-        self.end = self.start + 4*pi_time + p.MicrowaveInterogation.duration
+        self.end = self.start + 4.0*pi_time + p.MicrowaveInterogation.duration
