@@ -78,6 +78,9 @@ class shelving_fidelity(QsimExperiment):
 
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_bright = np.delete(counts_bright, bright_errors)
+            for berror, derror in zip(bright_errors[0], dark_errors[0]):
+                print 'Counts bright state on doppler cooling error = ' + str(counts_bright[int(berror)])
+                print 'Counts dark state on doppler cooling error = ' + str(counts_dark[int(derror)])
 
             dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_dark = np.delete(counts_dark, dark_errors)

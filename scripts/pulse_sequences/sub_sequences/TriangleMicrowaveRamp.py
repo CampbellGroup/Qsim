@@ -5,15 +5,15 @@ from labrad.units import WithUnit as U
 class triangle_microwave_ramp(pulse_sequence):
 
     required_parameters = [
-                           ('MicrowaveInterogation', 'duration'),
-                           ('MicrowaveInterogation', 'detuning'),
-                           ('MicrowaveInterogation', 'power'),
-                           ('Line_Selection', 'qubit'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus'),
-                           ('ddsDefaults', 'qubit_dds_freq')
-                           ]
+        ('MicrowaveInterogation', 'duration'),
+        ('MicrowaveInterogation', 'detuning'),
+        ('MicrowaveInterogation', 'power'),
+        ('Line_Selection', 'qubit'),
+        ('Transitions', 'qubit_0'),
+        ('Transitions', 'qubit_plus'),
+        ('Transitions', 'qubit_minus'),
+        ('ddsDefaults', 'qubit_dds_freq')
+        ]
 
     def sequence(self):
         p = self.parameters

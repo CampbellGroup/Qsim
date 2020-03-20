@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TriangleMicrowaveRamp.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TriangleMicrowaveRamp.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +52,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="" />
+      <changelist id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="" />
       <created>1488816643992</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -280,7 +282,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584628722347</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="traingle ramp sequence added for microwave interrogation">
+      <created>1584638106064</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1584638106064</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -307,12 +316,12 @@
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
-    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2" timestamp="1584628722295">
+    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2" timestamp="1584640663652">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
-    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584628722295" />
+    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584640663652" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
     <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583935763828" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
@@ -322,11 +331,11 @@
     </state>
     <state x="623" y="144" key="SettingsEditor/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1580513048327" />
     <state x="2543" y="148" key="SettingsEditor/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583455025933" />
-    <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2" timestamp="1584628728856">
+    <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2" timestamp="1584638114977">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="555" y="262" width="802" height="529" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957739600" />
-    <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584628728856" />
+    <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638114977" />
     <state x="2256" y="386" width="1086" height="443" key="Vcs.Push.Dialog.v2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310595923" />
     <state x="572" y="367" key="com.intellij.ide.util.TipDialog" timestamp="1583952580723">
       <screen x="0" y="0" width="1920" height="1047" />
