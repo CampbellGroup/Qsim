@@ -24,6 +24,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
 
     exp_parameters.extend(sequence.all_required_parameters())
 
@@ -31,8 +32,13 @@ class MicrowaveRabiFlopping(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
+        self.pulser = cxn.pulser
 
     def run(self, cxn, context):
+
+        line_trigger = self.p.MicrowaveInterogation.AC_line_trigger
+        if line_trigger == 'On':
+            self.pulser.line_trigger_state(True)
 
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
         qubit = self.p.Line_Selection.qubit
@@ -63,6 +69,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
             self.dv.add(duration, pop)
 
     def finalize(self, cxn, context):
+        self.pulser.line_trigger_state(False)
         pass
 
 
