@@ -9,13 +9,15 @@ from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.EmptySequence import empty_sequence
 from sub_sequences.Shelving import shelving
 from sub_sequences.Deshelving import deshelving
+from sub_sequences.RamseyMicrowaveInterrogation import ramsey_microwave_interrogation
 
 
 class microwave_ramsey_point(pulse_sequence):
 
     required_subsequences = [turn_off_all, doppler_cooling, shelving_doppler_cooling,
                              microwave_interogation, shelving_state_detection, deshelving,
-                             standard_state_detection, optical_pumping, empty_sequence, shelving]
+                             standard_state_detection, optical_pumping, empty_sequence, shelving,
+                             ramsey_microwave_interrogation]
 
     required_parameters = [
                           ('Modes', 'state_detection_mode')
@@ -29,9 +31,10 @@ class microwave_ramsey_point(pulse_sequence):
         else:
             self.addSequence(doppler_cooling)
         self.addSequence(optical_pumping)
-        self.addSequence(microwave_interogation)
-        self.addSequence(empty_sequence)
-        self.addSequence(microwave_interogation)
+        self.addSequence(ramsey_microwave_interrogation)
+        # self.addSequence(microwave_interogation)
+        # self.addSequence(empty_sequence)
+        # self.addSequence(microwave_interogation)
         if mode == 'Shelving':
             self.addSequence(shelving)
             self.addSequence(shelving_state_detection)

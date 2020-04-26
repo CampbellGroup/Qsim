@@ -24,10 +24,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
-    exp_parameters.append(('MLStateDetection', 'repititions'))
-    exp_parameters.append(('MLStateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('bf_fluorescence', 'crop_start_time'))
-    exp_parameters.append(('bf_fluorescence', 'crop_stop_time'))
+    exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
 
     exp_parameters.extend(sequence.all_required_parameters())
 
@@ -35,8 +32,13 @@ class MicrowaveRabiFlopping(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
+        self.pulser = cxn.pulser
 
     def run(self, cxn, context):
+
+        line_trigger = self.p.MicrowaveInterogation.AC_line_trigger
+        if line_trigger == 'On':
+            self.pulser.line_trigger_state(True)
 
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
         qubit = self.p.Line_Selection.qubit
@@ -54,40 +56,20 @@ class MicrowaveRabiFlopping(QsimExperiment):
                 errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
             elif mode == 'Standard':
+                # force standard optical pumping if standard readout method used
+                # no sense in quadrupole optical pumping by accident if using standard readout
+                self.p['OpticalPumping.method'] = 'Standard'
                 [counts] = self.run_sequence()
-            elif mode == 'ML':
-                [counts, allCounts] = self.run_ML_sequence()
+            else:
+                print 'Detection mode not selected!!!'
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
             pop = self.get_pop(counts)
             self.dv.add(duration, pop)
 
-    def run_ML_sequence(self, max_runs=1000, num=1):
-        reps = self.p.MLStateDetection.repititions
-        counts = np.array([])
-        allCounts = np.array([])
-
-        for iteration in range(int(reps)):
-            self.timeharp.start_measure(60000)
-            self.pulser.start_number(1)
-            self.pulser.wait_sequence_done()
-            self.timeharp.stop_measure()
-            data = self.timeharp.read_fifo(2048)
-            stamps = data[0]
-            data_length = data[1]
-            stamps = stamps[0:data_length]
-            timetags = self.convert_timetags(stamps)
-            low = self.p.bf_fluorescence.crop_start_time['ns']
-            high = self.p.bf_fluorescence.crop_stop_time['ns']
-            cropped_timetags = sum([low <= item <= high for item in timetags])
-            all_timetags = sum([0.0 <= item <= 12.5 for item in timetags])
-            counts = np.concatenate((counts, np.array([cropped_timetags])))
-            allCounts = np.concatenate((allCounts, np.array([all_timetags])))
-        self.pulser.stop_sequence()
-        return [counts, allCounts]
-
     def finalize(self, cxn, context):
+        self.pulser.line_trigger_state(False)
         pass
 
 

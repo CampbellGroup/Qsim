@@ -8,13 +8,14 @@ class uber_knill_sequence(pulse_sequence):
     """
 
     required_parameters = [
-                           ('MicrowaveInterogation', 'duration'),
-                           ('MicrowaveInterogation', 'detuning'),
-                           ('MicrowaveInterogation', 'power'),
-                           ('Line_Selection', 'qubit'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus')
+        ('MicrowaveInterogation', 'duration'),
+        ('MicrowaveInterogation', 'detuning'),
+        ('MicrowaveInterogation', 'power'),
+        ('Line_Selection', 'qubit'),
+        ('Transitions', 'qubit_0'),
+        ('Transitions', 'qubit_plus'),
+        ('Transitions', 'qubit_minus'),
+        ('ddsDefaults', 'qubit_dds_freq')
                            ]
 
     def sequence(self):
@@ -30,7 +31,7 @@ class uber_knill_sequence(pulse_sequence):
         elif p.Line_Selection.qubit == 'qubit_minus':
             center = p.Transitions.qubit_minus
 
-        DDS_freq = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
         phases = [30.0, 0.0, 90.0, 0.0, 30.0]
         knill_time = 5*p.MicrowaveInterogation.duration
 

@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/DAC Characteristics.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Ipython-Notebooks/DAC Characteristics.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/Neutral Fluorescence.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Ipython-Notebooks/Neutral Fluorescence.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/Untitled1.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Ipython-Notebooks/Untitled1.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/Untitled13.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ipython-Notebooks/Untitled3.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clients/QsimGUI/QsimGUI2.0.py" beforeDir="false" afterPath="$PROJECT_DIR$/clients/QsimGUI/QsimGUI2.0.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Linescan/metastable_microwave_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Linescan/metastable_microwave_linescan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/line_narrowing/Line_Narrowing.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/line_narrowing/Line_Narrowing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/pulser_phase_diagnostic.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/pulser_phase_diagnostic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/#Shelving.py#" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,13 +13,22 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1XBG1DmooketltAPKqlmsXzIbQi" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -43,23 +37,316 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
+      <recent name="$PROJECT_DIR$/deprecated/deprecated_sub_sequences" />
+      <recent name="$PROJECT_DIR$/deprecated/deprecated_random" />
+      <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
+    </key>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="18ef93e3-ca88-4cf4-99a1-9ba6ea03d0a7" name="Default Changelist" comment="" />
+      <changelist id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="" />
       <created>1488816643992</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
     </task>
+    <task id="LOCAL-00001" summary="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM">
+      <created>1583456819008</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1583456819008</updated>
+    </task>
+    <task id="LOCAL-00002" summary="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM">
+      <created>1583456841265</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1583456841265</updated>
+    </task>
+    <task id="LOCAL-00003" summary="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM">
+      <created>1583457087766</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1583457087766</updated>
+    </task>
+    <task id="LOCAL-00004" summary="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM">
+      <created>1583459327218</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1583459327218</updated>
+    </task>
+    <task id="LOCAL-00005" summary="removing some experimental dependencies on mode-locked laser based state detection&#10;&#10;also added new lasers to wavemeter linescan">
+      <created>1583859405206</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1583859405206</updated>
+    </task>
+    <task id="LOCAL-00006" summary="testing adding dds center frequencies to parameter vault instead of hard coding">
+      <created>1583859994425</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1583859994425</updated>
+    </task>
+    <task id="LOCAL-00007" summary="added the microwave qubit dds in as a default frequency from the registry so that we can set the DDS to sub Hz easily">
+      <created>1583860720218</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1583860720218</updated>
+    </task>
+    <task id="LOCAL-00008" summary="small fixes, lingering print statements">
+      <created>1583860959392</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1583860959392</updated>
+    </task>
+    <task id="LOCAL-00009" summary="small fixes, lingering print statements">
+      <created>1583861548085</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1583861548085</updated>
+    </task>
+    <task id="LOCAL-00010" summary="small fixes, lingering print statements">
+      <created>1583861739847</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1583861739847</updated>
+    </task>
+    <task id="LOCAL-00011" summary="small fixes, lingering print statements">
+      <created>1583861824783</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1583861824783</updated>
+    </task>
+    <task id="LOCAL-00012" summary="added doppler_cooling_freq from registry to all subsequences">
+      <created>1583867128572</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1583867128572</updated>
+    </task>
+    <task id="LOCAL-00013" summary="added additional parameters to ddsDefaults">
+      <created>1583876218700</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1583876218700</updated>
+    </task>
+    <task id="LOCAL-00014" summary="changed bright state preparation to work with shelving and standard detection">
+      <created>1583881903079</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1583881903079</updated>
+    </task>
+    <task id="LOCAL-00015" summary="changed bright state preparation to work with shelving and standard detection">
+      <created>1583883759637</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1583883759637</updated>
+    </task>
+    <task id="LOCAL-00016" summary="changed bright state preparation to work with shelving and standard detection">
+      <created>1583885352811</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1583885352811</updated>
+    </task>
+    <task id="LOCAL-00017" summary="changed bright state detection to work with shelving and standard detection">
+      <created>1583935763934</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1583935763934</updated>
+    </task>
+    <task id="LOCAL-00018" summary="changed bright state detection to work with shelving and standard detection">
+      <created>1583957732037</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1583957732037</updated>
+    </task>
+    <task id="LOCAL-00019" summary="changed dark state detection to work with shelving and standard detection">
+      <created>1583963213746</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1583963213746</updated>
+    </task>
+    <task id="LOCAL-00020" summary="changed dark state detection to work with shelving and standard detection">
+      <created>1583963341409</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1583963341409</updated>
+    </task>
+    <task id="LOCAL-00021" summary="changed dark state detection to work with shelving and standard detection">
+      <created>1583963391776</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1583963391776</updated>
+    </task>
+    <task id="LOCAL-00022" summary="changed dark state detection to work with shelving and standard detection">
+      <created>1583964707140</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1583964707140</updated>
+    </task>
+    <task id="LOCAL-00023" summary="changed dark state detection to work with shelving and standard detection">
+      <created>1583967015214</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1583967015214</updated>
+    </task>
+    <task id="LOCAL-00024" summary="changed dark state detection to work with shelving and standard detection">
+      <created>1584138468099</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1584138468099</updated>
+    </task>
+    <task id="LOCAL-00025" summary="working on collecting timetags during shelving fidelity experiment">
+      <created>1584205440391</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1584205440391</updated>
+    </task>
+    <task id="LOCAL-00026" summary="working on collecting timetags during shelving fidelity experiment">
+      <created>1584220134481</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1584220134481</updated>
+    </task>
+    <task id="LOCAL-00027" summary="working on collecting timetags during shelving fidelity experiment for error detection">
+      <created>1584294895856</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1584294895856</updated>
+    </task>
+    <task id="LOCAL-00028" summary="timetags are now collected during state detection if so desired&#10;forced standard optical pumping method during rabi flopping if standard readout is used">
+      <created>1584310579328</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1584310579328</updated>
+    </task>
+    <task id="LOCAL-00029" summary="attempting to save timetags that we deem to be errors to datavault">
+      <created>1584378981532</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1584378981532</updated>
+    </task>
+    <task id="LOCAL-00030" summary="made all hardcoded dds frequencies and powers stored in parameter vault. now each sub sequence has a set of dds default parameters it imports from PV and are easily changeable if the RF requirements for the DDS change">
+      <created>1584406114508</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1584406114508</updated>
+    </task>
+    <task id="LOCAL-00031" summary="traingle ramp sequence added for microwave interrogation">
+      <created>1584628549502</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1584628549502</updated>
+    </task>
+    <task id="LOCAL-00032" summary="traingle ramp sequence added for microwave interrogation">
+      <created>1584628722347</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1584628722347</updated>
+    </task>
+    <task id="LOCAL-00033" summary="traingle ramp sequence added for microwave interrogation">
+      <created>1584638106064</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1584638106064</updated>
+    </task>
+    <task id="LOCAL-00034" summary="traingle ramp sequence added for microwave interrogation">
+      <created>1584671798318</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1584671798318</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM" />
+    <MESSAGE value="removing some experimental dependencies on mode-locked laser based state detection&#10;&#10;also added new lasers to wavemeter linescan" />
+    <MESSAGE value="testing adding dds center frequencies to parameter vault instead of hard coding" />
+    <MESSAGE value="added the microwave qubit dds in as a default frequency from the registry so that we can set the DDS to sub Hz easily" />
+    <MESSAGE value="small fixes, lingering print statements" />
+    <MESSAGE value="added doppler_cooling_freq from registry to all subsequences" />
+    <MESSAGE value="added additional parameters to ddsDefaults" />
+    <MESSAGE value="changed bright state preparation to work with shelving and standard detection" />
+    <MESSAGE value="changed bright state detection to work with shelving and standard detection" />
+    <MESSAGE value="changed dark state detection to work with shelving and standard detection" />
+    <MESSAGE value="working on collecting timetags during shelving fidelity experiment" />
+    <MESSAGE value="working on collecting timetags during shelving fidelity experiment for error detection" />
+    <MESSAGE value="timetags are now collected during state detection if so desired&#10;forced standard optical pumping method during rabi flopping if standard readout is used" />
+    <MESSAGE value="attempting to save timetags that we deem to be errors to datavault" />
+    <MESSAGE value="made all hardcoded dds frequencies and powers stored in parameter vault. now each sub sequence has a set of dds default parameters it imports from PV and are easily changeable if the RF requirements for the DDS change" />
+    <MESSAGE value="traingle ramp sequence added for microwave interrogation" />
+    <option name="LAST_COMMIT_MESSAGE" value="traingle ramp sequence added for microwave interrogation" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="623" y="144" key="SettingsEditor" timestamp="1580513048327">
-      <screen x="0" y="0" width="1920" height="1053" />
+    <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
+      <screen x="1920" y="42" width="1920" height="1080" />
+    </state>
+    <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
+    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2" timestamp="1584671798151">
+      <screen x="1920" y="42" width="1920" height="1080" />
+    </state>
+    <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
+    <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
+    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
+    <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
+    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583935763828" />
+    <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
+    <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
+    <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="623" y="144" key="SettingsEditor/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1580513048327" />
+    <state x="2543" y="148" key="SettingsEditor/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583455025933" />
+    <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2" timestamp="1584671801973">
+      <screen x="1920" y="42" width="1920" height="1080" />
+    </state>
+    <state x="555" y="262" width="802" height="529" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957739600" />
+    <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
+    <state x="2256" y="386" width="1086" height="443" key="Vcs.Push.Dialog.v2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310595923" />
+    <state x="572" y="367" key="com.intellij.ide.util.TipDialog" timestamp="1583952580723">
+      <screen x="0" y="0" width="1920" height="1047" />
+    </state>
+    <state x="572" y="367" key="com.intellij.ide.util.TipDialog/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583952580723" />
+    <state x="2492" y="379" key="com.intellij.ide.util.TipDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583883398539" />
+    <state x="2492" y="379" key="com.intellij.ide.util.TipDialog/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583454979065" />
   </component>
 </project>

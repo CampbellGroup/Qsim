@@ -5,11 +5,14 @@ from labrad.units import WithUnit as U
 class doppler_cooling(pulse_sequence):
 
     required_parameters = [
-                           ('DopplerCooling', 'cooling_power'),
-                           ('DopplerCooling', 'repump_power'),
-                           ('DopplerCooling', 'detuning'),
-                           ('DopplerCooling', 'duration'),
-                           ('Transitions', 'main_cooling_369')
+        ('DopplerCooling', 'cooling_power'),
+        ('DopplerCooling', 'repump_power'),
+        ('DopplerCooling', 'detuning'),
+        ('DopplerCooling', 'duration'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq')
                            ]
 
     def sequence(self):
@@ -18,8 +21,8 @@ class doppler_cooling(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.DopplerCooling.duration,
-                    U(110.0, 'MHz'),
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_freq,
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.addDDS('369DP',
                     self.start,
@@ -30,13 +33,7 @@ class doppler_cooling(pulse_sequence):
         self.addDDS('935SP',
                     self.start,
                     p.DopplerCooling.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.DopplerCooling.repump_power)
-
-        self.addDDS('760SP',
-                    self.start,
-                    p.DopplerCooling.duration,
-                    U(320.0, 'MHz'),
-                    U(-2.0,  'dBm'))
 
         self.end = self.start + p.DopplerCooling.duration

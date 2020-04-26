@@ -100,13 +100,19 @@ class QsimExperiment(experiment):
         pulse_sequence.programSequence(self.pulser)
 
     def run_sequence(self, max_runs=1000, num=1):
+
+        # empty arrays to store photon counts and time tags
         counts = np.array([])
+        tt = np.array([])
+
+        # choose state detection method and number of repetitions
         self.state_detection_mode = self.p.Modes.state_detection_mode
         if self.state_detection_mode == 'Shelving':
             reps = self.p.ShelvingStateDetection.repititions
         elif self.state_detection_mode == 'Standard':
             reps = self.p.StandardStateDetection.repititions
 
+        # program pulser for a given number of runs of the experiment, and collect readout counts
         for i in range(int(reps)/max_runs):
             self.pulser.start_number(max_runs)
             self.pulser.wait_sequence_done()
@@ -122,13 +128,50 @@ class QsimExperiment(experiment):
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             self.pulser.reset_readout_counts()
 
+        # parse the photon counts for each call of ReadoutCount
         counts_parsed = []
         for i in range(num):
             counts_parsed.append(counts[i::num])
         return counts_parsed
 
-    def process_data(self, counts):
 
+    def run_sequence_with_timetags(self, max_runs=1000, num=1):
+        # empty arrays to store photon counts and time tags
+        counts = np.array([])
+        tt = np.array([])
+
+        # choose state detection method and number of repetitions
+        self.state_detection_mode = self.p.Modes.state_detection_mode
+        if self.state_detection_mode == 'Shelving':
+            reps = self.p.ShelvingStateDetection.repititions
+        elif self.state_detection_mode == 'Standard':
+            reps = self.p.StandardStateDetection.repititions
+
+        for i in range(int(reps) / max_runs):
+            self.pulser.start_number(max_runs)
+            self.pulser.wait_sequence_done()
+            self.pulser.stop_sequence()
+            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+            tt = np.concatenate((tt, self.pulser.get_timetags()))
+            self.pulser.reset_readout_counts()
+
+        if int(reps) % max_runs != 0:
+            runs = int(reps) % max_runs
+            self.pulser.start_number(runs)
+            self.pulser.wait_sequence_done()
+            self.pulser.stop_sequence()
+            counts = np.concatenate((counts, self.pulser.get_readout_counts()))
+            tt = np.concatenate((tt, self.pulser.get_timetags()))
+            self.pulser.reset_readout_counts()
+
+        # parse the photon counts for each call of ReadoutCount
+        counts_parsed = []
+        for i in range(num):
+            counts_parsed.append(counts[i::num])
+
+        return counts_parsed, [tt]
+
+    def process_data(self, counts):
         bins = []
         bins = list(np.arange(0, np.max(counts) + 1, 1))
         events = [list(counts).count(i) for i in bins]
@@ -141,7 +184,6 @@ class QsimExperiment(experiment):
             threshold = self.p.ShelvingStateDetection.state_readout_threshold
         elif self.state_detection_mode == 'Standard':
             threshold = self.p.StandardStateDetection.state_readout_threshold
-        print threshold
         prob = float(len(np.where(counts >= threshold)[0]))/float(len(counts))
         return prob
 

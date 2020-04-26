@@ -2,18 +2,18 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from sub_sequences.DopplerCooling import doppler_cooling
 from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.ShelvingStateDetection import shelving_state_detection
-from sub_sequences.MLStateDetection import ml_state_detection
 from sub_sequences.TurnOffAll import turn_off_all
-from sub_sequences.BrightStatePumping import bright_state_pumping
+from BrightStatePumping import bright_state_pumping
 from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from sub_sequences.Shelving import shelving
+from sub_sequences.Deshelving import deshelving
 
 
 class bright_state_preperation(pulse_sequence):
 
-    required_subsequences = [doppler_cooling, standard_state_detection, ml_state_detection,
+    required_subsequences = [doppler_cooling, standard_state_detection,
                              shelving_state_detection, turn_off_all, bright_state_pumping,
-                             shelving_doppler_cooling, shelving]
+                             shelving_doppler_cooling, shelving, deshelving]
     required_parameters = [
         ('Modes', 'state_detection_mode')]
 
@@ -36,3 +36,4 @@ class bright_state_preperation(pulse_sequence):
         elif mode == 'Shelving':
             self.addSequence(shelving)
             self.addSequence(shelving_state_detection)
+            self.addSequence(deshelving)

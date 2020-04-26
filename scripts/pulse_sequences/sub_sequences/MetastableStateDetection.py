@@ -5,13 +5,16 @@ from labrad.units import WithUnit as U
 class metastable_state_detection(pulse_sequence):
 
     required_parameters = [
-                           ('MetastableStateDetection', 'duration'),
-                           ('MetastableStateDetection', 'repump_power'),
-                           ('MetastableStateDetection', 'detuning'),
-                           ('MetastableStateDetection', 'CW_power'),
-                           ('Deshelving', 'power1'),
-                           ('Transitions', 'main_cooling_369'),
-                            ]
+        ('MetastableStateDetection', 'duration'),
+        ('MetastableStateDetection', 'repump_power'),
+        ('MetastableStateDetection', 'detuning'),
+        ('MetastableStateDetection', 'CW_power'),
+        ('Deshelving', 'power1'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -23,7 +26,7 @@ class metastable_state_detection(pulse_sequence):
         self.addDDS('935SP',
                     self.start,
                     p.MetastableStateDetection.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.MetastableStateDetection.repump_power)
 
         self.addDDS('369DP',
@@ -35,8 +38,8 @@ class metastable_state_detection(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.MetastableStateDetection.duration,
-                    U(110.0, 'MHz'),
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_freq,
+                    p.ddsDefaults.doppler_cooling_power)
 
         #self.addDDS('760SP',
         #            self.start,

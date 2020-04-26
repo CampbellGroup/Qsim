@@ -8,12 +8,15 @@ from labrad.units import WithUnit as U
 class bright_state_pumping(pulse_sequence):
 
     required_parameters = [
-                           ('BrightStatePumping', 'doppler_power'),
-                           ('BrightStatePumping', 'repump_power'),
-                           ('BrightStatePumping', 'detuning'),
-                           ('BrightStatePumping', 'duration'),
-                           ('BrightStatePumping', 'bright_prep_method'),
-                           ('Transitions', 'main_cooling_369'),
+        ('BrightStatePumping', 'doppler_power'),
+        ('BrightStatePumping', 'repump_power'),
+        ('BrightStatePumping', 'detuning'),
+        ('BrightStatePumping', 'duration'),
+        ('BrightStatePumping', 'bright_prep_method'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
                            ]
 
     required_subsequences = [optical_pumping, microwave_interogation, double_microwave_sequence]
@@ -26,8 +29,8 @@ class bright_state_pumping(pulse_sequence):
             self.addDDS('DopplerCoolingSP',
                         self.start,
                         p.BrightStatePumping.duration,
-                        U(110.0, 'MHz'),
-                        U(-20.8, 'dBm'))
+                        p.ddsDefaults.doppler_cooling_freq,
+                        p.ddsDefaults.doppler_cooling_power)
 
             self.addDDS('369DP',
                         self.start,
@@ -38,7 +41,7 @@ class bright_state_pumping(pulse_sequence):
             self.addDDS('935SP',
                         self.start,
                         p.BrightStatePumping.duration,
-                        U(320.0, 'MHz'),
+                        p.ddsDefaults.repump_935_freq,
                         p.BrightStatePumping.repump_power)
 
             self.end = self.start + p.BrightStatePumping.duration

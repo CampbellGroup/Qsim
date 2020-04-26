@@ -6,13 +6,15 @@ import numpy as np
 class metastable_microwave_interogation(pulse_sequence):
 
     required_parameters = [
-                           ('MetastableMicrowaveInterogation', 'duration'),
-                           ('MetastableMicrowaveInterogation', 'detuning'),
-                           ('MetastableMicrowaveInterogation', 'power'),
-                           ('MetastableMicrowaveInterogation', 'deshelving_time'),
-                           ('Transitions', 'MetastableQubit'),
-                           ('Transitions', 'qubit_plus'),
-                           ]
+        ('MetastableMicrowaveInterogation', 'duration'),
+        ('MetastableMicrowaveInterogation', 'detuning'),
+        ('MetastableMicrowaveInterogation', 'power'),
+        ('MetastableMicrowaveInterogation', 'deshelving_time'),
+        ('Transitions', 'MetastableQubit'),
+        ('Transitions', 'qubit_plus'),
+        ('ddsDefaults', 'repump_760_2_freq'),
+        ('ddsDefaults', 'repump_760_2_power'),
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -31,7 +33,7 @@ class metastable_microwave_interogation(pulse_sequence):
         self.addDDS('760SP2',
                     self.start + p.MetastableMicrowaveInterogation.duration,
                     p.MetastableMicrowaveInterogation.deshelving_time,
-                    U(160.0, 'MHz'),
-                    U(6.0, 'dBm'))
+                    p.ddsDefaults.repump_760_2_freq,
+                    p.ddsDefaults.repump_760_2_power)
 
         self.end = self.start + p.MetastableMicrowaveInterogation.duration + p.MetastableMicrowaveInterogation.deshelving_time

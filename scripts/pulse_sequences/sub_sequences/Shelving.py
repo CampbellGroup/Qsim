@@ -5,14 +5,16 @@ from labrad.units import WithUnit as U
 class shelving(pulse_sequence):
 
     required_parameters = [
-                           ('Shelving', 'duration'),
-                           ('Shelving', 'power'),
-                           ('Shelving', 'detuning'),
-                           ('Shelving', 'assist_power'),
-                           ('Shelving', 'repump_power'),
-                           ('Transitions', 'main_cooling_369'),
-                           ('DopplerCooling', 'detuning')
-                           ]
+        ('Shelving', 'duration'),
+        ('Shelving', 'assist_power'),
+        ('Shelving', 'repump_power'),
+        ('Transitions', 'main_cooling_369'),
+        ('DopplerCooling', 'detuning'),
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -29,33 +31,32 @@ class shelving(pulse_sequence):
             assist_start = self.start
             assist_duration = p.Shelving.duration
 
+        # hard coded off for high fidelity experiment fears
         self.addDDS('369DP',
                     assist_start,
                     assist_duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                    p.Shelving.assist_power)
+                    U(-46.0, 'dBm'))
 
         self.addDDS('DopplerCoolingSP',
                     assist_start,
                     assist_duration,
-                    U(110.0, 'MHz'),
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_freq,
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.addDDS('935SP',
                     self.start,
                     p.Shelving.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.Shelving.repump_power)
 
-        self.addDDS('411DP',
+        self.addTTL('411TTL',
                     self.start,
-                    p.Shelving.duration,
-                    U(250.0, 'MHz'),
-                    p.Shelving.power)
+                    p.Shelving.duration)
 
-        if p.Shelving.duration > shutterlag:
-            self.addTTL('ShelvingShutter',
-                        self.start,
-                        p.Shelving.duration)
+        #if p.Shelving.duration > shutterlag:
+        #    self.addTTL('ShelvingShutter',
+        #                self.start,
+        #                p.Shelving.duration)
 
         self.end = self.start + p.Shelving.duration

@@ -5,17 +5,18 @@ from labrad.units import WithUnit as U
 class microwave_interogation_minus(pulse_sequence):
 
     required_parameters = [
-                           ('MicrowaveInterogation', 'duration'),
-                           ('MicrowaveInterogation', 'detuning'),
-                           ('MicrowaveInterogation', 'power'),
-                           ('Transitions', 'qubit_minus'),
-                           ('Pi_times', 'qubit_minus')
-                           ]
+        ('MicrowaveInterogation', 'duration'),
+        ('MicrowaveInterogation', 'detuning'),
+        ('MicrowaveInterogation', 'power'),
+        ('Transitions', 'qubit_minus'),
+        ('Pi_times', 'qubit_minus'),
+        ('ddsDefaults', 'qubit_dds_freq')
+    ]
 
     def sequence(self):
         p = self.parameters
         center = p.Transitions.qubit_minus
-        DDS_freq = U(377.188, 'MHz') - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
         pi_time = p.Pi_times.qubit_minus
 
         self.addDDS('Microwave_qubit',

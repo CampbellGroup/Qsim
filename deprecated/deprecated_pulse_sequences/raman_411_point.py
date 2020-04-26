@@ -1,10 +1,10 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.Raman411Interogation import raman_411_interogation
-from sub_sequences.TurnOffAll import turn_off_all
-from sub_sequences.StandardStateDetection import standard_state_detection
-from sub_sequences.MicrowaveInterogation import microwave_interogation
-from sub_sequences.OpticalPumping import optical_pumping
+from scripts.pulse_sequences.sub_sequences.DopplerCooling import doppler_cooling
+from deprecated.deprecated_sub_sequences.Raman411Interogation import raman_411_interogation
+from scripts.pulse_sequences.sub_sequences.TurnOffAll import turn_off_all
+from scripts.pulse_sequences.sub_sequences.StandardStateDetection import standard_state_detection
+from scripts.pulse_sequences.sub_sequences.MicrowaveInterogation import microwave_interogation
+from scripts.pulse_sequences.sub_sequences.OpticalPumping import optical_pumping
 
 
 class raman_411_point(pulse_sequence):

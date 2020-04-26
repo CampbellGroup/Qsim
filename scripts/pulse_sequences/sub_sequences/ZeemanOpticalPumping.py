@@ -56,7 +56,7 @@ class zeeman_dark_optical_pumping(pulse_sequence):
                     self.start,
                     p.ZeemanPumping.duration,
                     U(160.0, 'MHz'),
-                    U(-2.0, 'dBm'))
+                    U(-7.0, 'dBm'))
 
         self.addTTL('976SP',
                     self.start,

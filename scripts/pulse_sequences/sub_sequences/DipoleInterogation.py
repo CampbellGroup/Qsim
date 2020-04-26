@@ -5,11 +5,18 @@ from labrad.units import WithUnit as U
 class dipole_interogation(pulse_sequence):
 
     required_parameters = [
-                           ('DipoleInterogation', 'duration'),
-                           ('DipoleInterogation', 'frequency'),
-                           ('DipoleInterogation', 'power'),
-                           ('DipoleInterogation', 'repump_power'),
-                           ('DipoleInterogation', 'interogation_laser')
+        ('DipoleInterogation', 'duration'),
+        ('DipoleInterogation', 'frequency'),
+        ('DipoleInterogation', 'power'),
+        ('DipoleInterogation', 'repump_power'),
+        ('DipoleInterogation', 'interogation_laser'),
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'optical_pumping_freq'),
+        ('ddsDefaults', 'state_detection_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'optical_pumping_power'),
+        ('ddsDefaults', 'state_detection_power'),
+        ('ddsDefaults', 'repump_935_freq')
                            ]
 
     def sequence(self):
@@ -24,27 +31,27 @@ class dipole_interogation(pulse_sequence):
             self.addDDS('DopplerCoolingSP',
                         self.start,
                         p.DipoleInterogation.duration,
-                        U(110.0, 'MHz'),
-                        U(-9.0, 'dBm'))
+                        p.ddsDefaults.doppler_cooling_freq,
+                        p.ddsDefaults.doppler_cooling_power)
 
         if p.DipoleInterogation.interogation_laser == 'StateDetectionSP':
             self.addDDS('StateDetectionSP',
                         self.start,
                         p.DipoleInterogation.duration,
-                        U(110.0, 'MHz'),
-                        U(-4.0, 'dBm'))
+                        p.ddsDefaults.state_detection_freq,
+                        p.ddsDefaults.state_detection_power)
 
         if p.DipoleInterogation.interogation_laser == 'OpticalPumpingSP':
             self.addDDS('OpticalPumpingSP',
                         self.start,
                         p.DipoleInterogation.duration,
-                        U(110.0, 'MHz'),
-                        U(-4.0, 'dBm'))
+                        p.ddsDefaults.optical_pumping_freq,
+                        p.ddsDefaults.optical_pumping_power)
 
         self.addDDS('935SP',
                     self.start,
                     p.DipoleInterogation.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.DipoleInterogation.repump_power)
         self.addTTL('TimeResolvedCount', self.start, p.DipoleInterogation.duration)
         self.end = self.start + p.DipoleInterogation.duration

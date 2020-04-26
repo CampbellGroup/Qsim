@@ -5,11 +5,14 @@ from labrad.units import WithUnit as U
 class shelving_state_detection(pulse_sequence):
 
     required_parameters = [
-                           ('ShelvingStateDetection', 'duration'),
-                           ('ShelvingStateDetection', 'repump_power'),
-                           ('ShelvingStateDetection', 'detuning'),
-                           ('ShelvingStateDetection', 'CW_power'),
-                           ('Transitions', 'main_cooling_369'),
+        ('ShelvingStateDetection', 'duration'),
+        ('ShelvingStateDetection', 'repump_power'),
+        ('ShelvingStateDetection', 'detuning'),
+        ('ShelvingStateDetection', 'CW_power'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
                             ]
 
     def sequence(self):
@@ -19,10 +22,14 @@ class shelving_state_detection(pulse_sequence):
                     self.start,
                     p.ShelvingStateDetection.duration)
 
+        self.addTTL('TimeResolvedCount',
+                    self.start,
+                    p.ShelvingStateDetection.duration)
+
         self.addDDS('935SP',
                     self.start,
                     p.ShelvingStateDetection.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.ShelvingStateDetection.repump_power)
 
         self.addDDS('369DP',
@@ -34,7 +41,7 @@ class shelving_state_detection(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.ShelvingStateDetection.duration,
-                    U(110.0, 'MHz'),
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_freq,
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.end = self.start + p.ShelvingStateDetection.duration

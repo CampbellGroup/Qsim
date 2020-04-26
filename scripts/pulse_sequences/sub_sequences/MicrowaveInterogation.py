@@ -10,15 +10,15 @@ from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoKnillSequence import spi
 class microwave_interogation(pulse_sequence):
 
     required_parameters = [
-                           ('MicrowaveInterogation', 'duration'),
-                           ('MicrowaveInterogation', 'detuning'),
-                           ('MicrowaveInterogation', 'power'),
-                           ('MicrowaveInterogation', 'pulse_sequence'),
-                           ('Line_Selection', 'qubit'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus')
-                           ]
+        ('MicrowaveInterogation', 'duration'),
+        ('MicrowaveInterogation', 'detuning'),
+        ('MicrowaveInterogation', 'power'),
+        ('MicrowaveInterogation', 'pulse_sequence'),
+        ('Line_Selection', 'qubit'),
+        ('Transitions', 'qubit_0'),
+        ('Transitions', 'qubit_plus'),
+        ('Transitions', 'qubit_minus'),
+    ]
     required_subsequences = [knill_sequence, microwave_sequence_standard, bb1_sequence, spin_echo_sequence, uber_knill_sequence, spin_echo_knill_sequence]
 
     def sequence(self):

@@ -5,12 +5,15 @@ from labrad.units import WithUnit as U
 class standard_state_detection(pulse_sequence):
 
     required_parameters = [
-                           ('StandardStateDetection', 'duration'),
-                           ('StandardStateDetection', 'CW_power'),
-                           ('StandardStateDetection', 'repump_power'),
-                           ('StandardStateDetection', 'detuning'),
-                           ('Transitions', 'main_cooling_369'),
-                            ]
+        ('StandardStateDetection', 'duration'),
+        ('StandardStateDetection', 'CW_power'),
+        ('StandardStateDetection', 'repump_power'),
+        ('StandardStateDetection', 'detuning'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'state_detection_freq'),
+        ('ddsDefaults', 'state_detection_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -22,14 +25,14 @@ class standard_state_detection(pulse_sequence):
         self.addDDS('935SP',
                     self.start,
                     p.StandardStateDetection.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.StandardStateDetection.repump_power)
 
         self.addDDS('StateDetectionSP',
                     self.start,
                     p.StandardStateDetection.duration,
-                    U(110.0, 'MHz'),
-                    U(-4.0, 'dBm'))
+                    p.ddsDefaults.state_detection_freq,
+                    p.ddsDefaults.state_detection_power)
 
         self.addDDS('369DP',
                     self.start,

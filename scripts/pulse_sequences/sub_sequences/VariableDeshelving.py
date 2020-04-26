@@ -5,14 +5,19 @@ from labrad.units import WithUnit as U
 class variable_deshelving(pulse_sequence):
 
     required_parameters = [
-                           ('VariableDeshelving', 'duration'),
-                           ('Deshelving', 'power1'),
-                           ('Deshelving', 'power2'),
-                           ('DopplerCooling', 'cooling_power'),
-                           ('DopplerCooling', 'detuning'),
-                           ('Transitions', 'main_cooling_369'),
-                           ('Deshelving', 'repump_power'),
-                           ]
+        ('VariableDeshelving', 'duration'),
+        ('Deshelving', 'power1'),
+        ('Deshelving', 'power2'),
+        ('DopplerCooling', 'cooling_power'),
+        ('DopplerCooling', 'detuning'),
+        ('Transitions', 'main_cooling_369'),
+        ('Deshelving', 'repump_power'),
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'repump_760_1_freq'),
+        ('ddsDefaults', 'repump_760_2_freq'),
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -26,25 +31,25 @@ class variable_deshelving(pulse_sequence):
         self.addDDS('DopplerCoolingSP',
                     self.start,
                     p.VariableDeshelving.duration,
-                    U(110.0, 'MHz'),
-                    U(-9.0, 'dBm'))
+                    p.ddsDefaults.doppler_cooling_freq,
+                    p.ddsDefaults.doppler_cooling_power)
 
         self.addDDS('935SP',
                     self.start,
                     p.VariableDeshelving.duration,
-                    U(320.0, 'MHz'),
+                    p.ddsDefaults.repump_935_freq,
                     p.Deshelving.repump_power)
 
         self.addDDS('760SP',
                     self.start,
                     p.VariableDeshelving.duration,
-                    U(160.0, 'MHz'),
+                    p.ddsDefaults.repump_760_1_freq,
                     p.Deshelving.power1)
 
         self.addDDS('760SP2',
                     self.start,
                     p.VariableDeshelving.duration,
-                    U(160.0, 'MHz'),
+                    p.ddsDefaults.repump_760_2_freq,
                     p.Deshelving.power2)
 
         self.end = self.start + p.VariableDeshelving.duration
