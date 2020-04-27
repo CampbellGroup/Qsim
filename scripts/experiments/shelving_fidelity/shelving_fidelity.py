@@ -27,6 +27,8 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('Timetags', 'save_timetags'))
     exp_parameters.append(('Timetags', 'lower_threshold'))
     exp_parameters.append(('Timetags', 'upper_threshold'))
+    exp_parameters.append(('MicrowaveInterogation','AC_line_trigger'))
+    exp_parameters.append(('MicrowaveInterogation', 'delay_from_line_trigger'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
@@ -36,6 +38,11 @@ class shelving_fidelity(QsimExperiment):
         self.ident = ident
 
     def run(self, cxn, context):
+
+        if self.p.MicrowaveInterogation.AC_line_trigger == 'On':
+            self.pulser.line_trigger_state(True)
+            self.pulser.line_trigger_duration(self.p.MicrowaveInterogation.delay_from_line_trigger)
+
         qubit = self.p.Line_Selection.qubit
         collect_timetags = self.p.Timetags.save_timetags
         if qubit == 'qubit_0':
@@ -78,14 +85,12 @@ class shelving_fidelity(QsimExperiment):
 
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_bright = np.delete(counts_bright, bright_errors)
-            for berror, derror in zip(bright_errors[0], dark_errors[0]):
-                print 'Counts bright state on doppler cooling error = ' + str(counts_bright[int(berror)])
-                print 'Counts dark state on doppler cooling error = ' + str(counts_dark[int(derror)])
-
             dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_dark = np.delete(counts_dark, dark_errors)
 
-
+            for berror, derror in zip(bright_errors[0], dark_errors[0]):
+                print 'Counts bright state on doppler cooling error = ' + str(counts_bright[int(berror)])
+                print 'Counts dark state on doppler cooling error = ' + str(counts_dark[int(derror)])
 
             print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
 
@@ -155,6 +160,11 @@ class shelving_fidelity(QsimExperiment):
             ttDark.append(tempDark)
             tt = tt[int(b + d):]
         return ttBright, ttDark
+
+    def finalize(self, cxn, context):
+        self.pulser.line_trigger_state(False)
+        self.pulser.line_trigger_duration(U(0.0, 'us'))
+        pass
 
 if __name__ == '__main__':
     cxn = labrad.connect()

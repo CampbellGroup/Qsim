@@ -22,10 +22,10 @@ class MicrowaveRamseyExperiment(QsimExperiment):
     exp_parameters.append(('MicrowaveRamsey', 'scan_type'))
     exp_parameters.append(('MicrowaveRamsey', 'phase_scan'))
     exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
+    exp_parameters.append(('MicrowaveInterogation', 'delay_from_line_trigger'))
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
-
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'repititions'))
@@ -45,6 +45,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
 
         if self.p.MicrowaveInterogation.AC_line_trigger == 'On':
             self.pulser.line_trigger_state(True)
+            self.pulser.line_trigger_duration(self.p.MicrowaveInterogation.delay_from_line_trigger)
 
         scan_parameter = self.p.MicrowaveRamsey.scan_type
         mode = self.p.Modes.state_detection_mode
@@ -107,10 +108,9 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                 pop = self.get_pop(counts)
                 self.dv.add(phase, pop)
 
-
-
     def finalize(self, cxn, context):
         self.pulser.line_trigger_state(False)
+        self.pulser.line_trigger_duration(U(0.0, 'us'))
         pass
 
 
