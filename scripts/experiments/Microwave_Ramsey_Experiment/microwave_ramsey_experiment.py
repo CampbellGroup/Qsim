@@ -47,6 +47,8 @@ class MicrowaveRamseyExperiment(QsimExperiment):
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(self.p.MicrowaveInterogation.delay_from_line_trigger)
 
+        init_optical_pumping_method = self.p['OpticalPumping.method']
+
         scan_parameter = self.p.MicrowaveRamsey.scan_type
         mode = self.p.Modes.state_detection_mode
 
@@ -59,7 +61,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
 
         elif qubit == 'qubit_minus':
             pi_time = self.p.Pi_times.qubit_minus
-
+        self.p['OpticalPumping.method'] = 'Standard'
         self.p['MicrowaveInterogation.duration'] = pi_time/2.0
         self.p['MicrowaveInterogation.detuning'] = self.p.MicrowaveRamsey.detuning
 
@@ -107,6 +109,8 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                     self.plot_hist(hist)
                 pop = self.get_pop(counts)
                 self.dv.add(phase, pop)
+
+        self.p['OpticalPumping.method'] = init_optical_pumping_method
 
     def finalize(self, cxn, context):
         self.pulser.line_trigger_state(False)
