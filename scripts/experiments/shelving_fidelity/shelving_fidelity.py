@@ -85,11 +85,26 @@ class shelving_fidelity(QsimExperiment):
                 #for location in save_timetags[0]:
                 #    self.dv.add(counts_bright[location], np.array(timetags_bright[int(location)][0]), context=self.tt_context)
 
+            padWidth = 1
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-            counts_bright = np.delete(counts_bright, bright_errors)
+            bright_delete = np.array([])
+            for error in bright_errors[0]:
+                # we are going to delete the experiments 1 before and after the error for safety
+                tempPad = range(error - padWidth, error + padWidth + 1, 1)
+                bright_delete = np.concatenate((bright_delete, tempPad))
+            bright_delete = bright_delete[(bright_delete < len(counts_doppler_bright)) & (bright_delete >= 0.0)]
+            print bright_delete, bright_errors[0]
+            counts_bright = np.delete(counts_bright, bright_delete)
 
             dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-            counts_dark = np.delete(counts_dark, dark_errors)
+            dark_delete = np.array([])
+            for error in dark_errors[0]:
+                # we are going to delete the experiments 1 before and after the error for safety
+                tempPad = range(error - padWidth, error + padWidth + 1, 1)
+                dark_delete = np.concatenate((dark_delete, tempPad))
+            dark_delete = dark_delete[(dark_delete < len(counts_doppler_dark)) & (dark_delete >= 0.0)]
+            print dark_delete, dark_errors[0]
+            counts_dark = np.delete(counts_dark, dark_delete)
 
             #for berror, derror in zip(bright_errors[0], dark_errors[0]):
             #    print 'Counts bright state on doppler cooling error = ' + str(counts_bright[int(berror)])

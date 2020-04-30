@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
