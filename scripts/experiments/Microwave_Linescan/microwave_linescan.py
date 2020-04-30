@@ -41,6 +41,12 @@ class MicrowaveLineScan(QsimExperiment):
 
     def run(self, cxn, context):
 
+        init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
+        init_optical_pumping_method = self.p.OpticalPumping.method
+
+        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        self.p['OpticalPumping.method'] = 'Standard'
+
         data = self.setup_datavault('frequency', 'probability')  # gives the x and y names to Data Vault
         qubit = self.p.Line_Selection.qubit
         self.setup_grapher('Microwave Linescan ' + qubit)
@@ -79,6 +85,9 @@ class MicrowaveLineScan(QsimExperiment):
             pop = self.get_pop(counts)
 
             self.dv.add(detuning + center['kHz'], pop)
+
+        self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_pulse_sequence
+        self.p['OpticalPumping.method'] = init_optical_pumping_method
 
         return should_break
 

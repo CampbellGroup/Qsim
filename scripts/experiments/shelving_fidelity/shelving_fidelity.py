@@ -123,6 +123,10 @@ class shelving_fidelity(QsimExperiment):
                 #self.p.MicrowaveInterogation.pulse_sequence = init_sequence
                 #self.program_pulser(sequence)
 
+        # reset the line trigger and delay to false
+        self.pulser.line_trigger_state(False)
+        self.pulser.line_trigger_duration(U(0.0, 'us'))
+
     def setup_prob_datavault(self):
         self.dv_context = self.dv.context()
         self.dv.cd(['', 'shelving_fidelity'], True, context=self.dv_context)
@@ -165,8 +169,6 @@ class shelving_fidelity(QsimExperiment):
         return ttBright, ttDark
 
     def finalize(self, cxn, context):
-        self.pulser.line_trigger_state(False)
-        self.pulser.line_trigger_duration(U(0.0, 'us'))
         pass
 
 

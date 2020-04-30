@@ -36,13 +36,21 @@ class MicrowaveRabiFlopping(QsimExperiment):
 
     def run(self, cxn, context):
 
+        qubit = self.p.Line_Selection.qubit
+        mode = self.p.Modes.state_detection_mode
+
+        init_bright_state_pumping_method = self.p.BrightStatePumping.method
+        init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
+        init_optical_pumping_method = self.p.OpticalPumping.method
+
+        self.p['BrightStatePumping.method'] = 'Microwave'
+        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+
         line_trigger = self.p.MicrowaveInterogation.AC_line_trigger
         if line_trigger == 'On':
             self.pulser.line_trigger_state(True)
 
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
-        qubit = self.p.Line_Selection.qubit
-        mode = self.p.Modes.state_detection_mode
         self.setup_grapher('Rabi Flopping ' + qubit)
         self.times = self.get_scan_list(self.p.RabiFlopping.scan, 'us')
         for i, duration in enumerate(self.times):
@@ -50,26 +58,37 @@ class MicrowaveRabiFlopping(QsimExperiment):
             if should_break:
                 break
             self.p['MicrowaveInterogation.duration'] = U(duration, 'us')
+
+            if mode == 'Standard':
+                # force standard optical pumping if standard readout method used
+                # no sense in quadrupole optical pumping by accident if using standard readout
+                self.p['OpticalPumping.method'] = 'Standard'
+
             self.program_pulser(sequence)
+
             if mode == 'Shelving':
                 [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
                 errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
             elif mode == 'Standard':
-                # force standard optical pumping if standard readout method used
-                # no sense in quadrupole optical pumping by accident if using standard readout
-                self.p['OpticalPumping.method'] = 'Standard'
                 [counts] = self.run_sequence()
             else:
                 print 'Detection mode not selected!!!'
+
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
+
             pop = self.get_pop(counts)
             self.dv.add(duration, pop)
 
-    def finalize(self, cxn, context):
+        # reset all the init settings that you forced for this experiment 
+        self.p['BrightStatePumping.method'] = init_bright_state_pumping_method
+        self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_pulse_sequence
+        self.p['OpticalPumping.method'] = init_optical_pumping_method
         self.pulser.line_trigger_state(False)
+
+    def finalize(self, cxn, context):
         pass
 
 
