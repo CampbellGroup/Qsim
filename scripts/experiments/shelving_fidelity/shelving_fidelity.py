@@ -93,7 +93,6 @@ class shelving_fidelity(QsimExperiment):
                 tempPad = range(error - padWidth, error + padWidth + 1, 1)
                 bright_delete = np.concatenate((bright_delete, tempPad))
             bright_delete = bright_delete[(bright_delete < len(counts_doppler_bright)) & (bright_delete >= 0.0)]
-            print bright_delete, bright_errors[0]
             counts_bright = np.delete(counts_bright, bright_delete)
 
             dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
@@ -103,7 +102,6 @@ class shelving_fidelity(QsimExperiment):
                 tempPad = range(error - padWidth, error + padWidth + 1, 1)
                 dark_delete = np.concatenate((dark_delete, tempPad))
             dark_delete = dark_delete[(dark_delete < len(counts_doppler_dark)) & (dark_delete >= 0.0)]
-            print dark_delete, dark_errors[0]
             counts_dark = np.delete(counts_dark, dark_delete)
 
             #for berror, derror in zip(bright_errors[0], dark_errors[0]):
