@@ -32,9 +32,9 @@ class wavemeter_linescan(QsimExperiment):
 
         self.ident = ident
         self.cxnwlm = labrad.connect('10.97.112.2', password='lab')
-        self.cxnhudwlm = labrad.connect('10.97.111.8', password='lab')
         self.wm = self.cxnwlm.multiplexerserver
         if self.p.wavemeterscan.lasername == 'Hudson':
+            self.cxnhudwlm = labrad.connect('10.97.111.8', password='lab')
             self.wm = self.cxnhudwlm.multiplexerserver
 
     def run(self, cxn, context):

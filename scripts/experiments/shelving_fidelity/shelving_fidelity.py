@@ -19,11 +19,13 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
+
     exp_parameters.append(('MicrowaveInterogation', 'repititions'))
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('ShelvingStateDetection', 'sequence_iterations'))
+
     exp_parameters.append(('Timetags', 'save_timetags'))
     exp_parameters.append(('Timetags', 'lower_threshold'))
     exp_parameters.append(('Timetags', 'upper_threshold'))
@@ -85,12 +87,13 @@ class shelving_fidelity(QsimExperiment):
 
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_bright = np.delete(counts_bright, bright_errors)
+
             dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             counts_dark = np.delete(counts_dark, dark_errors)
 
-            for berror, derror in zip(bright_errors[0], dark_errors[0]):
-                print 'Counts bright state on doppler cooling error = ' + str(counts_bright[int(berror)])
-                print 'Counts dark state on doppler cooling error = ' + str(counts_dark[int(derror)])
+            #for berror, derror in zip(bright_errors[0], dark_errors[0]):
+            #    print 'Counts bright state on doppler cooling error = ' + str(counts_bright[int(berror)])
+            #    print 'Counts dark state on doppler cooling error = ' + str(counts_dark[int(derror)])
 
             print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
 
@@ -136,7 +139,7 @@ class shelving_fidelity(QsimExperiment):
         self.tt_context = self.dv.context()
         self.dv.cd(['', 'timetagged_errors'], True, context=self.tt_context)
         self.timetags_dataset = self.dv.new('timetagged_errors', [('counts_bright', 'num')],
-                                            [('timetags', 'bright_timetag_errors', 'list')], context = self.tt_context)
+                                            [('timetags', 'bright_timetag_errors', 'list')], context=self.tt_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_context)
 
@@ -165,6 +168,7 @@ class shelving_fidelity(QsimExperiment):
         self.pulser.line_trigger_state(False)
         self.pulser.line_trigger_duration(U(0.0, 'us'))
         pass
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

@@ -28,13 +28,10 @@ class spin_echo_sequence(pulse_sequence):
         #  select which zeeman level to prepare
         if p.Line_Selection.qubit == 'qubit_0':
             center = p.Transitions.qubit_0
-            pi_time = p.Pi_times.qubit_0
         elif p.Line_Selection.qubit == 'qubit_plus':
             center = p.Transitions.qubit_plus
-            pi_time = p.Pi_times.qubit_plus
         elif p.Line_Selection.qubit == 'qubit_minus':
             center = p.Transitions.qubit_minus
-            pi_time = p.Pi_times.qubit_minus
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
 

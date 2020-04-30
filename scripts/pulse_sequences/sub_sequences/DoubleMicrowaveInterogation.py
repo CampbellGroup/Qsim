@@ -107,3 +107,64 @@ class double_microwave_sequence(pulse_sequence):
                         U(30.0, 'deg'))
 
             self.end = self.start + 5*pi_time_0 + 5*pi_time_plus
+
+        elif p.MicrowaveInterogation.pulse_sequence == 'SpinEcho + KnillZeeman':
+
+            # this is the spin echo sequence for the clock qubit
+            # rotation around X
+            self.addDDS('Microwave_qubit',
+                        self.start,
+                        pi_time_0/2.0,
+                        DDS_0,
+                        p.MicrowaveInterogation.power,
+                        U(0.0, 'deg'))
+
+            # rotation around Y
+            self.addDDS('Microwave_qubit',
+                        self.start + pi_time_0/2.0,
+                        pi_time_0,
+                        DDS_0,
+                        p.MicrowaveInterogation.power,
+                        U(90.0, 'deg'))
+
+            # rotation around X
+            self.addDDS('Microwave_qubit',
+                        self.start + 3.0*pi_time_0/2.0,
+                        pi_time_0/2.0,
+                        DDS_0,
+                        p.MicrowaveInterogation.power,
+                        U(0.0, 'deg'))
+
+            # this is the knill sequence part on the zeeman line
+            self.addDDS('Microwave_qubit',
+                        self.start + 2.0*pi_time_0,
+                        pi_time_plus,
+                        DDS_plus,
+                        p.MicrowaveInterogation.power,
+                        U(30.0, 'deg'))
+            self.addDDS('Microwave_qubit',
+                        self.start + 2.0*pi_time_0 + pi_time_plus,
+                        pi_time_plus,
+                        DDS_plus,
+                        p.MicrowaveInterogation.power,
+                        U(0.0, 'deg'))
+            self.addDDS('Microwave_qubit',
+                        self.start + 2.0*pi_time_0 + 2*pi_time_plus,
+                        pi_time_plus,
+                        DDS_plus,
+                        p.MicrowaveInterogation.power,
+                        U(90.0, 'deg'))
+            self.addDDS('Microwave_qubit',
+                        self.start + 2.0*pi_time_0 + 3*pi_time_plus,
+                        pi_time_plus,
+                        DDS_plus,
+                        p.MicrowaveInterogation.power,
+                        U(0.0, 'deg'))
+            self.addDDS('Microwave_qubit',
+                        self.start + 2.0*pi_time_0 + 4*pi_time_plus,
+                        pi_time_plus,
+                        DDS_plus,
+                        p.MicrowaveInterogation.power,
+                        U(30.0, 'deg'))
+
+            self.end = self.start + 5.0*pi_time_plus + 2.0*pi_time_0
