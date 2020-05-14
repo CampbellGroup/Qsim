@@ -3,18 +3,18 @@ from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequ
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
+import time
 
 
-class MicrowaveRabiFlopping(QsimExperiment):
+class RabiPointTracker(QsimExperiment):
     """
-    repeatedly prepare the |0> state, interrogate with resonant microwaves for
-    a variable time t and measure the population in the bright state
+    Scan the 369 laser with the AOM double pass interleaved
+    with doppler cooling.
     """
 
-    name = 'Microwave Rabi Flopping'
+    name = 'Rabi Point Tracker'
 
     exp_parameters = []
-    exp_parameters.append(('RabiFlopping', 'scan'))
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
@@ -25,7 +25,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
-
+    exp_parameters.append(('RabiPointTracker', 'interrogation_time'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
@@ -35,7 +35,11 @@ class MicrowaveRabiFlopping(QsimExperiment):
         self.pulser = cxn.pulser
 
     def run(self, cxn, context):
-
+        """
+        We are going to repeat the same rabi point over and over indefinitely and
+        plot the probability of being in the up state as a function of real lab time,
+        which will be kept track of using the native 'time' function in python
+        """
         qubit = self.p.Line_Selection.qubit
         mode = self.p.Modes.state_detection_mode
 
@@ -51,14 +55,15 @@ class MicrowaveRabiFlopping(QsimExperiment):
             self.pulser.line_trigger_state(True)
 
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
-        self.setup_grapher('Rabi Flopping ' + qubit)
-        self.times = self.get_scan_list(self.p.RabiFlopping.scan, 'us')
-        for i, duration in enumerate(self.times):
-            should_break = self.update_progress(i/float(len(self.times)))
+        self.setup_grapher('Rabi Point Tracker')
+        self.rabi_time = self.p.RabiPointTracker.interrogation_time
+        self.p['MicrowaveInterogation.duration'] = self.rabi_time
+        init_time = U(time.time(), 's')
+        i = 0
+        while True:
+            should_break = self.update_progress(np.random.rand())
             if should_break:
                 break
-            self.p['MicrowaveInterogation.duration'] = U(duration, 'us')
-
             if mode == 'Standard':
                 # force standard optical pumping if standard readout method used
                 # no sense in quadrupole optical pumping by accident if using standard readout
@@ -75,14 +80,16 @@ class MicrowaveRabiFlopping(QsimExperiment):
             else:
                 print 'Detection mode not selected!!!'
 
+            time_since_start = U(time.time(), 's') - init_time
+
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
 
             pop = self.get_pop(counts)
-            self.dv.add(duration, pop)
+            self.dv.add(time_since_start['s'], pop)
+            i +=1
 
-        # reset all the init settings that you forced for this experiment 
         self.p['BrightStatePumping.method'] = init_bright_state_pumping_method
         self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_pulse_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_method

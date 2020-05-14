@@ -13,6 +13,7 @@ class bright_state_pumping(pulse_sequence):
         ('BrightStatePumping', 'detuning'),
         ('BrightStatePumping', 'duration'),
         ('BrightStatePumping', 'bright_prep_method'),
+        ('MicrowaveInterogation', 'repititions'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
@@ -48,7 +49,8 @@ class bright_state_pumping(pulse_sequence):
 
         elif p.BrightStatePumping.bright_prep_method == 'Microwave':
             self.addSequence(optical_pumping)
-            self.addSequence(microwave_interogation)
+            for i in range(int(p.MicrowaveInterogation.repititions)):
+                self.addSequence(microwave_interogation)
 
         # double microwave is programmed separately b/c PI_times are hard coded, not variable
         elif p.BrightStatePumping.bright_prep_method == 'Double_Microwave':

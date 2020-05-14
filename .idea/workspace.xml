@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -316,7 +320,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588274301536</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="removing cavity server, realized it doesnt make sense since cavity is better than the wavemeter">
+      <created>1588280809094</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1588280809094</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -339,21 +350,22 @@
     <MESSAGE value="adding error padding for doppler cooling errors where padWidth determines how many experiments before/after the detected doppler error are to be thrown out" />
     <MESSAGE value="removing print statements" />
     <MESSAGE value="starting server to lock 369nm cavity piezo to wavemeter&#10;also adding more changes to experiments where default OP method is standard" />
-    <option name="LAST_COMMIT_MESSAGE" value="starting server to lock 369nm cavity piezo to wavemeter&#10;also adding more changes to experiments where default OP method is standard" />
+    <MESSAGE value="removing cavity server, realized it doesnt make sense since cavity is better than the wavemeter" />
+    <option name="LAST_COMMIT_MESSAGE" value="removing cavity server, realized it doesnt make sense since cavity is better than the wavemeter" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
-    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1588274301433">
+    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1588280808930">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
     <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
-    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1588274301433" />
+    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1588280808930" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
@@ -361,12 +373,12 @@
     </state>
     <state x="623" y="144" key="SettingsEditor/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1580513048327" />
     <state x="2543" y="148" key="SettingsEditor/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583455025933" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1588266471732">
+    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1588281766836">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="555" y="262" width="802" height="529" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957739600" />
     <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1588266471732" />
+    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1588281766836" />
     <state x="2256" y="386" width="1086" height="443" key="Vcs.Push.Dialog.v2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310595923" />
     <state x="572" y="367" key="com.intellij.ide.util.TipDialog" timestamp="1583952580723">
       <screen x="0" y="0" width="1920" height="1047" />

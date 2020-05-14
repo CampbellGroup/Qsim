@@ -4,6 +4,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 #from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
 #from Qsim.scripts.experiments.shelving_411.shelving_411 import ShelvingRate
 #from Qsim.scripts.experiments.Microwave_Ramsey_Experiment.microwave_ramsey_experiment import MicrowaveRamseyExperiment
+from Qsim.scripts.pulse_sequences.bright_state_prepepration import bright_state_preperation
 import numpy as np
 from labrad.units import WithUnit as U
 
@@ -61,9 +62,9 @@ class shelving_fidelity(QsimExperiment):
         self.p['Modes.state_detection_mode'] = 'Shelving'
         self.setup_prob_datavault()
         self.setup_timetags_datavault()
-        i = 0
         self.program_pulser(sequence)
 
+        i = 0
         while i < self.p.ShelvingStateDetection.sequence_iterations:
             i += 1
             should_break = self.update_progress(np.random.random())
@@ -87,12 +88,14 @@ class shelving_fidelity(QsimExperiment):
 
             padWidth = 1
             bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+            print('Bright doppler errors at' + str(bright_errors))
             bright_delete = np.array([])
             for error in bright_errors[0]:
                 # we are going to delete the experiments 1 before and after the error for safety
                 tempPad = range(error - padWidth, error + padWidth + 1, 1)
                 bright_delete = np.concatenate((bright_delete, tempPad))
             bright_delete = bright_delete[(bright_delete < len(counts_doppler_bright)) & (bright_delete >= 0.0)]
+            print('Bright padded doppler errors at' + str(bright_delete))
             counts_bright = np.delete(counts_bright, bright_delete)
 
             dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
@@ -104,19 +107,27 @@ class shelving_fidelity(QsimExperiment):
             dark_delete = dark_delete[(dark_delete < len(counts_doppler_dark)) & (dark_delete >= 0.0)]
             counts_dark = np.delete(counts_dark, dark_delete)
 
-            #for berror, derror in zip(bright_errors[0], dark_errors[0]):
-            #    print 'Counts bright state on doppler cooling error = ' + str(counts_bright[int(berror)])
-            #    print 'Counts dark state on doppler cooling error = ' + str(counts_dark[int(derror)])
 
-            print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
 
             hist_bright = self.process_data(counts_bright)
             hist_dark = self.process_data(counts_dark)
 
+            # this part plots the histograms on the hist panel in the shelving_fidelity tab
             self.plot_hist(hist_bright, folder_name='Shelving_Histogram')
             self.plot_hist(hist_dark, folder_name='Shelving_Histogram')
 
-            self.plot_prob(i, counts_bright, counts_dark)
+            #this processes the counts and calculates the fidelity and plots it on the bottom panel
+            probDark, probBright = self.plot_prob(i, counts_bright, counts_dark)
+
+            print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
+            print('probDark = ' + str(probDark))
+            print('probBright = ' + str(probBright))
+
+            # this will do something if there was a dark state error
+            if probDark != 0.0:
+                self.pulser.line_trigger_state(False)
+                self.pulser.stop_sequence()
+                break
 
             #if i % self.p.ShelvingFidelity.drift_track_iterations == 0:
                 #drift_context = self.sc.context()
@@ -138,7 +149,6 @@ class shelving_fidelity(QsimExperiment):
 
         # reset the line trigger and delay to false
         self.pulser.line_trigger_state(False)
-        self.pulser.line_trigger_duration(U(0.0, 'us'))
 
     def setup_prob_datavault(self):
         self.dv_context = self.dv.context()
@@ -166,6 +176,7 @@ class shelving_fidelity(QsimExperiment):
         prob_bright = self.get_pop(counts_bright)
         self.dv.add(num, prob_dark, prob_bright,
                     prob_bright - prob_dark, context=self.dv_context)
+        return prob_dark, prob_bright
 
     def process_timetags(self, timetags, counts_bright, counts_dark):
         # function should take in the timetags, and parse into a list of lists for the timetags
@@ -184,6 +195,11 @@ class shelving_fidelity(QsimExperiment):
     def finalize(self, cxn, context):
         pass
 
+    def check_pi_time(self, number_pi_pulses):
+        pi_time_check_context = self.sc.context()
+        init_sequence = self.p.MicrowaveInterogation.pulse_sequence
+        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        self.p['MicrowaveInterogation.duration'] = pi_time*number_pi_pulses
 
 if __name__ == '__main__':
     cxn = labrad.connect()
