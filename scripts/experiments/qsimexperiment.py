@@ -168,7 +168,6 @@ class QsimExperiment(experiment):
         counts_parsed = []
         for i in range(num):
             counts_parsed.append(counts[i::num])
-
         return counts_parsed, [tt]
 
     def process_data(self, counts):

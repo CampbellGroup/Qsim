@@ -3,14 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -336,7 +330,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589497871840</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="added qubit dds offset by 15 MHz to every subsequence so that it always remains on but detuned for any experiment">
+      <created>1589571330650</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1589571330650</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -361,21 +362,22 @@
     <MESSAGE value="starting server to lock 369nm cavity piezo to wavemeter&#10;also adding more changes to experiments where default OP method is standard" />
     <MESSAGE value="removing cavity server, realized it doesnt make sense since cavity is better than the wavemeter" />
     <MESSAGE value="added new experiment for tracking rabi frequency drifts" />
-    <option name="LAST_COMMIT_MESSAGE" value="added new experiment for tracking rabi frequency drifts" />
+    <MESSAGE value="added qubit dds offset by 15 MHz to every subsequence so that it always remains on but detuned for any experiment" />
+    <option name="LAST_COMMIT_MESSAGE" value="added qubit dds offset by 15 MHz to every subsequence so that it always remains on but detuned for any experiment" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
-    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589497871711">
+    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589571330577">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
     <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
-    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589497871711" />
+    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589571330577" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">

@@ -72,41 +72,36 @@ class shelving_fidelity(QsimExperiment):
             if should_break:
                 break
             self.reload_all_parameters()
+
             self.p = self.parameters
             if self.p != old_params:
                 self.program_pulser(sequence)
+
             if collect_timetags == 'OFF':
                 [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=250, num=4)
             elif collect_timetags == 'ON':
                 [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark], timetags = self.run_sequence_with_timetags(max_runs=150, num=4)
-                ttBright = []
-                [timetags_bright, timetags_dark] = self.process_timetags(timetags, counts_bright, counts_dark)
-                save_timetags = np.where(np.logical_and(counts_bright >= self.p.Timetags.lower_threshold,
+                timetags_bright, timetags_dark = self.process_timetags(timetags, counts_bright, counts_dark)
+                save_bright_timetags = np.where(np.logical_and(counts_bright >= self.p.Timetags.lower_threshold,
                                                         counts_bright <= self.p.Timetags.upper_threshold))
-                #for location in save_timetags[0]:
-                #    self.dv.add(counts_bright[location], np.array(timetags_bright[int(location)][0]), context=self.tt_context)
+                save_dark_timetags = np.where(np.logical_and(counts_dark >= self.p.Timetags.lower_threshold,
+                                                               counts_dark <= self.p.Timetags.upper_threshold))
 
-            padWidth = 1
-            bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-            print('Bright doppler errors at' + str(bright_errors))
-            bright_delete = np.array([])
-            for error in bright_errors[0]:
-                # we are going to delete the experiments 1 before and after the error for safety
-                tempPad = range(error - padWidth, error + padWidth + 1, 1)
-                bright_delete = np.concatenate((bright_delete, tempPad))
-            bright_delete = bright_delete[(bright_delete < len(counts_doppler_bright)) & (bright_delete >= 0.0)]
-            print('Bright padded doppler errors at' + str(bright_delete))
-            counts_bright = np.delete(counts_bright, bright_delete)
+                for locationBright, locationDark in zip(save_bright_timetags[0], save_dark_timetags[0]):
 
-            dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-            dark_delete = np.array([])
-            for error in dark_errors[0]:
-                # we are going to delete the experiments 1 before and after the error for safety
-                tempPad = range(error - padWidth, error + padWidth + 1, 1)
-                dark_delete = np.concatenate((dark_delete, tempPad))
-            dark_delete = dark_delete[(dark_delete < len(counts_doppler_dark)) & (dark_delete >= 0.0)]
-            counts_dark = np.delete(counts_dark, dark_delete)
+                    col1 = np.zeros(len(timetags_bright[int(locationBright)]))
+                    col1[0] = counts_bright[locationBright]
+                    self.dv.add(np.column_stack((col1,
+                                                np.array(timetags_bright[int(locationBright)]))), context=self.tt_bright_context)
 
+                    col1 = np.zeros(len(timetags_bright[int(locationDark)]))
+                    col1[0] = counts_bright[locationDark]
+                    self.dv.add(np.column_stack((col1,
+                                         np.array(timetags_bright[int(locationDark)]))), context=self.tt_dark_context)
+
+            # delete the experiments where the ion wasnt properly doppler cooled
+            counts_bright, counts_dark = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
+                                                                          counts_bright, counts_dark)
 
 
             hist_bright = self.process_data(counts_bright)
@@ -163,12 +158,19 @@ class shelving_fidelity(QsimExperiment):
             self.dv.add_parameter(parameter, self.p[parameter], context=self.dv_context)
 
     def setup_timetags_datavault(self):
-        self.tt_context = self.dv.context()
-        self.dv.cd(['', 'timetagged_errors'], True, context=self.tt_context)
-        self.timetags_dataset = self.dv.new('timetagged_errors', [('counts_bright', 'num')],
-                                            [('timetags', 'bright_timetag_errors', 'list')], context=self.tt_context)
+        self.tt_bright_context = self.dv.context()
+        self.dv.cd(['', 'timetagged_bright_errors'], True, context=self.tt_bright_context)
+        self.tt_bright_dataset = self.dv.new('timetagged_errors', [('arb', 'arb')],
+                                            [('time', 'timetags', 'num')], context=self.tt_bright_context)
         for parameter in self.p:
-            self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_context)
+            self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_bright_context)
+
+        self.tt_dark_context = self.dv.context()
+        self.dv.cd(['', 'timetagged_dark_errors'], True, context=self.tt_dark_context)
+        self.tt_dark_dataset = self.dv.new('timetagged_errors', [('arb', 'arb')],
+                                             [('time', 'timetags', 'num')], context=self.tt_dark_context)
+        for parameter in self.p:
+            self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_dark_context)
 
     def plot_prob(self, num, counts_dark, counts_bright):
         print num
@@ -183,7 +185,7 @@ class shelving_fidelity(QsimExperiment):
         # during each  state detection sequence
         ttBright = []
         ttDark = []
-        tt = timetags
+        tt = timetags[0]
         for b, d in zip(counts_bright, counts_dark):
             tempBright = tt[:int(b)]
             tempDark = tt[int(b):int(d + b)]
@@ -191,6 +193,29 @@ class shelving_fidelity(QsimExperiment):
             ttDark.append(tempDark)
             tt = tt[int(b + d):]
         return ttBright, ttDark
+
+    def delete_doppler_count_errors(self, counts_doppler_bright, counts_doppler_dark, counts_bright, counts_dark):
+
+        padWidth = 1
+        bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+        bright_delete = np.array([])
+        for error in bright_errors[0]:
+            # we are going to delete the experiments 1 before and after the error for safety
+            tempPad = range(error - padWidth, error + padWidth + 1, 1)
+            bright_delete = np.concatenate((bright_delete, tempPad))
+        bright_delete = bright_delete[(bright_delete < len(counts_doppler_bright)) & (bright_delete >= 0.0)]
+        counts_bright = np.delete(counts_bright, bright_delete)
+
+        dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+        dark_delete = np.array([])
+        for error in dark_errors[0]:
+            # we are going to delete the experiments 1 before and after the error for safety
+            tempPad = range(error - padWidth, error + padWidth + 1, 1)
+            dark_delete = np.concatenate((dark_delete, tempPad))
+        dark_delete = dark_delete[(dark_delete < len(counts_doppler_dark)) & (dark_delete >= 0.0)]
+        counts_dark = np.delete(counts_dark, dark_delete)
+
+        return counts_bright, counts_dark
 
     def finalize(self, cxn, context):
         pass
