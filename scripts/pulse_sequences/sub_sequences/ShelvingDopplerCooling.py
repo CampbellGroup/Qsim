@@ -10,6 +10,7 @@ class shelving_doppler_cooling(pulse_sequence):
         ('DopplerCooling', 'detuning'),
         ('Shelving_Doppler_Cooling', 'duration'),
         ('Transitions', 'main_cooling_369'),
+        ('MicrowaveInterogation', 'power'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
@@ -17,6 +18,7 @@ class shelving_doppler_cooling(pulse_sequence):
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_freq'),
         ('ddsDefaults', 'repump_760_2_power'),
+        ('ddsDefaults', 'qubit_dds_freq')
     ]
 
     def sequence(self):
@@ -51,6 +53,12 @@ class shelving_doppler_cooling(pulse_sequence):
                     p.Shelving_Doppler_Cooling.duration,
                     p.ddsDefaults.repump_760_2_freq,
                     p.ddsDefaults.repump_760_2_power)
+
+        self.addDDS('Microwave_qubit',
+                    self.start,
+                    p.Shelving_Doppler_Cooling.duration,
+                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                    p.MicrowaveInterogation.power)
 
         self.addTTL('ReadoutCount', self.start, p.Shelving_Doppler_Cooling.duration)
 

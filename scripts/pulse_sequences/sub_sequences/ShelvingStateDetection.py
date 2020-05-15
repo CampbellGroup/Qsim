@@ -9,10 +9,12 @@ class shelving_state_detection(pulse_sequence):
         ('ShelvingStateDetection', 'repump_power'),
         ('ShelvingStateDetection', 'detuning'),
         ('ShelvingStateDetection', 'CW_power'),
+        ('MicrowaveInterogation', 'power'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'qubit_dds_freq')
                             ]
 
     def sequence(self):
@@ -43,5 +45,11 @@ class shelving_state_detection(pulse_sequence):
                     p.ShelvingStateDetection.duration,
                     p.ddsDefaults.doppler_cooling_freq,
                     p.ddsDefaults.doppler_cooling_power)
+
+        self.addDDS('Microwave_qubit',
+                    self.start,
+                    p.ShelvingStateDetection.duration,
+                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                    p.MicrowaveInterogation.power)
 
         self.end = self.start + p.ShelvingStateDetection.duration

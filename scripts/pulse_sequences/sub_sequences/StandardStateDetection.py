@@ -10,9 +10,11 @@ class standard_state_detection(pulse_sequence):
         ('StandardStateDetection', 'repump_power'),
         ('StandardStateDetection', 'detuning'),
         ('Transitions', 'main_cooling_369'),
+        ('MicrowaveInterogation', 'power'),
         ('ddsDefaults', 'state_detection_freq'),
         ('ddsDefaults', 'state_detection_power'),
         ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'qubit_dds_freq'),
     ]
 
     def sequence(self):
@@ -39,5 +41,11 @@ class standard_state_detection(pulse_sequence):
                     p.StandardStateDetection.duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.StandardStateDetection.detuning/2.0,
                     p.StandardStateDetection.CW_power)
+
+        self.addDDS('Microwave_qubit',
+                    self.start,
+                    p.StandardStateDetection.duration,
+                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                    p.MicrowaveInterogation.power)
 
         self.end = self.start + p.StandardStateDetection.duration

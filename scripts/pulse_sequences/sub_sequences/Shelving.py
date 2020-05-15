@@ -10,9 +10,11 @@ class shelving(pulse_sequence):
         ('Shelving', 'repump_power'),
         ('Transitions', 'main_cooling_369'),
         ('DopplerCooling', 'detuning'),
+        ('MicrowaveInterogation', 'power'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'qubit_dds_freq')
 
     ]
 
@@ -53,6 +55,12 @@ class shelving(pulse_sequence):
         self.addTTL('411TTL',
                     self.start,
                     p.Shelving.duration)
+
+        self.addDDS('Microwave_qubit',
+                    self.start,
+                    p.Shelving.duration,
+                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                    p.MicrowaveInterogation.power)
 
         #if p.Shelving.duration > shutterlag:
         #    self.addTTL('ShelvingShutter',

@@ -12,11 +12,13 @@ class deshelving(pulse_sequence):
         ('DopplerCooling', 'detuning'),
         ('Transitions', 'main_cooling_369'),
         ('Deshelving', 'repump_power'),
+        ('MicrowaveInterogation', 'power'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_2_freq'),
+        ('ddsDefaults', 'qubit_dds_freq')
                            ]
 
     def sequence(self):
@@ -55,5 +57,11 @@ class deshelving(pulse_sequence):
         self.addTTL('976SP',
                     self.start,
                     p.Deshelving.duration)
+
+        self.addDDS('Microwave_qubit',
+                    self.start,
+                    p.Deshelving.duration,
+                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                    p.MicrowaveInterogation.power)
 
         self.end = self.start + p.Deshelving.duration

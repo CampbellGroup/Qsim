@@ -13,13 +13,15 @@ class optical_pumping(pulse_sequence):
         ('OpticalPumping', 'quadrupole_op_duration'),
         ('OpticalPumping', 'quadrupole_op_detuning'),
         ('Transitions', 'main_cooling_369'),
+        ('MicrowaveInterogation', 'power'),
         ('ddsDefaults', 'optical_pumping_freq'),
         ('ddsDefaults', 'optical_pumping_power'),
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_freq'),
-        ('ddsDefaults', 'repump_760_2_power')
+        ('ddsDefaults', 'repump_760_2_power'),
+        ('ddsDefaults', 'qubit_dds_freq')
     ]
 
     def sequence(self):
@@ -57,6 +59,12 @@ class optical_pumping(pulse_sequence):
                         p.ddsDefaults.repump_760_2_freq,
                         p.ddsDefaults.repump_760_2_power)
 
+            self.addDDS('Microwave_qubit',
+                        self.start,
+                        p.OpticalPumping.duration,
+                        p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                        p.MicrowaveInterogation.power)
+
             self.end = self.start + p.OpticalPumping.duration
 
         if opMethod == 'QuadrupoleOnly':
@@ -87,6 +95,12 @@ class optical_pumping(pulse_sequence):
             self.addTTL('976SP',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration)
+
+            self.addDDS('Microwave_qubit',
+                        self.start,
+                        p.OpticalPumping.quadrupole_op_duration,
+                        p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                        p.MicrowaveInterogation.power)
 
             self.end = self.start + p.OpticalPumping.quadrupole_op_duration
 
@@ -126,6 +140,12 @@ class optical_pumping(pulse_sequence):
                         p.OpticalPumping.quadrupole_op_duration,
                         U(200.0, 'MHz') + p.OpticalPumping.quadrupole_op_detuning,
                         U(-6.8, 'dBm'))
+
+            self.addDDS('Microwave_qubit',
+                        self.start,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(5.0, 'ms'),
+                        p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                        p.MicrowaveInterogation.power)
 
             self.addTTL('976SP',
                         self.start,

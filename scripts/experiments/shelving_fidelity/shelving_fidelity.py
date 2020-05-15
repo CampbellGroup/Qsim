@@ -4,7 +4,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 #from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
 #from Qsim.scripts.experiments.shelving_411.shelving_411 import ShelvingRate
 #from Qsim.scripts.experiments.Microwave_Ramsey_Experiment.microwave_ramsey_experiment import MicrowaveRamseyExperiment
-from Qsim.scripts.pulse_sequences.bright_state_prepepration import bright_state_preperation
+#from Qsim.scripts.pulse_sequences.bright_state_prepepration import bright_state_preperation
 import numpy as np
 from labrad.units import WithUnit as U
 
