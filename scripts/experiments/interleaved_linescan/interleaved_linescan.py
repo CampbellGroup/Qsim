@@ -8,7 +8,9 @@ import numpy as np
 class InterleavedLinescan(QsimExperiment):
     """
     Scan the 369 laser with the AOM double pass interleaved
-    with doppler cooling.
+    with doppler cooling to reveal the lineshape. This experiment helps
+    to diagnose problems with micromotion compensation and cooling laser
+    intensity
     """
 
     name = 'Interleaved Line Scan'

@@ -5,6 +5,10 @@ import numpy as np
 
 
 class Line_Narrowing(QsimExperiment):
+    """
+    Repeats the interleaved linescan experiment at different (x, y, z) electric
+    field multipoles specified by the user. Helpful for micromotion compensation
+    """
 
     name = 'Line_Narrowing'
 

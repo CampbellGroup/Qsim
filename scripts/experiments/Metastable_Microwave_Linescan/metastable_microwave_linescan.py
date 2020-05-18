@@ -8,7 +8,9 @@ import numpy as np
 
 class MetastableMicrowaveLineScan(QsimExperiment):
     """
-    Scan 3.6 GHz microwave source over the qubit transition
+    Scan 3.6 GHz microwave source over the qubit transition in the F7/2
+    state. There are different ways of running this experiment as well,
+    like with heralded state preparation or not
     """
 
     name = 'Metastable Microwave Line Scan'

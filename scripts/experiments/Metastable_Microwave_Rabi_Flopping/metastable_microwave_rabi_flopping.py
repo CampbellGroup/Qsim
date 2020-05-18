@@ -8,8 +8,8 @@ import numpy as np
 
 class MetastableMicrowaveRabiFlopping(QsimExperiment):
     """
-    Scan the 369 laser with the AOM double pass interleaved
-    with doppler cooling.
+    Scan the interrogation time of the 3.6 GHz radiation for the
+    metastable qubit. Can perform heralded state preparation if desired
     """
 
     name = 'Metastable Microwave Rabi Flopping'

@@ -14,7 +14,11 @@ import time
 import numpy as np
 
 class ion_position_tracker(QsimExperiment):
-
+    """
+    Track the (x, y) position of the ion on the camera as a function of time.
+    Really useful if there are systematic DC voltage drifts in the experiment
+    that need tracking
+    """
     name = 'ion_position_tracker'
 
     exp_parameters = []

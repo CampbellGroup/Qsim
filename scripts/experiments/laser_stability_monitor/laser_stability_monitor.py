@@ -6,6 +6,11 @@ import os
 
 
 class lasermonitor(QsimExperiment):
+    """
+    Plots the change in a laser's frequency as a function of time relative
+    to the initial laser frequency reading. Can be extended to any wavemeter that
+    has a Labrad server
+    """
 
     name = 'Laser Monitor'
 
