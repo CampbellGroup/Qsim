@@ -84,12 +84,11 @@ class shelving_fidelity(QsimExperiment):
                 timetags_bright, timetags_dark = self.process_timetags(timetags, counts_bright, counts_dark)
                 self.save_suspicious_detection_events(counts_bright, counts_dark, timetags_bright, timetags_dark)
 
-
             # delete the experiments where the ion wasnt properly doppler cooled
             counts_bright, counts_dark = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
                                                                           counts_bright, counts_dark)
 
-
+            # process the count_bins and return the histogram with bins and photon counts/bin
             hist_bright = self.process_data(counts_bright)
             hist_dark = self.process_data(counts_dark)
 
