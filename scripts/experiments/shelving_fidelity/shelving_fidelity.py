@@ -82,22 +82,8 @@ class shelving_fidelity(QsimExperiment):
             elif collect_timetags == 'ON':
                 [counts_doppler_bright, counts_bright, counts_doppler_dark, counts_dark], timetags = self.run_sequence_with_timetags(max_runs=150, num=4)
                 timetags_bright, timetags_dark = self.process_timetags(timetags, counts_bright, counts_dark)
-                save_bright_timetags = np.where(np.logical_and(counts_bright >= self.p.Timetags.lower_threshold,
-                                                        counts_bright <= self.p.Timetags.upper_threshold))
-                save_dark_timetags = np.where(np.logical_and(counts_dark >= self.p.Timetags.lower_threshold,
-                                                               counts_dark <= self.p.Timetags.upper_threshold))
+                self.save_suspicious_detection_events(counts_bright, counts_dark, timetags_bright, timetags_dark)
 
-                for locationBright, locationDark in zip(save_bright_timetags[0], save_dark_timetags[0]):
-
-                    col1 = np.zeros(len(timetags_bright[int(locationBright)]))
-                    col1[0] = counts_bright[locationBright]
-                    self.dv.add(np.column_stack((col1,
-                                                np.array(timetags_bright[int(locationBright)]))), context=self.tt_bright_context)
-
-                    col1 = np.zeros(len(timetags_bright[int(locationDark)]))
-                    col1[0] = counts_bright[locationDark]
-                    self.dv.add(np.column_stack((col1,
-                                         np.array(timetags_bright[int(locationDark)]))), context=self.tt_dark_context)
 
             # delete the experiments where the ion wasnt properly doppler cooled
             counts_bright, counts_dark = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
@@ -216,6 +202,31 @@ class shelving_fidelity(QsimExperiment):
         counts_dark = np.delete(counts_dark, dark_delete)
 
         return counts_bright, counts_dark
+
+    def save_suspicious_detection_events(self, counts_bright, counts_dark, timetags_bright, timetags_dark):
+        """
+        This saves the timetags to a file for detection events where the number of counted photons falls
+        within a user specified range. The first column of the data saved will contain the number of
+        counted photons for the first corresponding timetag entry, and the second column will be the
+        timetags themselves. So it may look something like [(2, detectionevent1tt),(0,detectionevent1tt),
+        (1, detectionevent2tt), (2, detectionevent3tt), (0, detectionevent3tt)]
+        """
+        save_bright_timetags = np.where(np.logical_and(counts_bright >= self.p.Timetags.lower_threshold,
+                                                       counts_bright <= self.p.Timetags.upper_threshold))
+        save_dark_timetags = np.where(np.logical_and(counts_dark >= self.p.Timetags.lower_threshold,
+                                                     counts_dark <= self.p.Timetags.upper_threshold))
+
+        for locationBright, locationDark in zip(save_bright_timetags[0], save_dark_timetags[0]):
+            col1 = np.zeros(len(timetags_bright[int(locationBright)]))
+            col1[0] = counts_bright[locationBright]
+            self.dv.add(np.column_stack((col1,
+                                         np.array(timetags_bright[int(locationBright)]))),
+                        context=self.tt_bright_context)
+
+            col1 = np.zeros(len(timetags_dark[int(locationDark)]))
+            col1[0] = counts_dark[locationDark]
+            self.dv.add(np.column_stack((col1,
+                                         np.array(timetags_dark[int(locationDark)]))), context=self.tt_dark_context)
 
     def finalize(self, cxn, context):
         pass
