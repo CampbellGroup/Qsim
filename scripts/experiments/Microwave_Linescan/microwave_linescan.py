@@ -44,7 +44,7 @@ class MicrowaveLineScan(QsimExperiment):
         init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
         init_optical_pumping_method = self.p.OpticalPumping.method
 
-        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        #self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
         self.p['OpticalPumping.method'] = 'Standard'
 
         data = self.setup_datavault('frequency', 'probability')  # gives the x and y names to Data Vault

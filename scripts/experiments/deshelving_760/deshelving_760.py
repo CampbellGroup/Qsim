@@ -7,7 +7,8 @@ from labrad.units import WithUnit as U
 
 class DeshelvingRate(QsimExperiment):
     """
-    Measure 760nm deshelving rate to the F7/2
+    Measure population in the F7/2 state as a function of applied 760nm time. Should exhibit an
+    exponential decay as population is moved from the F7/2 to the S1/2.
     """
 
     name = 'DeshelvingRate'

@@ -9,13 +9,11 @@ import numpy as np
 
 
 class PMT_FFT(QsimExperiment):
-
+    """
+    Performs a fourier transform of the timetags counted by the pulser. Can be used to observe the micromotion
+    of the ion since scattering rates are modulated by ion motion.
+    """
     name = 'PMT_FFT'
-
-    '''
-    Takes FFT of incoming PMT Counts
-
-    '''
 
     exp_parameters = []
     exp_parameters.append(('FFT', 'center_frequency'))

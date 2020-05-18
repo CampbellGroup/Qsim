@@ -44,7 +44,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
         init_optical_pumping_method = self.p.OpticalPumping.method
 
         self.p['BrightStatePumping.method'] = 'Microwave'
-        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        #self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
 
         line_trigger = self.p.MicrowaveInterogation.AC_line_trigger
         if line_trigger == 'On':

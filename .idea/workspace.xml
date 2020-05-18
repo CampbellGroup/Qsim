@@ -3,7 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/DAC_Raster/DAC_Raster.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/DAC_Raster/DAC_Raster.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/FFT/PMT_FFT.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/FFT/PMT_FFT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Linescan/microwave_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Linescan/microwave_linescan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/deshelving_760/deshelving_760.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/deshelving_760/deshelving_760.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/fidelity_tweak_up/fidelity_tweak_up.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/fidelity_tweak_up/fidelity_tweak_up.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillPulseAreaCorrective.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillPulseAreaCorrective.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterogation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -350,7 +357,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589815514144</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="adding in new Knill-based sequence with phase modifications to further suppress amplitude errors at the expense of detuning error robustness">
+      <created>1589820950025</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1589820950025</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -377,21 +391,22 @@
     <MESSAGE value="added new experiment for tracking rabi frequency drifts" />
     <MESSAGE value="added qubit dds offset by 15 MHz to every subsequence so that it always remains on but detuned for any experiment" />
     <MESSAGE value="got timetag saving for doppler errors working in the shelving fidelity experiment. Also created functions to do a lot of the processing within 'run()' so that the experiment looks cleaner and easier to read" />
-    <option name="LAST_COMMIT_MESSAGE" value="got timetag saving for doppler errors working in the shelving fidelity experiment. Also created functions to do a lot of the processing within 'run()' so that the experiment looks cleaner and easier to read" />
+    <MESSAGE value="adding in new Knill-based sequence with phase modifications to further suppress amplitude errors at the expense of detuning error robustness" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding in new Knill-based sequence with phase modifications to further suppress amplitude errors at the expense of detuning error robustness" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
-    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589815514034">
+    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589830857001">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
     <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
-    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589815514034" />
+    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589830857001" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">

@@ -14,7 +14,10 @@ import numpy as np
 
 
 class dacRaster(QsimExperiment):
-
+    """
+    This experiment will scan through a user specified list of DAC voltages and can be run when
+    first trying to load the trap, or if the loadable position in the trap has been lost.
+    """
     name = 'DAC Raster'
 
     exp_parameters = []

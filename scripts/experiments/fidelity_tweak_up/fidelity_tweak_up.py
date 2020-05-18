@@ -7,8 +7,9 @@ from labrad.units import WithUnit as U
 
 class fidelity_tweak_up(QsimExperiment):
     """
-    Doppler cool ion the readout bright fidelity,
-    readout darkstate and subtract
+    Performs a continuous state preparation and measurment experiment of the ion. This experiment has been
+    modified to be exclusively used with standard I = 1/2 qubit state readout, and a separate experiment is
+    written for Shelving readout of the qubit.
     """
 
     name = 'Fidelity Tweak Up'
