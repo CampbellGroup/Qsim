@@ -26,6 +26,7 @@ class RabiPointTracker(QsimExperiment):
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
     exp_parameters.append(('RabiPointTracker', 'interrogation_time'))
+    exp_parameters.append(('RabiPointTracker', 'shelving_fidelity_drift_tracking'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
@@ -33,6 +34,7 @@ class RabiPointTracker(QsimExperiment):
     def initialize(self, cxn, context, ident):
         self.ident = ident
         self.pulser = cxn.pulser
+        self.context = context
 
     def run(self, cxn, context):
         """
@@ -47,7 +49,6 @@ class RabiPointTracker(QsimExperiment):
         init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
         init_optical_pumping_method = self.p.OpticalPumping.method
 
-        self.p['BrightStatePumping.method'] = 'Microwave'
         self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
 
         line_trigger = self.p.MicrowaveInterogation.AC_line_trigger
@@ -84,9 +85,17 @@ class RabiPointTracker(QsimExperiment):
 
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
-                self.plot_hist(hist)
+                # only plot the histogram if you're not in the middle of drift tracking
+                # during a shelving fidelity run
+                if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'OFF':
+                    self.plot_hist(hist)
 
             pop = self.get_pop(counts)
+            # if we are drift tracking during a shelving fidelity run we want to return
+            # the measured pop to the shelving fidelity experiment so it can make a decision
+            # based on the observed population
+            if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'ON':
+                return pop
             self.dv.add(time_since_start['s'], pop)
             i +=1
 

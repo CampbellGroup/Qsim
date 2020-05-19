@@ -1,6 +1,7 @@
 import labrad
 from Qsim.scripts.pulse_sequences.shelving_fidelity import shelving_fidelity as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
+from Qsim.scripts.experiments.Rabi_Point_Tracker.rabi_point_tracker import RabiPointTracker
 #from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
 #from Qsim.scripts.experiments.shelving_411.shelving_411 import ShelvingRate
 #from Qsim.scripts.experiments.Microwave_Ramsey_Experiment.microwave_ramsey_experiment import MicrowaveRamseyExperiment
@@ -32,6 +33,7 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('Timetags', 'upper_threshold'))
     exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
     exp_parameters.append(('MicrowaveInterogation', 'delay_from_line_trigger'))
+    exp_parameters.append(('RabiPointTracker', 'shelving_fidelity_drift_tracking'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
@@ -49,15 +51,15 @@ class shelving_fidelity(QsimExperiment):
         qubit = self.p.Line_Selection.qubit
         collect_timetags = self.p.Timetags.save_timetags
         if qubit == 'qubit_0':
-            pi_time = self.p.Pi_times.qubit_0
+            self.pi_time = self.p.Pi_times.qubit_0
 
         elif qubit == 'qubit_plus':
-            pi_time = self.p.Pi_times.qubit_plus
+            self.pi_time = self.p.Pi_times.qubit_plus
 
         elif qubit == 'qubit_minus':
-            pi_time = self.p.Pi_times.qubit_minus
+            self.pi_time = self.p.Pi_times.qubit_minus
 
-        self.p['MicrowaveInterogation.duration'] = pi_time
+        self.p['MicrowaveInterogation.duration'] = self.pi_time
         self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Shelving'
         self.setup_prob_datavault()
@@ -85,8 +87,12 @@ class shelving_fidelity(QsimExperiment):
                 self.save_suspicious_detection_events(counts_bright, counts_dark, timetags_bright, timetags_dark)
 
             # delete the experiments where the ion wasnt properly doppler cooled
-            counts_bright, counts_dark = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
-                                                                          counts_bright, counts_dark)
+            counts_bright, counts_dark, n_errors = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
+                                                                                    counts_bright, counts_dark)
+            print('Total doppler errors = ' + str(n_errors))
+            print('Total bright events = ' + str(len(counts_bright)))
+            print('Total dark events = ' + str(len(counts_dark)))
+            print 'Mean Doppler Counts:', (np.mean(counts_doppler_bright) + np.mean(counts_doppler_dark))/2.0
 
             # process the count_bins and return the histogram with bins and photon counts/bin
             hist_bright = self.process_data(counts_bright)
@@ -99,15 +105,9 @@ class shelving_fidelity(QsimExperiment):
             #this processes the counts and calculates the fidelity and plots it on the bottom panel
             probDark, probBright = self.plot_prob(i, counts_bright, counts_dark)
 
-            print 'Mean Doppler Counts:', np.mean(counts_doppler_bright)
-            print('probDark = ' + str(probDark))
-            print('probBright = ' + str(probBright))
-
-            # this will do something if there was a dark state error
-            if probDark != 0.0:
-                self.pulser.line_trigger_state(False)
-                self.pulser.stop_sequence()
-                break
+            if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'ON':
+                pop = self.run_rabi_tracking()
+                print(pop)
 
             #if i % self.p.ShelvingFidelity.drift_track_iterations == 0:
                 #drift_context = self.sc.context()
@@ -189,7 +189,7 @@ class shelving_fidelity(QsimExperiment):
             tempPad = range(error - padWidth, error + padWidth + 1, 1)
             bright_delete = np.concatenate((bright_delete, tempPad))
         bright_delete = bright_delete[(bright_delete < len(counts_doppler_bright)) & (bright_delete >= 0.0)]
-        counts_bright = np.delete(counts_bright, bright_delete)
+        counts_bright_fixed = np.delete(counts_bright, bright_delete)
 
         dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
         dark_delete = np.array([])
@@ -198,9 +198,10 @@ class shelving_fidelity(QsimExperiment):
             tempPad = range(error - padWidth, error + padWidth + 1, 1)
             dark_delete = np.concatenate((dark_delete, tempPad))
         dark_delete = dark_delete[(dark_delete < len(counts_doppler_dark)) & (dark_delete >= 0.0)]
-        counts_dark = np.delete(counts_dark, dark_delete)
+        counts_dark_fixed = np.delete(counts_dark, dark_delete)
 
-        return counts_bright, counts_dark
+        total_doppler_errors = len(bright_errors[0]) + len(dark_errors[0])
+        return counts_bright_fixed, counts_dark_fixed, total_doppler_errors
 
     def save_suspicious_detection_events(self, counts_bright, counts_dark, timetags_bright, timetags_dark):
         """
@@ -210,22 +211,54 @@ class shelving_fidelity(QsimExperiment):
         timetags themselves. So it may look something like [(2, detectionevent1tt),(0,detectionevent1tt),
         (1, detectionevent2tt), (2, detectionevent3tt), (0, detectionevent3tt)]
         """
-        save_bright_timetags = np.where(np.logical_and(counts_bright >= self.p.Timetags.lower_threshold,
-                                                       counts_bright <= self.p.Timetags.upper_threshold))
-        save_dark_timetags = np.where(np.logical_and(counts_dark >= self.p.Timetags.lower_threshold,
-                                                     counts_dark <= self.p.Timetags.upper_threshold))
+        save_bright_timetags = np.where(counts_bright <= self.p.Timetags.upper_threshold)
+        save_dark_timetags = np.where(counts_dark >= self.p.Timetags.lower_threshold)
 
         for locationBright, locationDark in zip(save_bright_timetags[0], save_dark_timetags[0]):
-            col1 = np.zeros(len(timetags_bright[int(locationBright)]))
-            col1[0] = counts_bright[locationBright]
-            self.dv.add(np.column_stack((col1,
-                                         np.array(timetags_bright[int(locationBright)]))),
-                        context=self.tt_bright_context)
+            countsBright = int(counts_bright[int(locationBright)])
+            countsDark = int(counts_dark[int(locationDark)])
+            # if a non-zero number of photons were timetagged, save them to datavault
+            if countsBright != 0:
+                col1 = np.zeros(countsBright)
+                col1[0] = countsBright
+                self.dv.add(np.column_stack((col1,
+                                             np.array(timetags_bright[int(locationBright)]))),
+                            context=self.tt_bright_context)
 
-            col1 = np.zeros(len(timetags_dark[int(locationDark)]))
-            col1[0] = counts_dark[locationDark]
-            self.dv.add(np.column_stack((col1,
-                                         np.array(timetags_dark[int(locationDark)]))), context=self.tt_dark_context)
+            if countsDark != 0:
+                col1 = np.zeros(countsDark)
+                col1[0] = countsDark
+                self.dv.add(np.column_stack((col1,
+                                             np.array(timetags_dark[int(locationDark)]))), context=self.tt_dark_context)
+
+    def run_rabi_tracking(self):
+        """
+        This should run the rabi tracking subroutine that performs a preparation of the
+        dark state, and does 100T_Pi and detects the population left in the bright state.
+        These values are then logged and decisions can be made later on what to do with it
+        """
+        rabi_track_context = self.sc.context()
+
+        init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence
+        init_optical_pumping_mode = self.p.OpticalPumping.method
+
+        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        self.p['OpticalPumping.method'] = 'Standard'
+        self.p['Modes.state_detection_mode'] = 'Standard'
+
+        self.rabi_tracker = self.make_experiment(RabiPointTracker)
+        self.rabi_tracker.initialize(self.cxn, rabi_track_context, self.ident)
+        pop = self.rabi_tracker.run(self.cxn, rabi_track_context)
+
+        self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_sequence
+        self.p['OpticalPumping.method'] = init_optical_pumping_mode
+        self.p['Modes.state_detection_mode'] = 'Shelving'
+        self.p['MicrowaveInterogation.duration'] = self.pi_time
+        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+
+        self.program_pulser(sequence)
+
+        return pop
 
     def finalize(self, cxn, context):
         pass
