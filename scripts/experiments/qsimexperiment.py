@@ -19,7 +19,7 @@ class QsimExperiment(experiment):
         else:
             self.name = name
 
-        self.p = self.parameters
+        self.p = self.parameter
         self.cxn = cxn
         self.pv = None
         self.sc = None

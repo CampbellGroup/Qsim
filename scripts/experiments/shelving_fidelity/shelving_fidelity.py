@@ -184,6 +184,11 @@ class shelving_fidelity(QsimExperiment):
         return ttBright, ttDark
 
     def delete_doppler_count_errors(self, counts_doppler_bright, counts_doppler_dark, counts_bright, counts_dark):
+        """
+        takes in the photon counts from each experiment, and the doppler cooling counts for each experiment. Deletes
+        the fidelity measurements where the doppler cooling counts were below a user specified threshold, and pads the
+        error mitigation by deleting the experiment before and after the identified experiment
+        """
 
         padWidth = 1
         bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
@@ -275,11 +280,6 @@ class shelving_fidelity(QsimExperiment):
     def finalize(self, cxn, context):
         pass
 
-    def check_pi_time(self, number_pi_pulses):
-        pi_time_check_context = self.sc.context()
-        init_sequence = self.p.MicrowaveInterogation.pulse_sequence
-        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
-        self.p['MicrowaveInterogation.duration'] = pi_time*number_pi_pulses
 
 if __name__ == '__main__':
     cxn = labrad.connect()

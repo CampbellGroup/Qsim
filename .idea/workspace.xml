@@ -378,11 +378,17 @@
       <option name="project" value="LOCAL" />
       <updated>1589922656429</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state. Now adds the data to datavault along with the populations and plots it live along with the state population and fidelities">
+      <created>1589924536617</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1589924536617</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="removing some experimental dependencies on mode-locked laser based state detection&#10;&#10;also added new lasers to wavemeter linescan" />
     <MESSAGE value="testing adding dds center frequencies to parameter vault instead of hard coding" />
     <MESSAGE value="added the microwave qubit dds in as a default frequency from the registry so that we can set the DDS to sub Hz easily" />
     <MESSAGE value="small fixes, lingering print statements" />
@@ -407,21 +413,22 @@
     <MESSAGE value="adding in new Knill-based sequence with phase modifications to further suppress amplitude errors at the expense of detuning error robustness" />
     <MESSAGE value="Adding some docstrings to the experiments to help future QSimmers" />
     <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state." />
-    <option name="LAST_COMMIT_MESSAGE" value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state." />
+    <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state. Now adds the data to datavault along with the populations and plots it live along with the state population and fidelities" />
+    <option name="LAST_COMMIT_MESSAGE" value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state. Now adds the data to datavault along with the populations and plots it live along with the state population and fidelities" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
-    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589922656365">
+    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589924536554">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
     <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
-    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589922656365" />
+    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589924536554" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
