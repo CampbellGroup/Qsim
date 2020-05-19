@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -372,11 +371,17 @@
       <option name="project" value="LOCAL" />
       <updated>1589840250056</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state.">
+      <created>1589922656429</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1589922656429</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM" />
     <MESSAGE value="removing some experimental dependencies on mode-locked laser based state detection&#10;&#10;also added new lasers to wavemeter linescan" />
     <MESSAGE value="testing adding dds center frequencies to parameter vault instead of hard coding" />
     <MESSAGE value="added the microwave qubit dds in as a default frequency from the registry so that we can set the DDS to sub Hz easily" />
@@ -401,21 +406,22 @@
     <MESSAGE value="got timetag saving for doppler errors working in the shelving fidelity experiment. Also created functions to do a lot of the processing within 'run()' so that the experiment looks cleaner and easier to read" />
     <MESSAGE value="adding in new Knill-based sequence with phase modifications to further suppress amplitude errors at the expense of detuning error robustness" />
     <MESSAGE value="Adding some docstrings to the experiments to help future QSimmers" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding some docstrings to the experiments to help future QSimmers" />
+    <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state." />
+    <option name="LAST_COMMIT_MESSAGE" value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state." />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
-    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589840249948">
+    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589922656365">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
     <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
-    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589840249948" />
+    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589922656365" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">

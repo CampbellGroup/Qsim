@@ -94,6 +94,16 @@ class shelving_fidelity(QsimExperiment):
             print('Total dark events = ' + str(len(counts_dark)))
             print 'Mean Doppler Counts:', (np.mean(counts_doppler_bright) + np.mean(counts_doppler_dark))/2.0
 
+            # this runs the rabi tracking subroutine if the user chooses to do so. We force the value it
+            # returns to 0.0 if we are not tracking since we are saving the data to datavault either way
+            if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'ON':
+                rabi_point_tracking_pop = self.run_rabi_tracking()
+            elif self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'OFF':
+                rabi_point_tracking_pop = 0.0
+
+            # this processes the counts and calculates the fidelity and plots it on the bottom panel
+            self.plot_prob(i, counts_bright, counts_dark, rabi_point_tracking_pop)
+
             # process the count_bins and return the histogram with bins and photon counts/bin
             hist_bright = self.process_data(counts_bright)
             hist_dark = self.process_data(counts_dark)
@@ -102,12 +112,6 @@ class shelving_fidelity(QsimExperiment):
             self.plot_hist(hist_bright, folder_name='Shelving_Histogram')
             self.plot_hist(hist_dark, folder_name='Shelving_Histogram')
 
-            #this processes the counts and calculates the fidelity and plots it on the bottom panel
-            probDark, probBright = self.plot_prob(i, counts_bright, counts_dark)
-
-            if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'ON':
-                pop = self.run_rabi_tracking()
-                print(pop)
 
             #if i % self.p.ShelvingFidelity.drift_track_iterations == 0:
                 #drift_context = self.sc.context()
@@ -137,7 +141,8 @@ class shelving_fidelity(QsimExperiment):
         self.dataset_prob = self.dv.new('shelving_fidelity', [('run', 'prob')],
                                         [('Prob', 'bright_prep', 'num'),
                                          ('Prob', 'dark_prep', 'num'),
-                                         ('Prob', 'contrast', 'num')], context=self.dv_context)
+                                         ('Prob', 'contrast', 'num'),
+                                         ('Prob', 'rabi_point_tracking', 'num')], context=self.dv_context)
         self.grapher.plot(self.dataset_prob, 'Fidelity', False)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.dv_context)
@@ -157,13 +162,12 @@ class shelving_fidelity(QsimExperiment):
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_dark_context)
 
-    def plot_prob(self, num, counts_dark, counts_bright):
-        print num
+    def plot_prob(self, num, counts_dark, counts_bright, rabi_point_tracking_prob):
         prob_dark = self.get_pop(counts_dark)
         prob_bright = self.get_pop(counts_bright)
         self.dv.add(num, prob_dark, prob_bright,
-                    prob_bright - prob_dark, context=self.dv_context)
-        return prob_dark, prob_bright
+                    prob_bright - prob_dark, rabi_point_tracking_prob,
+                    context=self.dv_context)
 
     def process_timetags(self, timetags, counts_bright, counts_dark):
         # function should take in the timetags, and parse into a list of lists for the timetags
@@ -239,23 +243,31 @@ class shelving_fidelity(QsimExperiment):
         """
         rabi_track_context = self.sc.context()
 
+        # collect the initial settings of some parameters from the base experiment (shelving_fidelity)
         init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence
         init_optical_pumping_mode = self.p.OpticalPumping.method
 
+        # manually force all the parameters how you want them for the drift tracking experiment, which
+        # can in practice be very different from what we use in the high fidelity measurement
         self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
         self.p['OpticalPumping.method'] = 'Standard'
         self.p['Modes.state_detection_mode'] = 'Standard'
+        self.p['MicrowaveInterogation.duration'] = 100.0 * self.pi_time
 
+        # make the experiment, initialize it, and run it.
         self.rabi_tracker = self.make_experiment(RabiPointTracker)
         self.rabi_tracker.initialize(self.cxn, rabi_track_context, self.ident)
         pop = self.rabi_tracker.run(self.cxn, rabi_track_context)
 
+        # return the parameters to their intial states, including some additional ones that
+        # may be changed in the rabi tracking run() method
         self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_mode
         self.p['Modes.state_detection_mode'] = 'Shelving'
         self.p['MicrowaveInterogation.duration'] = self.pi_time
         self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
 
+        # reprogram the pulser with the sequence defined in this experiment (shelving_fidelity)
         self.program_pulser(sequence)
 
         return pop
