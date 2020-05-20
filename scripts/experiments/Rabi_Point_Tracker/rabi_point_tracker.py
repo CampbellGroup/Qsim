@@ -17,7 +17,9 @@ class RabiPointTracker(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
-
+    exp_parameters.append(('Pi_times', 'qubit_0'))
+    exp_parameters.append(('Pi_times', 'qubit_plus'))
+    exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'repititions'))
@@ -25,8 +27,9 @@ class RabiPointTracker(QsimExperiment):
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
-    exp_parameters.append(('RabiPointTracker', 'interrogation_time'))
+    exp_parameters.append(('RabiPointTracker', 'number_pi_times'))
     exp_parameters.append(('RabiPointTracker', 'shelving_fidelity_drift_tracking'))
+    exp_parameters.append(('RabiPointTracker', 'pi_time_feedback'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
@@ -45,6 +48,15 @@ class RabiPointTracker(QsimExperiment):
         qubit = self.p.Line_Selection.qubit
         mode = self.p.Modes.state_detection_mode
 
+        if qubit == 'qubit_0':
+            self.pi_time = self.p.Pi_times.qubit_0
+
+        elif qubit == 'qubit_plus':
+            self.pi_time = self.p.Pi_times.qubit_plus
+
+        elif qubit == 'qubit_minus':
+            self.pi_time = self.p.Pi_times.qubit_minus
+
         init_bright_state_pumping_method = self.p.BrightStatePumping.method
         init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
         init_optical_pumping_method = self.p.OpticalPumping.method
@@ -57,11 +69,11 @@ class RabiPointTracker(QsimExperiment):
 
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
         self.setup_grapher('Rabi Point Tracker')
-        self.rabi_time = self.p.RabiPointTracker.interrogation_time
-        self.p['MicrowaveInterogation.duration'] = self.rabi_time
+        self.n_pi_times = self.p.RabiPointTracker.number_pi_times
         init_time = U(time.time(), 's')
         i = 0
         while True:
+            print(self.pi_time)
             should_break = self.update_progress(np.random.rand())
             if should_break:
                 break
@@ -70,6 +82,7 @@ class RabiPointTracker(QsimExperiment):
                 # no sense in quadrupole optical pumping by accident if using standard readout
                 self.p['OpticalPumping.method'] = 'Standard'
 
+            self.p['MicrowaveInterogation.duration'] = self.n_pi_times * self.pi_time
             self.program_pulser(sequence)
 
             if mode == 'Shelving':
@@ -96,6 +109,10 @@ class RabiPointTracker(QsimExperiment):
             # based on the observed population
             if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'ON':
                 return pop
+
+            if self.p.RabiPointTracker.pi_time_feedback == 'ON':
+                self.update_pi_time(pop, gain=0.1)
+
             self.dv.add(time_since_start['s'], pop)
             i +=1
 
@@ -103,6 +120,13 @@ class RabiPointTracker(QsimExperiment):
         self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_pulse_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_method
         self.pulser.line_trigger_state(False)
+
+    def update_pi_time(self, pop, gain, set_point=0.5):
+        error = (pop - set_point)
+        if np.abs(error) > 0.05:
+            self.pi_time = self.pi_time - gain*error*self.pi_time/self.n_pi_times
+        else:
+            self.pi_time = self.pi_time
 
     def finalize(self, cxn, context):
         pass

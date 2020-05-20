@@ -112,25 +112,6 @@ class shelving_fidelity(QsimExperiment):
             self.plot_hist(hist_bright, folder_name='Shelving_Histogram')
             self.plot_hist(hist_dark, folder_name='Shelving_Histogram')
 
-
-            #if i % self.p.ShelvingFidelity.drift_track_iterations == 0:
-                #drift_context = self.sc.context()
-
-                #init_sequence = self.p.MicrowaveInterogation.pulse_sequence
-                #self.p.MicrowaveInterogation.pulse_sequence = 'standard'
-
-                #self.linescan = self.make_experiment(InterleavedLinescan)
-                #self.linescan.initialize(self.cxn, drift_context, self.ident)
-                #self.linescan.run(self.cxn, drift_context)
-
-                #self.shelving_rate = self.make_experiment(ShelvingRate)
-                #self.shelving_rate.initialize(self.cxn, drift_context, self.ident)
-                #self.shelving_rate.run(self.cxn, drift_context)
-
-                #self.sc.pause_script(self.ident, True)
-                #self.p.MicrowaveInterogation.pulse_sequence = init_sequence
-                #self.program_pulser(sequence)
-
         # reset the line trigger and delay to false
         self.pulser.line_trigger_state(False)
 

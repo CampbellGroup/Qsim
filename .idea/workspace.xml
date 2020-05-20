@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -385,12 +386,24 @@
       <option name="project" value="LOCAL" />
       <updated>1589924536617</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="added docstring">
+      <created>1589924764241</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1589924764241</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fixed accidental deletion in qsimexperiment.py">
+      <created>1589924823488</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1589924823488</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="testing adding dds center frequencies to parameter vault instead of hard coding" />
-    <MESSAGE value="added the microwave qubit dds in as a default frequency from the registry so that we can set the DDS to sub Hz easily" />
     <MESSAGE value="small fixes, lingering print statements" />
     <MESSAGE value="added doppler_cooling_freq from registry to all subsequences" />
     <MESSAGE value="added additional parameters to ddsDefaults" />
@@ -414,33 +427,35 @@
     <MESSAGE value="Adding some docstrings to the experiments to help future QSimmers" />
     <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state." />
     <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state. Now adds the data to datavault along with the populations and plots it live along with the state population and fidelities" />
-    <option name="LAST_COMMIT_MESSAGE" value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state. Now adds the data to datavault along with the populations and plots it live along with the state population and fidelities" />
+    <MESSAGE value="added docstring" />
+    <MESSAGE value="fixed accidental deletion in qsimexperiment.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed accidental deletion in qsimexperiment.py" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
-    <state x="2527" y="136" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589924536554">
+    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1589924823431">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
     <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
-    <state x="2527" y="136" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589924536554" />
+    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589924823431" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2543" y="148" key="SettingsEditor/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583455025933" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1589840257161">
+    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1589924540665">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="555" y="262" width="802" height="529" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957739600" />
     <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589840257161" />
+    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1589924540665" />
     <state x="2256" y="386" width="1086" height="443" key="Vcs.Push.Dialog.v2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310595923" />
     <state x="572" y="367" key="com.intellij.ide.util.TipDialog" timestamp="1583952580723">
       <screen x="0" y="0" width="1920" height="1047" />
