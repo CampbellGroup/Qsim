@@ -2,10 +2,8 @@ import labrad
 from Qsim.scripts.pulse_sequences.shelving_fidelity import shelving_fidelity as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.Rabi_Point_Tracker.rabi_point_tracker import RabiPointTracker
-#from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
-#from Qsim.scripts.experiments.shelving_411.shelving_411 import ShelvingRate
-#from Qsim.scripts.experiments.Microwave_Ramsey_Experiment.microwave_ramsey_experiment import MicrowaveRamseyExperiment
-#from Qsim.scripts.pulse_sequences.bright_state_prepepration import bright_state_preperation
+from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as rabi_track_sequence
+
 import numpy as np
 from labrad.units import WithUnit as U
 
@@ -27,6 +25,12 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('ShelvingStateDetection', 'sequence_iterations'))
+    exp_parameters.append(('DopplerCooling', 'detuning'))
+    exp_parameters.append(('DopplerCooling', 'duration'))
+    exp_parameters.append(('Transitions', 'main_cooling_369'))
+    exp_parameters.append(('Modes', 'state_detection_mode'))
+    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
 
     exp_parameters.append(('Timetags', 'save_timetags'))
     exp_parameters.append(('Timetags', 'lower_threshold'))
@@ -34,13 +38,17 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
     exp_parameters.append(('MicrowaveInterogation', 'delay_from_line_trigger'))
     exp_parameters.append(('RabiPointTracker', 'shelving_fidelity_drift_tracking'))
-    exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.append(('RabiPointTracker', 'number_pi_times'))
 
+    exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.extend(rabi_track_sequence.all_required_parameters())
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
+        self.pulser = cxn.pulser
+        self.context = context
 
     def run(self, cxn, context):
 
@@ -70,13 +78,13 @@ class shelving_fidelity(QsimExperiment):
         while i < self.p.ShelvingStateDetection.sequence_iterations:
             i += 1
             should_break = self.update_progress(np.random.random())
-            old_params = dict(self.p.iteritems())
             if should_break:
                 break
-            self.reload_all_parameters()
 
+            old_params = dict(self.p.iteritems())
+            self.reload_all_parameters()
             self.p = self.parameters
-            if self.p != old_params:
+            if (self.p != old_params) or (self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'ON'):
                 self.program_pulser(sequence)
 
             if collect_timetags == 'OFF':
@@ -103,7 +111,7 @@ class shelving_fidelity(QsimExperiment):
 
             # this processes the counts and calculates the fidelity and plots it on the bottom panel
             self.plot_prob(i, counts_bright, counts_dark, rabi_point_tracking_pop)
-
+            print str(rabi_point_tracking_pop)
             # process the count_bins and return the histogram with bins and photon counts/bin
             hist_bright = self.process_data(counts_bright)
             hist_dark = self.process_data(counts_dark)
@@ -112,8 +120,8 @@ class shelving_fidelity(QsimExperiment):
             self.plot_hist(hist_bright, folder_name='Shelving_Histogram')
             self.plot_hist(hist_dark, folder_name='Shelving_Histogram')
 
-        # reset the line trigger and delay to false
-        self.pulser.line_trigger_state(False)
+
+
 
     def setup_prob_datavault(self):
         self.dv_context = self.dv.context()
@@ -227,8 +235,6 @@ class shelving_fidelity(QsimExperiment):
         dark state, and does 100T_Pi and detects the population left in the bright state.
         These values are then logged and decisions can be made later on what to do with it
         """
-        rabi_track_context = self.sc.context()
-
         # collect the initial settings of some parameters from the base experiment (shelving_fidelity)
         init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence
         init_optical_pumping_mode = self.p.OpticalPumping.method
@@ -238,12 +244,17 @@ class shelving_fidelity(QsimExperiment):
         self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
         self.p['OpticalPumping.method'] = 'Standard'
         self.p['Modes.state_detection_mode'] = 'Standard'
-        self.p['MicrowaveInterogation.duration'] = 100.0 * self.pi_time
+        self.n_pi_times = self.p.RabiPointTracker.number_pi_times
+        self.p['MicrowaveInterogation.duration'] = self.n_pi_times * self.pi_time
 
         # make the experiment, initialize it, and run it.
-        self.rabi_tracker = self.make_experiment(RabiPointTracker)
-        self.rabi_tracker.initialize(self.cxn, rabi_track_context, self.ident)
-        pop = self.rabi_tracker.run(self.cxn, rabi_track_context)
+        #self.rabi_tracker = self.make_experiment(RabiPointTracker)
+        #self.rabi_tracker.initialize(self.cxn, rabi_track_context, self.ident)
+        #pop = self.rabi_tracker.run(self.cxn, rabi_track_context)
+        self.pulser.line_trigger_state(False)
+        self.program_pulser(rabi_track_sequence)
+        [counts] = self.run_sequence()
+        pop = self.get_pop(counts)
 
         # return the parameters to their intial states, including some additional ones that
         # may be changed in the rabi tracking run() method
@@ -253,13 +264,17 @@ class shelving_fidelity(QsimExperiment):
         self.p['MicrowaveInterogation.duration'] = self.pi_time
         self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
 
-        # reprogram the pulser with the sequence defined in this experiment (shelving_fidelity)
-        self.program_pulser(sequence)
+        if self.p.MicrowaveInterogation.AC_line_trigger == 'On':
+            self.pulser.line_trigger_state(True)
+            self.pulser.line_trigger_duration(self.p.MicrowaveInterogation.delay_from_line_trigger)
 
+        # DO NOT REPROGRAM PULSER HERE, IF YOU REPROGRAM AND THE EXPERIMENT GETS STOPPED BEOFRE THE
+        # SEQUENCE CAN RUN THE PULSER WILL FREEZE UP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         return pop
 
     def finalize(self, cxn, context):
-        pass
+        # reset the line trigger and delay to false
+        self.pulser.line_trigger_state(False)
 
 
 if __name__ == '__main__':

@@ -21,11 +21,9 @@ class RabiPointTracker(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'repititions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
     exp_parameters.append(('RabiPointTracker', 'number_pi_times'))
     exp_parameters.append(('RabiPointTracker', 'shelving_fidelity_drift_tracking'))
@@ -46,7 +44,7 @@ class RabiPointTracker(QsimExperiment):
         which will be kept track of using the native 'time' function in python
         """
         qubit = self.p.Line_Selection.qubit
-        mode = self.p.Modes.state_detection_mode
+        self.p['Modes.state_detection_mode'] = 'Standard'
 
         if qubit == 'qubit_0':
             self.pi_time = self.p.Pi_times.qubit_0
@@ -67,51 +65,40 @@ class RabiPointTracker(QsimExperiment):
         if line_trigger == 'On':
             self.pulser.line_trigger_state(True)
 
-        self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
-        self.setup_grapher('Rabi Point Tracker')
+        if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'OFF':
+            # dont need to setup seperate connection to datavault and grapher if we
+            # are drift tracking during the shelving experiment
+            self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
+            self.setup_grapher('Rabi Point Tracker')
+
         self.n_pi_times = self.p.RabiPointTracker.number_pi_times
         init_time = U(time.time(), 's')
         i = 0
         while True:
-            print(self.pi_time)
-            should_break = self.update_progress(np.random.rand())
-            if should_break:
-                break
-            if mode == 'Standard':
-                # force standard optical pumping if standard readout method used
-                # no sense in quadrupole optical pumping by accident if using standard readout
-                self.p['OpticalPumping.method'] = 'Standard'
+            if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'OFF':
+                should_break = self.update_progress(np.random.rand())
+                if should_break:
+                    break
 
+            self.p['OpticalPumping.method'] = 'Standard'
             self.p['MicrowaveInterogation.duration'] = self.n_pi_times * self.pi_time
             self.program_pulser(sequence)
-
-            if mode == 'Shelving':
-                [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
-                errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-                counts = np.delete(detection_counts, errors)
-            elif mode == 'Standard':
-                [counts] = self.run_sequence()
-            else:
-                print 'Detection mode not selected!!!'
-
+            [counts] = self.run_sequence()
             time_since_start = U(time.time(), 's') - init_time
 
-            if i % self.p.StandardStateDetection.points_per_histogram == 0:
+            if (i % self.p.StandardStateDetection.points_per_histogram == 0) & (self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'OFF'):
                 hist = self.process_data(counts)
-                # only plot the histogram if you're not in the middle of drift tracking
-                # during a shelving fidelity run
-                if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'OFF':
-                    self.plot_hist(hist)
+                self.plot_hist(hist)
 
             pop = self.get_pop(counts)
+            if self.p.RabiPointTracker.pi_time_feedback == 'ON':
+                self.update_pi_time(pop, gain=0.1)
+
             # if we are drift tracking during a shelving fidelity run we want to return
             # the measured pop to the shelving fidelity experiment so it can make a decision
             # based on the observed population
             if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'ON':
                 return pop
-
-            if self.p.RabiPointTracker.pi_time_feedback == 'ON':
-                self.update_pi_time(pop, gain=0.1)
 
             self.dv.add(time_since_start['s'], pop)
             i +=1
@@ -122,6 +109,10 @@ class RabiPointTracker(QsimExperiment):
         self.pulser.line_trigger_state(False)
 
     def update_pi_time(self, pop, gain, set_point=0.5):
+        """
+        Adjust the pi time of th qubit based on the measured bright state population at the
+        interrogation time n_pi_times * pi_time
+        """
         error = (pop - set_point)
         if np.abs(error) > 0.05:
             self.pi_time = self.pi_time - gain*error*self.pi_time/self.n_pi_times
