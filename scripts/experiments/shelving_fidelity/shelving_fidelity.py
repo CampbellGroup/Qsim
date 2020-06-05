@@ -2,7 +2,6 @@ import labrad
 from Qsim.scripts.pulse_sequences.shelving_fidelity import shelving_fidelity as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.Rabi_Point_Tracker.rabi_point_tracker import RabiPointTracker
-from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as rabi_track_sequence
 
 import numpy as np
 from labrad.units import WithUnit as U
@@ -25,12 +24,6 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('ShelvingStateDetection', 'sequence_iterations'))
-    exp_parameters.append(('DopplerCooling', 'detuning'))
-    exp_parameters.append(('DopplerCooling', 'duration'))
-    exp_parameters.append(('Transitions', 'main_cooling_369'))
-    exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('StandardStateDetection', 'repititions'))
-    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
 
     exp_parameters.append(('Timetags', 'save_timetags'))
     exp_parameters.append(('Timetags', 'lower_threshold'))
@@ -41,7 +34,6 @@ class shelving_fidelity(QsimExperiment):
     exp_parameters.append(('RabiPointTracker', 'number_pi_times'))
 
     exp_parameters.extend(sequence.all_required_parameters())
-    exp_parameters.extend(rabi_track_sequence.all_required_parameters())
     exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterogation', 'duration'))
 
@@ -84,6 +76,7 @@ class shelving_fidelity(QsimExperiment):
             old_params = dict(self.p.iteritems())
             self.reload_all_parameters()
             self.p = self.parameters
+            # HAVE TO REPROGRAM THE SEQUENCE HERE AFTER THE 'SHOULD_BREAK' OTHERWISE PULSER CAN FREEZE
             if (self.p != old_params) or (self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'ON'):
                 self.program_pulser(sequence)
 
@@ -112,6 +105,7 @@ class shelving_fidelity(QsimExperiment):
             # this processes the counts and calculates the fidelity and plots it on the bottom panel
             self.plot_prob(i, counts_bright, counts_dark, rabi_point_tracking_pop)
             print str(rabi_point_tracking_pop)
+
             # process the count_bins and return the histogram with bins and photon counts/bin
             hist_bright = self.process_data(counts_bright)
             hist_dark = self.process_data(counts_dark)
@@ -235,6 +229,8 @@ class shelving_fidelity(QsimExperiment):
         dark state, and does 100T_Pi and detects the population left in the bright state.
         These values are then logged and decisions can be made later on what to do with it
         """
+
+        rabi_track_context = self.sc.context()
         # collect the initial settings of some parameters from the base experiment (shelving_fidelity)
         init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence
         init_optical_pumping_mode = self.p.OpticalPumping.method
@@ -248,13 +244,10 @@ class shelving_fidelity(QsimExperiment):
         self.p['MicrowaveInterogation.duration'] = self.n_pi_times * self.pi_time
 
         # make the experiment, initialize it, and run it.
-        #self.rabi_tracker = self.make_experiment(RabiPointTracker)
-        #self.rabi_tracker.initialize(self.cxn, rabi_track_context, self.ident)
-        #pop = self.rabi_tracker.run(self.cxn, rabi_track_context)
-        self.pulser.line_trigger_state(False)
-        self.program_pulser(rabi_track_sequence)
-        [counts] = self.run_sequence()
-        pop = self.get_pop(counts)
+        self.rabi_tracker = self.make_experiment(RabiPointTracker)
+        self.rabi_tracker.initialize(self.cxn, rabi_track_context, self.ident)
+        pop = self.rabi_tracker.run(self.cxn, rabi_track_context)
+
 
         # return the parameters to their intial states, including some additional ones that
         # may be changed in the rabi tracking run() method

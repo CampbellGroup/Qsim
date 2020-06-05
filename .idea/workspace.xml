@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,13 +58,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00002" summary="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM">
-      <created>1583456841265</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1583456841265</updated>
     </task>
     <task id="LOCAL-00003" summary="changing shelving to use the single pass 411 w/ TTL, 411 optical pumping to use double passed AOM">
       <created>1583457087766</created>
@@ -401,11 +395,17 @@
       <option name="project" value="LOCAL" />
       <updated>1590016505555</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="BUG FIX: when drift tracking, if you reprogram the initial sequence after you perform drift tracking, but attempt to stop the experiment before running the programmed sequence, the pulser will freeze and you lose control over the pulser!!!">
+      <created>1591309756467</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1591309756467</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added doppler_cooling_freq from registry to all subsequences" />
     <MESSAGE value="added additional parameters to ddsDefaults" />
     <MESSAGE value="changed bright state preparation to work with shelving and standard detection" />
     <MESSAGE value="changed bright state detection to work with shelving and standard detection" />
@@ -430,21 +430,22 @@
     <MESSAGE value="added docstring" />
     <MESSAGE value="fixed accidental deletion in qsimexperiment.py" />
     <MESSAGE value="added in pi_time feedback to the rabi_point_tracking experiment for testing. Might implement in the shelving experiment. &#10;&#10;Also removed the drift tracking code that has been commented out for a while. We have been manually drift tracking." />
-    <option name="LAST_COMMIT_MESSAGE" value="added in pi_time feedback to the rabi_point_tracking experiment for testing. Might implement in the shelving experiment. &#10;&#10;Also removed the drift tracking code that has been commented out for a while. We have been manually drift tracking." />
+    <MESSAGE value="BUG FIX: when drift tracking, if you reprogram the initial sequence after you perform drift tracking, but attempt to stop the experiment before running the programmed sequence, the pulser will freeze and you lose control over the pulser!!!" />
+    <option name="LAST_COMMIT_MESSAGE" value="BUG FIX: when drift tracking, if you reprogram the initial sequence after you perform drift tracking, but attempt to stop the experiment before running the programmed sequence, the pulser will freeze and you lose control over the pulser!!!" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
       <screen x="1920" y="42" width="1920" height="1080" />
     </state>
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
-    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1590016505491">
+    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1591309756252">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583957731818" />
     <state x="2527" y="136" width="819" height="806" key="CommitChangelistDialog2/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583967015139" />
     <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
     <state x="607" y="132" key="CommitChangelistDialog2/0.0.1920.1047@0.0.1920.1047" timestamp="1584138467986" />
-    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1590016505491" />
+    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1591309756252" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
     <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">

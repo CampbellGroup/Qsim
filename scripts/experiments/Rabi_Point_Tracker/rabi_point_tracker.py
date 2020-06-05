@@ -61,9 +61,8 @@ class RabiPointTracker(QsimExperiment):
 
         self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
 
-        line_trigger = self.p.MicrowaveInterogation.AC_line_trigger
-        if line_trigger == 'On':
-            self.pulser.line_trigger_state(True)
+        init_line_trigger_state = self.p.MicrowaveInterogation.AC_line_trigger
+        self.pulser.line_trigger_state(False)
 
         if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == 'OFF':
             # dont need to setup seperate connection to datavault and grapher if we
@@ -106,7 +105,8 @@ class RabiPointTracker(QsimExperiment):
         self.p['BrightStatePumping.method'] = init_bright_state_pumping_method
         self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_pulse_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_method
-        self.pulser.line_trigger_state(False)
+        if init_line_trigger_state == 'On':
+            self.pulser.line_trigger_state(True)
 
     def update_pi_time(self, pop, gain, set_point=0.5):
         """

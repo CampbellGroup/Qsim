@@ -28,10 +28,12 @@ class InterleavedLinescan(QsimExperiment):
     def initialize(self, cxn, context, ident):
         self.ident = ident
         self.reg = cxn.registry
+        self.pulser = cxn.pulser
         self.reg.cd(['', 'settings'])
 
     def run(self, cxn, context):
 
+        self.pulser.line_trigger_state(False)
         self.setup_datavault('frequency', 'photons')  # gives the x and y names to Data Vault
         self.setup_grapher('Interleaved Linescan')
         self.detunings = self.get_scan_list(self.p.InterleavedLinescan.line_scan, 'MHz')

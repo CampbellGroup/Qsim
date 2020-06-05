@@ -1,0 +1,74 @@
+"""
+### BEGIN NODE INFO
+[info]
+name = Cavity Piezo Lock
+version = 1.0
+description =
+instancename = Cavity Piezo Lock
+
+[startup]
+cmdline = %PYTHON% %FILE%
+timeout = 100
+
+[shutdown]
+message = 987654321
+timeout = 100
+### END
+
+"""
+
+import os
+from labrad.server import LabradServer, setting
+from labrad.units import WithUnit as U
+from twisted.internet.defer import inlineCallbacks
+from twisted.internet.task import LoopingCall
+import socket
+
+class cavity_piezo_lock(LabradServer):
+
+    name = 'Cavity Piezo Lock'
+
+    def initServer(self):
+        self.password = os.environ['LABRADPASSWORD']
+        self.name = socket.gethostname() + ' Cavity Piezo Lock'
+        self.chan = 1
+        self.rate = 2
+        self.connect()
+        self.lc = LoopingCall(self.loop)
+        self.lc.start(self.rate)
+
+    @inlineCallbacks
+    def connect(self):
+        '''
+        Creates asynchronous connection
+        '''
+        from labrad.wrappers import connectAsync
+        self.cxn = yield connectAsync('10.97.112.4', name=self.name, password=self.password)
+        self.wavemeter = self.cxn.multiplexerserver
+        self.piezo = self.cxn.piezo_server
+        self.piezo.select_device(0)
+
+        self.set_point = yield self.wavemeter.get_frequency(1)
+
+    @inlineCallbacks
+    def loop(self):
+        print 'here'
+        init_voltage = yield self.piezo.get_voltage(self.chan)
+        init_voltage = U(init_voltage, 'V')
+        print init_voltage
+        frequency_reading = yield self.wavemeter.get_frequency(1)
+        delta = (self.set_point - frequency_reading)*1e6  # want the frequency in MHz for convenience
+        print delta
+        if np.abs(delta) < 5.0:
+            pass
+        if (delta < 0.0) and (np.abd(delta) < 15.0):
+            set_voltage = init_voltage + U(1.0, 'V')
+            yield self.piezo.set_voltage(self.chan, set_voltage)
+        if (delta > 0.0) and (np.abd(delta) < 15.0):
+            set_voltage = init_voltage - U(1.0, 'V')
+            yield self.piezo.set_voltage(self.chan, set_voltage)
+
+
+if __name__ == "__main__":
+    from labrad import util
+    util.runServer(cavity_piezo_lock())
