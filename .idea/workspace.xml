@@ -2,11 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/Optical_Pumping_Rate/optical_pumping_rate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/bf_fluorescence/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/optical_pumping_point.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/bf_fluorescence/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Optical_Pumping_Rate/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/bf_fluorescence/bf_fluorescence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/bf_fluorescence/bf_fluorescence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/RecordTimeTags.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RecordTimeTags.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,10 +46,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scripts/experiments" />
+      <recent name="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_sub_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_random" />
-      <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
     </key>
   </component>
   <component name="SvnConfiguration">

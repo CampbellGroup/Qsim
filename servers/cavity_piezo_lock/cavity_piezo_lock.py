@@ -23,6 +23,7 @@ from labrad.units import WithUnit as U
 from twisted.internet.defer import inlineCallbacks
 from twisted.internet.task import LoopingCall
 import socket
+import numpy as np
 
 class cavity_piezo_lock(LabradServer):
 
@@ -35,7 +36,7 @@ class cavity_piezo_lock(LabradServer):
         self.rate = 2
         self.connect()
         self.lc = LoopingCall(self.loop)
-        self.lc.start(self.rate)
+
 
     @inlineCallbacks
     def connect(self):
@@ -45,27 +46,28 @@ class cavity_piezo_lock(LabradServer):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync('10.97.112.4', name=self.name, password=self.password)
         self.wavemeter = self.cxn.multiplexerserver
-        self.piezo = self.cxn.piezo_server
+        self.piezo = yield self.cxn.piezo_server
         self.piezo.select_device(0)
-
         self.set_point = yield self.wavemeter.get_frequency(1)
+        self.lc.start(self.rate)
 
     @inlineCallbacks
     def loop(self):
-        print 'here'
-        init_voltage = yield self.piezo.get_voltage(self.chan)
-        init_voltage = U(init_voltage, 'V')
-        print init_voltage
+        # piezo box set_voltage command returns voltage for some reason
+        init_voltage = yield self.piezo.set_voltage(self.chan)
+        init_voltage = U(float(init_voltage[1]), 'V')
         frequency_reading = yield self.wavemeter.get_frequency(1)
         delta = (self.set_point - frequency_reading)*1e6  # want the frequency in MHz for convenience
-        print delta
-        if np.abs(delta) < 5.0:
+
+        if np.abs(delta) < 4.0:
             pass
-        if (delta < 0.0) and (np.abd(delta) < 15.0):
-            set_voltage = init_voltage + U(1.0, 'V')
+        elif (delta < 0.0) and (np.abs(delta) < 15.0):
+            delta_voltage = np.abs(delta)/10.0  # the cavity piezo is roughly 10 MHz/Volt
+            set_voltage = init_voltage - U(delta_voltage, 'V')
             yield self.piezo.set_voltage(self.chan, set_voltage)
-        if (delta > 0.0) and (np.abd(delta) < 15.0):
-            set_voltage = init_voltage - U(1.0, 'V')
+        elif (delta > 0.0) and (np.abs(delta) < 15.0):
+            delta_voltage = np.abs(delta)/10.0  # the cavity piezo is roughly 10 MHz/Volt
+            set_voltage = init_voltage + U(delta_voltage, 'V')
             yield self.piezo.set_voltage(self.chan, set_voltage)
 
 

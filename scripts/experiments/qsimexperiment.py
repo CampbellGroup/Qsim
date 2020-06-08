@@ -1,5 +1,6 @@
 from common.lib.servers.script_scanner.scan_methods import experiment
 import numpy as np
+import time
 
 
 class QsimExperiment(experiment):
@@ -51,6 +52,12 @@ class QsimExperiment(experiment):
             self.grapher = self.cxn.servers['grapher']
         except KeyError as error:
             error_message = error + '\n' + "Grapher is not running"
+            raise KeyError(error_message)
+
+        try:
+            self.timeharp = self.cxn.servers['timeharpserver']
+        except KeyError as error:
+            error_message = str(error) + '\n' + "TimeHarp is not running"
             raise KeyError(error_message)
 
     def setup_datavault(self, x_axis, y_axis):
@@ -194,6 +201,35 @@ class QsimExperiment(experiment):
         self.dv.add(hist, context=self.hist_ctx)
         if create_new:
             self.grapher.plot(self.dataset_hist, 'Histogram', False)
+
+    def get_timeharp_timetags(self, measure_time, buffer_size=131072):
+        self.timeharp.start_measure(measure_time)
+        time.sleep(measure_time/1000.)
+        data = self.timeharp.read_fifo(buffer_size)
+        stamps = data[0]
+        data_length = data[1]
+        stamps = stamps[0:data_length]
+        timetags = self.convert_timetags(stamps)
+        while data_length > 0:
+            data = self.timeharp.read_fifo(buffer_size)
+            stamps = data[0]
+            data_length = data[1]
+            stamps = stamps[0:data_length]
+            timetags += self.convert_timetags(stamps)
+        self.timeharp.stop_measure()
+        return timetags
+
+    def convert_timetags(self, data):
+        timetags = []
+        for i, stamp in enumerate(data):
+            print stamp
+            timetag = (stamp >> 10) & 2 ** 15 - 1
+            timetag = (stamp >> 10) & (2 ** 15 - 1)
+            timetag = timetag * 25. / 1000.  # time in nanoseconds
+            if timetag != 0:
+                timetags.append(timetag)
+        return timetags
+
 
     def _finalize(self, cxn, context):
         self.pmt.set_mode(self.init_mode)
