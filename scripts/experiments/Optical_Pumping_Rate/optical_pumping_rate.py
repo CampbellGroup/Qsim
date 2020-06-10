@@ -17,6 +17,7 @@ class optical_pumping_rate(QsimExperiment):
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.append(('OpticalPumping', 'scan'))
     exp_parameters.remove(('OpticalPumping', 'duration'))
+    exp_parameters.remove(('OpticalPumping', 'quadrupole_op_duration'))
     exp_parameters.append(('OpticalPumping', 'method'))
     exp_parameters.append(('ShelvingStateDetection', 'repititions'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
@@ -46,15 +47,19 @@ class optical_pumping_rate(QsimExperiment):
 
             elif self.p.OpticalPumping.method == 'QuadrupoleOnly':
                 if self.p.Modes.state_detection_mode == 'Shelving':
+                    self.p['OpticalPumping.duration'] = U(0.0, 'us')
                     self.p['OpticalPumping.quadrupole_op_duration'] = U(duration, 'us')
                     self.p['Modes.state_detection_mode'] = 'Shelving'
+                    self.program_pulser(sequence)
                     [doppler_counts, detection_counts] = self.run_sequence(num=2, max_runs=500)
                     deshelving_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                     detection_counts = np.delete(detection_counts, deshelving_errors)
                 elif self.p.Modes.state_detection_mode == 'Standard':
+                    self.p['OpticalPumping.duration'] = U(0.0, 'us')
                     self.p['OpticalPumping.quadrupole_op_duration'] = U(duration, 'us')
                     self.p['Modes.state_detection_mode'] = 'Standard'
-                    [detection_counts] = self.run_sequence(sequence)
+                    self.program_pulser(sequence)
+                    [detection_counts] = self.run_sequence(num=1, max_runs=1000)
 
             hist = self.process_data(detection_counts)
             self.plot_hist(hist)

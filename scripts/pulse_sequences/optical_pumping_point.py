@@ -6,12 +6,13 @@ from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from sub_sequences.ShelvingStateDetection import shelving_state_detection
 from sub_sequences.Deshelving import deshelving
+from sub_sequences.Shelving import shelving
 
 class optical_pumping_point(pulse_sequence):
 
     required_subsequences = [doppler_cooling, standard_state_detection, turn_off_all
                              , optical_pumping, shelving_doppler_cooling, shelving_state_detection,
-                             deshelving]
+                             deshelving, shelving]
 
     required_parameters = [
         ('OpticalPumping', 'method'),
@@ -30,6 +31,7 @@ class optical_pumping_point(pulse_sequence):
             if p.Modes.state_detection_mode == 'Shelving':
                 self.addSequence(shelving_doppler_cooling)
                 self.addSequence(optical_pumping)
+                self.addSequence(shelving)
                 self.addSequence(shelving_state_detection)
                 self.addSequence(deshelving)
             if p.Modes.state_detection_mode == 'Standard':
