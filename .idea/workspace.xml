@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:CHR" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/Test_Camera_Detection/Test_Camera_Detection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/Test_Camera_Detection/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TestCameraDetection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/test_camera_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Qsim.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Qsim.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clients/QsimGUI/QsimGUI2.0.py" beforeDir="false" afterPath="$PROJECT_DIR$/clients/QsimGUI/QsimGUI2.0.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/Test_Pulse_Sequence/Test_Pulse_Sequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Test_Pulse_Sequence/Test_Pulse_Sequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/Test_Pulse_Sequence/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Test_Pulse_Sequence/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/testexp/testexperiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/testexp/testexperiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Optical_Pumping_Rate/optical_pumping_rate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Optical_Pumping_Rate/optical_pumping_rate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/AdiabaticRapidPassageMicrowave.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/AdiabaticRapidPassageMicrowave.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillMicrowaveSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillMicrowaveSequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillPulseAreaCorrective.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillPulseAreaCorrective.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RamseyMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RamseyMicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TestSubSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TestSubSequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TurnOffAll.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TurnOffAll.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +61,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -426,6 +433,17 @@
     <option name="localTasksCounter" value="55" />
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="changed dark state detection to work with shelving and standard detection" />
     <MESSAGE value="working on collecting timetags during shelving fidelity experiment" />
@@ -469,14 +487,11 @@
     <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1591818540148" />
     <state x="2225" y="135" width="1106" height="847" key="CommitChangelistDialog2/0.0.5760.1047@0.0.5760.1047" timestamp="1584310579243" />
     <state x="2527" y="136" width="695" height="803" key="CommitChangelistDialog2/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583876218616" />
-    <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl" timestamp="1592238687062">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="739" y="1319" width="424" height="483" key="FileChooserDialogImpl" timestamp="1592498068817">
+      <screen x="0" y="900" width="1920" height="1080" />
     </state>
     <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592238687062" />
-    <state x="2543" y="148" key="SettingsEditor" timestamp="1583455025933">
-      <screen x="1920" y="0" width="1920" height="1080" />
-    </state>
-    <state x="2543" y="148" key="SettingsEditor/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583455025933" />
+    <state x="739" y="1319" width="424" height="483" key="FileChooserDialogImpl/0.900.1920.1080/0.0.1600.900@0.900.1920.1080" timestamp="1592498068817" />
     <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1591818547718">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -489,6 +504,5 @@
     </state>
     <state x="572" y="367" key="com.intellij.ide.util.TipDialog/0.0.1920.1047/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1047" timestamp="1583952580723" />
     <state x="2492" y="379" key="com.intellij.ide.util.TipDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583883398539" />
-    <state x="2492" y="379" key="com.intellij.ide.util.TipDialog/32.0.1888.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1583454979065" />
   </component>
 </project>
