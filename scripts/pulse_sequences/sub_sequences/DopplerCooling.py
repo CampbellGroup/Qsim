@@ -12,7 +12,8 @@ class doppler_cooling(pulse_sequence):
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
-        ('ddsDefaults', 'repump_935_freq')
+        ('ddsDefaults', 'repump_935_freq'),
+        ('MicrowaveInterogation', 'power')
                            ]
 
     def sequence(self):
@@ -35,5 +36,14 @@ class doppler_cooling(pulse_sequence):
                     p.DopplerCooling.duration,
                     p.ddsDefaults.repump_935_freq,
                     p.DopplerCooling.repump_power)
+
+        #self.addTTL('MicrowaveTTL',
+        #            self.start,
+        #            p.DopplerCooling.duration)
+        self.addDDS('Microwave_qubit',
+                    self.start,
+                    p.DopplerCooling.duration,
+                    U(362.0, 'MHz'),
+                    p.MicrowaveInterogation.power)
 
         self.end = self.start + p.DopplerCooling.duration

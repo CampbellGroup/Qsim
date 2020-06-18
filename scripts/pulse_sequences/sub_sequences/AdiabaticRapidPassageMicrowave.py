@@ -5,7 +5,6 @@ from labrad.units import WithUnit as U
 class adiabatic_rapid_passage_microwave(pulse_sequence):
 
     required_parameters = [
-        ('MicrowaveInterogation', 'duration'),
         ('MicrowaveInterogation', 'detuning'),
         ('MicrowaveInterogation', 'power'),
         ('MicrowaveInterogation', 'ARP_freq_span'),
@@ -32,16 +31,26 @@ class adiabatic_rapid_passage_microwave(pulse_sequence):
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
 
-        freq_range = p.MicrowaveInterogation.ARP_freq_span
-        sweep_time = p.MicrowaveInterogation.ARP_sweep_time
+        freq_range = p.MicrowaveInterogation.ARP_freq_span['MHz']
+        sweep_time = p.MicrowaveInterogation.ARP_sweep_time['ms']
         freq_sweep_rate = freq_range/sweep_time
 
         self.addDDS('Microwave_qubit',
                     self.start,
-                    p.MicrowaveInterogation.duration,
-                    DDS_freq,
+                    U(1.0, 'us'),
+                    DDS_freq - U(freq_range, 'MHz') / 2.0,
+                    p.MicrowaveInterogation.power,
+                    U(0.0, 'deg'),
+                    U(0.0, 'MHz'),
+                    U(0.0, 'dB'))
+
+        self.addDDS('Microwave_qubit',
+                    self.start + U(1.0, 'us'),
+                    p.MicrowaveInterogation.ARP_sweep_time,
+                    DDS_freq + U(freq_range, 'MHz')/2.0,
                     p.MicrowaveInterogation.power,
                     U(0.0, 'deg'),
                     U(freq_sweep_rate, 'MHz'),
-                    U(0.0, 'dBm'))
-        self.end = self.start + p.MicrowaveInterogation.duration
+                    U(0.0, 'dB'))
+
+        self.end = self.start + p.MicrowaveInterogation.ARP_sweep_time + U(1.0, 'us')

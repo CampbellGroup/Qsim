@@ -14,8 +14,9 @@ class shelving(pulse_sequence):
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
-        ('ddsDefaults', 'qubit_dds_freq')
-
+        ('ddsDefaults', 'qubit_dds_freq'),
+        ('ddsDefaults', 'SP411_freq'),
+        ('ddsDefaults', 'SP411_power')
     ]
 
     def sequence(self):
@@ -34,17 +35,17 @@ class shelving(pulse_sequence):
             assist_duration = p.Shelving.duration
 
         # hard coded off for high fidelity experiment fears
-        self.addDDS('369DP',
-                    assist_start,
-                    assist_duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
-                    U(-46.0, 'dBm'))
+        #self.addDDS('369DP',
+        #            assist_start,
+        #            assist_duration,
+        #            p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
+        #            U(-46.0, 'dBm'))
 
-        self.addDDS('DopplerCoolingSP',
-                    assist_start,
-                    assist_duration,
-                    p.ddsDefaults.doppler_cooling_freq,
-                    p.ddsDefaults.doppler_cooling_power)
+        #self.addDDS('DopplerCoolingSP',
+        #            assist_start,
+        #            assist_duration,
+        #            p.ddsDefaults.doppler_cooling_freq,
+        #            p.ddsDefaults.doppler_cooling_power)
 
         self.addDDS('935SP',
                     self.start,
@@ -52,15 +53,25 @@ class shelving(pulse_sequence):
                     p.ddsDefaults.repump_935_freq,
                     p.Shelving.repump_power)
 
-        self.addTTL('411TTL',
-                    self.start,
-                    p.Shelving.duration)
-
-        self.addDDS('Microwave_qubit',
+        self.addDDS('411SP',
                     self.start,
                     p.Shelving.duration,
-                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
-                    p.MicrowaveInterogation.power)
+                    p.ddsDefaults.SP411_freq,
+                    p.ddsDefaults.SP411_power)
+
+        # giving the DDS time to change frequency before beginning to shelve
+        if p.Shelving.duration['ms'] > 2.0:
+            self.addTTL('MicrowaveTTL',
+                        self.start + U(1.0, 'ms'),
+                        p.Shelving.duration)
+            self.addTTL('MicrowaveTTL3',
+                        self.start + U(1.0, 'ms'),
+                        p.Shelving.duration)
+        self.addDDS('Microwave_qubit',
+                self.start,
+                p.Shelving.duration,
+                U(362.0, 'MHz'),
+                p.MicrowaveInterogation.power)
 
         #if p.Shelving.duration > shutterlag:
         #    self.addTTL('ShelvingShutter',

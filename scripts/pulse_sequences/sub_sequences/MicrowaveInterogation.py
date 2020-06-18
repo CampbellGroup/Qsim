@@ -6,6 +6,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.UberKnillSequence import uber_kn
 from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoSequence import spin_echo_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoKnillSequence import spin_echo_knill_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.KnillPulseAreaCorrective import knill_pulse_area_correcting_sequence
+from Qsim.scripts.pulse_sequences.sub_sequences.AdiabaticRapidPassageMicrowave import adiabatic_rapid_passage_microwave
 
 
 class microwave_interogation(pulse_sequence):
@@ -15,6 +16,8 @@ class microwave_interogation(pulse_sequence):
         ('MicrowaveInterogation', 'detuning'),
         ('MicrowaveInterogation', 'power'),
         ('MicrowaveInterogation', 'pulse_sequence'),
+        ('MicrowaveInterogation', 'ARP_sweep_time'),
+        ('MicrowaveInterogation', 'ARP_freq_span'),
         ('Line_Selection', 'qubit'),
         ('Transitions', 'qubit_0'),
         ('Transitions', 'qubit_plus'),
@@ -22,7 +25,7 @@ class microwave_interogation(pulse_sequence):
     ]
     required_subsequences = [knill_sequence, microwave_sequence_standard, bb1_sequence,
                              spin_echo_sequence, uber_knill_sequence, spin_echo_knill_sequence,
-                             knill_pulse_area_correcting_sequence]
+                             knill_pulse_area_correcting_sequence, adiabatic_rapid_passage_microwave]
 
     def sequence(self):
         p = self.parameters
@@ -47,3 +50,6 @@ class microwave_interogation(pulse_sequence):
 
         elif p.MicrowaveInterogation.pulse_sequence == 'KnillPulseAreaCorrecting':
             self.addSequence(knill_pulse_area_correcting_sequence)
+
+        elif p.MicrowaveInterogation.pulse_sequence == 'ARP':
+            self.addSequence(adiabatic_rapid_passage_microwave)

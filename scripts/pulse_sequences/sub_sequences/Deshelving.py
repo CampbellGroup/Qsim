@@ -58,10 +58,13 @@ class deshelving(pulse_sequence):
                     self.start,
                     p.Deshelving.duration)
 
+        #self.addTTL('MicrowaveTTL',
+        #            self.start,
+        #            p.Deshelving.duration)
         self.addDDS('Microwave_qubit',
                     self.start,
                     p.Deshelving.duration,
-                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                    U(362.0, 'MHz'),
                     p.MicrowaveInterogation.power)
 
         self.end = self.start + p.Deshelving.duration

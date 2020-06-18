@@ -42,10 +42,13 @@ class standard_state_detection(pulse_sequence):
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.StandardStateDetection.detuning/2.0,
                     p.StandardStateDetection.CW_power)
 
+        #self.addTTL('MicrowaveTTL',
+        #            self.start,
+        #            p.StandardStateDetection.duration)
         self.addDDS('Microwave_qubit',
                     self.start,
                     p.StandardStateDetection.duration,
-                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                    U(362.0, 'MHz'),
                     p.MicrowaveInterogation.power)
 
         self.end = self.start + p.StandardStateDetection.duration

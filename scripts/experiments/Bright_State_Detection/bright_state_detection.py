@@ -51,8 +51,7 @@ class BrightStateDetection(QsimExperiment):
                 [doppler_counts, counts] = self.run_sequence(max_runs=500, num=2)
                 doppler_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(counts, doppler_errors)
-                print 'Mean doppler cooling counts =  ' + str(sum(doppler_counts)/len(doppler_counts))
-                print 'Deleted' + str(len(doppler_errors)) + ' experiments due to Doppler errors'
+                print doppler_errors
 
             # run and process data if detection mode is standard
             elif mode == 'Standard':
@@ -72,7 +71,10 @@ class BrightStateDetection(QsimExperiment):
             self.reload_all_parameters()
             self.p = self.parameters
             if self.p != old_params:
-                self.program_pulser(sequence)
+                if mode == 'Standard':
+                    self.program_pulser(sequence)
+                elif mode == 'Shelving':
+                    self.program_pulser(shelving_sequence)
 
     def setup_prob_datavault(self):
         self.dv.cd(['', 'Bright_State_Probability'],

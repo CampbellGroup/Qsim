@@ -46,10 +46,13 @@ class shelving_state_detection(pulse_sequence):
                     p.ddsDefaults.doppler_cooling_freq,
                     p.ddsDefaults.doppler_cooling_power)
 
+        #self.addTTL('MicrowaveTTL',
+        #            self.start,
+        #            p.ShelvingStateDetection.duration)
         self.addDDS('Microwave_qubit',
                     self.start,
                     p.ShelvingStateDetection.duration,
-                    p.ddsDefaults.qubit_dds_freq - U(15.0, 'MHz'),
+                    U(362.0, 'MHz'),
                     p.MicrowaveInterogation.power)
 
         self.end = self.start + p.ShelvingStateDetection.duration

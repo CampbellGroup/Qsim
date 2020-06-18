@@ -48,7 +48,6 @@ class DarkStateDetection(QsimExperiment):
 
         # choose which qubit will be driven
         qubit = self.p.Line_Selection.qubit
-        reps = self.p.MicrowaveInterogation.repititions
         if qubit == 'qubit_0':
             self.pi_time = self.p.Pi_times.qubit_0
         elif qubit == 'qubit_plus':
@@ -57,7 +56,7 @@ class DarkStateDetection(QsimExperiment):
             self.pi_time = self.p.Pi_times.qubit_minus
 
         # fix the interrogation time to be the pi_time and the detuning to be 0
-        self.p['MicrowaveInterogation.duration'] = reps*self.pi_time
+        self.p['MicrowaveInterogation.duration'] = self.pi_time
         self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
 
         self.mode = self.p.Modes.state_detection_mode

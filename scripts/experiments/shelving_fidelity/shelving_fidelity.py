@@ -229,7 +229,6 @@ class shelving_fidelity(QsimExperiment):
         dark state, and does 100T_Pi and detects the population left in the bright state.
         These values are then logged and decisions can be made later on what to do with it
         """
-
         rabi_track_context = self.sc.context()
         # collect the initial settings of some parameters from the base experiment (shelving_fidelity)
         init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence

@@ -29,10 +29,20 @@ class microwave_sequence_standard(pulse_sequence):
             center = p.Transitions.qubit_minus
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
+        ttl_off = U(800.0, 'ns')
+        ttl_delay = U(60.0, 'ns')
+        start_delay = U(3.0, 'us')
 
+        self.addTTL('MicrowaveTTL',
+                    self.start + ttl_off + start_delay,
+                    p.MicrowaveInterogation.duration - ttl_delay)
+        self.addTTL('MicrowaveTTL3',
+                    self.start + ttl_off + start_delay,
+                    p.MicrowaveInterogation.duration)
         self.addDDS('Microwave_qubit',
                     self.start,
-                    p.MicrowaveInterogation.duration,
+                    p.MicrowaveInterogation.duration + ttl_off + start_delay,
                     DDS_freq,
                     p.MicrowaveInterogation.power)
-        self.end = self.start + p.MicrowaveInterogation.duration
+
+        self.end = self.start + p.MicrowaveInterogation.duration + ttl_off + start_delay

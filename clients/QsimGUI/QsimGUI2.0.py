@@ -104,17 +104,17 @@ class QSIM_GUI(QtGui.QMainWindow):
         twidget = QtGui.QWidget()
         from common.lib.clients.evPump.evPumpClient import eVPumpClient
         from common.lib.clients.bristol.bristol_client import bristol_client
-        from Qsim.clients.time_harp_client.time_harp_client import TimeHarpClient
+        #from Qsim.clients.time_harp_client.time_harp_client import TimeHarpClient
         gridLayout = QtGui.QGridLayout()
         evpump = eVPumpClient(reactor)
         evpump.setMaximumHeight(500)
         bristol = bristol_client(reactor)
-        timeharp = TimeHarpClient(reactor, cxn)
-        timeharp.setMaximumHeight(620)
+        #timeharp = TimeHarpClient(reactor, cxn)
+        #timeharp.setMaximumHeight(620)
         bristol.setMaximumHeight(200)
         gridLayout.addWidget(evpump, 0, 0)
         gridLayout.addWidget(bristol, 1, 0, 1, 2)
-        gridLayout.addWidget(timeharp, 0, 1)
+        #gridLayout.addWidget(timeharp, 0, 1)
         twidget.setLayout(gridLayout)
         return twidget
 

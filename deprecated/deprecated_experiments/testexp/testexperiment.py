@@ -1,6 +1,7 @@
 import labrad
 from common.lib.servers.script_scanner.scan_methods import experiment
 import time
+
 class testexperiment(experiment):
     
     name = 'testexperiment'

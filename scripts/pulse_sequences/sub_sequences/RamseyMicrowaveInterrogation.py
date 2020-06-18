@@ -37,6 +37,13 @@ class ramsey_microwave_interrogation(pulse_sequence):
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
 
+        self.addTTL('MicrowaveTTL',
+                    self.start,
+                    pi_time + p.EmptySequence.duration)
+        self.addTTL('MicrowaveTTL3',
+                    self.start,
+                    pi_time + p.EmptySequence.duration)
+
         self.addDDS('Microwave_qubit',
                     self.start,
                     pi_time/2.0,

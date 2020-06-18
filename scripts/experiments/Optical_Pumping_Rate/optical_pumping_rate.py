@@ -40,6 +40,7 @@ class optical_pumping_rate(QsimExperiment):
                 break
 
             if self.p.OpticalPumping.method == 'Standard':
+                self.p['OpticalPumping.quadrupole_op_duration'] = U(0.0, 'us')
                 self.p['OpticalPumping.duration'] = U(duration, 'us')
                 self.p['Modes.state_detection_mode'] = 'Standard'
                 self.program_pulser(sequence)
