@@ -132,19 +132,19 @@ class optical_pumping(pulse_sequence):
 
             self.addDDS('935SP',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us'),
                         p.ddsDefaults.repump_935_freq,
                         p.OpticalPumping.repump_power)
 
             self.addDDS('760SP',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us'),
                         p.ddsDefaults.repump_760_1_freq,
                         p.ddsDefaults.repump_760_1_power)
 
             self.addDDS('760SP2',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us'),
                         p.ddsDefaults.repump_760_2_freq,
                         p.ddsDefaults.repump_760_2_power)
 
@@ -156,15 +156,18 @@ class optical_pumping(pulse_sequence):
 
             #self.addTTL('MicrowaveTTL',
             #            self.start,
-            #            p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration)
+            #            p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us'))
+            #self.addTTL('MicrowaveTTL3',
+            #            self.start + U(100.0, 'us'),
+            #            p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration - U(100.0, 'us') + U(500.0, 'us'))
             self.addDDS('Microwave_qubit',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration,
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us'),
                         U(362.0, 'MHz'),
                         p.MicrowaveInterogation.power)
 
             self.addTTL('976SP',
                         self.start,
-                        p.OpticalPumping.quadrupole_op_duration + p.OpticalPumping.duration)
+                        p.OpticalPumping.quadrupole_op_duration + p.OpticalPumping.duration + U(500.0, 'us'))
 
-            self.end = self.start + p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration
+            self.end = self.start + p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us')

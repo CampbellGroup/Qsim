@@ -3,6 +3,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveInterogation import mic
 from Qsim.scripts.pulse_sequences.sub_sequences.DoubleMicrowaveInterogation import double_microwave_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.OpticalPumping import optical_pumping
 from labrad.units import WithUnit as U
+import numpy as np
 
 
 class bright_state_pumping(pulse_sequence):
@@ -13,7 +14,9 @@ class bright_state_pumping(pulse_sequence):
         ('BrightStatePumping', 'detuning'),
         ('BrightStatePumping', 'duration'),
         ('BrightStatePumping', 'bright_prep_method'),
+        ('BrightStatePumping', 'microwave_phase_list'),
         ('MicrowaveInterogation', 'repititions'),
+        ('MicrowaveInterogation', 'microwave_phase'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
@@ -49,7 +52,16 @@ class bright_state_pumping(pulse_sequence):
 
         elif p.BrightStatePumping.bright_prep_method == 'Microwave':
             self.addSequence(optical_pumping)
+
+            if p.BrightStatePumping.microwave_phase_list == 'constant':
+                phases = np.zeros(int(p.MicrowaveInterogation.repititions))
+            elif p.BrightStatePumping.microwave_phase_list == 'random':
+                phases = 360.0*np.random.rand(int(p.MicrowaveInterogation.repititions))
+            elif p.BrightStatePumping.microwave_phase_list == 'zeroPizero':
+                phases = 180.0 * np.array([i % 2 for i in range(int(p.MicrowaveInterogation.repititions))])
+
             for i in range(int(p.MicrowaveInterogation.repititions)):
+                p['MicrowaveInterogation.microwave_phase'] = U(phases[i], 'deg')
                 self.addSequence(microwave_interogation)
 
         # double microwave is programmed separately b/c PI_times are hard coded, not variable

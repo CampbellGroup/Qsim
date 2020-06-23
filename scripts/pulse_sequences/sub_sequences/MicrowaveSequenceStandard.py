@@ -5,14 +5,15 @@ from labrad.units import WithUnit as U
 class microwave_sequence_standard(pulse_sequence):
 
     required_parameters = [
-                           ('MicrowaveInterogation', 'duration'),
-                           ('MicrowaveInterogation', 'detuning'),
-                           ('MicrowaveInterogation', 'power'),
-                           ('Line_Selection', 'qubit'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus'),
-                           ('ddsDefaults', 'qubit_dds_freq')
+        ('MicrowaveInterogation', 'duration'),
+        ('MicrowaveInterogation', 'detuning'),
+        ('MicrowaveInterogation', 'power'),
+        ('MicrowaveInterogation', 'microwave_phase'),
+        ('Line_Selection', 'qubit'),
+        ('Transitions', 'qubit_0'),
+        ('Transitions', 'qubit_plus'),
+        ('Transitions', 'qubit_minus'),
+        ('ddsDefaults', 'qubit_dds_freq')
                            ]
 
     def sequence(self):
@@ -43,6 +44,7 @@ class microwave_sequence_standard(pulse_sequence):
                     self.start,
                     p.MicrowaveInterogation.duration + ttl_off + start_delay,
                     DDS_freq,
-                    p.MicrowaveInterogation.power)
+                    p.MicrowaveInterogation.power,
+                    p.MicrowaveInterogation.microwave_phase)
 
         self.end = self.start + p.MicrowaveInterogation.duration + ttl_off + start_delay

@@ -35,6 +35,8 @@ class MicrowaveRabiFlopping(QsimExperiment):
         self.pulser = cxn.pulser
 
     def run(self, cxn, context):
+        self.pulser.switch_auto('MicrowaveTTL')
+        self.pulser.switch_auto('MicrowaveTTL3')
 
         qubit = self.p.Line_Selection.qubit
         mode = self.p.Modes.state_detection_mode
@@ -89,7 +91,8 @@ class MicrowaveRabiFlopping(QsimExperiment):
             self.pulser.line_trigger_state(True)
 
     def finalize(self, cxn, context):
-        pass
+        self.pulser.switch_manual('MicrowaveTTL')
+        self.pulser.switch_manual('MicrowaveTTL3')
 
 
 if __name__ == '__main__':

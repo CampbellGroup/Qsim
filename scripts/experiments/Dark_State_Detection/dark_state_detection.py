@@ -29,6 +29,7 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('RabiPointTracker', 'shelving_fidelity_drift_tracking'))
+    exp_parameters.append(('BrightStatePumping', 'microwave_phase_list'))
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.extend(shelving_sequence.all_required_parameters())
 
@@ -45,7 +46,8 @@ class DarkStateDetection(QsimExperiment):
         self.hist_ctx = self.dv.context()
 
     def run(self, cxn, context):
-
+        self.pulser.switch_auto('MicrowaveTTL')
+        self.pulser.switch_auto('MicrowaveTTL3')
         # choose which qubit will be driven
         qubit = self.p.Line_Selection.qubit
         if qubit == 'qubit_0':
@@ -105,6 +107,15 @@ class DarkStateDetection(QsimExperiment):
             self.p = self.parameters
             if self.p != old_params:
                 self.program_pulser(sequence)
+
+            # if the phase list is random we want to always reprogram the pulser so that
+            # a new set of random phases is set for the next set of N experiments
+            if self.p.BrightStatePumping.microwave_phase_list == 'random':
+                if self.mode == 'Standard':
+                    self.program_pulser(sequence)
+                elif self.mode == 'Shelving':
+                    self.program_pulser(shelving_sequence)
+
 
     def setup_prob_datavault(self):
         self.dv.cd(['', 'Dark_State_Probability'], True, context=self.prob_ctx)
