@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TurnOffAll.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TurnOffAll.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -443,11 +454,15 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592238687062" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1592953701355">
+    <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog" timestamp="1592956034184">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956034184" />
+    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1592956018334">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
     <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592953701355" />
+    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956018334" />
   </component>
 </project>

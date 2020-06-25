@@ -59,19 +59,6 @@ class shelving(pulse_sequence):
                     p.ddsDefaults.SP411_freq,
                     p.ddsDefaults.SP411_power)
 
-        # giving the DDS time to change frequency before beginning to shelve
-        #if p.Shelving.duration['ms'] > 2.0:
-        #    self.addTTL('MicrowaveTTL',
-        #                self.start + U(1.0, 'ms'),
-        #                p.Shelving.duration)
-        #    self.addTTL('MicrowaveTTL3',
-        #                self.start + U(1.0, 'ms'),
-        #                p.Shelving.duration)
-        self.addDDS('Microwave_qubit',
-                self.start,
-                p.Shelving.duration,
-                U(362.0, 'MHz'),
-                p.MicrowaveInterogation.power)
 
         #if p.Shelving.duration > shutterlag:
         #    self.addTTL('ShelvingShutter',

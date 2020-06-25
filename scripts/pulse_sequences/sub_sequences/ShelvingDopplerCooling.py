@@ -54,15 +54,6 @@ class shelving_doppler_cooling(pulse_sequence):
                     p.ddsDefaults.repump_760_2_freq,
                     p.ddsDefaults.repump_760_2_power)
 
-        #self.addTTL('MicrowaveTTL',
-        #            self.start,
-        #            p.Shelving_Doppler_Cooling.duration)
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    p.Shelving_Doppler_Cooling.duration,
-                    U(362.0, 'MHz'),
-                    p.MicrowaveInterogation.power)
-
         self.addTTL('ReadoutCount', self.start, p.Shelving_Doppler_Cooling.duration)
 
         self.end = self.start + p.Shelving_Doppler_Cooling.duration
