@@ -2,9 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from Qsim.scripts.pulse_sequences.sub_sequences.KnillMicrowaveSequence import knill_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveSequenceStandard import microwave_sequence_standard
 from Qsim.scripts.pulse_sequences.sub_sequences.BB1MicrowaveSequence import bb1_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.UberKnillSequence import uber_knill_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoSequence import spin_echo_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoKnillSequence import spin_echo_knill_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.KnillPulseAreaCorrective import knill_pulse_area_correcting_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.AdiabaticRapidPassageMicrowave import adiabatic_rapid_passage_microwave
 
@@ -24,8 +22,8 @@ class microwave_interogation(pulse_sequence):
         ('Transitions', 'qubit_minus'),
     ]
     required_subsequences = [knill_sequence, microwave_sequence_standard, bb1_sequence,
-                             spin_echo_sequence, uber_knill_sequence, spin_echo_knill_sequence,
-                             knill_pulse_area_correcting_sequence, adiabatic_rapid_passage_microwave]
+                             spin_echo_sequence, knill_pulse_area_correcting_sequence,
+                             adiabatic_rapid_passage_microwave]
 
     def sequence(self):
         p = self.parameters
@@ -41,12 +39,6 @@ class microwave_interogation(pulse_sequence):
 
         elif p.MicrowaveInterogation.pulse_sequence == 'SpinEcho':
             self.addSequence(spin_echo_sequence)
-
-        elif p.MicrowaveInterogation.pulse_sequence == 'UberKnill':
-            self.addSequence(uber_knill_sequence)
-
-        elif p.MicrowaveInterogation.pulse_sequence == 'SpinEchoKnill':
-            self.addSequence(spin_echo_knill_sequence)
 
         elif p.MicrowaveInterogation.pulse_sequence == 'KnillPulseAreaCorrecting':
             self.addSequence(knill_pulse_area_correcting_sequence)
