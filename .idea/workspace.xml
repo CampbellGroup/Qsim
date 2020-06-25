@@ -25,11 +25,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="moved some not-useful microwave composite pulse sequences to the deprecated folder">
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="creating new high fidelity experiment with different pulse sequence programming" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -82,13 +78,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00009" summary="small fixes, lingering print statements">
-      <created>1583861548085</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1583861548085</updated>
     </task>
     <task id="LOCAL-00010" summary="small fixes, lingering print statements">
       <created>1583861739847</created>
@@ -426,7 +415,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593104363344</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="creating new high fidelity experiment with different pulse sequence programming">
+      <created>1593107437912</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1593107437912</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -441,7 +437,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="working on collecting timetags during shelving fidelity experiment for error detection" />
     <MESSAGE value="timetags are now collected during state detection if so desired&#10;forced standard optical pumping method during rabi flopping if standard readout is used" />
     <MESSAGE value="attempting to save timetags that we deem to be errors to datavault" />
     <MESSAGE value="made all hardcoded dds frequencies and powers stored in parameter vault. now each sub sequence has a set of dds default parameters it imports from PV and are easily changeable if the RF requirements for the DDS change" />
@@ -466,7 +461,8 @@
     <MESSAGE value="created a frequency scan of the quadrupole optical pumping beam to find the correct DDS frequency to set for quadrupole OP" />
     <MESSAGE value="added TTL switches to micowave sequences, along with some changes to where the microwaves are turned on/off" />
     <MESSAGE value="moved some not-useful microwave composite pulse sequences to the deprecated folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="moved some not-useful microwave composite pulse sequences to the deprecated folder" />
+    <MESSAGE value="creating new high fidelity experiment with different pulse sequence programming" />
+    <option name="LAST_COMMIT_MESSAGE" value="creating new high fidelity experiment with different pulse sequence programming" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
@@ -488,11 +484,12 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956034184" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1592956018334">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="752" y="416" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1593107443055">
+      <screen x="0" y="28" width="1920" height="1052" />
     </state>
     <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
     <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
     <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956018334" />
+    <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
   </component>
 </project>
