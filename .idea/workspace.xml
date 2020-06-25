@@ -25,14 +25,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Qsim.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Qsim.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="moved some not-useful microwave composite pulse sequences to the deprecated folder">
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoKnillSequence.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TriangleMicrowaveRamp.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/TriangleMicrowaveRamp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/UberKnillSequence.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,13 +82,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00008" summary="small fixes, lingering print statements">
-      <created>1583860959392</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1583860959392</updated>
     </task>
     <task id="LOCAL-00009" summary="small fixes, lingering print statements">
       <created>1583861548085</created>
@@ -430,7 +419,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592953693399</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="moved some not-useful microwave composite pulse sequences to the deprecated folder">
+      <created>1593104363343</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1593104363344</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -445,7 +441,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="working on collecting timetags during shelving fidelity experiment" />
     <MESSAGE value="working on collecting timetags during shelving fidelity experiment for error detection" />
     <MESSAGE value="timetags are now collected during state detection if so desired&#10;forced standard optical pumping method during rabi flopping if standard readout is used" />
     <MESSAGE value="attempting to save timetags that we deem to be errors to datavault" />
@@ -470,7 +465,8 @@
     <MESSAGE value="fixing cavity piezo lock server, added ability to readout the voltage history of the lock" />
     <MESSAGE value="created a frequency scan of the quadrupole optical pumping beam to find the correct DDS frequency to set for quadrupole OP" />
     <MESSAGE value="added TTL switches to micowave sequences, along with some changes to where the microwaves are turned on/off" />
-    <option name="LAST_COMMIT_MESSAGE" value="added TTL switches to micowave sequences, along with some changes to where the microwaves are turned on/off" />
+    <MESSAGE value="moved some not-useful microwave composite pulse sequences to the deprecated folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved some not-useful microwave composite pulse sequences to the deprecated folder" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
