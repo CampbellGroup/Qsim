@@ -16,10 +16,16 @@ class microwave_interogation(pulse_sequence):
         ('MicrowaveInterogation', 'pulse_sequence'),
         ('MicrowaveInterogation', 'ARP_sweep_time'),
         ('MicrowaveInterogation', 'ARP_freq_span'),
+        ('MicrowaveInterogation', 'AC_line_trigger'),
+        ('MicrowaveInterrogation', 'delay_from_line_trigger'),
         ('Line_Selection', 'qubit'),
         ('Transitions', 'qubit_0'),
         ('Transitions', 'qubit_plus'),
         ('Transitions', 'qubit_minus'),
+        ('Pi_times', 'qubit_0'),
+        ('Pi_times', 'qubit_plus'),
+        ('Pi_times', 'qubit_minus'),
+        ('MicrowaveInterogation', 'repititions')
     ]
     required_subsequences = [knill_sequence, microwave_sequence_standard, bb1_sequence,
                              spin_echo_sequence, knill_pulse_area_correcting_sequence,

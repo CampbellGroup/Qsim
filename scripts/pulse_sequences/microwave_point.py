@@ -31,7 +31,7 @@ class microwave_point(pulse_sequence):
         if mode == 'Shelving':
             self.addSequence(shelving_doppler_cooling)
             self.addSequence(optical_pumping)
-        else:
+        elif mode == 'Stadard':
             self.addSequence(doppler_cooling)
             self.addSequence(optical_pumping)
 

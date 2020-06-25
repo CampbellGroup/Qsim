@@ -9,10 +9,16 @@ class doppler_cooling(pulse_sequence):
         ('DopplerCooling', 'repump_power'),
         ('DopplerCooling', 'detuning'),
         ('DopplerCooling', 'duration'),
+        ('DopplerCooling', 'record_counts'),
+        ('DopplerCooling', 'doppler_counts_threshold'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'repump_760_1_freq'),
+        ('ddsDefaults', 'repump_760_1_power'),
+        ('ddsDefaults', 'repump_760_2_freq'),
+        ('ddsDefaults', 'repump_760_2_power'),
         ('MicrowaveInterogation', 'power')
                            ]
 
@@ -36,5 +42,20 @@ class doppler_cooling(pulse_sequence):
                     p.DopplerCooling.duration,
                     p.ddsDefaults.repump_935_freq,
                     p.DopplerCooling.repump_power)
+
+        self.addDDS('760SP',
+                    self.start,
+                    p.DopplerCooling.duration,
+                    p.ddsDefaults.repump_760_1_freq,
+                    p.ddsDefaults.repump_760_1_power)
+
+        self.addDDS('760SP2',
+                    self.start,
+                    p.DopplerCooling.duration,
+                    p.ddsDefaults.repump_760_2_freq,
+                    p.ddsDefaults.repump_760_2_power)
+
+        if p.DopplerCooling.record_counts == 'On':
+            self.addTTL('ReadoutCount', self.start, p.DopplerCooling.duration)
 
         self.end = self.start + p.DopplerCooling.duration

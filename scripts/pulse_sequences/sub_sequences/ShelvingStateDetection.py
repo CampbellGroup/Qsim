@@ -9,6 +9,8 @@ class shelving_state_detection(pulse_sequence):
         ('ShelvingStateDetection', 'repump_power'),
         ('ShelvingStateDetection', 'detuning'),
         ('ShelvingStateDetection', 'CW_power'),
+        ('ShelvingStateDetection', 'repititions'),
+        ('ShelvingStateDetection', 'state_readout_threshold'),
         ('MicrowaveInterogation', 'power'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
