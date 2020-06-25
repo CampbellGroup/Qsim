@@ -25,25 +25,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="creating new high fidelity experiment to tinker with, starting by programming bright state/dark state separately&#10;&#10;also going to phase out 'shelving_doppler_cooling' in favor of just doppler cooling with the option to use ReadoutCounts to count photons&#10;&#10;also tried moving required parameters to subsequences instead of at the experiment level to increase readability of the experiment level codebase">
-      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/bright_state_preperation_interleaved.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/bright_state_preperation_interleaved.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/zeeman_fidelity/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/zeeman_fidelity/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/zeeman_fidelity/zeeman_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/zeeman_fidelity/zeeman_fidelity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/deshelving_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/deshelving_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/manifold_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/manifold_measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_ramsey_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_ramsey_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/optical_pumping_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/optical_pumping_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/quadrupole_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/quadrupole_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ZeemanOpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/ZeemanOpticalPumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/zeeman_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/zeeman_fidelity.py" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="moving unused experiments to the deprecated folder">
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/AdiabaticRapidPassageMicrowave.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/AdiabaticRapidPassageMicrowave.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,13 +80,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00011" summary="small fixes, lingering print statements">
-      <created>1583861824783</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1583861824783</updated>
     </task>
     <task id="LOCAL-00012" summary="added doppler_cooling_freq from registry to all subsequences">
       <created>1583867128572</created>
@@ -441,7 +417,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593127954459</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="moving unused experiments to the deprecated folder">
+      <created>1593128875817</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1593128875817</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -457,7 +440,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="attempting to save timetags that we deem to be errors to datavault" />
     <MESSAGE value="made all hardcoded dds frequencies and powers stored in parameter vault. now each sub sequence has a set of dds default parameters it imports from PV and are easily changeable if the RF requirements for the DDS change" />
     <MESSAGE value="traingle ramp sequence added for microwave interrogation" />
     <MESSAGE value="adding error padding for doppler cooling errors where padWidth determines how many experiments before/after the detected doppler error are to be thrown out" />
@@ -482,7 +464,8 @@
     <MESSAGE value="moved some not-useful microwave composite pulse sequences to the deprecated folder" />
     <MESSAGE value="creating new high fidelity experiment with different pulse sequence programming" />
     <MESSAGE value="creating new high fidelity experiment to tinker with, starting by programming bright state/dark state separately&#10;&#10;also going to phase out 'shelving_doppler_cooling' in favor of just doppler cooling with the option to use ReadoutCounts to count photons&#10;&#10;also tried moving required parameters to subsequences instead of at the experiment level to increase readability of the experiment level codebase" />
-    <option name="LAST_COMMIT_MESSAGE" value="creating new high fidelity experiment to tinker with, starting by programming bright state/dark state separately&#10;&#10;also going to phase out 'shelving_doppler_cooling' in favor of just doppler cooling with the option to use ReadoutCounts to count photons&#10;&#10;also tried moving required parameters to subsequences instead of at the experiment level to increase readability of the experiment level codebase" />
+    <MESSAGE value="moving unused experiments to the deprecated folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="moving unused experiments to the deprecated folder" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
