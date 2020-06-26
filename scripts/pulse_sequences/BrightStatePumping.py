@@ -1,6 +1,6 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveInterogation import microwave_interogation
-from Qsim.scripts.pulse_sequences.sub_sequences.DoubleMicrowaveInterogation import double_microwave_sequence
+from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveInterrogation import microwave_Interrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.DoubleMicrowaveInterrogation import double_microwave_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.OpticalPumping import optical_pumping
 from labrad.units import WithUnit as U
 import numpy as np
@@ -15,15 +15,15 @@ class bright_state_pumping(pulse_sequence):
         ('BrightStatePumping', 'duration'),
         ('BrightStatePumping', 'bright_prep_method'),
         ('BrightStatePumping', 'microwave_phase_list'),
-        ('MicrowaveInterogation', 'repititions'),
-        ('MicrowaveInterogation', 'microwave_phase'),
+        ('MicrowaveInterrogation', 'repetitions'),
+        ('MicrowaveInterrogation', 'microwave_phase'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
                            ]
 
-    required_subsequences = [optical_pumping, microwave_interogation, double_microwave_sequence]
+    required_subsequences = [optical_pumping, microwave_Interrogation, double_microwave_sequence]
 
     def sequence(self):
         p = self.parameters
@@ -54,15 +54,15 @@ class bright_state_pumping(pulse_sequence):
             self.addSequence(optical_pumping)
 
             if p.BrightStatePumping.microwave_phase_list == 'constant':
-                phases = np.zeros(int(p.MicrowaveInterogation.repititions))
+                phases = np.zeros(int(p.MicrowaveInterrogation.repititions))
             elif p.BrightStatePumping.microwave_phase_list == 'random':
-                phases = 360.0*np.random.rand(int(p.MicrowaveInterogation.repititions))
+                phases = 360.0*np.random.rand(int(p.MicrowaveInterrogation.repititions))
             elif p.BrightStatePumping.microwave_phase_list == 'zeroPizero':
-                phases = 180.0 * np.array([i % 2 for i in range(int(p.MicrowaveInterogation.repititions))])
+                phases = 180.0 * np.array([i % 2 for i in range(int(p.MicrowaveInterrogation.repititions))])
 
-            for i in range(int(p.MicrowaveInterogation.repititions)):
-                p['MicrowaveInterogation.microwave_phase'] = U(phases[i], 'deg')
-                self.addSequence(microwave_interogation)
+            for i in range(int(p.MicrowaveInterrogation.repititions)):
+                p['MicrowaveInterrogation.microwave_phase'] = U(phases[i], 'deg')
+                self.addSequence(microwave_Interrogation)
 
         # double microwave is programmed separately b/c PI_times are hard coded, not variable
         elif p.BrightStatePumping.bright_prep_method == 'Double_Microwave':

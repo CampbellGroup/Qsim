@@ -2,11 +2,10 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class knill_pulse_area_correcting_sequence(pulse_sequence):
+class knill(pulse_sequence):
     """
-     This sequence is based on the work by David Su, a modification of the Knill sequence that sacrifices
-     correcting detuning errors for correcting amplitude errors.
-     """
+    This is a knill sequence with variable pulse area and detuning
+    """
 
     required_parameters = [
                            ('MicrowaveInterrogation', 'duration'),
@@ -20,7 +19,6 @@ class knill_pulse_area_correcting_sequence(pulse_sequence):
                            ]
 
     def sequence(self):
-
         p = self.parameters
 
         #  select which zeeman level to prepare
@@ -34,9 +32,8 @@ class knill_pulse_area_correcting_sequence(pulse_sequence):
             center = p.Transitions.qubit_minus
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
-
         ttl_off = U(800.0, 'ns')
-        ttl_delay = U(60.0, 'ns')
+        ttl_delay = U(40.0, 'ns')
         start_delay = U(3.0, 'us')
 
         # pulse 1
@@ -65,7 +62,7 @@ class knill_pulse_area_correcting_sequence(pulse_sequence):
                     p.MicrowaveInterrogation.duration + ttl_off,
                     DDS_freq,
                     p.MicrowaveInterrogation.power,
-                    U(180.0, 'deg'))
+                    U(0.0, 'deg'))
 
         # pulse 3
         self.addTTL('MicrowaveTTL',
@@ -93,7 +90,7 @@ class knill_pulse_area_correcting_sequence(pulse_sequence):
                     p.MicrowaveInterrogation.duration + ttl_off,
                     DDS_freq,
                     p.MicrowaveInterrogation.power,
-                    U(180.0, 'deg'))
+                    U(0.0, 'deg'))
 
         # pulse 5
         self.addTTL('MicrowaveTTL',
@@ -108,5 +105,6 @@ class knill_pulse_area_correcting_sequence(pulse_sequence):
                     DDS_freq,
                     p.MicrowaveInterrogation.power,
                     U(30.0, 'deg'))
+
 
         self.end = self.start + 5 * p.MicrowaveInterrogation.duration + 5 * ttl_off + start_delay

@@ -25,11 +25,34 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="trying to make double microwave pulse sequence more flexible by adding subsequences rather than individual DDS pulses">
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed.">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/raman_411_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/raman_411_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/deshelving_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/deshelving_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/fidelity_tweak_up.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/fidelity_tweak_up.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/manifold_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/manifold_measurement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_ramsey_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_ramsey_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/optical_pumping_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/optical_pumping_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/quadrupole_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/quadrupole_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/BB1MicrowaveSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/BB1Sequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillMicrowaveSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillSequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillPulseAreaCorrective.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillPulseAreaCorrective.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/QuadrupoleInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/QuadrupoleInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RamseyMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RamseyMicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Test760.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/zeeman_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/zeeman_fidelity.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,11 +89,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_sub_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
       <recent name="$PROJECT_DIR$/scripts/experiments" />
       <recent name="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences" />
-      <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -83,13 +106,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00014" summary="changed bright state preparation to work with shelving and standard detection">
-      <created>1583881903079</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1583881903079</updated>
     </task>
     <task id="LOCAL-00015" summary="changed bright state preparation to work with shelving and standard detection">
       <created>1583883759637</created>
@@ -427,7 +443,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593187466386</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed.">
+      <created>1593190901261</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1593190901261</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -443,7 +466,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="adding error padding for doppler cooling errors where padWidth determines how many experiments before/after the detected doppler error are to be thrown out" />
     <MESSAGE value="removing print statements" />
     <MESSAGE value="starting server to lock 369nm cavity piezo to wavemeter&#10;also adding more changes to experiments where default OP method is standard" />
     <MESSAGE value="removing cavity server, realized it doesnt make sense since cavity is better than the wavemeter" />
@@ -468,7 +490,8 @@
     <MESSAGE value="moving unused experiments to the deprecated folder" />
     <MESSAGE value="moved AdiabaticRapidPassageMicrowave to deprecated -- adiabatic condition is too slow to work in our case" />
     <MESSAGE value="trying to make double microwave pulse sequence more flexible by adding subsequences rather than individual DDS pulses" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to make double microwave pulse sequence more flexible by adding subsequences rather than individual DDS pulses" />
+    <MESSAGE value="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed." />
+    <option name="LAST_COMMIT_MESSAGE" value="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed." />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
@@ -491,13 +514,18 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956034184" />
-    <state x="752" y="415" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1593129084183">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="752" y="1298" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1593190906299">
+      <screen x="0" y="900" width="1920" height="1080" />
     </state>
     <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
     <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
     <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956018334" />
     <state x="752" y="415" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1593129084183" />
     <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
+    <state x="752" y="1298" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.900.1920.1080" timestamp="1593190906299" />
+    <state x="0" y="117" width="618" height="783" key="find.popup" timestamp="1593203628418">
+      <screen x="0" y="27" width="1600" height="873" />
+    </state>
+    <state x="0" y="117" width="618" height="783" key="find.popup/0.900.1920.1080/0.27.1600.873@0.27.1600.873" timestamp="1593203628418" />
   </component>
 </project>

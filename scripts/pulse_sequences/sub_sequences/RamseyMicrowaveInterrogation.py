@@ -5,9 +5,9 @@ from labrad.units import WithUnit as U
 class ramsey_microwave_interrogation(pulse_sequence):
 
     required_parameters = [
-        ('MicrowaveInterogation', 'detuning'),
-        ('MicrowaveInterogation', 'power'),
-        ('MicrowaveInterogation', 'microwave_phase'),
+        ('MicrowaveInterrogation', 'detuning'),
+        ('MicrowaveInterrogation', 'power'),
+        ('MicrowaveInterrogation', 'microwave_phase'),
         ('Line_Selection', 'qubit'),
         ('Transitions', 'qubit_0'),
         ('Transitions', 'qubit_plus'),
@@ -35,7 +35,7 @@ class ramsey_microwave_interrogation(pulse_sequence):
             center = p.Transitions.qubit_minus
             pi_time = p.Pi_times.qubit_minus
 
-        DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
+        DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
 
         self.addTTL('MicrowaveTTL',
                     self.start,
@@ -48,14 +48,14 @@ class ramsey_microwave_interrogation(pulse_sequence):
                     self.start,
                     pi_time/2.0,
                     DDS_freq,
-                    p.MicrowaveInterogation.power,
+                    p.MicrowaveInterrogation.power,
                     U(0.0, 'deg'))
 
         self.addDDS('Microwave_qubit',
                     self.start + pi_time/2.0 + p.EmptySequence.duration,
                     pi_time/2.0,
                     DDS_freq,
-                    p.MicrowaveInterogation.power,
-                    p.MicrowaveInterogation.microwave_phase)
+                    p.MicrowaveInterrogation.power,
+                    p.MicrowaveInterrogation.microwave_phase)
 
         self.end = self.start + pi_time + p.EmptySequence.duration

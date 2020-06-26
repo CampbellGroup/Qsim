@@ -1,12 +1,12 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.QuadrupoleInterogation import quadrupole_interogation
-from sub_sequences.TurnOffAll import turn_off_all
-from sub_sequences.ShelvingStateDetection import shelving_state_detection
+from scripts.pulse_sequences.sub_sequences.QuadrupoleInterrogation import quadrupole_interogation
+from scripts.pulse_sequences.sub_sequences.TurnOffAll import turn_off_all
+from scripts.pulse_sequences.sub_sequences.ShelvingStateDetection import shelving_state_detection
 from deprecated.deprecated_sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from deprecated.deprecated_sub_sequences.ZeemanOpticalPumping import zeeman_bright_optical_pumping
 from deprecated.deprecated_sub_sequences.ZeemanOpticalPumping import zeeman_dark_optical_pumping
-from sub_sequences.Shelving import shelving
-from sub_sequences.Deshelving import deshelving
+from scripts.pulse_sequences.sub_sequences.Shelving import shelving
+from scripts.pulse_sequences.sub_sequences.Deshelving import deshelving
 
 
 class zeeman_fidelity(pulse_sequence):

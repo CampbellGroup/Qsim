@@ -1,6 +1,6 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.MicrowaveInterogation import microwave_interogation
+from sub_sequences.MicrowaveInterrogation import microwave_interrogation
 from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.ShelvingStateDetection import shelving_state_detection
@@ -13,13 +13,13 @@ from sub_sequences.Deshelving import deshelving
 class microwave_point(pulse_sequence):
 
     required_subsequences = [turn_off_all, doppler_cooling,
-                             microwave_interogation,
+                             microwave_interrogation,
                              standard_state_detection, shelving_state_detection, deshelving,
                              optical_pumping, shelving, shelving_doppler_cooling]
 
     required_parameters = [
         ('Modes', 'state_detection_mode'),
-        ('MicrowaveInterogation', 'repititions')
+        ('MicrowaveInterrogation', 'repetitions')
         ]
 
     def sequence(self):
@@ -31,12 +31,12 @@ class microwave_point(pulse_sequence):
         if mode == 'Shelving':
             self.addSequence(shelving_doppler_cooling)
             self.addSequence(optical_pumping)
-        elif mode == 'Stadard':
+        elif mode == 'Standard':
             self.addSequence(doppler_cooling)
             self.addSequence(optical_pumping)
 
-        for i in range(int(p.MicrowaveInterogation.repititions)):
-            self.addSequence(microwave_interogation)
+        for i in range(int(p.MicrowaveInterrogation.repititions)):
+            self.addSequence(microwave_interrogation)
 
         if mode == 'Shelving':
             self.addSequence(shelving)

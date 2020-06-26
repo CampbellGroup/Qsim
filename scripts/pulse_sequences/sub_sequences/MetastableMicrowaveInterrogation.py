@@ -3,13 +3,13 @@ from labrad.units import WithUnit as U
 import numpy as np
 
 
-class metastable_microwave_interogation(pulse_sequence):
+class metastable_microwave_Interrogation(pulse_sequence):
 
     required_parameters = [
-        ('MetastableMicrowaveInterogation', 'duration'),
-        ('MetastableMicrowaveInterogation', 'detuning'),
-        ('MetastableMicrowaveInterogation', 'power'),
-        ('MetastableMicrowaveInterogation', 'deshelving_time'),
+        ('MetastableMicrowaveInterrogation', 'duration'),
+        ('MetastableMicrowaveInterrogation', 'detuning'),
+        ('MetastableMicrowaveInterrogation', 'power'),
+        ('MetastableMicrowaveInterrogation', 'deshelving_time'),
         ('Transitions', 'MetastableQubit'),
         ('Transitions', 'qubit_plus'),
         ('ddsDefaults', 'repump_760_2_freq'),
@@ -19,21 +19,21 @@ class metastable_microwave_interogation(pulse_sequence):
     def sequence(self):
         p = self.parameters
         center = p.Transitions.MetastableQubit
-        DDS_freq = U(270.000, 'MHz') - (p.MetastableMicrowaveInterogation.detuning + center)
+        DDS_freq = U(270.000, 'MHz') - (p.MetastableMicrowaveInterrogation.detuning + center)
 
         self.addDDS('3GHz_qubit',
                     self.start,
-                    p.MetastableMicrowaveInterogation.duration,
+                    p.MetastableMicrowaveInterrogation.duration,
                     DDS_freq,
-                    p.MetastableMicrowaveInterogation.power)
+                    p.MetastableMicrowaveInterrogation.power)
 
         # turning on the 760 after microwacve interrogation for now because we dont
         # know what the Pi time is, so we just leave on the microwaves for a while and
         # deshelve whatever gets moved to the F = 4 manifold
         self.addDDS('760SP2',
-                    self.start + p.MetastableMicrowaveInterogation.duration,
-                    p.MetastableMicrowaveInterogation.deshelving_time,
+                    self.start + p.MetastableMicrowaveInterrogation.duration,
+                    p.MetastableMicrowaveInterrogation.deshelving_time,
                     p.ddsDefaults.repump_760_2_freq,
                     p.ddsDefaults.repump_760_2_power)
 
-        self.end = self.start + p.MetastableMicrowaveInterogation.duration + p.MetastableMicrowaveInterogation.deshelving_time
+        self.end = self.start + p.MetastableMicrowaveInterrogation.duration + p.MetastableMicrowaveInterrogation.deshelving_time
