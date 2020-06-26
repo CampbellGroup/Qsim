@@ -21,9 +21,9 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
-    exp_parameters.append(('StandardStateDetection', 'repititions'))
-    exp_parameters.append(('MicrowaveInterogation', 'repititions')) 
+    exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
+    exp_parameters.append(('StandardStateDetection', 'repetitions'))
+    exp_parameters.append(('MicrowaveInterrogation', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
@@ -34,8 +34,8 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.extend(shelving_sequence.all_required_parameters())
 
     # manually set these parameters in the experiment
-    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
-    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'detuning'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
 
     def initialize(self, cxn, context, ident):
@@ -58,8 +58,8 @@ class DarkStateDetection(QsimExperiment):
             self.pi_time = self.p.Pi_times.qubit_minus
 
         # fix the interrogation time to be the pi_time and the detuning to be 0
-        self.p['MicrowaveInterogation.duration'] = self.pi_time
-        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+        self.p['MicrowaveInterrogation.duration'] = self.pi_time
+        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
 
         self.mode = self.p.Modes.state_detection_mode
         self.setup_prob_datavault()
@@ -142,7 +142,7 @@ class DarkStateDetection(QsimExperiment):
         """
 
         padWidth = 1 # delete this many experiments before and after the detected doppler error
-        dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+        dark_errors = np.where(counts_doppler_dark <= self.p.DopplerCooling.doppler_counts_threshold)
         dark_delete = np.array([])
         for error in dark_errors[0]:
             # we are going to delete the experiments 1 before and after the error for safety
@@ -163,15 +163,15 @@ class DarkStateDetection(QsimExperiment):
         rabi_track_context = self.sc.context()
 
         # collect the initial settings of some parameters from the base experiment (shelving_fidelity)
-        init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence
+        init_microwave_sequence = self.p.MicrowaveInterrogation.pulse_sequence
         init_optical_pumping_mode = self.p.OpticalPumping.method
 
         # manually force all the parameters how you want them for the drift tracking experiment, which
         # can in practice be very different from what we use in the high fidelity measurement
-        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        self.p['MicrowaveInterrogation.pulse_sequence'] = 'standard'
         self.p['OpticalPumping.method'] = 'Standard'
         self.p['Modes.state_detection_mode'] = 'Standard'
-        self.p['MicrowaveInterogation.duration'] = 100.0 * self.pi_time
+        self.p['MicrowaveInterrogation.duration'] = 100.0 * self.pi_time
 
         # make the experiment, initialize it, and run it.
         self.rabi_tracker = self.make_experiment(RabiPointTracker)
@@ -180,11 +180,11 @@ class DarkStateDetection(QsimExperiment):
         print(pop)
         # return the parameters to their intial states, including some additional ones that
         # may be changed in the rabi tracking run() method
-        self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_sequence
+        self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_mode
         self.p['Modes.state_detection_mode'] = self.mode
-        self.p['MicrowaveInterogation.duration'] = self.pi_time
-        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+        self.p['MicrowaveInterrogation.duration'] = self.pi_time
+        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
 
         # reprogram the pulser with the sequence defined in this experiment (shelving_fidelity)
         if self.mode == 'Shelving':

@@ -25,10 +25,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed.">
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="continuing to fix spelling errors">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_fidelity/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/manifold_measurement/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/manifold_measurement/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/manifold_measurement/manifold_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/manifold_measurement/manifold_measurement.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,9 +67,9 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_sub_sequences" />
-      <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
       <recent name="$PROJECT_DIR$/scripts/experiments" />
       <recent name="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences" />
     </key>
@@ -82,13 +84,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00016" summary="changed bright state preparation to work with shelving and standard detection">
-      <created>1583885352811</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1583885352811</updated>
     </task>
     <task id="LOCAL-00017" summary="changed bright state detection to work with shelving and standard detection">
       <created>1583935763934</created>
@@ -426,7 +421,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593203821859</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="continuing to fix spelling errors">
+      <created>1593204805903</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1593204805903</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -442,7 +444,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="removing print statements" />
     <MESSAGE value="starting server to lock 369nm cavity piezo to wavemeter&#10;also adding more changes to experiments where default OP method is standard" />
     <MESSAGE value="removing cavity server, realized it doesnt make sense since cavity is better than the wavemeter" />
     <MESSAGE value="added new experiment for tracking rabi frequency drifts" />
@@ -467,7 +468,8 @@
     <MESSAGE value="moved AdiabaticRapidPassageMicrowave to deprecated -- adiabatic condition is too slow to work in our case" />
     <MESSAGE value="trying to make double microwave pulse sequence more flexible by adding subsequences rather than individual DDS pulses" />
     <MESSAGE value="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed." />
-    <option name="LAST_COMMIT_MESSAGE" value="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed." />
+    <MESSAGE value="continuing to fix spelling errors" />
+    <option name="LAST_COMMIT_MESSAGE" value="continuing to fix spelling errors" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
