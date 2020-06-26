@@ -3,7 +3,6 @@ from Qsim.scripts.pulse_sequences.shelving_bright_spam import shelving_bright_sp
 from Qsim.scripts.pulse_sequences.shelving_dark_spam import shelving_dark_spam as dark_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.Rabi_Point_Tracker.rabi_point_tracker import RabiPointTracker
-
 import numpy as np
 from labrad.units import WithUnit as U
 
@@ -33,14 +32,14 @@ class high_fidelity_measurement(QsimExperiment):
     def run(self, cxn, context):
 
         # set the line trigger state to the appropriate state
-        if self.p.MicrowaveInterogation.AC_line_trigger == 'On':
+        if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
             self.pulser.line_trigger_state(True)
-            self.pulser.line_trigger_duration(self.p.MicrowaveInterogation.delay_from_line_trigger)
+            self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
         self.p['Line_Selection.qubit'] = 'qubit_0'
         self.pi_time = self.p.Pi_times.qubit_0
-        self.p['MicrowaveInterogation.duration'] = self.pi_time
-        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+        self.p['MicrowaveInterrogation.duration'] = self.pi_time
+        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Shelving'
 
         self.setup_prob_datavault()
@@ -151,17 +150,17 @@ class high_fidelity_measurement(QsimExperiment):
         These values are then logged and decisions can be made later on what to do with it
         """
         rabi_track_context = self.sc.context()
-        # collect the initial settings of some parameters from the base experiment (shelving_fidelity)
+
         init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence
         init_optical_pumping_mode = self.p.OpticalPumping.method
 
         # manually force all the parameters how you want them for the drift tracking experiment, which
         # can in practice be very different from what we use in the high fidelity measurement
-        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        self.p['MicrowaveInterrogation.pulse_sequence'] = 'standard'
         self.p['OpticalPumping.method'] = 'Standard'
         self.p['Modes.state_detection_mode'] = 'Standard'
         self.n_pi_times = self.p.RabiPointTracker.number_pi_times
-        self.p['MicrowaveInterogation.duration'] = self.n_pi_times * self.pi_time
+        self.p['MicrowaveInterrogation.duration'] = self.n_pi_times * self.pi_time
 
         # make the experiment, initialize it, and run it.
         self.rabi_tracker = self.make_experiment(RabiPointTracker)
@@ -171,15 +170,15 @@ class high_fidelity_measurement(QsimExperiment):
 
         # return the parameters to their intial states, including some additional ones that
         # may be changed in the rabi tracking run() method
-        self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_sequence
+        self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_mode
         self.p['Modes.state_detection_mode'] = 'Shelving'
-        self.p['MicrowaveInterogation.duration'] = self.pi_time
-        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+        self.p['MicrowaveInterrogation.duration'] = self.pi_time
+        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
 
-        if self.p.MicrowaveInterogation.AC_line_trigger == 'On':
+        if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
             self.pulser.line_trigger_state(True)
-            self.pulser.line_trigger_duration(self.p.MicrowaveInterogation.delay_from_line_trigger)
+            self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
         # DO NOT REPROGRAM PULSER HERE, IF YOU REPROGRAM AND THE EXPERIMENT GETS STOPPED BEOFRE THE
         # SEQUENCE CAN RUN THE PULSER WILL FREEZE UP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
