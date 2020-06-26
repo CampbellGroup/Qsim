@@ -13,15 +13,13 @@ class optical_pumping(pulse_sequence):
         ('OpticalPumping', 'quadrupole_op_duration'),
         ('OpticalPumping', 'quadrupole_op_detuning'),
         ('Transitions', 'main_cooling_369'),
-        ('MicrowaveInterogation', 'power'),
         ('ddsDefaults', 'optical_pumping_freq'),
         ('ddsDefaults', 'optical_pumping_power'),
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_freq'),
-        ('ddsDefaults', 'repump_760_2_power'),
-        ('ddsDefaults', 'qubit_dds_freq')
+        ('ddsDefaults', 'repump_760_2_power')
     ]
 
     def sequence(self):

@@ -22,10 +22,12 @@ class shelving_state_detection(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
+        # standard readout count TTL, provides number of detected photons
         self.addTTL('ReadoutCount',
                     self.start,
                     p.ShelvingStateDetection.duration)
 
+        # provides timetags
         self.addTTL('TimeResolvedCount',
                     self.start,
                     p.ShelvingStateDetection.duration)
