@@ -1,6 +1,8 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from labrad.units import WithUnit as U
-
+from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveSequenceStandard import microwave_sequence_standard
+from Qsim.scripts.pulse_sequences.sub_sequences.KnillMicrowaveSequence import knill_sequence
+from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoSequence import spin_echo_sequence
 
 class double_microwave_sequence(pulse_sequence):
 
@@ -18,153 +20,44 @@ class double_microwave_sequence(pulse_sequence):
                            ('ddsDefaults', 'qubit_dds_freq')
                            ]
 
+    required_subsequences = [microwave_sequence_standard, knill_sequence, spin_echo_sequence]
+
     def sequence(self):
         p = self.parameters
-
-        center_0 = p.Transitions.qubit_0
-        center_plus = p.Transitions.qubit_plus
 
         pi_time_0 = p.Pi_times.qubit_0
         pi_time_plus = p.Pi_times.qubit_plus
 
-        DDS_0 = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center_0)
-        DDS_plus = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center_plus)
 
         if p.MicrowaveInterogation.pulse_sequence == 'standard':
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        pi_time_0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power)
-            self.addDDS('Microwave_qubit',
-                        self.start + pi_time_0,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power)
-            self.end = self.start + pi_time_0 + pi_time_plus
+            # set the pi time and line selection parameter for first Pi pulse
+            p['MicrowaveInterogation.duration'] = pi_time_0
+            p['Line_Selection.qubit'] = 'qubit_0'
+            self.addSequence(microwave_sequence_standard)
+
+            # set the pi time and line selection parameter for second Pi pulse
+            p['MicrowaveInterogation.duration'] = pi_time_plus
+            p['Line_Selection.qubit'] = 'qubit_plus'
+            self.addSequence(microwave_sequence_standard)
 
         elif p.MicrowaveInterogation.pulse_sequence == 'knill':
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        pi_time_0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power,
-                        U(30.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + pi_time_0,
-                        pi_time_0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 2*pi_time_0,
-                        pi_time_0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power,
-                        U(90.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 3*pi_time_0,
-                        pi_time_0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 4*pi_time_0,
-                        pi_time_0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power,
-                        U(30.0, 'deg'))
+            # set the pi time and line selection parameter for first Pi pulse
+            p['MicrowaveInterogation.duration'] = pi_time_0
+            p['Line_Selection.qubit'] = 'qubit_0'
+            self.addSequence(knill_sequence)
 
-            self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(30.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0 + pi_time_plus,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0 + 2*pi_time_plus,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(90.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0 + 3*pi_time_plus,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 5*pi_time_0 + 4*pi_time_plus,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(30.0, 'deg'))
-
-            self.end = self.start + 5*pi_time_0 + 5*pi_time_plus
+            # set the pi time and line selection parameter for second Pi pulse
+            p['MicrowaveInterogation.duration'] = pi_time_plus
+            p['Line_Selection.qubit'] = 'qubit_plus'
+            self.addSequence(knill_sequence)
 
         elif p.MicrowaveInterogation.pulse_sequence == 'SpinEcho + KnillZeeman':
+            # set the pi time and line selection parameter for first Pi pulse
+            p['MicrowaveInterogation.duration'] = pi_time_0
+            p['Line_Selection.qubit'] = 'qubit_0'
+            self.addSequence(spin_echo_sequence)
 
-            # this is the spin echo sequence for the clock qubit
-            # rotation around X
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        pi_time_0/2.0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-
-            # rotation around Y
-            self.addDDS('Microwave_qubit',
-                        self.start + pi_time_0/2.0,
-                        pi_time_0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power,
-                        U(90.0, 'deg'))
-
-            # rotation around X
-            self.addDDS('Microwave_qubit',
-                        self.start + 3.0*pi_time_0/2.0,
-                        pi_time_0/2.0,
-                        DDS_0,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-
-            # this is the knill sequence part on the zeeman line
-            self.addDDS('Microwave_qubit',
-                        self.start + 2.0*pi_time_0,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(30.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 2.0*pi_time_0 + pi_time_plus,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 2.0*pi_time_0 + 2*pi_time_plus,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(90.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 2.0*pi_time_0 + 3*pi_time_plus,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(0.0, 'deg'))
-            self.addDDS('Microwave_qubit',
-                        self.start + 2.0*pi_time_0 + 4*pi_time_plus,
-                        pi_time_plus,
-                        DDS_plus,
-                        p.MicrowaveInterogation.power,
-                        U(30.0, 'deg'))
-
-            self.end = self.start + 5.0*pi_time_plus + 2.0*pi_time_0
+            # set the pi time and line selection parameter for second Pi pulse
+            p['MicrowaveInterogation.duration'] = pi_time_plus
+            p['Line_Selection.qubit'] = 'qubit_plus'
+            self.addSequence(knill_sequence)

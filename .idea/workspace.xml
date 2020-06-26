@@ -25,8 +25,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="moving unused experiments to the deprecated folder">
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/AdiabaticRapidPassageMicrowave.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/AdiabaticRapidPassageMicrowave.py" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="moved AdiabaticRapidPassageMicrowave to deprecated -- adiabatic condition is too slow to work in our case">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterogation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,8 +64,8 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_sub_sequences" />
+      <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
       <recent name="$PROJECT_DIR$/scripts/experiments" />
       <recent name="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
@@ -80,13 +81,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00012" summary="added doppler_cooling_freq from registry to all subsequences">
-      <created>1583867128572</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1583867128572</updated>
     </task>
     <task id="LOCAL-00013" summary="added additional parameters to ddsDefaults">
       <created>1583876218700</created>
@@ -424,7 +418,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593128875817</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="moved AdiabaticRapidPassageMicrowave to deprecated -- adiabatic condition is too slow to work in our case">
+      <created>1593129019735</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1593129019735</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -440,7 +441,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="made all hardcoded dds frequencies and powers stored in parameter vault. now each sub sequence has a set of dds default parameters it imports from PV and are easily changeable if the RF requirements for the DDS change" />
     <MESSAGE value="traingle ramp sequence added for microwave interrogation" />
     <MESSAGE value="adding error padding for doppler cooling errors where padWidth determines how many experiments before/after the detected doppler error are to be thrown out" />
     <MESSAGE value="removing print statements" />
@@ -465,7 +465,8 @@
     <MESSAGE value="creating new high fidelity experiment with different pulse sequence programming" />
     <MESSAGE value="creating new high fidelity experiment to tinker with, starting by programming bright state/dark state separately&#10;&#10;also going to phase out 'shelving_doppler_cooling' in favor of just doppler cooling with the option to use ReadoutCounts to count photons&#10;&#10;also tried moving required parameters to subsequences instead of at the experiment level to increase readability of the experiment level codebase" />
     <MESSAGE value="moving unused experiments to the deprecated folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="moving unused experiments to the deprecated folder" />
+    <MESSAGE value="moved AdiabaticRapidPassageMicrowave to deprecated -- adiabatic condition is too slow to work in our case" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved AdiabaticRapidPassageMicrowave to deprecated -- adiabatic condition is too slow to work in our case" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
@@ -488,12 +489,13 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956034184" />
-    <state x="752" y="416" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1593107443055">
-      <screen x="0" y="28" width="1920" height="1052" />
+    <state x="752" y="415" width="879" height="444" key="Vcs.Push.Dialog.v2" timestamp="1593129084183">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
     <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
     <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956018334" />
+    <state x="752" y="415" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1593129084183" />
     <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
   </component>
 </project>
