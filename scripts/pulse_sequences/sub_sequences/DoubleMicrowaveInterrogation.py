@@ -5,7 +5,8 @@ from Qsim.scripts.pulse_sequences.sub_sequences.KnillMicrowaveSequence import kn
 from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoSequence import spin_echo_sequence
 
 class double_microwave_sequence(pulse_sequence):
-
+    # this sequence is exclusively used for F = 1 manifold preparation, so we only want
+    # to do Pi-pulses
     required_parameters = [
                            ('MicrowaveInterogation', 'duration'),
                            ('MicrowaveInterogation', 'detuning'),

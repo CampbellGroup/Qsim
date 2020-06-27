@@ -3,6 +3,8 @@ from labrad.units import WithUnit as U
 
 
 class microwave_sequence_standard(pulse_sequence):
+    # this is a general microwave square pulse sequence where the different qubit lines
+    # can be selected
 
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),
@@ -48,5 +50,3 @@ class microwave_sequence_standard(pulse_sequence):
                     p.MicrowaveInterrogation.microwave_phase)
 
         self.end = self.start + p.MicrowaveInterrogation.duration + ttl_off + start_delay
-
-

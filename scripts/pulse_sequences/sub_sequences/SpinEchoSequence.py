@@ -1,5 +1,4 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-import numpy as np
 from labrad.units import WithUnit as U
 
 

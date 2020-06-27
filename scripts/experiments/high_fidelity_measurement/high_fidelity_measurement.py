@@ -13,7 +13,7 @@ class high_fidelity_measurement(QsimExperiment):
     of the pulse sequence and data analysis
     """
 
-    name = 'Shelving Fidelity'
+    name = 'High Fidelity Measurement'
 
     exp_parameters = []
 
@@ -44,9 +44,16 @@ class high_fidelity_measurement(QsimExperiment):
 
         self.setup_prob_datavault()
 
+
         i = 0
         while i < self.p.ShelvingStateDetection.sequence_iterations:
             i += 1
+
+            if self.p.DopplerCooling.record_counts == 'Off':
+                print(
+                    'You have not set the experiment to record Doppler cooling counts, rethink your life choices and try again.')
+                break
+
             should_break = self.update_progress(np.random.random())
             if should_break:
                 break
@@ -149,10 +156,11 @@ class high_fidelity_measurement(QsimExperiment):
         dark state, and does 100T_Pi and detects the population left in the bright state.
         These values are then logged and decisions can be made later on what to do with it
         """
+        init_params = self.p
         rabi_track_context = self.sc.context()
 
-        init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence
-        init_optical_pumping_mode = self.p.OpticalPumping.method
+        #init_microwave_sequence = self.p.MicrowaveInterogation.pulse_sequence
+        #init_optical_pumping_mode = self.p.OpticalPumping.method
 
         # manually force all the parameters how you want them for the drift tracking experiment, which
         # can in practice be very different from what we use in the high fidelity measurement
@@ -170,18 +178,18 @@ class high_fidelity_measurement(QsimExperiment):
 
         # return the parameters to their intial states, including some additional ones that
         # may be changed in the rabi tracking run() method
-        self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_sequence
-        self.p['OpticalPumping.method'] = init_optical_pumping_mode
-        self.p['Modes.state_detection_mode'] = 'Shelving'
-        self.p['MicrowaveInterrogation.duration'] = self.pi_time
-        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
+        #self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_sequence
+        #self.p['OpticalPumping.method'] = init_optical_pumping_mode
+        #self.p['Modes.state_detection_mode'] = 'Shelving'
+        #self.p['MicrowaveInterrogation.duration'] = self.pi_time
+        #self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
+
+        self.p = init_params
 
         if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
-        # DO NOT REPROGRAM PULSER HERE, IF YOU REPROGRAM AND THE EXPERIMENT GETS STOPPED BEOFRE THE
-        # SEQUENCE CAN RUN THE PULSER WILL FREEZE UP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         return pop
 
     def finalize(self, cxn, context):
