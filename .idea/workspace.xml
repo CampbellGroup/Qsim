@@ -25,17 +25,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="continuing to fix spelling errors">
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/knill_pi_pulse.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/spin_echo_pi_pulse.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/standard_pi_pulse.py" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,13 +81,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00018" summary="changed bright state detection to work with shelving and standard detection">
-      <created>1583957732037</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1583957732037</updated>
     </task>
     <task id="LOCAL-00019" summary="changed dark state detection to work with shelving and standard detection">
       <created>1583963213746</created>
@@ -433,7 +418,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593206128816</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences">
+      <created>1593299861664</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1593299861665</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -449,7 +441,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="starting server to lock 369nm cavity piezo to wavemeter&#10;also adding more changes to experiments where default OP method is standard" />
     <MESSAGE value="removing cavity server, realized it doesnt make sense since cavity is better than the wavemeter" />
     <MESSAGE value="added new experiment for tracking rabi frequency drifts" />
     <MESSAGE value="added qubit dds offset by 15 MHz to every subsequence so that it always remains on but detuned for any experiment" />
@@ -474,13 +465,10 @@
     <MESSAGE value="trying to make double microwave pulse sequence more flexible by adding subsequences rather than individual DDS pulses" />
     <MESSAGE value="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed." />
     <MESSAGE value="continuing to fix spelling errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="continuing to fix spelling errors" />
+    <MESSAGE value="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences" />
+    <option name="LAST_COMMIT_MESSAGE" value="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp" timestamp="1584638090808">
-      <screen x="1920" y="42" width="1920" height="1080" />
-    </state>
-    <state x="2596" y="212" width="560" height="745" key="#TriangleMicrowaveRamp/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584638090808" />
     <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1592953693202">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -497,7 +485,7 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956034184" />
-    <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1593206607223">
+    <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1593299868444">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
     <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
@@ -506,7 +494,7 @@
     <state x="752" y="415" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1593129084183" />
     <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
     <state x="752" y="1298" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.900.1920.1080" timestamp="1593190906299" />
-    <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.27.1600.873@0.27.1600.873" timestamp="1593206607223" />
+    <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.27.1600.873@0.27.1600.873" timestamp="1593299868444" />
     <state x="0" y="117" width="618" height="783" key="find.popup" timestamp="1593203628418">
       <screen x="0" y="27" width="1600" height="873" />
     </state>
