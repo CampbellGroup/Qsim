@@ -1,9 +1,8 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from labrad.units import WithUnit as U
-import numpy as np
 
 
-class metastable_microwave_Interrogation(pulse_sequence):
+class metastable_microwave_interrogation(pulse_sequence):
 
     required_parameters = [
         ('MetastableMicrowaveInterrogation', 'duration'),

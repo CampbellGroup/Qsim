@@ -7,7 +7,7 @@ from sub_sequences.Deshelving import deshelving
 
 
 class shelving_bright_spam(pulse_sequence):
-    required_subsequences = [shelving, doppler_cooling, shelving_state_detection, deshelving,
+    required_subsequences = [shelving, shelving_doppler_cooling, shelving_state_detection, deshelving,
                              optical_pumping]
 
     required_parameters = [

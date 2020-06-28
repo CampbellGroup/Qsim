@@ -10,7 +10,7 @@ from sub_sequences.Deshelving import deshelving
 
 class shelving_fidelity(pulse_sequence):
 
-    required_subsequences = [shelving, doppler_cooling, shelving_state_detection, deshelving,
+    required_subsequences = [shelving, shelving_doppler_cooling, shelving_state_detection, deshelving,
                              turn_off_all, bright_state_pumping, optical_pumping]
 
     required_parameters = [

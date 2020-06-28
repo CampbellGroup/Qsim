@@ -25,22 +25,18 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="fixed double microwave sequence to use pi-pulse dedicated subsequences">
-      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/bright_state_preperation_interleaved.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/bright_state_preperation_interleaved.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/manifold_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/manifold_measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/zeeman_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/zeeman_fidelity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preparation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preparation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/deshelving_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/deshelving_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TurnOffAll.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TurnOffAll.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,15 +69,15 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_sub_sequences" />
       <recent name="$PROJECT_DIR$/scripts/experiments" />
-      <recent name="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -94,13 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00020" summary="changed dark state detection to work with shelving and standard detection">
-      <created>1583963341409</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1583963341409</updated>
     </task>
     <task id="LOCAL-00021" summary="changed dark state detection to work with shelving and standard detection">
       <created>1583963391776</created>
@@ -438,7 +427,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593378787829</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments">
+      <created>1593379211018</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1593379211019</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -454,7 +450,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added new experiment for tracking rabi frequency drifts" />
     <MESSAGE value="added qubit dds offset by 15 MHz to every subsequence so that it always remains on but detuned for any experiment" />
     <MESSAGE value="got timetag saving for doppler errors working in the shelving fidelity experiment. Also created functions to do a lot of the processing within 'run()' so that the experiment looks cleaner and easier to read" />
     <MESSAGE value="adding in new Knill-based sequence with phase modifications to further suppress amplitude errors at the expense of detuning error robustness" />
@@ -479,13 +474,13 @@
     <MESSAGE value="continuing to fix spelling errors" />
     <MESSAGE value="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences" />
     <MESSAGE value="fixed double microwave sequence to use pi-pulse dedicated subsequences" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed double microwave sequence to use pi-pulse dedicated subsequences" />
+    <MESSAGE value="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments" />
+    <option name="LAST_COMMIT_MESSAGE" value="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1592953693202">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2662" y="181" width="868" height="829" key="CommitChangelistDialog2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671798151" />
     <state x="239" y="161" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497330679" />
     <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592953693202" />
     <state x="737" y="302" width="424" height="510" key="FileChooserDialogImpl" timestamp="1593122034313">
@@ -498,14 +493,18 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956034184" />
-    <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1593299868444">
-      <screen x="0" y="27" width="1600" height="873" />
+    <state x="289" y="85" width="1022" height="732" key="SettingsEditor" timestamp="1593381581532">
+      <screen x="0" y="0" width="1600" height="900" />
     </state>
-    <state x="2672" y="440" width="483" height="457" key="Vcs.Push.Dialog.v2/0.0.1920.1047/3840.42.1920.1080/1920.42.1920.1080@1920.42.1920.1080" timestamp="1584671801973" />
+    <state x="289" y="85" width="1022" height="732" key="SettingsEditor/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1593381581532" />
+    <state x="752" y="422" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1593379216035">
+      <screen x="0" y="38" width="1920" height="1042" />
+    </state>
     <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
     <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956018334" />
     <state x="752" y="415" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1593129084183" />
     <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
+    <state x="752" y="422" key="Vcs.Push.Dialog.v2/0.38.1920.1042@0.38.1920.1042" timestamp="1593379216035" />
     <state x="752" y="1298" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.900.1920.1080" timestamp="1593190906299" />
     <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.27.1600.873@0.27.1600.873" timestamp="1593299868444" />
     <state x="0" y="117" width="618" height="783" key="find.popup" timestamp="1593203628418">

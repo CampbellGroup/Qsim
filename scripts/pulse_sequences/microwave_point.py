@@ -26,21 +26,18 @@ class microwave_point(pulse_sequence):
         p = self.parameters
         mode = p.Modes.state_detection_mode
 
-        self.addSequence(turn_off_all)
-
-        if mode == 'Shelving':
-            self.addSequence(shelving_doppler_cooling)
-            self.addSequence(optical_pumping)
-        elif mode == 'Standard':
+        if mode == 'Standard':
             self.addSequence(doppler_cooling)
             self.addSequence(optical_pumping)
+            for i in range(int(p.MicrowaveInterrogation.repititions)):
+                self.addSequence(microwave_interrogation)
+            self.addSequence(standard_state_detection)
 
-        for i in range(int(p.MicrowaveInterrogation.repititions)):
-            self.addSequence(microwave_interrogation)
-
-        if mode == 'Shelving':
+        elif mode == 'Shelving':
+            self.addSequence(shelving_doppler_cooling)
+            self.addSequence(optical_pumping)
+            for i in range(int(p.MicrowaveInterrogation.repititions)):
+                self.addSequence(microwave_interrogation)
             self.addSequence(shelving)
             self.addSequence(shelving_state_detection)
             self.addSequence(deshelving)
-        elif mode == 'Standard':
-            self.addSequence(standard_state_detection)

@@ -9,17 +9,16 @@ from sub_sequences.Deshelving import deshelving
 
 class shelving_dark_spam(pulse_sequence):
 
-    required_subsequences = [shelving, doppler_cooling, shelving_state_detection, deshelving,
+    required_subsequences = [shelving, shelving_doppler_cooling, shelving_state_detection, deshelving,
                              optical_pumping, microwave_interrogation]
 
     required_parameters = [
                            ]
 
     def sequence(self):
-
-       self.addSequence(shelving_doppler_cooling)
-       self.addSeqeucne(optical_pumping)
-       self.addSequence(microwave_interrogation)
-       self.addSequence(shelving)
-       self.addSequence(shelving_state_detection)
-       self.addSequence(deshelving)
+        self.addSequence(shelving_doppler_cooling)
+        self.addSeqeucne(optical_pumping)
+        self.addSequence(microwave_interrogation)
+        self.addSequence(shelving)
+        self.addSequence(shelving_state_detection)
+        self.addSequence(deshelving)
