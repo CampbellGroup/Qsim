@@ -3,7 +3,7 @@ from sub_sequences.MicrowaveInterrogation import microwave_interrogation
 from sub_sequences.MetastableMicrowaveInterrogation import metastable_microwave_interrogation
 from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.MetastableStateDetection import metastable_state_detection
-from deprecated.deprecated_sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
+from scripts.pulse_sequences.sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.Shelving import shelving
 from sub_sequences.Deshelving import deshelving

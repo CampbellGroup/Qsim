@@ -55,7 +55,4 @@ class doppler_cooling(pulse_sequence):
                     p.ddsDefaults.repump_760_2_freq,
                     p.ddsDefaults.repump_760_2_power)
 
-        if p.DopplerCooling.record_counts == 'On':
-            self.addTTL('ReadoutCount', self.start, p.DopplerCooling.duration)
-
         self.end = self.start + p.DopplerCooling.duration

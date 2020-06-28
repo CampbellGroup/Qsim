@@ -1,9 +1,9 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.MicrowaveInterrogation import microwave_interogation
+from sub_sequences.MicrowaveInterrogation import microwave_interrogation
 from sub_sequences.MetastableMicrowaveInterrogation import metastable_microwave_interogation
 from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.MetastableStateDetection import metastable_state_detection
-from deprecated.deprecated_sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
+from scripts.pulse_sequences.sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.Shelving import shelving
 from sub_sequences.Deshelving import deshelving
@@ -13,7 +13,7 @@ class metastable_microwave_point(pulse_sequence):
 
     required_subsequences = [turn_off_all, metastable_microwave_interogation,
                              metastable_state_detection, optical_pumping, shelving,
-                             shelving_doppler_cooling, deshelving, microwave_interogation]
+                             shelving_doppler_cooling, deshelving, microwave_interrogation]
 
     required_parameters = [
         ]
@@ -23,7 +23,7 @@ class metastable_microwave_point(pulse_sequence):
         self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)
         self.addSequence(optical_pumping)
-        self.addSequence(microwave_interogation)
+        self.addSequence(microwave_interrogation)
         self.addSequence(shelving)
         self.addSequence(metastable_microwave_interogation)
         self.addSequence(metastable_state_detection)

@@ -25,9 +25,22 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="fixed double microwave sequence to use pi-pulse dedicated subsequences">
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/bright_state_preperation_interleaved.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/bright_state_preperation_interleaved.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/manifold_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/manifold_measurement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/zeeman_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences/zeeman_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preperation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preperation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/deshelving_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/deshelving_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_fidelity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,13 +94,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00019" summary="changed dark state detection to work with shelving and standard detection">
-      <created>1583963213746</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1583963213746</updated>
     </task>
     <task id="LOCAL-00020" summary="changed dark state detection to work with shelving and standard detection">
       <created>1583963341409</created>
@@ -425,7 +431,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593299861665</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="fixed double microwave sequence to use pi-pulse dedicated subsequences">
+      <created>1593378787828</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1593378787829</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -441,7 +454,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="removing cavity server, realized it doesnt make sense since cavity is better than the wavemeter" />
     <MESSAGE value="added new experiment for tracking rabi frequency drifts" />
     <MESSAGE value="added qubit dds offset by 15 MHz to every subsequence so that it always remains on but detuned for any experiment" />
     <MESSAGE value="got timetag saving for doppler errors working in the shelving fidelity experiment. Also created functions to do a lot of the processing within 'run()' so that the experiment looks cleaner and easier to read" />
@@ -466,7 +478,8 @@
     <MESSAGE value="cleaning up some subsequences -- too many things randomly in there from other experiments, we can make it more complicated later if needed." />
     <MESSAGE value="continuing to fix spelling errors" />
     <MESSAGE value="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences" />
-    <option name="LAST_COMMIT_MESSAGE" value="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences" />
+    <MESSAGE value="fixed double microwave sequence to use pi-pulse dedicated subsequences" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed double microwave sequence to use pi-pulse dedicated subsequences" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1592953693202">

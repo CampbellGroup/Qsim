@@ -5,7 +5,7 @@ from scripts.pulse_sequences.sub_sequences.ShelvingStateDetection import shelvin
 from deprecated.deprecated_sub_sequences.MLStateDetection import ml_state_detection
 from scripts.pulse_sequences.sub_sequences.TurnOffAll import turn_off_all
 from scripts.pulse_sequences.BrightStatePumping import bright_state_pumping
-from deprecated.deprecated_sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
+from scripts.pulse_sequences.sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from scripts.pulse_sequences.sub_sequences.Shelving import shelving
 
 

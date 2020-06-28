@@ -4,7 +4,7 @@ from sub_sequences.MicrowaveInterrogation import microwave_interrogation
 from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.ShelvingStateDetection import shelving_state_detection
-from deprecated.deprecated_sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
+from scripts.pulse_sequences.sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.Shelving import shelving
 from sub_sequences.Deshelving import deshelving
