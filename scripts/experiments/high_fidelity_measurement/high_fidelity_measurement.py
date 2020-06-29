@@ -129,7 +129,7 @@ class high_fidelity_measurement(QsimExperiment):
         """
 
         padWidth = 1
-        bright_errors = np.where(counts_doppler_bright <= self.p.DopplerCooling.doppler_counts_threshold)
+        bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
         bright_delete = np.array([])
         for error in bright_errors[0]:
             # we are going to delete the experiments 1 before and after the error for safety

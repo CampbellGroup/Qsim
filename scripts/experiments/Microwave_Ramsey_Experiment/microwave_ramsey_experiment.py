@@ -15,20 +15,20 @@ class MicrowaveRamseyExperiment(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
-    exp_parameters.append(('MicrowaveInterogation', 'detuning'))
+    exp_parameters.append(('MicrowaveInterrogation', 'detuning'))
     exp_parameters.append(('MicrowaveRamsey', 'delay_time'))
     exp_parameters.append(('MicrowaveRamsey', 'fixed_delay_time'))
     exp_parameters.append(('MicrowaveRamsey', 'detuning'))
     exp_parameters.append(('MicrowaveRamsey', 'scan_type'))
     exp_parameters.append(('MicrowaveRamsey', 'phase_scan'))
-    exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
-    exp_parameters.append(('MicrowaveInterogation', 'delay_from_line_trigger'))
+    exp_parameters.append(('MicrowaveInterrogation', 'AC_line_trigger'))
+    exp_parameters.append(('MicrowaveInterrogation', 'delay_from_line_trigger'))
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
-    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
+    exp_parameters.append(('StandardStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
@@ -36,16 +36,16 @@ class MicrowaveRamseyExperiment(QsimExperiment):
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('EmptySequence', 'duration'))
-    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
 
     def run(self, cxn, context):
 
-        if self.p.MicrowaveInterogation.AC_line_trigger == 'On':
+        if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
             self.pulser.line_trigger_state(True)
-            self.pulser.line_trigger_duration(self.p.MicrowaveInterogation.delay_from_line_trigger)
+            self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
         init_optical_pumping_method = self.p['OpticalPumping.method']
 
@@ -62,8 +62,8 @@ class MicrowaveRamseyExperiment(QsimExperiment):
         elif qubit == 'qubit_minus':
             pi_time = self.p.Pi_times.qubit_minus
         self.p['OpticalPumping.method'] = 'Standard'
-        self.p['MicrowaveInterogation.duration'] = pi_time/2.0
-        self.p['MicrowaveInterogation.detuning'] = self.p.MicrowaveRamsey.detuning
+        self.p['MicrowaveInterrogation.duration'] = pi_time/2.0
+        self.p['MicrowaveInterrogation.detuning'] = self.p.MicrowaveRamsey.detuning
 
         if scan_parameter == "delay_time":
             self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
@@ -77,7 +77,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                 self.program_pulser(sequence)
                 if mode == 'Shelving':
                     [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
-                    errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
+                    errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                     counts = np.delete(detection_counts, errors)
                 else:
                     [counts] = self.run_sequence()
@@ -96,7 +96,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                 should_break = self.update_progress(i/float(len(self.phase_list)))
                 if should_break:
                     break
-                self.p['MicrowaveInterogation.microwave_phase'] = U(phase, 'deg')
+                self.p['MicrowaveInterrogation.microwave_phase'] = U(phase, 'deg')
                 self.program_pulser(sequence)
                 if mode == 'Shelving':
                     [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)

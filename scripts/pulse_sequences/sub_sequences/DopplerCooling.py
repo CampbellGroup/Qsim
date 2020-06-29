@@ -9,8 +9,6 @@ class doppler_cooling(pulse_sequence):
         ('DopplerCooling', 'repump_power'),
         ('DopplerCooling', 'detuning'),
         ('DopplerCooling', 'duration'),
-        ('DopplerCooling', 'record_counts'),
-        ('DopplerCooling', 'doppler_counts_threshold'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
@@ -19,7 +17,7 @@ class doppler_cooling(pulse_sequence):
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_freq'),
         ('ddsDefaults', 'repump_760_2_power'),
-        ('MicrowaveInterogation', 'power')
+        ('MicrowaveInterrogation', 'power')
                            ]
 
     def sequence(self):

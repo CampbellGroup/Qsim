@@ -19,15 +19,15 @@ class fidelity_tweak_up(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
-    exp_parameters.append(('MicrowaveInterogation', 'repititions'))
-    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('MicrowaveInterrogation', 'repetitions'))
+    exp_parameters.append(('StandardStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
     # hide some parameters
-    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
-    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'detuning'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
 
     def initialize(self, cxn, context, ident):
@@ -46,8 +46,8 @@ class fidelity_tweak_up(QsimExperiment):
         elif qubit == 'qubit_minus':
             pi_time = self.p.Pi_times.qubit_minus
 
-        self.p['MicrowaveInterogation.duration'] = reps*pi_time
-        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+        self.p['MicrowaveInterrogation.duration'] = reps*pi_time
+        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Standard'
 
         self.setup_prob_datavault()

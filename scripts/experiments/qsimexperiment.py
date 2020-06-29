@@ -115,9 +115,9 @@ class QsimExperiment(experiment):
         # choose state detection method and number of repetitions
         self.state_detection_mode = self.p.Modes.state_detection_mode
         if self.state_detection_mode == 'Shelving':
-            reps = self.p.ShelvingStateDetection.repititions
+            reps = self.p.ShelvingStateDetection.repetitions
         elif self.state_detection_mode == 'Standard':
-            reps = self.p.StandardStateDetection.repititions
+            reps = self.p.StandardStateDetection.repetitions
 
         # program pulser for a given number of runs of the experiment, and collect readout counts
         for i in range(int(reps)/max_runs):
@@ -150,9 +150,9 @@ class QsimExperiment(experiment):
         # choose state detection method and number of repetitions
         self.state_detection_mode = self.p.Modes.state_detection_mode
         if self.state_detection_mode == 'Shelving':
-            reps = self.p.ShelvingStateDetection.repititions
+            reps = self.p.ShelvingStateDetection.repetitions
         elif self.state_detection_mode == 'Standard':
-            reps = self.p.StandardStateDetection.repititions
+            reps = self.p.StandardStateDetection.repetitions
 
         for i in range(int(reps) / max_runs):
             self.pulser.start_number(max_runs)

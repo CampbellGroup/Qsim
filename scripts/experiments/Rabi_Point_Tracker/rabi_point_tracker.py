@@ -21,16 +21,16 @@ class RabiPointTracker(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('StandardStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('MicrowaveInterogation', 'AC_line_trigger'))
+    exp_parameters.append(('MicrowaveInterrogation', 'AC_line_trigger'))
     exp_parameters.append(('RabiPointTracker', 'number_pi_times'))
     exp_parameters.append(('RabiPointTracker', 'shelving_fidelity_drift_tracking'))
     exp_parameters.append(('RabiPointTracker', 'pi_time_feedback'))
     exp_parameters.extend(sequence.all_required_parameters())
 
-    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -59,7 +59,7 @@ class RabiPointTracker(QsimExperiment):
         init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
         init_optical_pumping_method = self.p.OpticalPumping.method
 
-        self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        self.p['MicrowaveInterrogation.pulse_sequence'] = 'standard'
 
         init_line_trigger_state = self.p.MicrowaveInterogation.AC_line_trigger
         self.pulser.line_trigger_state(False)
@@ -80,7 +80,7 @@ class RabiPointTracker(QsimExperiment):
                     break
 
             self.p['OpticalPumping.method'] = 'Standard'
-            self.p['MicrowaveInterogation.duration'] = self.n_pi_times * self.pi_time
+            self.p['MicrowaveInterrogation.duration'] = self.n_pi_times * self.pi_time
             self.program_pulser(sequence)
             [counts] = self.run_sequence()
             time_since_start = U(time.time(), 's') - init_time
@@ -103,7 +103,7 @@ class RabiPointTracker(QsimExperiment):
             i +=1
 
         self.p['BrightStatePumping.method'] = init_bright_state_pumping_method
-        self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_pulse_sequence
+        self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_pulse_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_method
         if init_line_trigger_state == 'On':
             self.pulser.line_trigger_state(True)

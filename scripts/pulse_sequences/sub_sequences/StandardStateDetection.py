@@ -10,7 +10,6 @@ class standard_state_detection(pulse_sequence):
         ('StandardStateDetection', 'repump_power'),
         ('StandardStateDetection', 'detuning'),
         ('Transitions', 'main_cooling_369'),
-        ('MicrowaveInterogation', 'power'),
         ('ddsDefaults', 'state_detection_freq'),
         ('ddsDefaults', 'state_detection_power'),
         ('ddsDefaults', 'repump_935_freq'),

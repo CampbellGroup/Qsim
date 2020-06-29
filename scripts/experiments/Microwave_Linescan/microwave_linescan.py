@@ -23,15 +23,15 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_minus'))
 
     exp_parameters.extend(sequence.all_required_parameters())
-    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
-    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'detuning'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
     exp_parameters.append(('bf_fluorescence', 'crop_start_time'))
     exp_parameters.append(('bf_fluorescence', 'crop_stop_time'))
 
     exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
-    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
+    exp_parameters.append(('StandardStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
@@ -64,17 +64,17 @@ class MicrowaveLineScan(QsimExperiment):
             center = self.p.Transitions.qubit_minus
             pi_time = self.p.Pi_times.qubit_minus
 
-        self.p['MicrowaveInterogation.duration'] = pi_time
+        self.p['MicrowaveInterrogation.duration'] = pi_time
 
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
                 break
-            self.p['MicrowaveInterogation.detuning'] = U(detuning, 'kHz')
+            self.p['MicrowaveInterrogation.detuning'] = U(detuning, 'kHz')
             self.program_pulser(sequence)
             if mode == 'Shelving':
                 [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
-                errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
+                errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
             if mode == 'Standard':
                 [counts] = self.run_sequence()
@@ -86,7 +86,7 @@ class MicrowaveLineScan(QsimExperiment):
 
             self.dv.add(detuning + center['kHz'], pop)
 
-        self.p['MicrowaveInterogation.pulse_sequence'] = init_microwave_pulse_sequence
+        self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_pulse_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_method
 
         return should_break

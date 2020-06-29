@@ -142,7 +142,7 @@ class DarkStateDetection(QsimExperiment):
         """
 
         padWidth = 1 # delete this many experiments before and after the detected doppler error
-        dark_errors = np.where(counts_doppler_dark <= self.p.DopplerCooling.doppler_counts_threshold)
+        dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
         dark_delete = np.array([])
         for error in dark_errors[0]:
             # we are going to delete the experiments 1 before and after the error for safety

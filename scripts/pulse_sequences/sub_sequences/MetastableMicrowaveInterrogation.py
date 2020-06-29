@@ -26,7 +26,7 @@ class metastable_microwave_interrogation(pulse_sequence):
                     DDS_freq,
                     p.MetastableMicrowaveInterrogation.power)
 
-        # turning on the 760 after microwacve interrogation for now because we dont
+        # turning on the 760 after microwave interrogation for now because we dont
         # know what the Pi time is, so we just leave on the microwaves for a while and
         # deshelve whatever gets moved to the F = 4 manifold
         self.addDDS('760SP2',

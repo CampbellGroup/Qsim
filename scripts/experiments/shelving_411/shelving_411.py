@@ -17,12 +17,12 @@ class ShelvingRate(QsimExperiment):
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('Shelving', 'duration'))
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+    exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('Pi_times', 'qubit_0'))
-    exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
-    exp_parameters.remove(('MicrowaveInterogation', 'duration'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'detuning'))
+    exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -30,8 +30,8 @@ class ShelvingRate(QsimExperiment):
     def run(self, cxn, context):
         self.setup_datavault('time', 'probability')
         self.setup_grapher('ShelvingRate')
-        self.p['MicrowaveInterogation.duration'] = self.p.Pi_times.qubit_0
-        self.p['MicrowaveInterogation.detuning'] = U(0.0, 'kHz')
+        self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
+        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Shelving'
         self.times = self.get_scan_list(self.p.ShelvingRate.scan, 'ms')
         for i, duration in enumerate(self.times):

@@ -17,7 +17,7 @@ class DeshelvingRate(QsimExperiment):
     exp_parameters.append(('DeshelvingRate', 'scan'))
     exp_parameters.extend(sequence.all_required_parameters())
 
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+    exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.remove(('VariableDeshelving', 'duration'))
