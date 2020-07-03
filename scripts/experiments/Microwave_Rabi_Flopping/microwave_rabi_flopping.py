@@ -35,10 +35,6 @@ class MicrowaveRabiFlopping(QsimExperiment):
         self.pulser = cxn.pulser
 
     def run(self, cxn, context):
-        self.init_state_1 = self.pulser.get_state('MicrowaveTTL')
-        self.init_state_3 = self.pulser.get_state('MicrowaveTTL3')
-        self.pulser.switch_auto('MicrowaveTTL')
-        self.pulser.switch_auto('MicrowaveTTL3')
 
         qubit = self.p.Line_Selection.qubit
         mode = self.p.Modes.state_detection_mode
@@ -93,12 +89,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
             self.pulser.line_trigger_state(True)
 
     def finalize(self, cxn, context):
-        # checks whether the switches were in manual state before experiment started (True = manual, False = auto)
-        if self.init_state_1[0]:
-            self.pulser.switch_manual('MicrowaveTTL')
-        if self.init_state_3[0]:
-            self.pulser.switch_manual('MicrowaveTTL3')
-
+        pass
 
 if __name__ == '__main__':
     cxn = labrad.connect()

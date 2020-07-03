@@ -106,7 +106,10 @@ class DarkStateDetection(QsimExperiment):
             self.reload_all_parameters()
             self.p = self.parameters
             if self.p != old_params:
-                self.program_pulser(sequence)
+                if self.mode == 'Standard':
+                    self.program_pulser(sequence)
+                elif self.mode == 'Shelving':
+                    self.program_pulser(shelving_sequence)
 
             # if the phase list is random we want to always reprogram the pulser so that
             # a new set of random phases is set for the next set of N experiments
@@ -141,7 +144,7 @@ class DarkStateDetection(QsimExperiment):
         error mitigation by deleting the experiment before and after the identified experiment
         """
 
-        padWidth = 1 # delete this many experiments before and after the detected doppler error
+        padWidth = 1  # delete this many experiments before and after the detected doppler error
         dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
         dark_delete = np.array([])
         for error in dark_errors[0]:

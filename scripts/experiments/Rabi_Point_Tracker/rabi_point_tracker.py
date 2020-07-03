@@ -55,11 +55,11 @@ class RabiPointTracker(QsimExperiment):
         elif qubit == 'qubit_minus':
             self.pi_time = self.p.Pi_times.qubit_minus
 
-        init_bright_state_pumping_method = self.p.BrightStatePumping.method
-        init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
-        init_optical_pumping_method = self.p.OpticalPumping.method
+        #init_bright_state_pumping_method = self.p.BrightStatePumping.method
+        #init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
+        #init_optical_pumping_method = self.p.OpticalPumping.method
 
-        self.p['MicrowaveInterrogation.pulse_sequence'] = 'standard'
+        #self.p['MicrowaveInterrogation.pulse_sequence'] = 'standard'
 
         init_line_trigger_state = self.p.MicrowaveInterogation.AC_line_trigger
         self.pulser.line_trigger_state(False)
@@ -79,7 +79,7 @@ class RabiPointTracker(QsimExperiment):
                 if should_break:
                     break
 
-            self.p['OpticalPumping.method'] = 'Standard'
+            #self.p['OpticalPumping.method'] = 'Standard'
             self.p['MicrowaveInterrogation.duration'] = self.n_pi_times * self.pi_time
             self.program_pulser(sequence)
             [counts] = self.run_sequence()
@@ -102,11 +102,11 @@ class RabiPointTracker(QsimExperiment):
             self.dv.add(time_since_start['s'], pop)
             i +=1
 
-        self.p['BrightStatePumping.method'] = init_bright_state_pumping_method
-        self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_pulse_sequence
-        self.p['OpticalPumping.method'] = init_optical_pumping_method
-        if init_line_trigger_state == 'On':
-            self.pulser.line_trigger_state(True)
+        #self.p['BrightStatePumping.method'] = init_bright_state_pumping_method
+        #self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_pulse_sequence
+        #self.p['OpticalPumping.method'] = init_optical_pumping_method
+        #if init_line_trigger_state == 'On':
+        #    self.pulser.line_trigger_state(True)
 
     def update_pi_time(self, pop, gain, set_point=0.5):
         """

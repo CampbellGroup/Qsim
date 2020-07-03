@@ -23,9 +23,6 @@ class MicrowaveRamseyExperiment(QsimExperiment):
     exp_parameters.append(('MicrowaveRamsey', 'phase_scan'))
     exp_parameters.append(('MicrowaveInterrogation', 'AC_line_trigger'))
     exp_parameters.append(('MicrowaveInterrogation', 'delay_from_line_trigger'))
-    exp_parameters.append(('Pi_times', 'qubit_0'))
-    exp_parameters.append(('Pi_times', 'qubit_plus'))
-    exp_parameters.append(('Pi_times', 'qubit_minus'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'repetitions'))
@@ -36,7 +33,6 @@ class MicrowaveRamseyExperiment(QsimExperiment):
     exp_parameters.extend(sequence.all_required_parameters())
 
     exp_parameters.remove(('EmptySequence', 'duration'))
-    exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident

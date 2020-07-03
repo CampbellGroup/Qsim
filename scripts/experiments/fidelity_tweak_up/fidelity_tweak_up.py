@@ -36,7 +36,7 @@ class fidelity_tweak_up(QsimExperiment):
     def run(self, cxn, context):
 
         qubit = self.p.Line_Selection.qubit
-        reps = self.p.MicrowaveInterogation.repititions
+        reps = self.p.MicrowaveInterrogation.repetitions
         if qubit == 'qubit_0':
             pi_time = self.p.Pi_times.qubit_0
 

@@ -8,6 +8,7 @@ class ramsey_microwave_interrogation(pulse_sequence):
         ('MicrowaveInterrogation', 'detuning'),
         ('MicrowaveInterrogation', 'power'),
         ('MicrowaveInterrogation', 'microwave_phase'),
+        ('MicrowaveInterrogation', 'pulse_sequence'),
         ('Line_Selection', 'qubit'),
         ('Transitions', 'qubit_0'),
         ('Transitions', 'qubit_plus'),
@@ -36,26 +37,41 @@ class ramsey_microwave_interrogation(pulse_sequence):
             pi_time = p.Pi_times.qubit_minus
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
+        pulse_delay = U(800.0, 'us')
 
-        self.addTTL('MicrowaveTTL',
-                    self.start,
-                    pi_time + p.EmptySequence.duration)
-        self.addTTL('MicrowaveTTL3',
-                    self.start,
-                    pi_time + p.EmptySequence.duration)
+        if p.MicrowaveInterrogation.pulse_sequence != 'HPOnlyNoMixing':
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time/2.0,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+            # first pi/2 pulse, DDS turns on 800 us before the ttl allows it through
+            self.addTTL('MicrowaveTTL',
+                        self.start + pulse_delay,
+                        pi_time/2.0)
 
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time/2.0 + p.EmptySequence.duration,
-                    pi_time/2.0,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    p.MicrowaveInterrogation.microwave_phase)
+            self.addDDS('Microwave_qubit',
+                        self.start,
+                        pi_time/2.0 + pulse_delay,
+                        DDS_freq,
+                        p.MicrowaveInterrogation.power,
+                        U(0.0, 'deg'))
 
-        self.end = self.start + pi_time + p.EmptySequence.duration
+            # second pi/2 pulse
+            self.addTTL('MicrowaveTTL',
+                        self.start + pulse_delay + pi_time/2.0 + p.EmptySequence.duration,
+                        pi_time / 2.0)
+
+            self.addDDS('Microwave_qubit',
+                        self.start + pi_time/2.0 + pulse_delay,
+                        pi_time/2.0 + p.EmptySequence.duration,
+                        DDS_freq,
+                        p.MicrowaveInterrogation.power,
+                        p.MicrowaveInterrogation.microwave_phase)
+
+        elif p.MicrowaveInterrogation.pulse_sequence == 'HPOnlyNoMixing':
+            self.addTTL('MicrowaveTTL',
+                        self.start,
+                        pi_time/2.0)
+
+            self.addTTL('MicrowaveTTL',
+                        self.start + pi_time/2.0 + p.EmptySequence.duration,
+                        pi_time/2.0)
+
+        self.end = self.start + pi_time + p.EmptySequence.duration + pulse_delay

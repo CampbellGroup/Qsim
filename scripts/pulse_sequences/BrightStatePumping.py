@@ -27,7 +27,7 @@ class bright_state_pumping(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        self.end = self.start + p.BrightStatePumping.duration
+        # self.end = self.start + p.BrightStatePumping.duration
 
         if p.BrightStatePumping.bright_prep_method == 'Doppler Cooling':
             self.addDDS('DopplerCoolingSP',
@@ -54,13 +54,13 @@ class bright_state_pumping(pulse_sequence):
             self.addSequence(optical_pumping)
 
             if p.BrightStatePumping.microwave_phase_list == 'constant':
-                phases = np.zeros(int(p.MicrowaveInterrogation.repititions))
+                phases = np.zeros(int(p.MicrowaveInterrogation.repetitions))
             elif p.BrightStatePumping.microwave_phase_list == 'random':
-                phases = 360.0*np.random.rand(int(p.MicrowaveInterrogation.repititions))
+                phases = 360.0*np.random.rand(int(p.MicrowaveInterrogation.repetitions))
             elif p.BrightStatePumping.microwave_phase_list == 'zeroPizero':
-                phases = 180.0 * np.array([i % 2 for i in range(int(p.MicrowaveInterrogation.repititions))])
+                phases = 180.0 * np.array([i % 2 for i in range(int(p.MicrowaveInterrogation.repetitions))])
 
-            for i in range(int(p.MicrowaveInterrogation.repititions)):
+            for i in range(int(p.MicrowaveInterrogation.repetitions)):
                 p['MicrowaveInterrogation.microwave_phase'] = U(phases[i], 'deg')
                 self.addSequence(microwave_interrogation)
 

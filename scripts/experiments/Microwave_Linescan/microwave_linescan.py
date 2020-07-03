@@ -41,17 +41,12 @@ class MicrowaveLineScan(QsimExperiment):
 
     def run(self, cxn, context):
 
-        init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
-        init_optical_pumping_method = self.p.OpticalPumping.method
-
-        #self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
-        self.p['OpticalPumping.method'] = 'Standard'
-
         data = self.setup_datavault('frequency', 'probability')  # gives the x and y names to Data Vault
         qubit = self.p.Line_Selection.qubit
         self.setup_grapher('Microwave Linescan ' + qubit)
         self.detunings = self.get_scan_list(self.p.MicrowaveLinescan.scan, 'kHz')
         mode = self.p.Modes.state_detection_mode
+
         if qubit == 'qubit_0':
             center = self.p.Transitions.qubit_0
             pi_time = self.p.Pi_times.qubit_0
@@ -65,7 +60,7 @@ class MicrowaveLineScan(QsimExperiment):
             pi_time = self.p.Pi_times.qubit_minus
 
         self.p['MicrowaveInterrogation.duration'] = pi_time
-
+        print pi_time
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
@@ -85,9 +80,6 @@ class MicrowaveLineScan(QsimExperiment):
             pop = self.get_pop(counts)
 
             self.dv.add(detuning + center['kHz'], pop)
-
-        self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_pulse_sequence
-        self.p['OpticalPumping.method'] = init_optical_pumping_method
 
         return should_break
 

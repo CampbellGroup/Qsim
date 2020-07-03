@@ -12,7 +12,7 @@ class double_microwave_sequence(pulse_sequence):
     # this sequence is exclusively used for F = 1 manifold preparation, so we only want
     # to do Pi-pulses
     required_parameters = [
-                           ('MicrowaveInterogation', 'pulse_sequence'),
+                           ('MicrowaveInterrogation', 'pulse_sequence'),
                            ]
 
     required_subsequences = [standard_pi_pulse_clock, standard_pi_pulse_plus, knill_pi_pulse_clock,

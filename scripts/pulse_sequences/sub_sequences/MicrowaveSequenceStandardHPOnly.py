@@ -17,21 +17,12 @@ class microwave_sequence_standard_hp_only(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
+        # buffer time is there so that when we concatenate pulses, the ttl will turn off for sure and
+        # then turn back on for the next pi pulse
 
-        #  select which zeeman level to prepare
-        if p.Line_Selection.qubit == 'qubit_0':
-            center = p.Transitions.qubit_0
-
-        elif p.Line_Selection.qubit == 'qubit_plus':
-            center = p.Transitions.qubit_plus
-
-        elif p.Line_Selection.qubit == 'qubit_minus':
-            center = p.Transitions.qubit_minus
-
-        DDS_freq = p.ddsDefaults.qubit_dds_freq
-
+        buffer_time = U(2000.0, 'us')
         self.addTTL('MicrowaveTTL',
-                    self.start,
+                    self.start + buffer_time,
                     p.MicrowaveInterrogation.duration)
 
-        self.end = self.start + p.MicrowaveInterrogation.duration
+        self.end = self.start + p.MicrowaveInterrogation.duration + buffer_time
