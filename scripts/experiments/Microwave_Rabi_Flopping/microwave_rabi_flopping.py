@@ -46,8 +46,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
         self.p['BrightStatePumping.method'] = 'Microwave'
         #self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
 
-        init_line_trigger_state = self.p.MicrowaveInterrogation.AC_line_trigger
-        self.pulser.line_trigger_state(False)
+        self.pulser.line_trigger_state(self.p.MicrowaveInterrogation.AC_line_trigger == 'On')
 
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
         self.setup_grapher('Rabi Flopping ' + qubit)
@@ -55,6 +54,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i/float(len(self.times)))
             if should_break:
+                self.pulser.line_trigger_state(False)
                 break
             self.p['MicrowaveInterrogation.duration'] = U(duration, 'us')
 
@@ -85,8 +85,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
         self.p['BrightStatePumping.method'] = init_bright_state_pumping_method
         self.p['MicrowaveInterrogation.pulse_sequence'] = init_microwave_pulse_sequence
         self.p['OpticalPumping.method'] = init_optical_pumping_method
-        if init_line_trigger_state == 'On':
-            self.pulser.line_trigger_state(True)
+        self.pulser.line_trigger_state(False)
 
     def finalize(self, cxn, context):
         pass

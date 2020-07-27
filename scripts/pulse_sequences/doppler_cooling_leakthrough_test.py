@@ -1,39 +1,37 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.ShelvingStateDetection import shelving_state_detection
 from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
-from BrightStatePumping import bright_state_pumping
-from sub_sequences.Shelving import shelving
 from sub_sequences.Deshelving import deshelving
+from sub_sequences.Shelving import shelving
+from sub_sequences.DoublePass369 import double_pass_369
 
+class doppler_cooling_leakthrough_test(pulse_sequence):
 
-class dark_state_preparation(pulse_sequence):
-
-    required_subsequences = [turn_off_all, doppler_cooling, standard_state_detection,
-                             shelving_state_detection, optical_pumping, shelving, shelving_doppler_cooling,
-                             deshelving, bright_state_pumping]
+    required_subsequences = [doppler_cooling, standard_state_detection, optical_pumping,
+                             doppler_cooling, shelving_state_detection, deshelving,
+                             shelving, shelving_doppler_cooling, double_pass_369]
 
     required_parameters = [
         ('Modes', 'state_detection_mode'),
-        ('BrightStatePumping', 'start_with_Hadamard')]
+        ('EmptySequence', 'scan_empty_duration')
+                           ]
 
     def sequence(self):
+        p = self.parameters
 
-        mode = self.parameters.Modes.state_detection_mode
-
-        if mode == 'Standard':
+        if p.Modes.state_detection_mode == 'Standard':
             self.addSequence(doppler_cooling)
             self.addSequence(optical_pumping)
-            if self.parameters.BrightStatePumping.start_with_Hadamard == 'On':
-                self.addSequence(bright_state_pumping)
+            self.addSequence(double_pass_369)
             self.addSequence(standard_state_detection)
 
-        elif mode == 'Shelving':
+        elif p.Modes.state_detection_mode == 'Shelving':
             self.addSequence(shelving_doppler_cooling)
             self.addSequence(optical_pumping)
+            self.addSequence(double_pass_369)
             self.addSequence(shelving)
             self.addSequence(shelving_state_detection)
             self.addSequence(deshelving)

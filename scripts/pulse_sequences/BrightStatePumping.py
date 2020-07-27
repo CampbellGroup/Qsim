@@ -2,6 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveInterrogation import microwave_interrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.DoubleMicrowaveInterrogation import double_microwave_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.OpticalPumping import optical_pumping
+from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.Hadamard import hadamard
 from labrad.units import WithUnit as U
 import numpy as np
 
@@ -15,6 +16,7 @@ class bright_state_pumping(pulse_sequence):
         ('BrightStatePumping', 'duration'),
         ('BrightStatePumping', 'bright_prep_method'),
         ('BrightStatePumping', 'microwave_phase_list'),
+        ('BrightStatePumping', 'start_with_Hadamard'),
         ('MicrowaveInterrogation', 'repetitions'),
         ('MicrowaveInterrogation', 'microwave_phase'),
         ('Transitions', 'main_cooling_369'),
@@ -23,7 +25,8 @@ class bright_state_pumping(pulse_sequence):
         ('ddsDefaults', 'repump_935_freq'),
                            ]
 
-    required_subsequences = [optical_pumping, microwave_interrogation, double_microwave_sequence]
+    required_subsequences = [optical_pumping, microwave_interrogation, double_microwave_sequence,
+                             hadamard]
 
     def sequence(self):
         p = self.parameters
@@ -59,6 +62,10 @@ class bright_state_pumping(pulse_sequence):
                 phases = 360.0*np.random.rand(int(p.MicrowaveInterrogation.repetitions))
             elif p.BrightStatePumping.microwave_phase_list == 'zeroPizero':
                 phases = 180.0 * np.array([i % 2 for i in range(int(p.MicrowaveInterrogation.repetitions))])
+
+            if p.BrightStatePumping.start_with_Hadamard == 'On':
+                print 'adding Hadamrad gate'
+                self.addSequence(hadamard)
 
             for i in range(int(p.MicrowaveInterrogation.repetitions)):
                 p['MicrowaveInterrogation.microwave_phase'] = U(phases[i], 'deg')

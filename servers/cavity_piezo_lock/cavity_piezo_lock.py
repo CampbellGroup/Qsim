@@ -68,12 +68,14 @@ class cavity_piezo_lock(LabradServer):
         if np.abs(delta) < 7.0:
             pass
         elif (delta < 0.0) and (np.abs(delta) < 20.0):
+            print delta
             delta_voltage = np.abs(delta)/20.0  # the cavity piezo is roughly 10 MHz/Volt
             set_voltage = init_voltage - U(delta_voltage, 'V')
             yield self.piezo.set_voltage(self.chan, set_voltage)
             self.voltage_history.append(set_voltage['V'])
             time.sleep(self.sleep_time)
         elif (delta > 0.0) and (np.abs(delta) < 20.0):
+            print delta
             delta_voltage = np.abs(delta)/20.0  # the cavity piezo is roughly 10 MHz/Volt
             set_voltage = init_voltage + U(delta_voltage, 'V')
             yield self.piezo.set_voltage(self.chan, set_voltage)

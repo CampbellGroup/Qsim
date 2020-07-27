@@ -16,19 +16,20 @@ class double_microwave_sequence(pulse_sequence):
                            ]
 
     required_subsequences = [standard_pi_pulse_clock, standard_pi_pulse_plus, knill_pi_pulse_clock,
-                             knill_pi_pulse_plus, standard_pi_pulse_clock, standard_pi_pulse_plus]
+                             knill_pi_pulse_plus, standard_pi_pulse_clock, standard_pi_pulse_plus,
+                             spin_echo_pi_pulse_clock, spin_echo_pi_pulse_plus]
 
     def sequence(self):
         p = self.parameters
 
-        if p.MicrowaveInterogation.pulse_sequence == 'standard':
+        if p.MicrowaveInterrogation.pulse_sequence == 'standard':
             self.addSequence(standard_pi_pulse_clock)
             self.addSequence(standard_pi_pulse_plus)
 
-        elif p.MicrowaveInterogation.pulse_sequence == 'knill':
+        elif p.MicrowaveInterrogation.pulse_sequence == 'knill':
             self.addSequence(knill_pi_pulse_clock)
             self.addSequence(knill_pi_pulse_plus)
 
-        elif p.MicrowaveInterogation.pulse_sequence == 'SpinEcho + KnillZeeman':
+        elif p.MicrowaveInterrogation.pulse_sequence == 'SpinEcho + KnillZeeman':
             self.addSequence(spin_echo_pi_pulse_clock)
             self.addSequence(knill_pi_pulse_plus)

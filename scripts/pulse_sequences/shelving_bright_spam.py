@@ -15,7 +15,7 @@ class shelving_bright_spam(pulse_sequence):
 
     def sequence(self):
         self.addSequence(shelving_doppler_cooling)
-        self.addSeqeucne(optical_pumping)
+        self.addSequence(optical_pumping)
         self.addSequence(shelving)
         self.addSequence(shelving_state_detection)
         self.addSequence(deshelving)

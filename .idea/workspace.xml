@@ -25,22 +25,28 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_23_20,_4_47_PM_[Default_Changelist]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_23_20__4_47_PM__Default_Changelist_.xml" beforeDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments">
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/doppler_cooling_leakthrough_test/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/experiments/doppler_cooling_leakthrough_test/doppler_cooling_leakthrough_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/doppler_cooling_leakthrough_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoublePass369.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/single_qubit_gates/Hadamard.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/single_qubit_gates/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Linescan/microwave_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Linescan/microwave_linescan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Ramsey_Experiment/microwave_ramsey_experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Ramsey_Experiment/microwave_ramsey_experiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Rabi_Point_Tracker/rabi_point_tracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/fidelity_tweak_up/#fidelity_tweak_up.py#" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/fidelity_tweak_up/fidelity_tweak_up.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/fidelity_tweak_up/fidelity_tweak_up.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preparation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandardHPOnly.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandardHPOnly.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RamseyMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RamseyMicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillSequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/knill_pi_pulse.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/knill_pi_pulse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/spin_echo_pi_pulse.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/spin_echo_pi_pulse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/standard_pi_pulse.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/standard_pi_pulse.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -483,11 +489,11 @@
     <option name="LAST_COMMIT_MESSAGE" value="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1593459512451">
+    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1593650441022">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="239" y="161" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497330679" />
-    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1593459512451" />
+    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1593650441022" />
     <state x="737" y="302" width="424" height="510" key="FileChooserDialogImpl" timestamp="1593122034313">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
