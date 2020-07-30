@@ -25,29 +25,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments">
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/doppler_cooling_leakthrough_test/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/doppler_cooling_leakthrough_test/doppler_cooling_leakthrough_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/doppler_cooling_leakthrough_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoublePass369.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/single_qubit_gates/Hadamard.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/single_qubit_gates/__init__.py" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Rabi_Flopping/microwave_rabi_flopping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preparation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillSequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/knill_pi_pulse.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/knill_pi_pulse.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/spin_echo_pi_pulse.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/spin_echo_pi_pulse.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/standard_pi_pulse.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/standard_pi_pulse.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +71,7 @@
       <recent name="$PROJECT_DIR$/scripts/experiments" />
     </key>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -101,13 +82,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00021" summary="changed dark state detection to work with shelving and standard detection">
-      <created>1583963391776</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1583963391776</updated>
     </task>
     <task id="LOCAL-00022" summary="changed dark state detection to work with shelving and standard detection">
       <created>1583964707140</created>
@@ -445,7 +419,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593379211019</updated>
     </task>
-    <option name="localTasksCounter" value="70" />
+    <task id="LOCAL-00070" summary="modified microwave sequences to use new TTL switch, created experiment to look for leakthrough laser light of the doppler cooling beam">
+      <created>1595884276062</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1595884276063</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -461,7 +442,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added qubit dds offset by 15 MHz to every subsequence so that it always remains on but detuned for any experiment" />
     <MESSAGE value="got timetag saving for doppler errors working in the shelving fidelity experiment. Also created functions to do a lot of the processing within 'run()' so that the experiment looks cleaner and easier to read" />
     <MESSAGE value="adding in new Knill-based sequence with phase modifications to further suppress amplitude errors at the expense of detuning error robustness" />
     <MESSAGE value="Adding some docstrings to the experiments to help future QSimmers" />
@@ -486,14 +466,15 @@
     <MESSAGE value="created dedicated pi_pulse subsequences for ease of programming multiple microwave pi pulses on different transitions&#10;&#10;also removed the microwaveDDS from unnecessary subsequences" />
     <MESSAGE value="fixed double microwave sequence to use pi-pulse dedicated subsequences" />
     <MESSAGE value="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments" />
-    <option name="LAST_COMMIT_MESSAGE" value="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments" />
+    <MESSAGE value="modified microwave sequences to use new TTL switch, created experiment to look for leakthrough laser light of the doppler cooling beam" />
+    <option name="LAST_COMMIT_MESSAGE" value="modified microwave sequences to use new TTL switch, created experiment to look for leakthrough laser light of the doppler cooling beam" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1593650441022">
+    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1595884275697">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="239" y="161" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497330679" />
-    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1593650441022" />
+    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1595884275697" />
     <state x="737" y="302" width="424" height="510" key="FileChooserDialogImpl" timestamp="1593122034313">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>

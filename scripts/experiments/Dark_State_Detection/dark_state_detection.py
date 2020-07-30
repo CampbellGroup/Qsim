@@ -47,7 +47,6 @@ class DarkStateDetection(QsimExperiment):
 
     def run(self, cxn, context):
         self.pulser.switch_auto('MicrowaveTTL')
-        self.pulser.switch_auto('MicrowaveTTL3')
         # choose which qubit will be driven
         qubit = self.p.Line_Selection.qubit
         if qubit == 'qubit_0':
