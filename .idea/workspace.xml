@@ -25,8 +25,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Qsim.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Qsim.iml" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="working to modify way data is saved for high fidelity measurement">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
     </list>
@@ -83,13 +82,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00022" summary="changed dark state detection to work with shelving and standard detection">
-      <created>1583964707140</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1583964707140</updated>
     </task>
     <task id="LOCAL-00023" summary="changed dark state detection to work with shelving and standard detection">
       <created>1583967015214</created>
@@ -427,7 +419,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595884276063</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="working to modify way data is saved for high fidelity measurement">
+      <created>1596210478465</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1596210478465</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -443,7 +442,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="got timetag saving for doppler errors working in the shelving fidelity experiment. Also created functions to do a lot of the processing within 'run()' so that the experiment looks cleaner and easier to read" />
     <MESSAGE value="adding in new Knill-based sequence with phase modifications to further suppress amplitude errors at the expense of detuning error robustness" />
     <MESSAGE value="Adding some docstrings to the experiments to help future QSimmers" />
     <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state." />
@@ -468,7 +466,8 @@
     <MESSAGE value="fixed double microwave sequence to use pi-pulse dedicated subsequences" />
     <MESSAGE value="Integrated shelving doppler cooling back into the experiment, I fogot that this is actually a very useful thing for us to have since we switch experiments a lot and want to separate non-shelving-experiments from shelving experiments" />
     <MESSAGE value="modified microwave sequences to use new TTL switch, created experiment to look for leakthrough laser light of the doppler cooling beam" />
-    <option name="LAST_COMMIT_MESSAGE" value="modified microwave sequences to use new TTL switch, created experiment to look for leakthrough laser light of the doppler cooling beam" />
+    <MESSAGE value="working to modify way data is saved for high fidelity measurement" />
+    <option name="LAST_COMMIT_MESSAGE" value="working to modify way data is saved for high fidelity measurement" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1595884275697">
@@ -490,14 +489,15 @@
       <screen x="0" y="0" width="1600" height="900" />
     </state>
     <state x="289" y="85" width="1022" height="732" key="SettingsEditor/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1593381581532" />
-    <state x="752" y="422" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1593379216035">
-      <screen x="0" y="38" width="1920" height="1042" />
+    <state x="627" y="332" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1596210485922">
+      <screen x="0" y="0" width="1600" height="900" />
     </state>
     <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
     <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956018334" />
     <state x="752" y="415" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1593129084183" />
     <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
     <state x="752" y="422" key="Vcs.Push.Dialog.v2/0.38.1920.1042@0.38.1920.1042" timestamp="1593379216035" />
+    <state x="627" y="332" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1596210485922" />
     <state x="752" y="1298" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.900.1920.1080" timestamp="1593190906299" />
     <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.27.1600.873@0.27.1600.873" timestamp="1593299868444" />
     <state x="1062" y="57" width="742" height="969" key="find.popup" timestamp="1593463710003">

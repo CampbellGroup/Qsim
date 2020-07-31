@@ -39,6 +39,8 @@ class high_fidelity_measurement(QsimExperiment):
         self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Shelving'
 
+        self.reps = self.p.ShelvingStateDetection.repetitions
+
         self.setup_prob_datavault()
 
 
@@ -50,28 +52,38 @@ class high_fidelity_measurement(QsimExperiment):
             if should_break:
                 break
 
+            # programs and runs the bright state sequence, then creates an array with exp number, detection
+            # counts, and doppler counts to be saved to datavault
             self.program_pulser(bright_sequence)
             [counts_doppler_bright, counts_bright] = self.run_sequence(max_runs=500, num=2)
+            bright_data = np.column_stack((np.arange(self.reps), counts_bright, counts_doppler_bright))
 
+            # programs and runs the dark state sequence, then creates an array with exp number, detection
+            # counts, and doppler counts to be saved to datavault
             self.program_pulser(dark_sequence)
             [counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=500, num=2)
+            dark_data = np.column_stack((np.arange(self.reps), counts_dark, counts_doppler_dark))
 
-            # delete the experiments where the ion wasnt properly doppler cooled
-            counts_bright, counts_dark, n_errors = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
+            # delete the experiments where the ion wasnt properly doppler cooled. created new arrays for
+            # counts bright and counts dark so that original data is not modified from counts_bright,
+            # counts_dark
+            countsBright, countsDark, n_errors = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
                                                                                     counts_bright, counts_dark)
 
             # this processes the counts and calculates the fidelity and plots it on the bottom panel
-            self.plot_prob(i, counts_bright, counts_dark)
+            self.plot_prob(i, countsBright, countsDark)
 
             # process the count_bins and return the histogram with bins and photon counts/bin
-            hist_bright = self.process_data(counts_bright)
-            hist_dark = self.process_data(counts_dark)
+            hist_bright = self.process_data(countsBright)
+            hist_dark = self.process_data(countsDark)
 
             # this part plots the histograms on the hist panel in the shelving_fidelity tab
             self.plot_hist(hist_bright, folder_name='Shelving_Histogram')
             self.plot_hist(hist_dark, folder_name='Shelving_Histogram')
 
-    def setup_prob_datavault(self):
+    def setup_high_fidelity_datavault(self):
+
+        # datavault setup for the run number vs probability plots
         self.dv_context = self.dv.context()
         self.dv.cd(['', 'high_fidelity_measurement'], True, context=self.dv_context)
 
@@ -83,20 +95,38 @@ class high_fidelity_measurement(QsimExperiment):
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.dv_context)
 
-    def setup_timetags_datavault(self):
+        # datavault setup for the timetags for bright and dark states in separate folders
         self.tt_bright_context = self.dv.context()
-        self.dv.cd(['', 'timetagged_bright_errors'], True, context=self.tt_bright_context)
-        self.tt_bright_dataset = self.dv.new('timetagged_errors', [('arb', 'arb')],
-                                            [('time', 'timetags', 'num')], context=self.tt_bright_context)
+        self.dv.cd(['', 'high_fidelity_timetags_bright'], True, context=self.tt_bright_context)
+        self.tt_bright_dataset = self.dv.new('timetags', [('arb', 'arb')],
+                                             [('time', 'timetags', 'num')], context=self.tt_bright_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_bright_context)
 
         self.tt_dark_context = self.dv.context()
-        self.dv.cd(['', 'timetagged_dark_errors'], True, context=self.tt_dark_context)
-        self.tt_dark_dataset = self.dv.new('timetagged_errors', [('arb', 'arb')],
-                                             [('time', 'timetags', 'num')], context=self.tt_dark_context)
+        self.dv.cd(['', 'high_fidelity_timetags_dark'], True, context=self.tt_dark_context)
+        self.tt_dark_dataset = self.dv.new('timetags', [('arb', 'arb')],
+                                           [('time', 'timetags', 'num')], context=self.tt_dark_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_dark_context)
+
+        # datavault setup for the raw detection counts and doppler counts and experiment number for
+        # every experiment performed, bright and dark separately
+        self.hf_bright_context = self.dv.context()
+        self.dv.cd(['', 'high_fidelity_shelving_bright'], True, context=self.hf_bright_context)
+        self.hf_bright_dataset = self.dv.new('high_fidelity_data', [('run', 'arb units')],
+                                      [('counts', 'detection_counts'), ('counts', 'doppler_counts')],
+                                      context=self.hf_bright_context)
+        for parameter in self.p:
+            self.dv.add_parameter(parameter, self.p[parameter], context=self.hf_bright_context)
+
+        self.hf_dark_context = self.dv.context()
+        self.dv.cd(['', 'high_fidelity_shelving_dark'], True, context=self.hf_dark_context)
+        self.hf_dark_dataset = self.dv.new('high_fidelity_data', [('run', 'arb units')],
+                                      [('counts', 'detection_counts'), ('counts', 'doppler_counts')],
+                                      context=self.hf_dark_context)
+        for parameter in self.p:
+            self.dv.add_parameter(parameter, self.p[parameter], context=self.hf_dark_context)
 
     def plot_prob(self, num, counts_dark, counts_bright):
         prob_dark = self.get_pop(counts_dark)
