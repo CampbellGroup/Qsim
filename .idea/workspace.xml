@@ -28,6 +28,7 @@
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="working to modify way data is saved for high fidelity measurement">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,13 +83,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00024" summary="changed dark state detection to work with shelving and standard detection">
-      <created>1584138468099</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1584138468099</updated>
     </task>
     <task id="LOCAL-00025" summary="working on collecting timetags during shelving fidelity experiment">
       <created>1584205440391</created>
@@ -426,7 +420,14 @@
       <option name="project" value="LOCAL" />
       <updated>1596214465039</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="working to modify way data is saved for high fidelity measurement">
+      <created>1596222544086</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1596222544086</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -489,7 +490,7 @@
       <screen x="0" y="0" width="1600" height="900" />
     </state>
     <state x="289" y="85" width="1022" height="732" key="SettingsEditor/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1593381581532" />
-    <state x="627" y="332" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1596214471308">
+    <state x="627" y="332" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1596222549054">
       <screen x="0" y="0" width="1600" height="900" />
     </state>
     <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
@@ -497,7 +498,7 @@
     <state x="752" y="415" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1593129084183" />
     <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
     <state x="752" y="422" key="Vcs.Push.Dialog.v2/0.38.1920.1042@0.38.1920.1042" timestamp="1593379216035" />
-    <state x="627" y="332" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1596214471308" />
+    <state x="627" y="332" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1596222549054" />
     <state x="752" y="1298" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.900.1920.1080" timestamp="1593190906299" />
     <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.27.1600.873@0.27.1600.873" timestamp="1593299868444" />
     <state x="1062" y="57" width="742" height="969" key="find.popup" timestamp="1593463710003">

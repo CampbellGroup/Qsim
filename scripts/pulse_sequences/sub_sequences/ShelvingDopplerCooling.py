@@ -55,6 +55,13 @@ class shelving_doppler_cooling(pulse_sequence):
                     p.ddsDefaults.repump_760_2_freq,
                     p.ddsDefaults.repump_760_2_power)
 
-        self.addTTL('ReadoutCount', self.start, p.Shelving_Doppler_Cooling.duration)
+        self.addTTL('ReadoutCount',
+                    self.start,
+                    p.Shelving_Doppler_Cooling.duration)
+
+        # provides timetags
+        self.addTTL('TimeResolvedCount',
+                    self.start,
+                    p.ShelvingStateDetection.duration)
 
         self.end = self.start + p.Shelving_Doppler_Cooling.duration
