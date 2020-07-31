@@ -26,17 +26,6 @@ class high_fidelity_measurement(QsimExperiment):
         self.pulser = cxn.pulser
         self.context = context
 
-        # initialize contexts for different datavault connections
-        self.prob_context = self.dv.context()  # exp num vs prob
-        self.tt_bright_context = self.dv.context()  # timetags from bright experiments
-        self.tt_dark_context = self.dv.context()  # timetags from dark experiments
-        self.hf_bright_context = self.dv.context()  # detection and doppler counts for bright
-        self.hf_dark_context = self.dv.context()  # detection and doppler counts for dark
-
-
-
-
-
     def run(self, cxn, context):
 
         # set the line trigger state to the appropriate state
@@ -54,7 +43,6 @@ class high_fidelity_measurement(QsimExperiment):
 
         self.setup_high_fidelity_datavault()
 
-
         i = 0
         while i < self.p.HighFidelityMeasurement.sequence_iterations:
             i += 1
@@ -66,20 +54,28 @@ class high_fidelity_measurement(QsimExperiment):
             # programs and runs the bright state sequence, then creates an array with exp number, detection
             # counts, and doppler counts to be saved to datavault
             self.program_pulser(bright_sequence)
-            [counts_doppler_bright, counts_bright], ttBright = self.run_sequence_with_timetags(max_runs=500, num=2)
+            [counts_doppler_bright, counts_bright], ttBright = self.run_sequence_with_timetags(max_runs=300, num=2)
+            ttBright = ttBright[0]
             bright_data = np.column_stack((np.arange(self.reps), counts_bright, counts_doppler_bright))
+            self.dv.add(bright_data, context=self.hf_bright_context)
+            print counts_bright
+            print np.column_stack((np.zeros(len(ttBright)), ttBright))
+            self.dv.add(np.column_stack((np.zeros(len(ttBright)), ttBright)), context=self.tt_bright_context)
 
             # programs and runs the dark state sequence, then creates an array with exp number, detection
             # counts, and doppler counts to be saved to datavault
             self.program_pulser(dark_sequence)
-            [counts_doppler_dark, counts_dark], ttDark = self.run_sequence_with_timetags(max_runs=500, num=2)
+            [counts_doppler_dark, counts_dark], ttDark = self.run_sequence_with_timetags(max_runs=300, num=2)
+            ttDark = ttDark[0]
             dark_data = np.column_stack((np.arange(self.reps), counts_dark, counts_doppler_dark))
+            self.dv.add(dark_data, context=self.hf_dark_context)
+            self.dv.add(np.column_stack((np.zeros(len(ttDark)), ttDark)), context=self.tt_dark_context)
 
             # delete the experiments where the ion wasnt properly doppler cooled. created new arrays for
             # counts bright and counts dark so that original data is not modified from counts_bright,
             # counts_dark
             countsBright, countsDark, n_errors = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
-                                                                                    counts_bright, counts_dark)
+                                                                                  counts_bright, counts_dark)
 
             # this processes the counts and calculates the fidelity and plots it on the bottom panel
             self.plot_prob(i, countsBright, countsDark)
@@ -95,6 +91,7 @@ class high_fidelity_measurement(QsimExperiment):
     def setup_high_fidelity_datavault(self):
 
         # datavault setup for the run number vs probability plots
+        self.prob_context = self.dv.context()
         self.dv.cd(['', 'high_fidelity_measurement'], True, context=self.prob_context)
 
         self.dataset_prob = self.dv.new('high_fidelity_measurement', [('run', 'prob')],
@@ -107,12 +104,14 @@ class high_fidelity_measurement(QsimExperiment):
 
 
         # datavault setup for the timetags for bright and dark states in separate folders
+        self.tt_bright_context = self.dv.context()
         self.dv.cd(['', 'high_fidelity_timetags_bright'], True, context=self.tt_bright_context)
         self.tt_bright_dataset = self.dv.new('timetags', [('arb', 'arb')],
                                              [('time', 'timetags', 'num')], context=self.tt_bright_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_bright_context)
 
+        self.tt_dark_context = self.dv.context()
         self.dv.cd(['', 'high_fidelity_timetags_dark'], True, context=self.tt_dark_context)
         self.tt_dark_dataset = self.dv.new('timetags', [('arb', 'arb')],
                                            [('time', 'timetags', 'num')], context=self.tt_dark_context)
@@ -122,17 +121,19 @@ class high_fidelity_measurement(QsimExperiment):
 
         # datavault setup for the raw detection counts and doppler counts and experiment number for
         # every experiment performed, bright and dark separately
+        self.hf_bright_context = self.dv.context()
         self.dv.cd(['', 'high_fidelity_shelving_bright'], True, context=self.hf_bright_context)
-        self.hf_bright_dataset = self.dv.new('high_fidelity_data', [('run', 'arb units')],
-                                      [('counts', 'detection_counts'), ('counts', 'doppler_counts')],
-                                      context=self.hf_bright_context)
+        self.hf_bright_dataset = self.dv.new('high_fidelity_data', [('run', 'arb')],
+                                             [('counts', 'detection_counts', 'num'), ('counts', 'doppler_counts', 'num')],
+                                             context=self.hf_bright_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.hf_bright_context)
 
+        self.hf_dark_context = self.dv.context()
         self.dv.cd(['', 'high_fidelity_shelving_dark'], True, context=self.hf_dark_context)
-        self.hf_dark_dataset = self.dv.new('high_fidelity_data', [('run', 'arb units')],
-                                      [('counts', 'detection_counts'), ('counts', 'doppler_counts')],
-                                      context=self.hf_dark_context)
+        self.hf_dark_dataset = self.dv.new('high_fidelity_data', [('run', 'arb')],
+                                           [('counts', 'detection_counts', 'num'), ('counts', 'doppler_counts', 'num')],
+                                           context=self.hf_dark_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.hf_dark_context)
 
