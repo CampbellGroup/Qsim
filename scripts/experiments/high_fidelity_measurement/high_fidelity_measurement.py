@@ -108,15 +108,15 @@ class high_fidelity_measurement(QsimExperiment):
         """
         takes in the photon counts from each experiment, and the doppler cooling counts for each experiment. Deletes
         the fidelity measurements where the doppler cooling counts were below a user specified threshold, and pads the
-        error mitigation by deleting the experiment before and after the identified experiment
+        error mitigation by deleting the experiments after the identified experiment
         """
 
-        padWidth = 2
+        padding = 2
         bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
         bright_delete = np.array([])
         for error in bright_errors[0]:
             # we are going to delete the experiments 1 before and after the error for safety
-            tempPad = range(error - padWidth, error + padWidth + 1, 1)
+            tempPad = range(error, error + padding + 1, 1)
             bright_delete = np.concatenate((bright_delete, tempPad))
         bright_delete = bright_delete[(bright_delete < len(counts_doppler_bright)) & (bright_delete >= 0.0)]
         counts_bright_fixed = np.delete(counts_bright, bright_delete)
@@ -125,27 +125,13 @@ class high_fidelity_measurement(QsimExperiment):
         dark_delete = np.array([])
         for error in dark_errors[0]:
             # we are going to delete the experiments 1 before and after the error for safety
-            tempPad = range(error - padWidth, error + padWidth + 1, 1)
+            tempPad = range(error, error + padding + 1, 1)
             dark_delete = np.concatenate((dark_delete, tempPad))
         dark_delete = dark_delete[(dark_delete < len(counts_doppler_dark)) & (dark_delete >= 0.0)]
         counts_dark_fixed = np.delete(counts_dark, dark_delete)
 
-        self.check_if_error_neighbored_doppler_error(counts_bright, counts_dark, bright_delete, dark_delete)
-
         total_doppler_errors = len(bright_errors[0]) + len(dark_errors[0])
         return counts_bright_fixed, counts_dark_fixed, total_doppler_errors
-
-    def check_if_error_neighbored_doppler_error(self, counts_bright, counts_dark, deleted_bright_experiments, deleted_dark_experiments):
-        """
-        This should take in the cleaned counts after deleting dopper errors, and also the locations of the deleted doppler errors
-        to see if the state readout errors are next to deleted doppler error experiments
-        """
-        loc_bright_error = np.where(counts_bright <= self.p.ShelvingStateDetection.state_readout_threshold)
-        loc_dark_error = np.where(counts_dark > self.p.ShelvingStateDetection.state_readout_threshold)
-        print 'Location of bright errors = ' + str(loc_bright_error) + ' , doppler error locations = ' + str(set(deleted_bright_experiments))
-        print 'Location of dark errors = ' + str(loc_dark_error) + ' , doppler error locations = ' + str(set(deleted_dark_experiments))
-
-
 
     def finalize(self, cxn, context):
         # reset the line trigger and delay to false

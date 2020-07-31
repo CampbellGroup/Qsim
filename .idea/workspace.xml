@@ -26,8 +26,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Qsim.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Qsim.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
