@@ -38,10 +38,18 @@ class high_fidelity_measurement(QsimExperiment):
         self.p['MicrowaveInterrogation.duration'] = self.pi_time
         self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Shelving'
+        self.p['Shelving_Doppler_Cooling.record_timetags'] = 'On'
 
         self.reps = self.p.ShelvingStateDetection.repetitions
 
         self.setup_high_fidelity_datavault()
+
+        counts_dop_bright = []
+        counts_dop_dark = []
+        counts_det_bright = []
+        counts_det_dark = []
+        tt_bright = []
+        tt_dark = []
 
         i = 0
         while i < self.p.HighFidelityMeasurement.sequence_iterations:
@@ -56,20 +64,24 @@ class high_fidelity_measurement(QsimExperiment):
             self.program_pulser(bright_sequence)
             [counts_doppler_bright, counts_bright], ttBright = self.run_sequence_with_timetags(max_runs=250, num=2)
             ttBright = ttBright[0]
-            bright_data = np.column_stack((np.arange(self.reps), counts_bright, counts_doppler_bright))
-            self.dv.add(bright_data, context=self.hf_bright_context)
-            print counts_bright
-            print np.column_stack((np.zeros(len(ttBright)), ttBright))
-            self.dv.add(np.column_stack((np.zeros(len(ttBright)), ttBright)), context=self.tt_bright_context)
+            counts_dop_bright += list(counts_doppler_bright)
+            counts_det_bright += list(counts_bright)
+            tt_bright += list(ttBright)
+            #bright_data = np.column_stack((np.arange(self.reps), counts_bright, counts_doppler_bright))
+            #self.dv.add(bright_data, context=self.hf_bright_context)
+            #self.dv.add(np.column_stack((np.zeros(len(ttBright)), ttBright)), context=self.tt_bright_context)
 
             # programs and runs the dark state sequence, then creates an array with exp number, detection
             # counts, and doppler counts to be saved to datavault
             self.program_pulser(dark_sequence)
             [counts_doppler_dark, counts_dark], ttDark = self.run_sequence_with_timetags(max_runs=250, num=2)
             ttDark = ttDark[0]
-            dark_data = np.column_stack((np.arange(self.reps), counts_dark, counts_doppler_dark))
-            self.dv.add(dark_data, context=self.hf_dark_context)
-            self.dv.add(np.column_stack((np.zeros(len(ttDark)), ttDark)), context=self.tt_dark_context)
+            counts_dop_dark += list(counts_doppler_dark)
+            counts_det_dark += list(counts_dark)
+            tt_dark += list(ttDark)
+            #dark_data = np.column_stack((np.arange(self.reps), counts_dark, counts_doppler_dark))
+            #self.dv.add(dark_data, context=self.hf_dark_context)
+            #self.dv.add(np.column_stack((np.zeros(len(ttDark)), ttDark)), context=self.tt_dark_context)
 
             # delete the experiments where the ion wasnt properly doppler cooled. created new arrays for
             # counts bright and counts dark so that original data is not modified from counts_bright,
@@ -88,12 +100,26 @@ class high_fidelity_measurement(QsimExperiment):
             self.plot_hist(hist_bright, folder_name='Shelving_Histogram')
             self.plot_hist(hist_dark, folder_name='Shelving_Histogram')
 
+        self.save_counts_and_timetags(counts_det_bright, counts_dop_bright, counts_det_dark, counts_dop_dark, tt_bright, tt_dark)
+
+
 
     def plot_prob(self, num, counts_dark, counts_bright):
         prob_dark = self.get_pop(counts_dark)
         prob_bright = self.get_pop(counts_bright)
         self.dv.add(num, prob_dark, prob_bright,
-                    prob_bright - prob_dark, context=self.dv_context)
+                    prob_bright - prob_dark, context=self.prob_context)
+
+
+    def save_counts_and_timetags(self, counts_bright, counts_doppler_bright, counts_dark, counts_doppler_dark, ttBright, ttDark):
+        bright_data = np.column_stack((np.arange(len(counts_bright)), np.array(counts_bright), np.array(counts_doppler_bright)))
+        self.dv.add(bright_data, context=self.hf_bright_context)
+        self.dv.add(np.column_stack((np.zeros(len(ttBright)), np.array(ttBright))), context=self.tt_bright_context)
+
+        dark_data = np.column_stack((np.arange(len(counts_dark)), np.array(counts_dark), np.array(counts_doppler_dark)))
+        self.dv.add(dark_data, context=self.hf_dark_context)
+        self.dv.add(np.column_stack((np.zeros(len(ttDark)), np.array(ttDark))), context=self.tt_dark_context)
+
 
     def delete_doppler_count_errors(self, counts_doppler_bright, counts_doppler_dark, counts_bright, counts_dark):
         """
@@ -129,7 +155,7 @@ class high_fidelity_measurement(QsimExperiment):
 
         # datavault setup for the run number vs probability plots
         self.prob_context = self.dv.context()
-        self.dv.cd(['', 'high_fidelity_measurement'], True, context=self.prob_context)
+        self.dv.cd(['', 'high_fidelity_probability_vs_runs'], True, context=self.prob_context)
 
         self.dataset_prob = self.dv.new('high_fidelity_measurement', [('run', 'prob')],
                                         [('Prob', 'bright_prep', 'num'),
@@ -159,24 +185,32 @@ class high_fidelity_measurement(QsimExperiment):
         # datavault setup for the raw detection counts and doppler counts and experiment number for
         # every experiment performed, bright and dark separately
         self.hf_bright_context = self.dv.context()
-        self.dv.cd(['', 'high_fidelity_shelving_bright'], True, context=self.hf_bright_context)
-        self.hf_bright_dataset = self.dv.new('high_fidelity_data', [('run', 'arb')],
+        self.dv.cd(['', 'high_fidelity_counts_bright'], True, context=self.hf_bright_context)
+        self.hf_bright_dataset = self.dv.new('counts', [('run', 'arb')],
                                              [('counts', 'detection_counts', 'num'), ('counts', 'doppler_counts', 'num')],
                                              context=self.hf_bright_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.hf_bright_context)
 
         self.hf_dark_context = self.dv.context()
-        self.dv.cd(['', 'high_fidelity_shelving_dark'], True, context=self.hf_dark_context)
-        self.hf_dark_dataset = self.dv.new('high_fidelity_data', [('run', 'arb')],
+        self.dv.cd(['', 'high_fidelity_counts_dark'], True, context=self.hf_dark_context)
+        self.hf_dark_dataset = self.dv.new('counts', [('run', 'arb')],
                                            [('counts', 'detection_counts', 'num'), ('counts', 'doppler_counts', 'num')],
                                            context=self.hf_dark_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.hf_dark_context)
 
+
+    #def parse_timetags(self, ttB, ttD, detection_counts_bright, detection_counts_dark, doppler_counts_bright, doppler_counts_dark):
+
     def finalize(self, cxn, context):
         # reset the line trigger and delay to false
         self.pulser.line_trigger_state(False)
+
+        # we only really want to record the doppler cooling timetags in this experiment, so
+        # we force it on at the beginning and off at the end of the experiment
+        self.p['Shelving_Doppler_Cooling.record_timetags'] = 'Off'
+
 
 
 if __name__ == '__main__':

@@ -38,7 +38,7 @@ class cavity_piezo_lock(LabradServer):
         self.chan = 1
         self.rate = 2
         self.start_time = time.time()
-        self.sleep_time = 5
+        self.sleep_time = 10
         self.voltage_history = []
         self.connect()
         self.lc = LoopingCall(self.loop)
@@ -60,22 +60,20 @@ class cavity_piezo_lock(LabradServer):
     @inlineCallbacks
     def loop(self):
         # piezo box set_voltage command returns voltage for some reason
-        init_voltage = yield self.piezo.set_voltage(self.chan)
-        init_voltage = U(float(init_voltage[1][-6:]), 'V')
+        init_voltage = yield self.piezo.get_voltage(self.chan)
+        init_voltage = U(float(init_voltage), 'V')
         frequency_reading = yield self.wavemeter.get_frequency(1)
         delta = (self.set_point - frequency_reading)*1e6  # want the frequency in MHz for convenience
 
-        if np.abs(delta) < 7.0:
+        if np.abs(delta) < 5.0:
             pass
-        elif (delta < 0.0) and (np.abs(delta) < 20.0):
-            print delta
+        elif (delta < 0.0) and (np.abs(delta) < 40.0):
             delta_voltage = np.abs(delta)/20.0  # the cavity piezo is roughly 10 MHz/Volt
             set_voltage = init_voltage - U(delta_voltage, 'V')
             yield self.piezo.set_voltage(self.chan, set_voltage)
             self.voltage_history.append(set_voltage['V'])
             time.sleep(self.sleep_time)
-        elif (delta > 0.0) and (np.abs(delta) < 20.0):
-            print delta
+        elif (delta > 0.0) and (np.abs(delta) < 40.0):
             delta_voltage = np.abs(delta)/20.0  # the cavity piezo is roughly 10 MHz/Volt
             set_voltage = init_voltage + U(delta_voltage, 'V')
             yield self.piezo.set_voltage(self.chan, set_voltage)

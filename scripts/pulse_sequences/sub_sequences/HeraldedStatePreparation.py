@@ -18,12 +18,14 @@ class heralded_state_preparation(pulse_sequence):
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
-        ('ddsDefaults', 'repump_760_1_power')
+        ('ddsDefaults', 'repump_760_1_power'),
+        ('ddsDefaults', 'metastable_qubit_dds_freq'),
+        ('ddsDefaults', 'metastable_qubit_dds_power')
     ]
 
     def sequence(self):
         p = self.parameters
-        qubitFreq = U(270.000, 'MHz') - p.Transitions.MetastableQubit
+        qubitFreq = p.ddsDefaults.metastable_qubit_dds_freq - p.Transitions.MetastableQubit
 
         self.addTTL('ReadoutCount',
                     self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
@@ -34,7 +36,7 @@ class heralded_state_preparation(pulse_sequence):
                     self.start,
                     p.Pi_times.metastable_qubit,
                     qubitFreq,
-                    U(-11.0, 'dBm'))
+                    p.ddsDefaults.metastable_qubit_dds_power)
 
         # deshelve any remaining population in the original manifold
         self.addDDS('760SP',
@@ -49,6 +51,10 @@ class heralded_state_preparation(pulse_sequence):
                     p.MetastableStateDetection.duration,
                     p.ddsDefaults.repump_935_freq,
                     p.MetastableStateDetection.repump_power)
+
+        self.addTTL('976SP',
+                    self.start,
+                    p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration)
 
         self.addDDS('369DP',
                     self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,

@@ -54,11 +54,11 @@ class QsimExperiment(experiment):
             error_message = error + '\n' + "Grapher is not running"
             raise KeyError(error_message)
 
-        try:
-            self.timeharp = self.cxn.servers['timeharpserver']
-        except KeyError as error:
-            error_message = str(error) + '\n' + "TimeHarp is not running"
-            raise KeyError(error_message)
+        #try:
+        #    self.timeharp = self.cxn.servers['timeharpserver']
+        #except KeyError as error:
+        #    error_message = str(error) + '\n' + "TimeHarp is not running"
+        #    raise KeyError(error_message)
 
     def setup_datavault(self, x_axis, y_axis):
 

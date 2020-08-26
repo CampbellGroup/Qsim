@@ -10,6 +10,7 @@ class shelving_doppler_cooling(pulse_sequence):
         ('DopplerCooling', 'detuning'),
         ('Shelving_Doppler_Cooling', 'duration'),
         ('Shelving_Doppler_Cooling', 'doppler_counts_threshold'),
+        ('Shelving_Doppler_Cooling', 'record_timetags'),
         ('Transitions', 'main_cooling_369'),
         ('MicrowaveInterrogation', 'power'),
         ('ddsDefaults', 'doppler_cooling_freq'),
@@ -59,9 +60,8 @@ class shelving_doppler_cooling(pulse_sequence):
                     self.start,
                     p.Shelving_Doppler_Cooling.duration)
 
-        # provides timetags
         self.addTTL('TimeResolvedCount',
                     self.start,
-                    p.ShelvingStateDetection.duration)
+                    p.Shelving_Doppler_Cooling.duration)
 
         self.end = self.start + p.Shelving_Doppler_Cooling.duration

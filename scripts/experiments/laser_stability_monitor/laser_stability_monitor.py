@@ -1,4 +1,3 @@
-import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
 import socket

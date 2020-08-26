@@ -60,13 +60,14 @@ class MicrowaveLineScan(QsimExperiment):
             pi_time = self.p.Pi_times.qubit_minus
 
         self.p['MicrowaveInterrogation.duration'] = pi_time
-        print pi_time
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
                 break
+
             self.p['MicrowaveInterrogation.detuning'] = U(detuning, 'kHz')
             self.program_pulser(sequence)
+
             if mode == 'Shelving':
                 [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
                 errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
@@ -77,8 +78,8 @@ class MicrowaveLineScan(QsimExperiment):
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
-            pop = self.get_pop(counts)
 
+            pop = self.get_pop(counts)
             self.dv.add(detuning + center['kHz'], pop)
 
         return should_break

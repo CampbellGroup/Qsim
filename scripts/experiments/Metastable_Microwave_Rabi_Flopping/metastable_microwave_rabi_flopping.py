@@ -19,8 +19,8 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
-    exp_parameters.append(('StandardStateDetection', 'repititions'))
+    exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
+    exp_parameters.append(('StandardStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
@@ -30,7 +30,7 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
 
     exp_parameters.extend(sequence.all_required_parameters())
 
-    exp_parameters.remove(('MetastableMicrowaveInterogation', 'duration'))
+    exp_parameters.remove(('MetastableMicrowaveInterrogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -42,14 +42,14 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
 
         self.p['Line_Selection.qubit'] = 'qubit_0'  # define the bright state prep as qubit_0
         self.p['Modes.state_detection_mode'] = 'Shelving'
-        self.p['MicrowaveInterogation.duration'] = self.p.Pi_times.qubit_0
+        self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
 
         self.times = self.get_scan_list(self.p.MetastableMicrowaveRabiFlopping.scan, 'us')
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i/float(len(self.times)))
             if should_break:
                 break
-            self.p['MetastableMicrowaveInterogation.duration'] = U(duration, 'us')
+            self.p['MetastableMicrowaveInterrogation.duration'] = U(duration, 'us')
 #            self.program_pulser(sequence)
 #            [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
 #            errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
