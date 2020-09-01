@@ -31,7 +31,11 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
 
         self.p['Line_Selection.qubit'] = 'qubit_0'  # define the bright state prep as qubit_0
         self.p['Modes.state_detection_mode'] = 'Shelving'
-        self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
+
+        if self.p.Shelving.assist_laser == 'Doppler Cooling':
+            self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
+        elif self.p.Shelving.assist_laser == 'Optical Pumping':
+            self.p['MicrowaveInterrogation.duration'] = U(0.0, 'us')
 
         scan_parameter = self.p.MetastableMicrowaveRamsey.scan_type
 

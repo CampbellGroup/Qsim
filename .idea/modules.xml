@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Qsim.iml" filepath="$PROJECT_DIR$/.idea/Qsim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../common/.idea/common.iml" filepath="$PROJECT_DIR$/../common/.idea/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../config/.idea/config.iml" filepath="$PROJECT_DIR$/../config/.idea/config.iml" />
     </modules>
   </component>
 </project>

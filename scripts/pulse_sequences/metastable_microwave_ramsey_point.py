@@ -28,7 +28,7 @@ class metastable_microwave_ramsey_point(pulse_sequence):
         self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)
         self.addSequence(optical_pumping)
-        self.addSequence(microwave_interrogation)
+        #self.addSequence(microwave_interrogation) # we are trying to shelve from the |0> state for now
         self.addSequence(shelving)
         self.addSequence(metastable_ramsey_microwave_interrogation)
         self.addSequence(metastable_state_detection)

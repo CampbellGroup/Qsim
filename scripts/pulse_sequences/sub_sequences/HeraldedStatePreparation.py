@@ -38,17 +38,17 @@ class heralded_state_preparation(pulse_sequence):
                     qubitFreq,
                     p.ddsDefaults.metastable_qubit_dds_power)
 
-        # deshelve any remaining population in the original manifold
+        # deshelve any remaining population in the original manifold, leave on for the rest of the experiment
         self.addDDS('760SP',
                     self.start + p.Pi_times.metastable_qubit,
-                    p.HeraldedStatePreparation.deshelving_duration,
+                    p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
                     p.ddsDefaults.repump_760_1_freq,
                     p.ddsDefaults.repump_760_1_power)
 
         # detect any population in the ground state, at first here we will use the state detection parameters
         self.addDDS('935SP',
-                    self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
-                    p.MetastableStateDetection.duration,
+                    self.start,
+                    p.MetastableStateDetection.duration + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
                     p.ddsDefaults.repump_935_freq,
                     p.MetastableStateDetection.repump_power)
 
@@ -57,14 +57,14 @@ class heralded_state_preparation(pulse_sequence):
                     p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration)
 
         self.addDDS('369DP',
-                    self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
-                    p.MetastableStateDetection.duration,
+                    self.start + p.Pi_times.metastable_qubit,
+                    p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
                     p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.MetastableStateDetection.detuning/2.0,
                     p.MetastableStateDetection.CW_power)
 
         self.addDDS('DopplerCoolingSP',
-                    self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
-                    p.MetastableStateDetection.duration,
+                    self.start + p.Pi_times.metastable_qubit,
+                    p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
                     p.ddsDefaults.doppler_cooling_freq,
                     p.ddsDefaults.doppler_cooling_power)
 

@@ -2,6 +2,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
 import socket
 import os
+import labrad
 
 
 class lasermonitor(QsimExperiment):
@@ -20,10 +21,10 @@ class lasermonitor(QsimExperiment):
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
-        self.cxnwlm = labrad.connect('10.97.112.2',
-                                     name=socket.gethostname() + " Laser Monitor",
-                                     password=os.environ['LABRADPASSWORD'])
+        self.cxnwlm = labrad.connect('10.97.112.2', name=socket.gethostname() + " Laser Monitor", password=os.environ['LABRADPASSWORD'])
+        self.cxn369 = labrad.connect('10.97.112.4', name=socket.gethostname() + " Laser Monitor", password=os.environ['LABRADPASSWORD'])
         self.wlm = self.cxnwlm.multiplexerserver
+        self.wlm369 = self.cxn369.multiplexerserver
 
     def run(self, cxn, context):
 
@@ -32,16 +33,15 @@ class lasermonitor(QsimExperiment):
         '''
 
         self.inittime = time.time()
-        self.initfreq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
+        self.initfreq = self.wlm369.get_frequency(1)#self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
         print self.initfreq
         self.setup_datavault('Elapsed Time', 'Frequency Deviation')
         self.setup_grapher('Frequency Monitor')
-        print 'dv setup'
         while (time.time() - self.inittime) <= self.p.lasermonitor.measuretime['s']:
             should_stop = self.pause_or_stop()
             if should_stop:
                 break
-            freq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
+            freq = self.wlm369.get_frequency(1)# self.wl.get_frequency(int(self.p.lasermonitor.lasers[-1]))
             try:
                 self.dv.add(time.time() - self.inittime, 1e6*(self.initfreq - freq))
             except:
@@ -51,6 +51,8 @@ class lasermonitor(QsimExperiment):
 
     def finalize(self, cxn, context):
         self.cxnwlm.disconnect()
+        self.cxn369.disconnect()
+
 
 
 if __name__ == '__main__':
