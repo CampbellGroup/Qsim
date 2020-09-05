@@ -52,4 +52,8 @@ class variable_deshelving(pulse_sequence):
                     p.ddsDefaults.repump_760_2_freq,
                     p.Deshelving.power2)
 
+        self.addTTL('976SP',
+                    self.start,
+                    p.VariableDeshelving.duration)
+
         self.end = self.start + p.VariableDeshelving.duration

@@ -26,7 +26,7 @@ class shelving(pulse_sequence):
 
         assist_delay = U(7.0, 'ms')
 
-        if p.Shelving.duration > assist_delay:
+        if p.Shelving.duration > assist_delay and p.Shelving.assist_laser != 'None':
             if p.Shelving.assist_laser == 'Doppler Cooling':
 
                 self.addDDS('369DP',

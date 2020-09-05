@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.heralded_metastable_microwave_point import heralded_metastable_microwave_point as heralded_sequence
+from Qsim.scripts.pulse_sequences.metastable_rabi_qnd_point import metastable_rabi_qnd_point as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
@@ -7,15 +7,12 @@ import numpy as np
 
 class MetastableQubitQND(QsimExperiment):
     """
-    This experiment will herald state preparation of the metastable qubit, then manipulate with 
-    3.6 GHz microwaves. After some user decided microwave time t_0, the experimen will deshelve
-    the F=3 manifold and project the qubit, after which it will continue on with microwave 
-    interrogation. The idea here is that we can perform doppler cooling before we perform metastable
-    state detection, count the photons, and that will tell us which qubit state the 760 projected us into
-    and we only keep the experiments where we projected into the F = 4 manifold. 
+    Here we want to perform a rabi flop, but at a given point inthe rabi flopping curve we
+    need to project the qubit with the 760 into the ground state, and check for it there before
+    p
     """
 
-    name = 'Metastable Microwave Rabi Flopping'
+    name = 'Metastable Qubit QND'
 
     exp_parameters = []
     exp_parameters.append(('MetastableMicrowaveRabiFlopping', 'scan'))
@@ -23,11 +20,8 @@ class MetastableQubitQND(QsimExperiment):
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
     exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
-    exp_parameters.append(('StandardStateDetection', 'repetitions'))
-    exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
-    exp_parameters.append(('HeraldedStatePreparation', 'deshelving_duration'))
     exp_parameters.append(('MetastableStateDetection', 'herald_state_prep'))
     exp_parameters.append(('Pi_times', 'metastable_qubit'))
 
@@ -47,6 +41,7 @@ class MetastableQubitQND(QsimExperiment):
         self.p['Modes.state_detection_mode'] = 'Shelving'
         self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
 
+        self.number_exps = []
         self.times = self.get_scan_list(self.p.MetastableMicrowaveRabiFlopping.scan, 'us')
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i/float(len(self.times)))
@@ -54,14 +49,20 @@ class MetastableQubitQND(QsimExperiment):
                 break
             self.p['MetastableMicrowaveInterrogation.duration'] = U(duration, 'us')
 
-            self.program_pulser(heralded_sequence)
-            [doppler_counts, herald_counts, detection_counts] = self.run_sequence(max_runs=333, num=3)
+            self.program_pulser(sequence)
+
+            [doppler_counts, herald_counts, qnd_counts, detection_counts] = self.run_sequence(max_runs=250, num=4)
+
             failed_heralding = np.where(herald_counts >= self.p.ShelvingStateDetection.state_readout_threshold)
             doppler_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+            qnd_to_ground_state = np.where(qnd_counts >= self.p.ShelvingStateDetection.state_readout_threshold)
+
             # this will combine all errors into one array and delete repeats (error on both doppler and herald)
-            all_errors = np.unique(np.concatenate((failed_heralding[0], doppler_errors[0])))
+            all_errors = np.unique(np.concatenate((failed_heralding[0], doppler_errors[0], qnd_to_ground_state[0])))
             counts = np.delete(detection_counts, all_errors)
-            print len(counts)
+
+            self.number_exps.append(len(counts))
+            print(self.number_exps)
 
             hist = self.process_data(counts)
             self.plot_hist(hist)
@@ -75,6 +76,6 @@ class MetastableQubitQND(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = MetastableMicrowaveRabiFlopping(cxn=cxn)
+    exprt = MetastableQubitQND(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

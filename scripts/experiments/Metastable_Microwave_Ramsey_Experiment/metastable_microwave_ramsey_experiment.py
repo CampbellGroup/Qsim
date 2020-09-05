@@ -34,8 +34,9 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
 
         if self.p.Shelving.assist_laser == 'Doppler Cooling':
             self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
+            self.p['MicrowaveInterrogation.repetitions'] = 1.0
         elif self.p.Shelving.assist_laser == 'Optical Pumping':
-            self.p['MicrowaveInterrogation.duration'] = U(0.0, 'us')
+            self.p['MicrowaveInterrogation.repetitions'] = 0.0
 
         scan_parameter = self.p.MetastableMicrowaveRamsey.scan_type
 
@@ -75,6 +76,7 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
             self.setup_grapher('Metastable Microwave Ramsey Experiment')
             self.phase_list = self.get_scan_list(self.p.MetastableMicrowaveRamsey.phase_scan, 'deg')
             self.p['EmptySequence.duration'] = self.p.MetastableMicrowaveRamsey.fixed_delay_time
+            self.p['MetastableMicrowaveRamsey.detuning'] = U(0.0, 'kHz')
             for i, phase in enumerate(self.phase_list):
                 should_break = self.update_progress(i/float(len(self.phase_list)))
                 if should_break:
@@ -100,6 +102,7 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
                 pop = self.get_pop(counts)
+                print phase, pop
                 self.dv.add(phase, pop)
 
 

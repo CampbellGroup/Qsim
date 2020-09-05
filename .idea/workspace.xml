@@ -25,7 +25,38 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="added a lot of metastable qubit related code">
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_rabi_qnd_point.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveKnillSequence.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveSequenceStandard.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableRabiQND.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetstableQNDDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Rabi_Flopping/metastable_microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Rabi_Flopping/metastable_microwave_rabi_flopping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Ramsey_Experiment/metastable_microwave_ramsey_experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Ramsey_Experiment/metastable_microwave_ramsey_experiment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/deshelving_760/deshelving_760.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/deshelving_760/deshelving_760.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/laser_stability_monitor/laser_stability_monitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/laser_stability_monitor/laser_stability_monitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/metastable_qubit_qnd/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Qubit_QND/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/metastable_qubit_qnd/metastable_qubit_qnd.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Qubit_QND/metastable_qubit_qnd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_ramsey_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_ramsey_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableRamseyMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableRamseyMicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common/lib/servers/Pulser2/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/Pulser2/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common/lib/servers/Pulser2/pulse_sequences/pulse_sequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/Pulser2/pulse_sequences/pulse_sequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common/lib/servers/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common/lib/servers/piezo_server/Piezo_Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/piezo_server/Piezo_Server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../config/multiplexerclient_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/multiplexerclient_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../config/piezo_client_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/piezo_client_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../config/pulser/hardwareConfiguration.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/pulser/hardwareConfiguration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../config/scriptscanner_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/scriptscanner_config.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,7 +76,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1XBG1DmooketltAPKqlmsXzIbQi" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -56,7 +87,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../config" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
@@ -79,13 +110,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00026" summary="working on collecting timetags during shelving fidelity experiment">
-      <created>1584220134481</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1584220134481</updated>
     </task>
     <task id="LOCAL-00027" summary="working on collecting timetags during shelving fidelity experiment for error detection">
       <created>1584294895856</created>
@@ -423,7 +447,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598485722037</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="added a lot of metastable qubit related code: added a heralded fidelity tweak up experiment, some ramsey experiments">
+      <created>1598974943436</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1598974943437</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -439,7 +470,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Adding some docstrings to the experiments to help future QSimmers" />
     <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state." />
     <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state. Now adds the data to datavault along with the populations and plots it live along with the state population and fidelities" />
     <MESSAGE value="added docstring" />
@@ -464,18 +494,19 @@
     <MESSAGE value="modified microwave sequences to use new TTL switch, created experiment to look for leakthrough laser light of the doppler cooling beam" />
     <MESSAGE value="working to modify way data is saved for high fidelity measurement" />
     <MESSAGE value="added a lot of metastable qubit related code" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a lot of metastable qubit related code" />
+    <MESSAGE value="added a lot of metastable qubit related code: added a heralded fidelity tweak up experiment, some ramsey experiments" />
+    <option name="LAST_COMMIT_MESSAGE" value="added a lot of metastable qubit related code: added a heralded fidelity tweak up experiment, some ramsey experiments" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1598485721898">
+    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1598974943278">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="239" y="161" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497330679" />
-    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598485721898" />
-    <state x="737" y="302" width="424" height="510" key="FileChooserDialogImpl" timestamp="1593122034313">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598974943278" />
+    <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl" timestamp="1598974865674">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592238687062" />
+    <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598974865674" />
     <state x="737" y="302" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1593122034313" />
     <state x="737" y="307" key="FileChooserDialogImpl/0.34.1920.1046@0.34.1920.1046" timestamp="1593102967696" />
     <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog" timestamp="1592956034184">
@@ -486,11 +517,11 @@
       <screen x="0" y="0" width="1600" height="900" />
     </state>
     <state x="289" y="85" width="1022" height="732" key="SettingsEditor/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1593381581532" />
-    <state x="2672" y="398" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1598485730136">
+    <state x="2672" y="398" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1598974965705">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598485730136" />
+    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598974965705" />
     <state x="752" y="415" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1593129084183" />
     <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
     <state x="752" y="422" key="Vcs.Push.Dialog.v2/0.38.1920.1042@0.38.1920.1042" timestamp="1593379216035" />

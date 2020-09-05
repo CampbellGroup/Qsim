@@ -38,7 +38,7 @@ class cavity_piezo_lock(LabradServer):
         self.chan = 1
         self.rate = 2
         self.start_time = time.time()
-        self.sleep_time = 5
+        self.sleep_time = 10
         self.voltage_history = []
         self.connect()
         self.lc = LoopingCall(self.loop)

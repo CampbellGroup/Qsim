@@ -48,20 +48,20 @@ class metastable_ramsey_microwave_interrogation(pulse_sequence):
 
         if p.MetastableMicrowaveRamsey.cooling_lasers_during_microwaves == 'On':
             self.addDDS('935SP',
-                        self.start,
-                        pi_time + p.EmptySequence.duration,
+                        self.start + pi_time/2.0,
+                        p.EmptySequence.duration,
                         p.ddsDefaults.repump_935_freq,
                         p.ddsDefaults.repump_935_power)
 
             self.addDDS('369DP',
-                        self.start,
-                        pi_time + p.EmptySequence.duration,
+                        self.start + pi_time/2.0,
+                        p.EmptySequence.duration,
                         p.Transitions.main_cooling_369 / 2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning / 2.0,
-                        p.DopplerCooling.cooling_power)
+                        U(-4.0, 'dBm'))
 
             self.addDDS('DopplerCoolingSP',
-                        self.start,
-                        pi_time + p.EmptySequence.duration,
+                        self.start + pi_time/2.0,
+                        p.EmptySequence.duration,
                         p.ddsDefaults.doppler_cooling_freq,
                         p.ddsDefaults.doppler_cooling_power)
 

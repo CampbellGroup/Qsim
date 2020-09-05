@@ -20,8 +20,6 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
     exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
-    exp_parameters.append(('StandardStateDetection', 'repetitions'))
-    exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
     exp_parameters.append(('HeraldedStatePreparation', 'deshelving_duration'))

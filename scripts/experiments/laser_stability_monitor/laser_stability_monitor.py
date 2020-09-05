@@ -33,7 +33,7 @@ class lasermonitor(QsimExperiment):
         '''
 
         self.inittime = time.time()
-        self.initfreq = self.wlm369.get_frequency(1)#self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
+        self.initfreq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
         print self.initfreq
         self.setup_datavault('Elapsed Time', 'Frequency Deviation')
         self.setup_grapher('Frequency Monitor')
@@ -41,7 +41,7 @@ class lasermonitor(QsimExperiment):
             should_stop = self.pause_or_stop()
             if should_stop:
                 break
-            freq = self.wlm369.get_frequency(1)# self.wl.get_frequency(int(self.p.lasermonitor.lasers[-1]))
+            freq = self.wlm.get_frequency(int(self.p.lasermonitor.lasers[-1]))
             try:
                 self.dv.add(time.time() - self.inittime, 1e6*(self.initfreq - freq))
             except:
