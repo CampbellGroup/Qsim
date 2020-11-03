@@ -7,7 +7,8 @@ class double_pass_369(pulse_sequence):
     required_parameters = [
         ('DoublePass369', 'duration'),
         ('DoublePass369', 'power'),
-        ('Transitions', 'main_cooling_369')
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'DP369_freq')
     ]
 
     def sequence(self):
@@ -16,7 +17,7 @@ class double_pass_369(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.DoublePass369.duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz'),
+                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq,
                     p.DoublePass369.power)
 
         self.end = self.start + p.DoublePass369.duration

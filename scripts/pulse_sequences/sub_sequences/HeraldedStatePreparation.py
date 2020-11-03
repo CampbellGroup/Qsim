@@ -20,7 +20,9 @@ class heralded_state_preparation(pulse_sequence):
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'metastable_qubit_dds_freq'),
-        ('ddsDefaults', 'metastable_qubit_dds_power')
+        ('ddsDefaults', 'metastable_qubit_dds_power'),
+        ('ddsDefaults', 'DP369_freq')
+
     ]
 
     def sequence(self):
@@ -59,7 +61,7 @@ class heralded_state_preparation(pulse_sequence):
         self.addDDS('369DP',
                     self.start + p.Pi_times.metastable_qubit,
                     p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.MetastableStateDetection.detuning/2.0,
+                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning/2.0,
                     p.MetastableStateDetection.CW_power)
 
         self.addDDS('DopplerCoolingSP',

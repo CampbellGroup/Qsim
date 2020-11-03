@@ -16,8 +16,9 @@ class dipole_interogation(pulse_sequence):
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'optical_pumping_power'),
         ('ddsDefaults', 'state_detection_power'),
-        ('ddsDefaults', 'repump_935_freq')
-                           ]
+        ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'DP369_freq')
+    ]
 
     def sequence(self):
         p = self.parameters

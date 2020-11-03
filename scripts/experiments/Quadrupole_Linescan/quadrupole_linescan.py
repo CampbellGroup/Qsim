@@ -18,17 +18,16 @@ class QuadrupoleLineScan(QsimExperiment):
     exp_parameters.append(('Transitions', 'main_cooling_369'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('QuadrupoleLinescan', 'scan'))
-    exp_parameters.remove(('QuadrupoleInterogation', 'detuning'))
-    exp_parameters.append(('ShelvingStateDetection', 'repititions'))
+    exp_parameters.remove(('QuadrupoleInterrogation', 'detuning'))
+    exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
     exp_parameters.append(('ShelvingStateDetection', 'state_readout_threshold'))
-    exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
 
     def run(self, cxn, context):
 
-        self.setup_datavault('frequency', 'probability')  # gives the x and y names to Data Vault
+        self.setup_datavault('frequency', 'probability')
         self.setup_grapher('Quadrupole Linescan')
         self.detunings = self.get_scan_list(self.p.QuadrupoleLinescan.scan, 'kHz')
         center = self.p.Transitions.quadrupole
@@ -37,12 +36,10 @@ class QuadrupoleLineScan(QsimExperiment):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
                 break
-            self.p['QuadrupoleInterogation.detuning'] = U(detuning, 'kHz')
+            self.p['QuadrupoleInterrogation.detuning'] = U(detuning, 'kHz')
             self.p['Modes.state_detection_mode'] = 'Shelving'
             self.program_pulser(sequence)
-            [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
-            errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-            counts = np.delete(detection_counts, errors)
+            [counts] = self.run_sequence(max_runs=1000, num=1)
             pop = self.get_pop(counts)
             self.dv.add(detuning/1000. + center['MHz'], pop)
 

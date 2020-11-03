@@ -88,6 +88,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
             self.setup_grapher('Microwave Ramsey Experiment')
             self.phase_list = self.get_scan_list(self.p.MicrowaveRamsey.phase_scan, 'deg')
             self.p['EmptySequence.duration'] = self.p.MicrowaveRamsey.fixed_delay_time
+            print(str(self.p.MicrowaveRamsey.fixed_delay_time))
             for i, phase in enumerate(self.phase_list):
                 should_break = self.update_progress(i/float(len(self.phase_list)))
                 if should_break:
@@ -104,6 +105,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                     hist = self.process_data(counts)
                     self.plot_hist(hist)
                 pop = self.get_pop(counts)
+                print(str(phase) + ' deg , ' + str(pop) + 'population')
                 self.dv.add(phase, pop)
 
         self.p['OpticalPumping.method'] = init_optical_pumping_method

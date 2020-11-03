@@ -19,7 +19,8 @@ class optical_pumping(pulse_sequence):
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_freq'),
-        ('ddsDefaults', 'repump_760_2_power')
+        ('ddsDefaults', 'repump_760_2_power'),
+        ('ddsDefaults', 'DP369_freq')
     ]
 
     def sequence(self):
@@ -36,7 +37,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('369DP',
                         self.start,
                         p.OpticalPumping.duration,
-                        p.Transitions.main_cooling_369/2 + U(200.0, 'MHz') + p.OpticalPumping.detuning/2.0,
+                        p.Transitions.main_cooling_369/2 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning/2.0,
                         p.OpticalPumping.power)
 
             self.addDDS('935SP',
@@ -100,7 +101,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('369DP',
                         self.start,
                         p.OpticalPumping.duration,
-                        p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.OpticalPumping.detuning/2.0,
+                        p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning/2.0,
                         p.OpticalPumping.power)
 
             # explicitly turn off the double pass during quadrupole optical pumping

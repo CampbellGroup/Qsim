@@ -28,17 +28,18 @@ import numpy as np
 import time
 
 
-class cavity_piezo_lock(LabradServer):
+class cavity_piezo_lock_server(LabradServer):
 
-    name = 'Cavity Piezo Lock'
+    name = 'Cavity Piezo Lock Server'
 
     def initServer(self):
         self.password = os.environ['LABRADPASSWORD']
-        self.name = socket.gethostname() + ' Cavity Piezo Lock'
+        self.name = socket.gethostname() + ' Cavity Piezo Lock Server'
         self.chan = 1
-        self.rate = 2
+        self.rate = 1
         self.start_time = time.time()
-        self.sleep_time = 10
+        self.sleep_time = 0.01
+        self.max_voltage = U(50.0, 'V')
         self.voltage_history = []
         self.connect()
         self.lc = LoopingCall(self.loop)
@@ -56,6 +57,7 @@ class cavity_piezo_lock(LabradServer):
         self.piezo.select_device(0)
         self.set_point = yield self.wavemeter.get_frequency(1)
         self.lc.start(self.rate)
+        self.init_time = time.time()
 
     @inlineCallbacks
     def loop(self):
@@ -63,25 +65,40 @@ class cavity_piezo_lock(LabradServer):
         init_voltage = yield self.piezo.get_voltage(self.chan)
         init_voltage = U(float(init_voltage), 'V')
         frequency_reading = yield self.wavemeter.get_frequency(1)
-        delta = (self.set_point - frequency_reading)*1e6  # want the frequency in MHz for convenience
+        delta = (frequency_reading - self.set_point)*1e6  # want the frequency in MHz for convenience
 
-        if np.abs(delta) < 5.0:
+        if time.time() < self.init_time + 10.0:
+            print self.set_point
+
+        if np.abs(delta) < 4.0:
+            # dont do anything if within a certain range
             pass
+
         elif (delta < 0.0) and (np.abs(delta) < 40.0):
-            delta_voltage = np.abs(delta)/15.0  # the cavity piezo is roughly 10 MHz/Volt
+            delta_voltage = 0.01
             set_voltage = init_voltage - U(delta_voltage, 'V')
-            yield self.piezo.set_voltage(self.chan, set_voltage)
-            self.voltage_history.append(set_voltage['V'])
-            time.sleep(self.sleep_time)
-        elif (delta > 0.0) and (np.abs(delta) < 40.0):
-            delta_voltage = np.abs(delta)/15.0  # the cavity piezo is roughly 10 MHz/Volt
-            set_voltage = init_voltage + U(delta_voltage, 'V')
-            yield self.piezo.set_voltage(self.chan, set_voltage)
-            self.voltage_history.append(set_voltage['V'])
+            if set_voltage <= self.max_voltage:
+                yield self.piezo.set_voltage(self.chan, set_voltage)
+                self.voltage_history.append([time.time() - self.init_time, set_voltage['V']])
+            elif set_voltage > self.max_voltage:
+                print 'Maximum voltage exceeded'
             time.sleep(self.sleep_time)
 
-    @setting(3014, 'get_voltage_history', returns='*v[]')
+        elif (delta > 0.0) and (np.abs(delta) < 40.0):
+            delta_voltage = 0.01
+            set_voltage = init_voltage + U(delta_voltage, 'V')
+            if set_voltage <= self.max_voltage:
+                yield self.piezo.set_voltage(self.chan, set_voltage)
+                self.voltage_history.append([time.time() - self.init_time, set_voltage['V']])
+            elif set_voltage > self.max_voltage:
+                print 'Maximum voltage exceeded'
+            time.sleep(self.sleep_time)
+
+    @setting(3014, 'get_voltage_history', returns='*2v[]')
     def get_voltage_history(self, c):
+        """
+        Returns a list of times and voltages for backing out the history of voltage changes
+        """
         yield None
         returnValue(self.voltage_history)
 
@@ -93,6 +110,11 @@ class cavity_piezo_lock(LabradServer):
     def set_lock_frequency(self, c, lock_frequency):
         self.set_point = lock_frequency
 
+    @setting(3017, 'stop_lock_loop')
+    def stop_lock_loop(self, c):
+        self.lc.stop()
+
+
 if __name__ == "__main__":
     from labrad import util
-    util.runServer(cavity_piezo_lock())
+    util.runServer(cavity_piezo_lock_server())

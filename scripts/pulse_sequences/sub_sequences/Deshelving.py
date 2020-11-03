@@ -18,7 +18,10 @@ class deshelving(pulse_sequence):
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_2_freq'),
-        ('ddsDefaults', 'qubit_dds_freq')
+        ('ddsDefaults', 'qubit_dds_freq'),
+        ('ddsDefaults', 'repump_976_freq'),
+        ('ddsDefaults', 'repump_976_power'),
+        ('ddsDefaults', 'DP369_freq')
                            ]
 
     def sequence(self):
@@ -27,7 +30,7 @@ class deshelving(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.Deshelving.duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
+                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning/2.0,
                     p.DopplerCooling.cooling_power)
 
         self.addDDS('DopplerCoolingSP',
@@ -54,8 +57,10 @@ class deshelving(pulse_sequence):
                     p.ddsDefaults.repump_760_2_freq,
                     p.Deshelving.power2)
 
-        self.addTTL('976SP',
+        self.addDDS('976SP',
                     self.start,
-                    p.Deshelving.duration)
+                    p.Deshelving.duration,
+                    p.ddsDefaults.repump_976_freq,
+                    p.ddsDefaults.repump_976_power)
 
         self.end = self.start + p.Deshelving.duration

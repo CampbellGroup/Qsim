@@ -15,7 +15,8 @@ class metastable_state_detection(pulse_sequence):
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
-        ('ddsDefaults', 'repump_760_1_power')
+        ('ddsDefaults', 'repump_760_1_power'),
+        ('ddsDefaults', 'DP369_freq')
     ]
 
     def sequence(self):
@@ -46,7 +47,7 @@ class metastable_state_detection(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.MetastableStateDetection.duration + p.MetastableStateDetection.deshelving_duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.MetastableStateDetection.detuning/2.0,
+                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning/2.0,
                     p.MetastableStateDetection.CW_power)
 
         self.addDDS('DopplerCoolingSP',

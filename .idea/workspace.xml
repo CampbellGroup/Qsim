@@ -26,25 +26,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="added a lot of metastable qubit related code">
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_rabi_qnd_point.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveKnillSequence.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveSequenceStandard.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableRabiQND.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetstableQNDDetection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock_server/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Rabi_Flopping/metastable_microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Rabi_Flopping/metastable_microwave_rabi_flopping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Ramsey_Experiment/metastable_microwave_ramsey_experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Ramsey_Experiment/metastable_microwave_ramsey_experiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/deshelving_760/deshelving_760.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/deshelving_760/deshelving_760.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/Quadrupole_Linescan/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/clients/cavity_piezo_lock_client/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/Quadrupole_Linescan/quadrupole_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Linescan/quadrupole_linescan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/Quadrupole_Rabi_Flopping/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Linescan/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deprecated/deprecated_experiments/Quadrupole_Rabi_Flopping/quadrupole_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Rabi_Flopping/quadrupole_rabi_flopping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Ramsey_Experiment/microwave_ramsey_experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Ramsey_Experiment/microwave_ramsey_experiment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/laser_stability_monitor/laser_stability_monitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/laser_stability_monitor/laser_stability_monitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/metastable_qubit_qnd/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Qubit_QND/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/metastable_qubit_qnd/metastable_qubit_qnd.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Qubit_QND/metastable_qubit_qnd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_ramsey_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_ramsey_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableRamseyMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableRamseyMicrowaveInterrogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/quadrupole_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/quadrupole_point.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DipoleInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DipoleInterogation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoublePass369.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoublePass369.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableRabiQND.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableRabiQND.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetstableQNDDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetstableQNDDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/QuadrupoleInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/QuadrupoleInterrogation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/StandardStateDetection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Rabi_Flopping/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock/cavity_piezo_lock.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock_server/cavity_piezo_lock_server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" afterDir="false" />
@@ -92,11 +102,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scripts/experiments" />
       <recent name="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_experiments" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_pulse_sequences" />
       <recent name="$PROJECT_DIR$/deprecated/deprecated_sub_sequences" />
-      <recent name="$PROJECT_DIR$/scripts/experiments" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
@@ -110,13 +120,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00027" summary="working on collecting timetags during shelving fidelity experiment for error detection">
-      <created>1584294895856</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1584294895856</updated>
     </task>
     <task id="LOCAL-00028" summary="timetags are now collected during state detection if so desired&#10;forced standard optical pumping method during rabi flopping if standard readout is used">
       <created>1584310579328</created>
@@ -454,7 +457,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598974943437</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="added a lot of metastable qubit related code&#10;-- added lots of conditional-logic esque experiments">
+      <created>1599264085267</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1599264085267</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -470,7 +480,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state." />
     <MESSAGE value="rabi point tracking now runs after every set of bright/dark experiments and returns a population in the bright state. Now adds the data to datavault along with the populations and plots it live along with the state population and fidelities" />
     <MESSAGE value="added docstring" />
     <MESSAGE value="fixed accidental deletion in qsimexperiment.py" />
@@ -495,43 +504,26 @@
     <MESSAGE value="working to modify way data is saved for high fidelity measurement" />
     <MESSAGE value="added a lot of metastable qubit related code" />
     <MESSAGE value="added a lot of metastable qubit related code: added a heralded fidelity tweak up experiment, some ramsey experiments" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a lot of metastable qubit related code: added a heralded fidelity tweak up experiment, some ramsey experiments" />
+    <MESSAGE value="added a lot of metastable qubit related code&#10;-- added lots of conditional-logic esque experiments" />
+    <option name="LAST_COMMIT_MESSAGE" value="added a lot of metastable qubit related code&#10;-- added lots of conditional-logic esque experiments" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1598974943278">
+    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1599264085129">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="239" y="161" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497330679" />
-    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598974943278" />
+    <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1599264085129" />
     <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl" timestamp="1598974865674">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598974865674" />
-    <state x="737" y="302" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1593122034313" />
-    <state x="737" y="307" key="FileChooserDialogImpl/0.34.1920.1046@0.34.1920.1046" timestamp="1593102967696" />
-    <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog" timestamp="1592956034184">
+    <state x="2672" y="398" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1599264098541">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2519" y="302" width="712" height="471" key="MultipleFileMergeDialog/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1592956034184" />
-    <state x="289" y="85" width="1022" height="732" key="SettingsEditor" timestamp="1593381581532">
-      <screen x="0" y="0" width="1600" height="900" />
-    </state>
-    <state x="289" y="85" width="1022" height="732" key="SettingsEditor/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1593381581532" />
-    <state x="2672" y="398" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1598974965705">
-      <screen x="1920" y="0" width="1920" height="1080" />
-    </state>
-    <state x="752" y="388" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1053" timestamp="1592497347340" />
-    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598974965705" />
-    <state x="752" y="415" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1593129084183" />
-    <state x="752" y="416" key="Vcs.Push.Dialog.v2/0.28.1920.1052@0.28.1920.1052" timestamp="1593107443055" />
-    <state x="752" y="422" key="Vcs.Push.Dialog.v2/0.38.1920.1042@0.38.1920.1042" timestamp="1593379216035" />
+    <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1599264098541" />
     <state x="627" y="332" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1596222549054" />
-    <state x="752" y="1298" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.900.1920.1080" timestamp="1593190906299" />
-    <state x="627" y="349" width="800" height="535" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.27.1600.873@0.27.1600.873" timestamp="1593299868444" />
-    <state x="1062" y="57" width="742" height="969" key="find.popup" timestamp="1593463710003">
-      <screen x="0" y="0" width="1920" height="1053" />
+    <state x="3026" y="184" width="814" height="1038" key="dock-window-1" timestamp="1603919698250">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="1062" y="57" width="742" height="969" key="find.popup/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1593463710003" />
-    <state x="0" y="117" width="618" height="783" key="find.popup/0.900.1920.1080/0.27.1600.873@0.27.1600.873" timestamp="1593203628418" />
+    <state x="3026" y="184" width="814" height="1038" key="dock-window-1/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1603919698250" />
   </component>
 </project>

@@ -42,7 +42,7 @@ class InterleavedLinescan(QsimExperiment):
             if should_break:
                 return should_break
             # self.p.Transitions.main_cooling_369 divide by 2 for the double pass
-            freq = WithUnit(detuning, 'MHz')/2.0 + WithUnit(200.0, 'MHz')
+            freq = WithUnit(detuning, 'MHz')/2.0 + self.p.ddsDefaults.DP369_freq
             self.program_pulser(freq, detuning)
 
     def program_pulser(self, freq, detuning):

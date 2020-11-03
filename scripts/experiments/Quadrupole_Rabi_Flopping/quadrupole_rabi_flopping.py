@@ -24,7 +24,7 @@ class QuadrupoleRabiFlopping(QsimExperiment):
     exp_parameters.append(('ShelvingDopplerCooling', 'doppler_counts_threshold'))
     exp_parameters.extend(sequence.all_required_parameters())
 
-    exp_parameters.remove(('QuadrupoleInterogation', 'duration'))
+    exp_parameters.remove(('QuadrupoleInterrogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident

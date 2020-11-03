@@ -17,6 +17,7 @@ class doppler_cooling(pulse_sequence):
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_freq'),
         ('ddsDefaults', 'repump_760_2_power'),
+        ('ddsDefaults', 'DP369_freq'),
         ('MicrowaveInterrogation', 'power')
                            ]
 
@@ -32,7 +33,7 @@ class doppler_cooling(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.DopplerCooling.duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning/2.0,
+                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning/2.0,
                     p.DopplerCooling.cooling_power)
 
         self.addDDS('935SP',

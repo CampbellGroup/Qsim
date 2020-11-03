@@ -16,8 +16,9 @@ class shelving_state_detection(pulse_sequence):
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
-        ('ddsDefaults', 'qubit_dds_freq')
-                            ]
+        ('ddsDefaults', 'qubit_dds_freq'),
+        ('ddsDefaults', 'DP369_freq')
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -41,7 +42,7 @@ class shelving_state_detection(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.ShelvingStateDetection.duration,
-                    p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz') + p.ShelvingStateDetection.detuning/2.0,
+                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.ShelvingStateDetection.detuning/2.0,
                     p.ShelvingStateDetection.CW_power)
 
         self.addDDS('DopplerCoolingSP',

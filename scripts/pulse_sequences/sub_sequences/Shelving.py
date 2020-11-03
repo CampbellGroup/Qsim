@@ -19,6 +19,7 @@ class shelving(pulse_sequence):
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'optical_pumping_freq'),
         ('ddsDefaults', 'optical_pumping_power'),
+        ('ddsDefaults', 'DP369_freq')
     ]
 
     def sequence(self):
@@ -32,7 +33,7 @@ class shelving(pulse_sequence):
                 self.addDDS('369DP',
                             self.start + assist_delay,
                             p.Shelving.duration - assist_delay,
-                            p.Transitions.main_cooling_369 / 2.0 + U(200.0, 'MHz') + p.DopplerCooling.detuning / 2.0,
+                            p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning / 2.0,
                             p.Shelving.assist_power)
 
                 self.addDDS('DopplerCoolingSP',
@@ -46,7 +47,7 @@ class shelving(pulse_sequence):
                 self.addDDS('369DP',
                             self.start + assist_delay,
                             p.Shelving.duration - assist_delay,
-                            p.Transitions.main_cooling_369 / 2.0 + U(200.0, 'MHz') + p.OpticalPumping.detuning / 2.0,
+                            p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning / 2.0,
                             p.Shelving.assist_power)
 
                 self.addDDS('OpticalPumpingSP',
