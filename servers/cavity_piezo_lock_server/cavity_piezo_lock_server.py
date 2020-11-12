@@ -67,10 +67,10 @@ class cavity_piezo_lock_server(LabradServer):
         frequency_reading = yield self.wavemeter.get_frequency(1)
         delta = (frequency_reading - self.set_point)*1e6  # want the frequency in MHz for convenience
 
-        if time.time() < self.init_time + 10.0:
+        if time.time() < self.init_time + 5.0:
             print self.set_point
 
-        if np.abs(delta) < 4.0:
+        if np.abs(delta) < 2.0:
             # dont do anything if within a certain range
             pass
 

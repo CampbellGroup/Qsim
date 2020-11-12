@@ -19,6 +19,8 @@ class heralded_state_preparation(pulse_sequence):
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_1_power'),
+        ('ddsDefaults', 'repump_976_freq'),
+        ('ddsDefaults', 'repump_976_power'),
         ('ddsDefaults', 'metastable_qubit_dds_freq'),
         ('ddsDefaults', 'metastable_qubit_dds_power'),
         ('ddsDefaults', 'DP369_freq')
@@ -57,7 +59,11 @@ class heralded_state_preparation(pulse_sequence):
         self.addTTL('976SP',
                     self.start,
                     p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration)
-
+        self.addDDS('976SP',
+                    self.start,
+                    p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
+                    p.ddsDefaults.repump_976_freq,
+                    p.ddsDefaults.repump_976_power)
         self.addDDS('369DP',
                     self.start + p.Pi_times.metastable_qubit,
                     p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,

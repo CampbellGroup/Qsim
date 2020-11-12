@@ -15,16 +15,30 @@ class high_fidelity_measurement(QsimExperiment):
     name = 'High Fidelity Measurement'
 
     exp_parameters = []
+    hidden_parameters = [
+        ('MicrowaveInterrogation', 'duration'),
+        ('MicrowaveInterrogation', 'detuning'),
+        ('Shelving_Doppler_Cooling', 'record_timetags'),
+        ('MicrowaveInterrogation', 'microwave_phase'),
+        ('MicrowaveInterrogation', 'power'),
+        ('Deshelving', 'power1'),
+        ('Deshelving', 'power2'),
+        ('Deshelving', 'repump_power')
+    ]
 
     exp_parameters.append(('HighFidelityMeasurement', 'sequence_iterations'))
 
     exp_parameters.extend(bright_sequence.all_required_parameters())
     exp_parameters.extend(dark_sequence.all_required_parameters())
 
+    #for hidden_param in hidden_parameters:
+    #    exp_parameters.remove(hidden_param)
+
     def initialize(self, cxn, context, ident):
         self.ident = ident
         self.pulser = cxn.pulser
         self.context = context
+        self.hist_mean = 0.0
 
     def run(self, cxn, context):
 
@@ -33,16 +47,10 @@ class high_fidelity_measurement(QsimExperiment):
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
-        self.p['Line_Selection.qubit'] = 'qubit_0'
-        self.pi_time = self.p.Pi_times.qubit_0
-        self.p['MicrowaveInterrogation.duration'] = self.pi_time
-        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
-        self.p['Modes.state_detection_mode'] = 'Shelving'
-        self.p['Shelving_Doppler_Cooling.record_timetags'] = 'On'
+        self.set_fixed_params()
+        self.setup_high_fidelity_datavault()
 
         self.reps = self.p.ShelvingStateDetection.repetitions
-
-        self.setup_high_fidelity_datavault()
 
         counts_dop_bright = []
         counts_dop_dark = []
@@ -100,9 +108,31 @@ class high_fidelity_measurement(QsimExperiment):
             self.plot_hist(hist_bright, folder_name='Shelving_Histogram')
             self.plot_hist(hist_dark, folder_name='Shelving_Histogram')
 
+            # this part of the loop checks the detection counts to make sure cavity isnt drifting
+            if i == 1:
+                self.hist_mean = np.mean(countsBright)
+                print('mean detection counts on first experiment is  = ' + str(self.hist_mean))
+            elif i > 1:
+                if np.mean(countsBright) < self.hist_mean - 10:
+                    print(str(np.mean(countsBright)) + ' bright state counts, cavity drifting red, killing experiment')
+                    break
+                elif np.mean(countsBright) > self.hist_mean + 10:
+                    print(str(np.mean(countsBright)) + ' bright state counts, Cavity drifting blue, killing experiment')
+                    break
+
         self.save_counts_and_timetags(counts_det_bright, counts_dop_bright, counts_det_dark, counts_dop_dark, tt_bright, tt_dark)
 
-
+    def set_fixed_params(self):
+        self.p['Line_Selection.qubit'] = 'qubit_0'
+        self.pi_time = self.p.Pi_times.qubit_0
+        self.p['MicrowaveInterrogation.duration'] = self.pi_time
+        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
+        self.p['MicrowaveInterrogation.microwave_phase'] = U(0.0, 'deg')
+        self.p['Modes.state_detection_mode'] = 'Shelving'
+        self.p['Shelving_Doppler_Cooling.record_timetags'] = 'On'
+        self.p['Deshelving.power1'] = self.p.ddsDefaults.repump_760_1_power
+        self.p['Deshelving.power2'] = self.p.ddsDefaults.repump_760_2_power
+        self.p['Deshelving.repump_power'] = self.p.ddsDefaults.repump_935_power
 
     def plot_prob(self, num, counts_dark, counts_bright):
         prob_dark = self.get_pop(counts_dark)
@@ -128,7 +158,7 @@ class high_fidelity_measurement(QsimExperiment):
         error mitigation by deleting the experiments after the identified experiment
         """
 
-        padding = 2
+        padding = 0
         bright_errors = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
         bright_delete = np.array([])
         for error in bright_errors[0]:

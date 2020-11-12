@@ -20,7 +20,11 @@ class optical_pumping(pulse_sequence):
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_freq'),
         ('ddsDefaults', 'repump_760_2_power'),
-        ('ddsDefaults', 'DP369_freq')
+        ('ddsDefaults', 'DP369_freq'),
+        ('ddsDefaults', 'SP411_power'),
+        ('ddsDefaults', 'SP411_freq'),
+        ('ddsDefaults', 'repump_976_freq'),
+        ('ddsDefaults', 'repump_976_power')
     ]
 
     def sequence(self):
@@ -79,15 +83,17 @@ class optical_pumping(pulse_sequence):
                         p.ddsDefaults.repump_760_2_freq,
                         p.ddsDefaults.repump_760_2_power)
 
-            self.addDDS('411DP',
+            self.addDDS('411SP',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration,
-                        U(200.0, 'MHz') + p.OpticalPumping.quadrupole_op_detuning,
-                        U(-6.8, 'dBm'))
+                        p.ddsDefaults.SP411_freq - p.OpticalPumping.quadrupole_op_detuning,
+                        p.ddsDefaults.SP411_power)
 
-            self.addTTL('976SP',
+            self.addDDS('976SP',
                         self.start,
-                        p.OpticalPumping.quadrupole_op_duration)
+                        p.OpticalPumping.quadrupole_op_duration,
+                        p.ddsDefaults.repump_976_freq,
+                        p.ddsDefaults.repump_976_power)
 
             self.end = self.start + p.OpticalPumping.quadrupole_op_duration
 
@@ -113,30 +119,32 @@ class optical_pumping(pulse_sequence):
 
             self.addDDS('935SP',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us'),
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(100.0, 'us'),
                         p.ddsDefaults.repump_935_freq,
                         p.OpticalPumping.repump_power)
 
             self.addDDS('760SP',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us'),
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(100.0, 'us'),
                         p.ddsDefaults.repump_760_1_freq,
                         p.ddsDefaults.repump_760_1_power)
 
             self.addDDS('760SP2',
                         self.start,
-                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us'),
+                        p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(100.0, 'us'),
                         p.ddsDefaults.repump_760_2_freq,
                         p.ddsDefaults.repump_760_2_power)
 
-            self.addDDS('411DP',
+            self.addDDS('411SP',
                         self.start + p.OpticalPumping.duration,
                         p.OpticalPumping.quadrupole_op_duration,
-                        U(200.0, 'MHz') + p.OpticalPumping.quadrupole_op_detuning,
-                        U(-6.8, 'dBm'))
+                        p.ddsDefaults.SP411_freq - p.OpticalPumping.quadrupole_op_detuning,
+                        p.ddsDefaults.SP411_power)
 
-            self.addTTL('976SP',
+            self.addDDS('976SP',
                         self.start,
-                        p.OpticalPumping.quadrupole_op_duration + p.OpticalPumping.duration + U(500.0, 'us'))
+                        p.OpticalPumping.quadrupole_op_duration + p.OpticalPumping.duration + U(100.0, 'us'),
+                        p.ddsDefaults.repump_976_freq,
+                        p.ddsDefaults.repump_976_power)
 
-            self.end = self.start + p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(500.0, 'us')
+            self.end = self.start + p.OpticalPumping.duration + p.OpticalPumping.quadrupole_op_duration + U(100.0, 'us')

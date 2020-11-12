@@ -9,10 +9,11 @@ class shelving(pulse_sequence):
         ('Shelving', 'repump_power'),
         ('Shelving', 'assist_laser'),
         ('Transitions', 'main_cooling_369'),
+        ('Transitions', 'quadrupole'),
         ('DopplerCooling', 'detuning'),
         ('OpticalPumping', 'detuning'),
-        ('ddsDefaults', 'SP411_freq'),
-        ('ddsDefaults', 'SP411_power'),
+        ('ddsDefaults', 'DP411_freq'),
+        ('ddsDefaults', 'DP411_power'),
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_935_power'),
         ('ddsDefaults', 'doppler_cooling_freq'),
@@ -56,16 +57,14 @@ class shelving(pulse_sequence):
                             p.ddsDefaults.optical_pumping_freq,
                             p.ddsDefaults.optical_pumping_power)
 
-        self.addDDS('411SP',
+        self.addDDS('411DP',
                     self.start,
                     p.Shelving.duration,
-                    p.ddsDefaults.SP411_freq,
-                    p.ddsDefaults.SP411_power)
+                    p.ddsDefaults.DP411_freq - p.Transitions.quadrupole,  # minus sign reflects the way the quadrupole line scan exp is written
+                    p.ddsDefaults.DP411_power)
 
-        self.addDDS('935SP',
+        self.addTTL('861SP',
                     self.start,
-                    p.Shelving.duration,
-                    p.ddsDefaults.repump_935_freq,
-                    p.ddsDefaults.repump_935_power)
+                    p.Shelving.duration)
 
         self.end = self.start + p.Shelving.duration

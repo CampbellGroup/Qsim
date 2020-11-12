@@ -12,7 +12,6 @@ class deshelving(pulse_sequence):
         ('DopplerCooling', 'detuning'),
         ('Transitions', 'main_cooling_369'),
         ('Deshelving', 'repump_power'),
-        ('MicrowaveInterrogation', 'power'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
