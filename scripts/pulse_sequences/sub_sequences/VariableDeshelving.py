@@ -17,6 +17,8 @@ class variable_deshelving(pulse_sequence):
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_2_freq'),
+        ('ddsDefaults', 'repump_976_freq'),
+        ('ddsDefaults', 'repump_976_power'),
         ('ddsDefaults', 'DP369_freq')
     ]
 
@@ -53,8 +55,10 @@ class variable_deshelving(pulse_sequence):
                     p.ddsDefaults.repump_760_2_freq,
                     p.Deshelving.power2)
 
-        self.addTTL('976SP',
+        self.addDDS('976SP',
                     self.start,
-                    p.VariableDeshelving.duration)
+                    p.VariableDeshelving.duration,
+                    p.ddsDefaults.repump_976_freq,
+                    p.ddsDefaults.repump_976_power)
 
         self.end = self.start + p.VariableDeshelving.duration

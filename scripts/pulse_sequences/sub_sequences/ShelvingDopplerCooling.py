@@ -9,8 +9,6 @@ class shelving_doppler_cooling(pulse_sequence):
         ('DopplerCooling', 'repump_power'),
         ('DopplerCooling', 'detuning'),
         ('Shelving_Doppler_Cooling', 'duration'),
-        ('Shelving_Doppler_Cooling', 'doppler_counts_threshold'),
-        ('Shelving_Doppler_Cooling', 'record_timetags'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),

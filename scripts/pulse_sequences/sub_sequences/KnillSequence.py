@@ -8,15 +8,16 @@ class knill(pulse_sequence):
     """
 
     required_parameters = [
-                           ('MicrowaveInterrogation', 'duration'),
-                           ('MicrowaveInterrogation', 'detuning'),
-                           ('MicrowaveInterrogation', 'power'),
-                           ('Line_Selection', 'qubit'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus'),
-                           ('ddsDefaults', 'qubit_dds_freq')
-                           ]
+        ('MicrowaveInterrogation', 'duration'),
+        ('MicrowaveInterrogation', 'detuning'),
+        ('MicrowaveInterrogation', 'power'),
+        ('MicrowaveInterrogation', 'ttl_switch_delay'),
+        ('Line_Selection', 'qubit'),
+        ('Transitions', 'qubit_0'),
+        ('Transitions', 'qubit_plus'),
+        ('Transitions', 'qubit_minus'),
+        ('ddsDefaults', 'qubit_dds_freq')
+       ]
 
     def sequence(self):
         p = self.parameters
@@ -32,7 +33,7 @@ class knill(pulse_sequence):
             center = p.Transitions.qubit_minus
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
-        pulse_delay = U(800.0, 'us')
+        pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
         # pulse 1
         self.addTTL('MicrowaveTTL',

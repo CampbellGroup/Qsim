@@ -64,12 +64,12 @@ class MicrowaveRamseyExperiment(QsimExperiment):
         if scan_parameter == "delay_time":
             self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
             self.setup_grapher('Microwave Ramsey Experiment')
-            self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, 'us')
+            self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, 'ms')
             for i, dark_time in enumerate(self.dark_time):
                 should_break = self.update_progress(i/float(len(self.dark_time)))
                 if should_break:
                     break
-                self.p['EmptySequence.duration'] = U(dark_time, 'us')
+                self.p['EmptySequence.duration'] = U(dark_time, 'ms')
                 self.program_pulser(sequence)
                 if mode == 'Shelving':
                     [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)

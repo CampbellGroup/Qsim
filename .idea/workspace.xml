@@ -27,19 +27,15 @@
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="added a lot of metastable qubit related code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Linescan/quadrupole_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Linescan/quadrupole_linescan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Rabi_Flopping/quadrupole_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Rabi_Flopping/quadrupole_rabi_flopping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Ramsey_Experiment/microwave_ramsey_experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Ramsey_Experiment/microwave_ramsey_experiment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/quadrupole_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/quadrupole_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/KnillSequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveSequenceStandard.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/QuadrupoleInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/QuadrupoleInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock_server/cavity_piezo_lock_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock_server/cavity_piezo_lock_server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SpinEchoSequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" afterDir="false" />
@@ -105,13 +101,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00029" summary="attempting to save timetags that we deem to be errors to datavault">
-      <created>1584378981532</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1584378981532</updated>
     </task>
     <task id="LOCAL-00030" summary="made all hardcoded dds frequencies and powers stored in parameter vault. now each sub sequence has a set of dds default parameters it imports from PV and are easily changeable if the RF requirements for the DDS change">
       <created>1584406114508</created>
@@ -449,7 +438,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604419564147</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="removed old unused versions of the QsimGUI">
+      <created>1605201980299</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1605201980301</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -465,7 +461,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added docstring" />
     <MESSAGE value="fixed accidental deletion in qsimexperiment.py" />
     <MESSAGE value="added in pi_time feedback to the rabi_point_tracking experiment for testing. Might implement in the shelving experiment. &#10;&#10;Also removed the drift tracking code that has been commented out for a while. We have been manually drift tracking." />
     <MESSAGE value="BUG FIX: when drift tracking, if you reprogram the initial sequence after you perform drift tracking, but attempt to stop the experiment before running the programmed sequence, the pulser will freeze and you lose control over the pulser!!!" />
@@ -490,22 +485,24 @@
     <MESSAGE value="added a lot of metastable qubit related code: added a heralded fidelity tweak up experiment, some ramsey experiments" />
     <MESSAGE value="added a lot of metastable qubit related code&#10;-- added lots of conditional-logic esque experiments" />
     <MESSAGE value="main big change is the addition of a dds default center frequency for the 369 double pass" />
-    <option name="LAST_COMMIT_MESSAGE" value="main big change is the addition of a dds default center frequency for the 369 double pass" />
+    <MESSAGE value="removed old unused versions of the QsimGUI" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed old unused versions of the QsimGUI" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2159" y="165" width="868" height="829" key="CommitChangelistDialog2" timestamp="1604968766970">
+    <state x="2159" y="165" width="747" height="891" key="CommitChangelistDialog2" timestamp="1605201980180">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2159" y="165" width="845" height="803" key="CommitChangelistDialog2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604968766970" />
+    <state x="2159" y="165" width="747" height="891" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080/3840.0.1920.1080@1920.0.1920.1080" timestamp="1605201980180" />
     <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl" timestamp="1598974865674">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2657" y="282" width="424" height="510" key="FileChooserDialogImpl/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1598974865674" />
-    <state x="2672" y="398" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1604419589952">
+    <state x="2672" y="398" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1605201991305">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2672" y="398" width="879" height="444" key="Vcs.Push.Dialog.v2/0.0.1920.1053/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604419589952" />
-    <state x="627" y="332" key="Vcs.Push.Dialog.v2/0.900.1920.1080/0.0.1600.900@0.0.1600.900" timestamp="1596222549054" />
+    <state x="2672" y="398" key="Vcs.Push.Dialog.v2/0.27.1920.1053/1920.0.1920.1080/3840.0.1920.1080@1920.0.1920.1080" timestamp="1605201991305" />
     <state x="3026" y="184" width="814" height="1038" key="dock-window-1" timestamp="1603919698250">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>

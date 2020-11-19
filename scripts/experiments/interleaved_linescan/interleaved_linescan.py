@@ -18,7 +18,7 @@ class InterleavedLinescan(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(('InterleavedLinescan', 'repititions'))
     exp_parameters.append(('InterleavedLinescan', 'line_scan'))
-
+    exp_parameters.append(('HighFidelityMeasurement', 'drift_tracking'))
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
@@ -37,13 +37,19 @@ class InterleavedLinescan(QsimExperiment):
         self.setup_datavault('frequency', 'photons')  # gives the x and y names to Data Vault
         self.setup_grapher('Interleaved Linescan')
         self.detunings = self.get_scan_list(self.p.InterleavedLinescan.line_scan, 'MHz')
+        return_detuning, return_counts = [], []
         for i, detuning in enumerate(self.detunings):
-            should_break = self.update_progress(i/float(len(self.detunings)))
-            if should_break:
-                return should_break
+            if self.p.HighFidelityMeasurement.drift_tracking == 'Off':
+                should_break = self.update_progress(i/float(len(self.detunings)))
+                if should_break:
+                    return should_break
             # self.p.Transitions.main_cooling_369 divide by 2 for the double pass
             freq = WithUnit(detuning, 'MHz')/2.0 + self.p.ddsDefaults.DP369_freq
-            self.program_pulser(freq, detuning)
+            track_detuning, track_counts = self.program_pulser(freq, detuning)
+            return_detuning.append(track_detuning)
+            return_counts.append(track_counts)
+
+        return return_detuning, return_counts
 
     def program_pulser(self, freq, detuning):
         self.p['DipoleInterogation.frequency'] = freq
@@ -56,6 +62,7 @@ class InterleavedLinescan(QsimExperiment):
         counts = len(time_tags)
         self.pulser.reset_timetags()
         self.dv.add(detuning, counts)
+        return detuning, counts
 
 #    def map_power(self, power, freq):
 #        low = 0.0

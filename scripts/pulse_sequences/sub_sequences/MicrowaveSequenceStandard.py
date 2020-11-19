@@ -11,6 +11,7 @@ class microwave_sequence_standard(pulse_sequence):
         ('MicrowaveInterrogation', 'detuning'),
         ('MicrowaveInterrogation', 'power'),
         ('MicrowaveInterrogation', 'microwave_phase'),
+        ('MicrowaveInterrogation', 'ttl_switch_delay'),
         ('Line_Selection', 'qubit'),
         ('Transitions', 'qubit_0'),
         ('Transitions', 'qubit_plus'),
@@ -33,7 +34,7 @@ class microwave_sequence_standard(pulse_sequence):
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
 
-        pulse_delay = U(100.0, 'us')
+        pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
         self.addTTL('MicrowaveTTL',
                     self.start + pulse_delay,

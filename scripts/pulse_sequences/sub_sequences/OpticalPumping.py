@@ -41,7 +41,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('369DP',
                         self.start,
                         p.OpticalPumping.duration,
-                        p.Transitions.main_cooling_369/2 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning/2.0,
+                        p.Transitions.main_cooling_369/2 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning/2.0 - U(10.0, 'MHz')/2.0,
                         p.OpticalPumping.power)
 
             self.addDDS('935SP',
@@ -86,7 +86,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('411SP',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration,
-                        p.ddsDefaults.SP411_freq - p.OpticalPumping.quadrupole_op_detuning,
+                        p.ddsDefaults.SP411_freq - p.OpticalPumping.quadrupole_op_detuning/2.0,
                         p.ddsDefaults.SP411_power)
 
             self.addDDS('976SP',
@@ -107,15 +107,10 @@ class optical_pumping(pulse_sequence):
             self.addDDS('369DP',
                         self.start,
                         p.OpticalPumping.duration,
-                        p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning/2.0,
+                        p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning/2.0 - U(10.0, 'MHz')/2.0,
                         p.OpticalPumping.power)
 
             # explicitly turn off the double pass during quadrupole optical pumping
-            self.addDDS('369DP',
-                        self.start + p.OpticalPumping.duration,
-                        p.OpticalPumping.quadrupole_op_duration,
-                        U(200.0, 'MHz'),
-                        U(-46.0, 'dBm'))
 
             self.addDDS('935SP',
                         self.start,
@@ -138,7 +133,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('411SP',
                         self.start + p.OpticalPumping.duration,
                         p.OpticalPumping.quadrupole_op_duration,
-                        p.ddsDefaults.SP411_freq - p.OpticalPumping.quadrupole_op_detuning,
+                        p.ddsDefaults.SP411_freq - p.OpticalPumping.quadrupole_op_detuning/2.0,
                         p.ddsDefaults.SP411_power)
 
             self.addDDS('976SP',

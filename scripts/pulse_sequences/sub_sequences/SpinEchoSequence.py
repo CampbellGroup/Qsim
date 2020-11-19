@@ -11,6 +11,7 @@ class spin_echo(pulse_sequence):
         ('MicrowaveInterrogation', 'duration'),
         ('MicrowaveInterrogation', 'detuning'),
         ('MicrowaveInterrogation', 'power'),
+        ('MicrowaveInterrogation', 'ttl_switch_delay'),
         ('Line_Selection', 'qubit'),
         ('Transitions', 'qubit_0'),
         ('Transitions', 'qubit_plus'),
@@ -33,7 +34,7 @@ class spin_echo(pulse_sequence):
             center = p.Transitions.qubit_minus
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
-        pulse_delay = U(500.0, 'us')
+        pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
         # Pi/2 around X
         self.addTTL('MicrowaveTTL',
