@@ -9,16 +9,16 @@ class quadrupole_interrogation(pulse_sequence):
         ('QuadrupoleInterrogation', 'detuning'),
         ('QuadrupoleInterrogation', 'power'),
         ('Transitions', 'quadrupole'),
-        ('ddsDefaults', 'DP411_freq')
+        ('ddsDefaults', 'DP1_411_freq')
     ]
 
     def sequence(self):
         p = self.parameters
 
         center = p.Transitions.quadrupole
-        DDS_freq = p.ddsDefaults.DP411_freq - (p.QuadrupoleInterrogation.detuning + center)/2.0
+        DDS_freq = p.ddsDefaults.DP1_411_freq + (p.QuadrupoleInterrogation.detuning + center)/2.0
 
-        self.addDDS('411DP',
+        self.addDDS('411DP1',
                     self.start,
                     p.QuadrupoleInterrogation.duration,
                     DDS_freq,

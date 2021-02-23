@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class heralded_state_preparation(pulse_sequence):
+class heralded_four_preparation(pulse_sequence):
 
     required_parameters = [
         ('MetastableStateDetection', 'duration'),
@@ -23,8 +23,9 @@ class heralded_state_preparation(pulse_sequence):
         ('ddsDefaults', 'repump_976_power'),
         ('ddsDefaults', 'metastable_qubit_dds_freq'),
         ('ddsDefaults', 'metastable_qubit_dds_power'),
-        ('ddsDefaults', 'DP369_freq')
-
+        ('ddsDefaults', 'DP369_freq'),
+        ('ddsDefaults', 'protection_beam_freq'),
+        ('ddsDefaults', 'protection_beam_power'),
     ]
 
     def sequence(self):
@@ -56,14 +57,12 @@ class heralded_state_preparation(pulse_sequence):
                     p.ddsDefaults.repump_935_freq,
                     p.MetastableStateDetection.repump_power)
 
-        self.addTTL('976SP',
-                    self.start,
-                    p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration)
         self.addDDS('976SP',
                     self.start,
                     p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
                     p.ddsDefaults.repump_976_freq,
                     p.ddsDefaults.repump_976_power)
+
         self.addDDS('369DP',
                     self.start + p.Pi_times.metastable_qubit,
                     p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
@@ -75,5 +74,11 @@ class heralded_state_preparation(pulse_sequence):
                     p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
                     p.ddsDefaults.doppler_cooling_freq,
                     p.ddsDefaults.doppler_cooling_power)
+
+        self.addDDS('ProtectionBeam',
+                    self.start + p.Pi_times.metastable_qubit,
+                    p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
+                    p.ddsDefaults.protection_beam_freq,
+                    p.ddsDefaults.protection_beam_power)
 
         self.end = self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration

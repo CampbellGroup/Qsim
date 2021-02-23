@@ -6,10 +6,10 @@ from Qsim.scripts.pulse_sequences.sub_sequences.MetastableMicrowaveKnillSequence
 class metastable_microwave_interrogation(pulse_sequence):
 
     required_parameters = [
-        ('MetastableMicrowaveInterrogation', 'duration'),
-        ('MetastableMicrowaveInterrogation', 'detuning'),
-        ('MetastableMicrowaveInterrogation', 'power'),
-        ('MetastableMicrowaveInterrogation', 'pulse_sequence'),
+        ('Metastable_Microwave_Interrogation', 'duration'),
+        ('Metastable_Microwave_Interrogation', 'detuning'),
+        ('Metastable_Microwave_Interrogation', 'power'),
+        ('Metastable_Microwave_Interrogation', 'pulse_sequence'),
         ('Transitions', 'MetastableQubit'),
         ('ddsDefaults', 'metastable_qubit_dds_freq'),
         ('ddsDefaults', 'metastable_qubit_dds_power'),
@@ -21,8 +21,8 @@ class metastable_microwave_interrogation(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        if p.MetastableMicrowaveInterrogation.pulse_sequence == 'Standard':
+        if p.Metastable_Microwave_Interrogation.pulse_sequence == 'Standard':
             self.addSequence(metastable_microwave_sequence_standard)
 
-        if p.MetastableMicrowaveInterrogation.pulse_sequence == 'Knill':
+        if p.Metastable_Microwave_Interrogation.pulse_sequence == 'Knill':
             self.addSequence(metastable_microwave_knill_sequence)

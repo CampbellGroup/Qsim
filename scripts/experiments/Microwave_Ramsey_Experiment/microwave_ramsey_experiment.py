@@ -43,8 +43,6 @@ class MicrowaveRamseyExperiment(QsimExperiment):
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
-        init_optical_pumping_method = self.p['OpticalPumping.method']
-
         scan_parameter = self.p.MicrowaveRamsey.scan_type
         mode = self.p.Modes.state_detection_mode
 
@@ -57,8 +55,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
 
         elif qubit == 'qubit_minus':
             pi_time = self.p.Pi_times.qubit_minus
-        self.p['OpticalPumping.method'] = 'Standard'
-        self.p['MicrowaveInterrogation.duration'] = pi_time/2.0
+
         self.p['MicrowaveInterrogation.detuning'] = self.p.MicrowaveRamsey.detuning
 
         if scan_parameter == "delay_time":
@@ -97,7 +94,7 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                 self.program_pulser(sequence)
                 if mode == 'Shelving':
                     [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
-                    errors = np.where(doppler_counts <= self.p.ShelvingDopplerCooling.doppler_counts_threshold)
+                    errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                     counts = np.delete(detection_counts, errors)
                 else:
                     [counts] = self.run_sequence()
@@ -105,10 +102,9 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                     hist = self.process_data(counts)
                     self.plot_hist(hist)
                 pop = self.get_pop(counts)
+                print(len(counts))
                 print(str(phase) + ' deg , ' + str(pop) + 'population')
                 self.dv.add(phase, pop)
-
-        self.p['OpticalPumping.method'] = init_optical_pumping_method
 
     def finalize(self, cxn, context):
         self.pulser.line_trigger_state(False)

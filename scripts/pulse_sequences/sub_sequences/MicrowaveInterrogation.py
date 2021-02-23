@@ -3,9 +3,19 @@ from Qsim.scripts.pulse_sequences.sub_sequences.KnillSequence import knill
 from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveSequenceStandard import microwave_sequence_standard
 from Qsim.scripts.pulse_sequences.sub_sequences.BB1Sequence import bb1
 from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoSequence import spin_echo
-from Qsim.scripts.pulse_sequences.sub_sequences.KnillPulseAreaCorrective import knill_pulse_area_correcting_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveSequenceStandardHPOnly import microwave_sequence_standard_hp_only
+from Qsim.scripts.pulse_sequences.sub_sequences.SuMicrowaveSequence import su_sequence
 
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.standard_pi_pulse import standard_pi_pulse_clock
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.standard_pi_pulse import standard_pi_pulse_plus
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.standard_pi_pulse import standard_pi_pulse_minus
+
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.knill_pi_pulse import knill_pi_pulse_clock
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.knill_pi_pulse import knill_pi_pulse_plus
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.knill_pi_pulse import knill_pi_pulse_minus
+
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse import spin_echo_pi_pulse_clock
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse import spin_echo_pi_pulse_plus
+from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse import spin_echo_pi_pulse_minus
 
 class microwave_interrogation(pulse_sequence):
 
@@ -26,8 +36,10 @@ class microwave_interrogation(pulse_sequence):
         ('MicrowaveInterrogation', 'repetitions')
     ]
     required_subsequences = [knill, microwave_sequence_standard, bb1,
-                             spin_echo, knill_pulse_area_correcting_sequence,
-                              microwave_sequence_standard_hp_only]
+                             spin_echo, su_sequence,
+                             standard_pi_pulse_plus, standard_pi_pulse_clock, standard_pi_pulse_minus,
+                             knill_pi_pulse_plus, knill_pi_pulse_clock, knill_pi_pulse_minus,
+                             spin_echo_pi_pulse_plus, spin_echo_pi_pulse_clock, spin_echo_pi_pulse_minus]
 
     def sequence(self):
         p = self.parameters
@@ -44,8 +56,22 @@ class microwave_interrogation(pulse_sequence):
         elif p.MicrowaveInterrogation.pulse_sequence == 'SpinEcho':
             self.addSequence(spin_echo)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'KnillPulseAreaCorrecting':
-            self.addSequence(knill_pulse_area_correcting_sequence)
+        elif p.MicrowaveInterrogation.pulse_sequence == 'SuSequence':
+            self.addSequence(su_sequence)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'HPOnlyNoMixing':
-            self.addSequence(microwave_sequence_standard_hp_only)
+        elif p.MicrowaveInterrogation.pulse_sequence == 'DoubleStandard':
+            self.addSequence(standard_pi_pulse_clock)
+            self.addSequence(standard_pi_pulse_minus)
+
+        elif p.MicrowaveInterrogation.pulse_sequence == 'DoubleKnill':
+            self.addSequence(knill_pi_pulse_clock)
+            self.addSequence(knill_pi_pulse_minus)
+
+        elif p.MicrowaveInterrogation.pulse_sequence == 'DoubleSpinEcho':
+            self.addSequence(spin_echo_pi_pulse_clock)
+            self.addSequence(spin_echo_pi_pulse_minus)
+
+        elif p.MicrowaveInterrogation.pulse_sequence == 'ClockStandard_KnillZeeman':
+            self.addSequence(standard_pi_pulse_clock)
+            self.addSequence(knill_pi_pulse_minus)
+

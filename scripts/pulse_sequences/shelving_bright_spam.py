@@ -4,16 +4,18 @@ from sub_sequences.ShelvingStateDetection import shelving_state_detection
 from sub_sequences.Shelving import shelving
 from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.Deshelving import deshelving
+from sub_sequences.TurnOffAll import turn_off_all
 
 
 class shelving_bright_spam(pulse_sequence):
     required_subsequences = [shelving, shelving_doppler_cooling, shelving_state_detection, deshelving,
-                             optical_pumping]
+                             optical_pumping, turn_off_all]
 
     required_parameters = [
     ]
 
     def sequence(self):
+        self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)
         self.addSequence(optical_pumping)
         self.addSequence(shelving)

@@ -16,7 +16,9 @@ class metastable_state_detection(pulse_sequence):
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_760_1_freq'),
         ('ddsDefaults', 'repump_760_1_power'),
-        ('ddsDefaults', 'DP369_freq')
+        ('ddsDefaults', 'DP369_freq'),
+        ('ddsDefaults', 'repump_976_power'),
+        ('ddsDefaults', 'repump_976_freq')
     ]
 
     def sequence(self):
@@ -30,9 +32,11 @@ class metastable_state_detection(pulse_sequence):
                     p.ddsDefaults.repump_760_1_freq,
                     p.ddsDefaults.repump_760_1_power)
 
-        self.addTTL('976SP',
+        self.addDDS('976SP',
                     self.start,
-                    p.MetastableStateDetection.deshelving_duration + p.MetastableStateDetection.duration)
+                    p.MetastableStateDetection.deshelving_duration + p.MetastableStateDetection.duration,
+                    p.ddsDefaults.repump_976_freq,
+                    p.ddsDefaults.repump_976_power)
 
         self.addDDS('935SP',
                     self.start,

@@ -21,6 +21,8 @@ class optical_pumping_point(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
+        self.addSequence(turn_off_all)
+
         if p.OpticalPumping.method == 'Standard':
             self.addSequence(doppler_cooling)
             self.addSequence(optical_pumping)

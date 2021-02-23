@@ -29,7 +29,7 @@ class ShelvingRate(QsimExperiment):
 
     def run(self, cxn, context):
         self.setup_datavault('time', 'probability')
-        self.setup_grapher('ShelvingRate')
+        self.setup_grapher('Shelving')
         self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
         self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Shelving'
@@ -44,7 +44,7 @@ class ShelvingRate(QsimExperiment):
             deshelving_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             detection_counts = np.delete(detection_counts, deshelving_errors)
             hist = self.process_data(detection_counts)
-            self.plot_hist(hist)
+            self.plot_hist(hist, folder_name='Shelving_Histogram')
             pop = self.get_pop(detection_counts)
             self.dv.add(duration, pop)
 

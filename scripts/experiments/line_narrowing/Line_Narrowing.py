@@ -44,8 +44,9 @@ class Line_Narrowing(QsimExperiment):
         for i, step in enumerate(x_values):
             self.multipoles[self.multipole_index] = step
             self.mps.set_multipoles(self.multipoles)
-            should_break = self.linescan.run(cxn, context)
+            detuning, counts = self.linescan.run(cxn, context)
             self.linescan.dv.add_parameter(self.multipole_direction, step)
+            should_break = self.update_progress(i/float(len(x_values)))
             if should_break:
                 return should_break
 

@@ -33,8 +33,8 @@ class metastable_fidelity_tweak_up(QsimExperiment):
         self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
         self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
 
-        self.p['MetastableMicrowaveInterrogation.duration'] = self.p.Pi_times.metastable_qubit
-        self.p['MetastableMicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
+        self.p['Metastable_Microwave_Interrogation.duration'] = self.p.Pi_times.metastable_qubit
+        self.p['Metastable_Microwave_Interrogation.detuning'] = U(0.0, 'kHz')
 
         self.p['Modes.state_detection_mode'] = 'Shelving'
 
@@ -51,10 +51,11 @@ class metastable_fidelity_tweak_up(QsimExperiment):
             # programs and runs the bright state sequence, then creates an array with exp number, detection
             # counts, and doppler counts to be saved to datavault
             self.program_pulser(metastable_bright_sequence)
-            [counts_doppler_bright, counts_herald_bright, counts_bright] = self.run_sequence(max_runs=333, num=3)
-            failed_heralding_bright = np.where(counts_herald_bright >= self.p.ShelvingStateDetection.state_readout_threshold)
+            [counts_doppler_bright, counts_herald_bright_1, counts_herald_bright_2,  counts_bright] = self.run_sequence(max_runs=250, num=4)
+            failed_four_heralding_bright = np.where(counts_herald_bright_1 >= self.p.ShelvingStateDetection.state_readout_threshold)
+            failed_three_heralding_bright = np.where(counts_herald_bright_2 >= self.p.ShelvingStateDetection.state_readout_threshold)
             doppler_errors_bright = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-            all_bright_errors = np.unique(np.concatenate((failed_heralding_bright[0], doppler_errors_bright[0])))
+            all_bright_errors = np.unique(np.concatenate((failed_three_heralding_bright[0], failed_four_heralding_bright[0], doppler_errors_bright[0])))
             counts_bright_fixed = np.delete(counts_bright, all_bright_errors)
 
 

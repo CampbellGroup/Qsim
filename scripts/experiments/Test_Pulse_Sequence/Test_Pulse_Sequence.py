@@ -27,15 +27,17 @@ class TestPulseSequence(QsimExperiment):
             should_break = self.update_progress(np.random.rand())
             if should_break:
                 break
-
             self.program_pulser(sequence)
-            self.run_test_sequence()
+            counts = self.run_test_sequence()
+            print counts
             i += 1
 
     def run_test_sequence(self):
         self.pulser.start_number(100)
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()
+        counts = self.pulser.get_readout_counts()
+        return counts
 
 
 if __name__ == '__main__':

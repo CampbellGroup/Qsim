@@ -26,6 +26,8 @@ class microwave_point(pulse_sequence):
         p = self.parameters
         mode = p.Modes.state_detection_mode
 
+        self.addSequence(turn_off_all)
+
         if mode == 'Standard':
             self.addSequence(doppler_cooling)
             self.addSequence(optical_pumping)

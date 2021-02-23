@@ -9,6 +9,7 @@ class shelving_doppler_cooling(pulse_sequence):
         ('DopplerCooling', 'repump_power'),
         ('DopplerCooling', 'detuning'),
         ('Shelving_Doppler_Cooling', 'duration'),
+        ('Shelving_Doppler_Cooling', 'doppler_counts_threshold'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
@@ -18,7 +19,9 @@ class shelving_doppler_cooling(pulse_sequence):
         ('ddsDefaults', 'repump_760_2_freq'),
         ('ddsDefaults', 'repump_760_2_power'),
         ('ddsDefaults', 'qubit_dds_freq'),
-        ('ddsDefaults', 'DP369_freq')
+        ('ddsDefaults', 'DP369_freq'),
+        ('ddsDefaults', 'protection_beam_freq'),
+        ('ddsDefaults', 'protection_beam_power')
     ]
 
     def sequence(self):
@@ -53,6 +56,12 @@ class shelving_doppler_cooling(pulse_sequence):
                     p.Shelving_Doppler_Cooling.duration,
                     p.ddsDefaults.repump_760_2_freq,
                     p.ddsDefaults.repump_760_2_power)
+
+        self.addDDS('ProtectionBeam',
+                    self.start,
+                    p.Shelving_Doppler_Cooling.duration,
+                    p.ddsDefaults.protection_beam_freq,
+                    p.ddsDefaults.protection_beam_power)
 
         self.addTTL('ReadoutCount',
                     self.start,

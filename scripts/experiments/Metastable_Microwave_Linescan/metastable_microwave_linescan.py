@@ -62,14 +62,16 @@ class MetastableMicrowaveLineScan(QsimExperiment):
             pi_time = self.p.Pi_times.qubit_minus
 
         self.p['MicrowaveInterrogation.duration'] = pi_time
-        self.p['MetastableMicrowaveInterrogation.duration'] = self.p.Pi_times.metastable_qubit
+        self.p['Metastable_Microwave_Interrogation.duration'] = self.p.Pi_times.metastable_qubit
         self.p['Modes.state_detection_mode'] = 'Shelving'
+
+        print(self.p['Metastable_Microwave_Interrogation.duration'])
 
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
                 break
-            self.p['MetastableMicrowaveInterrogation.detuning'] = U(detuning, 'kHz')
+            self.p['Metastable_Microwave_Interrogation.detuning'] = U(detuning, 'kHz')
             if self.p.MetastableStateDetection.herald_state_prep == 'Off':
                 self.program_pulser(sequence)
                 [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)

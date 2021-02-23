@@ -28,7 +28,7 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
 
     exp_parameters.extend(sequence.all_required_parameters())
 
-    exp_parameters.remove(('MetastableMicrowaveInterrogation', 'duration'))
+    exp_parameters.remove(('Metastable_Microwave_Interrogation', 'duration'))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -47,7 +47,7 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
             should_break = self.update_progress(i/float(len(self.times)))
             if should_break:
                 break
-            self.p['MetastableMicrowaveInterrogation.duration'] = U(duration, 'us')
+            self.p['Metastable_Microwave_Interrogation.duration'] = U(duration, 'us')
 #            self.program_pulser(sequence)
 #            [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
 #            errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)

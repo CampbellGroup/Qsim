@@ -20,8 +20,10 @@ class deshelving(pulse_sequence):
         ('ddsDefaults', 'qubit_dds_freq'),
         ('ddsDefaults', 'repump_976_freq'),
         ('ddsDefaults', 'repump_976_power'),
-        ('ddsDefaults', 'DP369_freq')
-                           ]
+        ('ddsDefaults', 'DP369_freq'),
+        ('ddsDefaults', 'protection_beam_freq'),
+        ('ddsDefaults', 'protection_beam_power')
+        ]
 
     def sequence(self):
         p = self.parameters
@@ -61,5 +63,11 @@ class deshelving(pulse_sequence):
                     p.Deshelving.duration,
                     p.ddsDefaults.repump_976_freq,
                     p.ddsDefaults.repump_976_power)
+
+        self.addDDS('ProtectionBeam',
+                    self.start,
+                    p.Deshelving.duration,
+                    p.ddsDefaults.protection_beam_freq,
+                    p.ddsDefaults.protection_beam_power)
 
         self.end = self.start + p.Deshelving.duration

@@ -4,9 +4,9 @@ from labrad.units import WithUnit as U
 class metastable_microwave_knill_sequence(pulse_sequence):
 
     required_parameters = [
-        ('MetastableMicrowaveInterrogation', 'duration'),
-        ('MetastableMicrowaveInterrogation', 'detuning'),
-        ('MetastableMicrowaveInterrogation', 'power'),
+        ('Metastable_Microwave_Interrogation', 'duration'),
+        ('Metastable_Microwave_Interrogation', 'detuning'),
+        ('Metastable_Microwave_Interrogation', 'power'),
         ('Transitions', 'MetastableQubit'),
         ('ddsDefaults', 'metastable_qubit_dds_freq'),
         ('ddsDefaults', 'metastable_qubit_dds_power'),

@@ -17,7 +17,9 @@ class shelving_state_detection(pulse_sequence):
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'qubit_dds_freq'),
-        ('ddsDefaults', 'DP369_freq')
+        ('ddsDefaults', 'DP369_freq'),
+        ('ddsDefaults', 'protection_beam_freq'),
+        ('ddsDefaults', 'protection_beam_power')
     ]
 
     def sequence(self):

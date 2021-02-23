@@ -1,6 +1,5 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveInterrogation import microwave_interrogation
-from Qsim.scripts.pulse_sequences.sub_sequences.DoubleMicrowaveInterrogation import double_microwave_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.OpticalPumping import optical_pumping
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.Hadamard import hadamard
 from labrad.units import WithUnit as U
@@ -25,7 +24,7 @@ class bright_state_pumping(pulse_sequence):
         ('ddsDefaults', 'repump_935_freq'),
                            ]
 
-    required_subsequences = [optical_pumping, microwave_interrogation, double_microwave_sequence,
+    required_subsequences = [optical_pumping, microwave_interrogation,
                              hadamard]
 
     def sequence(self):
@@ -70,8 +69,3 @@ class bright_state_pumping(pulse_sequence):
             for i in range(int(p.MicrowaveInterrogation.repetitions)):
                 p['MicrowaveInterrogation.microwave_phase'] = U(phases[i], 'deg')
                 self.addSequence(microwave_interrogation)
-
-        # double microwave is programmed separately b/c PI_times are hard coded, not variable
-        elif p.BrightStatePumping.bright_prep_method == 'Double_Microwave':
-            self.addSequence(optical_pumping)
-            self.addSequence(double_microwave_sequence)

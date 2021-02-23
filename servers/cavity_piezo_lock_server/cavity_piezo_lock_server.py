@@ -54,6 +54,7 @@ class cavity_piezo_lock_server(LabradServer):
         self.cxn = yield connectAsync('10.97.112.4', name=self.name, password=self.password)
         self.wavemeter = self.cxn.multiplexerserver
         self.piezo = yield self.cxn.piezo_server
+        self.sleep_time = 2.0
         self.piezo.select_device(0)
         self.set_point = yield self.wavemeter.get_frequency(1)
         self.lc.start(self.rate)
@@ -67,7 +68,7 @@ class cavity_piezo_lock_server(LabradServer):
         frequency_reading = yield self.wavemeter.get_frequency(1)
         delta = (frequency_reading - self.set_point)*1e6  # want the frequency in MHz for convenience
 
-        if time.time() < self.init_time + 5.0:
+        if time.time() < self.init_time + 2.0:
             print self.set_point
 
         if np.abs(delta) < 2.0:
@@ -93,6 +94,10 @@ class cavity_piezo_lock_server(LabradServer):
             elif set_voltage > self.max_voltage:
                 print 'Maximum voltage exceeded'
             time.sleep(self.sleep_time)
+
+        elif delta > 40.0:
+            self.lc.stop()
+            print('Laser is outside programmed bandwidth of lock, killing loop.')
 
     @setting(3014, 'get_voltage_history', returns='*2v[]')
     def get_voltage_history(self, c):

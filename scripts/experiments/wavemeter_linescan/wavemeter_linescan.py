@@ -113,17 +113,11 @@ class wavemeter_linescan(QsimExperiment):
             self.channel = 3
             self.dac_port = 6
 
-        elif self.p.wavemeterscan.lasername == '411':
+        elif self.p.wavemeterscan.lasername == '822':
             self.centerfrequency = self.p.Transitions.shelving_411
             self.scan_range = self.p.wavemeterscan.scan_range_411
-            self.channel = 1
+            self.channel = 3
             self.dac_port = 3
-
-        #elif self.p.wavemeterscan.lasername == '822':
-        #    self.centerfrequency = self.p.Transitions.shelving_411
-        #    self.scan_range = self.p.wavemeterscan.scan_range_411
-        #    self.channel = 1
-        #    self.dac_port = 3
 
         elif self.p.wavemeterscan.lasername == 'Hudson':
             self.centerfrequency = self.p.Transitions.Hudson

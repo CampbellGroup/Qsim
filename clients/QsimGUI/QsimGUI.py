@@ -152,7 +152,7 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.addWidget(cameraswitch(reactor, cxn),   2, 0, 1, 1)
         gridLayout.addWidget(switchclient(reactor, cxn),   0, 0, 1, 1)
         gridLayout.addWidget(dacclient(reactor, cxn),      0, 1, 2, 1)
-        gridLayout.addWidget(LoadControl(reactor),    2, 1, 2, 1)
+        gridLayout.addWidget(LoadControl(reactor),         2, 1, 2, 1)
 #        gridLayout.addWidget(LoadIndicator(reactor),       3, 1, 2, 1)
         gridLayout.setSpacing(1)
         widget.setLayout(gridLayout)

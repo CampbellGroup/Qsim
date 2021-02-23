@@ -45,7 +45,7 @@ class QsimExperiment(experiment):
         try:
             self.pulser = self.cxn.servers['pulser']
         except KeyError as error:
-            error_message = error + '\n' + "DataVault is not running"
+            error_message = error + '\n' + "Pulser is not running"
             raise KeyError(error_message)
 
         try:
@@ -126,6 +126,7 @@ class QsimExperiment(experiment):
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             self.pulser.reset_readout_counts()
+            self.pulser.reset_timetags()
 
         if int(reps) % max_runs != 0:
             runs = int(reps) % max_runs
@@ -134,6 +135,7 @@ class QsimExperiment(experiment):
             self.pulser.stop_sequence()
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             self.pulser.reset_readout_counts()
+            self.pulser.reset_timetags()
 
         # parse the photon counts for each call of ReadoutCount
         counts_parsed = []
@@ -161,6 +163,7 @@ class QsimExperiment(experiment):
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             tt = np.concatenate((tt, self.pulser.get_timetags()))
             self.pulser.reset_readout_counts()
+            self.pulser.reset_timetags()
 
         if int(reps) % max_runs != 0:
             runs = int(reps) % max_runs
@@ -170,12 +173,14 @@ class QsimExperiment(experiment):
             counts = np.concatenate((counts, self.pulser.get_readout_counts()))
             tt = np.concatenate((tt, self.pulser.get_timetags()))
             self.pulser.reset_readout_counts()
+            self.pulser.reset_timetags()
 
         # parse the photon counts for each call of ReadoutCount
         counts_parsed = []
         for i in range(num):
             counts_parsed.append(counts[i::num])
         return counts_parsed, [tt]
+
 
     def process_data(self, counts):
         bins = []
