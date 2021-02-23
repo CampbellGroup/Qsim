@@ -26,79 +26,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="added a lot of metastable qubit related code">
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/High_Fidelity_Dark_State_SPAM/High_Fidelity_Dark_State_SPAM.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/High_Fidelity_Dark_State_SPAM/Modules.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/High_Fidelity_Dark_State_SPAM/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/off_resonant_shelving_measurement/off_resonant_shelving_measurement.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/SuMicrowaveSequence.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../common/lib/servers/TPI1001B/TPI1001B.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Qsim.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Qsim.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clients/QsimGUI/QsimGUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/clients/QsimGUI/QsimGUI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Fidelity_Tweak_Up/metastable_fidelity_tweak_up.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Fidelity_Tweak_Up/metastable_fidelity_tweak_up.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Linescan/metastable_microwave_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Linescan/metastable_microwave_linescan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Rabi_Flopping/metastable_microwave_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Microwave_Rabi_Flopping/metastable_microwave_rabi_flopping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Microwave_Ramsey_Experiment/microwave_ramsey_experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Microwave_Ramsey_Experiment/microwave_ramsey_experiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Rabi_Flopping/quadrupole_rabi_flopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Quadrupole_Rabi_Flopping/quadrupole_rabi_flopping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Test_Pulse_Sequence/Test_Pulse_Sequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Test_Pulse_Sequence/Test_Pulse_Sequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/bf_fluorescence/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/bf_fluorescence/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/bf_fluorescence/bf_fluorescence.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_experiments/bf_fluorescence/bf_fluorescence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/deshelving_760/deshelving_760.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/deshelving_760/deshelving_760.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/high_fidelity_measurement/high_fidelity_measurement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/interleaved_linescan/interleaved_linescan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/line_narrowing/Line_Narrowing.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/line_narrowing/Line_Narrowing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/qsimexperiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/shelving_411/shelving_411.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/shelving_411/shelving_411.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/BrightStatePumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/bright_state_preparation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/dark_state_preparation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_ramsey_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/heralded_metastable_microwave_ramsey_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/interleaved_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/interleaved_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_four_preparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_four_preparation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_microwave_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_rabi_qnd_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_rabi_qnd_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_three_preparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_three_preparation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_ramsey_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/microwave_ramsey_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/optical_pumping_point.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/optical_pumping_point.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_bright_spam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/shelving_dark_spam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DipoleInterogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DipoleInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/DoubleMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/deprecated/deprecated_sub_sequences/DoubleMicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedStatePreparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/HeraldedFourPreparation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveKnillSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveKnillSequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveSequenceStandard.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableMicrowaveSequenceStandard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MetastableStateDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/MicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/OpticalPumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/QuadrupoleInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/QuadrupoleInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RamseyMicrowaveInterrogation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/RamseyMicrowaveInterrogation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingDopplerCooling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ShelvingStateDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TestSubSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/TestSubSequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/knill_pi_pulse.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/knill_pi_pulse.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/standard_pi_pulse.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/pi_pulses/standard_pi_pulse.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/test_sequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/test_sequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/cavity_piezo_lock_server/cavity_piezo_lock_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/cavity_piezo_lock_server/cavity_piezo_lock_server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/servers/Pulser2/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/Pulser2/api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/servers/Pulser2/pulse_sequences/pulse_sequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/Pulser2/pulse_sequences/pulse_sequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/servers/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/servers/piezo_server/Piezo_Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/piezo_server/Piezo_Server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/multiplexerclient_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/multiplexerclient_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/piezo_client_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/piezo_client_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/pulser/hardwareConfiguration.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/pulser/hardwareConfiguration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/scriptscanner_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/scriptscanner_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/switch_client_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/switch_client_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/laser_stability_monitor/laser_stability_monitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/laser_stability_monitor/laser_stability_monitor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
