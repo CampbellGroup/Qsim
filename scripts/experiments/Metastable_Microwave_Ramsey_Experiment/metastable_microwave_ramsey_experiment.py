@@ -43,12 +43,12 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
         if scan_parameter == "delay_time":
             self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
             self.setup_grapher('Metastable Microwave Ramsey Experiment')
-            self.dark_time = self.get_scan_list(self.p.MetastableMicrowaveRamsey.delay_time, 'us')
+            self.dark_time = self.get_scan_list(self.p.MetastableMicrowaveRamsey.delay_time, 'ms')
             for i, dark_time in enumerate(self.dark_time):
                 should_break = self.update_progress(i/float(len(self.dark_time)))
                 if should_break:
                     break
-                self.p['EmptySequence.duration'] = U(dark_time, 'us')
+                self.p['EmptySequence.duration'] = U(dark_time, 'ms')
 
                 if self.p.MetastableStateDetection.herald_state_prep == 'Off':
                     self.program_pulser(sequence)
@@ -81,7 +81,7 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
                 should_break = self.update_progress(i/float(len(self.phase_list)))
                 if should_break:
                     break
-                self.p['MetastableMicrowaveInterrogation.microwave_phase'] = U(phase, 'deg')
+                self.p['Metastable_Microwave_Interrogation.microwave_phase'] = U(phase, 'deg')
 
                 if self.p.MetastableStateDetection.herald_state_prep == 'Off':
                     self.program_pulser(sequence)

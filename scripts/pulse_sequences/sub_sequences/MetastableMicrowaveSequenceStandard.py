@@ -17,17 +17,12 @@ class metastable_microwave_sequence_standard(pulse_sequence):
     def sequence(self):
         p = self.parameters
         center = p.Transitions.MetastableQubit
-        DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq - (p.Metastable_Microwave_Interrogation.detuning + center)
-        #ttl_delay = U(3.0, 'us')
+        DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq + (p.Metastable_Microwave_Interrogation.detuning + center)/8.0
 
-        #self.addTTL('MetastableQubitTTL',
-        #            self.start + ttl_delay,
-        #            p.Metastable_Microwave_Interrogation.duration)
         self.addDDS('3GHz_qubit',
                     self.start,
                     p.Metastable_Microwave_Interrogation.duration,
                     DDS_freq,
                     p.ddsDefaults.metastable_qubit_dds_power)
-
 
         self.end = self.start + p.Metastable_Microwave_Interrogation.duration

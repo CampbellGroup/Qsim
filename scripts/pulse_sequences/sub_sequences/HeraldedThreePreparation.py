@@ -30,7 +30,7 @@ class heralded_three_preparation(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        qubitFreq = p.ddsDefaults.metastable_qubit_dds_freq - p.Transitions.MetastableQubit
+        qubitFreq = p.ddsDefaults.metastable_qubit_dds_freq + p.Transitions.MetastableQubit/8.0
 
         self.addTTL('ReadoutCount',
                     self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,

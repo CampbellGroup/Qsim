@@ -7,7 +7,7 @@ class metastable_ramsey_microwave_interrogation(pulse_sequence):
     required_parameters = [
         ('MetastableMicrowaveRamsey', 'detuning'),
         ('MetastableMicrowaveRamsey', 'cooling_lasers_during_microwaves'),
-        ('MetastableMicrowaveInterrogation', 'microwave_phase'),
+        ('Metastable_Microwave_Interrogation', 'microwave_phase'),
         ('DopplerCooling', 'cooling_power'),
         ('DopplerCooling', 'repump_power'),
         ('DopplerCooling', 'detuning'),
@@ -29,8 +29,7 @@ class metastable_ramsey_microwave_interrogation(pulse_sequence):
         center = p.Transitions.MetastableQubit
         pi_time = p.Pi_times.metastable_qubit
 
-        DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq - (p.MetastableMicrowaveRamsey.detuning + center)
-
+        DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq + (p.MetastableMicrowaveRamsey.detuning + center)/8.0
 
         self.addDDS('3GHz_qubit',
                     self.start,
@@ -44,7 +43,7 @@ class metastable_ramsey_microwave_interrogation(pulse_sequence):
                     pi_time/2.0,
                     DDS_freq,
                     p.ddsDefaults.metastable_qubit_dds_power,
-                    p.MetastableMicrowaveInterrogation.microwave_phase)
+                    p.Metastable_Microwave_Interrogation.microwave_phase/8.0)
 
         if p.MetastableMicrowaveRamsey.cooling_lasers_during_microwaves == 'On':
             self.addDDS('935SP',

@@ -28,7 +28,7 @@ class lasermonitor(QsimExperiment):
         self.wlm = self.cxnwlm.multiplexerserver
         self.wlm369 = self.cxn369.multiplexerserver
         # self.chan_dict = {'369': 1, '760_1': 5, '935': 4, '399': 1, '760_2': 3, '822': 2, '976': 7}
-        self.chan_dict = {'369': 1, '760_1': 5, '935': 4, '399': 1, '760_2': 3, '822': 3, '976': 7}
+        self.chan_dict = {'369': 1, '760_1': 5, '935': 4, '399': 1, '760_2': 2, '822': 3, '976': 7}
 
     def run(self, cxn, context):
 
@@ -87,8 +87,8 @@ class lasermonitor(QsimExperiment):
             # try to add the data to datavault in MHz
             try:
                 if self.p.LaserMonitor.laser == 'shelving lasers':
-                    self.dv.add(time.time()-self.inittime, 1e6*(freq-self.initfreq_760_1),
-                                1e6*(freq-self.initfreq_760_2), 1e6*(freq-self.initfreq_822), context=self.dv_context)
+                    self.dv.add(time.time()-self.inittime, 1e6*(freq_760_1-self.initfreq_760_1),
+                                1e6*(freq_760_2-self.initfreq_760_2), 1e6*(freq_822-self.initfreq_822), context=self.shelving_laser_context)
                 else:
                     self.dv.add(time.time() - self.inittime, 1e6*(freq - self.initfreq))
             except:
@@ -99,29 +99,15 @@ class lasermonitor(QsimExperiment):
 
     def setup_datavault(self, x_axis, y_axis):
         if self.p.LaserMonitor.laser == 'shelving lasers':
-            self.context_760_1 = self.dv.context()
-            self.dv.cd(['', self.name+'_760_1'], True, context=self.context_760_1)
-            self.dataset_760_1 = self.dv.new(self.name + '_760_1', [(x_axis, 'num')],
-                                            [(y_axis, '', 'num')], context=self.context_760_1)
-            for parameter in self.p:
-                self.dv.add_parameter(parameter, self.p[parameter], context=self.context_760_1)
 
-            self.context_760_2 = self.dv.context()
-            self.dv.cd(['', self.name+'_760_2'], True, context=self.context_760_2)
-            self.dataset_760_2 = self.dv.new(self.name+'_760_2', [(x_axis, 'num')],
-                                            [(y_axis, '', 'num')], context=self.context_760_2)
+            self.shelving_laser_context = self.dv.context()
+            self.dv.cd(['', self.name+'_shelving_lasers'], True, context=self.shelving_laser_context)
+            self.dataset = self.dv.new(self.name + '_shelving_lasers', [(x_axis, 'num')],
+                                            [(y_axis, '760_1', 'num'), (y_axis, '760_2', 'num'), (y_axis, '822', 'num')], 
+                                            context=self.shelving_laser_context)
             for parameter in self.p:
-                self.dv.add_parameter(parameter, self.p[parameter], context=self.context_760_2)
+                self.dv.add_parameter(parameter, self.p[parameter], context=self.shelving_laser_context)
 
-            self.context_822 = self.dv.context()
-            self.dv.cd(['', self.name+'_822'], True, context=self.context_822)
-            self.dataset_822 = self.dv.new(self.name+'_822', [(x_axis, 'num')],
-                                            [(y_axis, '', 'num')], context=self.context_822)
-            for parameter in self.p:
-                self.dv.add_parameter(parameter, self.p[parameter], context=self.context_822)
-
-            for parameter in self.p:
-                self.dv.add_parameter(parameter, self.p[parameter])
         else:
             return QsimExperiment.setup_datavault(self, x_axis, y_axis)
 
@@ -135,6 +121,5 @@ if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = lasermonitor(cxn=cxn)
-    print exprt.name
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)
