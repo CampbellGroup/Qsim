@@ -5,13 +5,13 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 
 
-class DeshelvingRate(QsimExperiment):
+class deshelving_rate(QsimExperiment):
     """
     Measure population in the F7/2 state as a function of applied 760nm time. Should exhibit an
     exponential decay as population is moved from the F7/2 to the S1/2.
     """
 
-    name = 'DeshelvingRate'
+    name = 'Deshelving Rate'
 
     exp_parameters = []
     exp_parameters.append(('DeshelvingRate', 'scan'))
@@ -52,6 +52,6 @@ class DeshelvingRate(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = DeshelvingRate(cxn=cxn)
+    exprt = deshelving_rate(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

@@ -1,9 +1,9 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.KnillSequence import knill
-from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveSequenceStandard import microwave_sequence_standard
-from Qsim.scripts.pulse_sequences.sub_sequences.BB1Sequence import bb1
-from Qsim.scripts.pulse_sequences.sub_sequences.SpinEchoSequence import spin_echo
-from Qsim.scripts.pulse_sequences.sub_sequences.SuMicrowaveSequence import su_sequence
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.KnillSequence import knill
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.MicrowaveSequenceStandard import microwave_sequence_standard
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.BB1Sequence import bb1
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.SpinEchoSequence import spin_echo
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.SuMicrowaveSequence import su_sequence
 
 from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.standard_pi_pulse import standard_pi_pulse_clock
 from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.standard_pi_pulse import standard_pi_pulse_plus

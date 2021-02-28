@@ -5,7 +5,7 @@ from labrad.units import WithUnit as U
 from scipy.optimize import curve_fit as fit
 
 
-class InterleavedLinescan(QsimExperiment):
+class interleaved_linescan(QsimExperiment):
     """
     Scan the 369 laser with the AOM double pass interleaved
     with doppler cooling to reveal the lineshape. This experiment helps
@@ -78,6 +78,6 @@ class InterleavedLinescan(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = InterleavedLinescan(cxn=cxn)
+    exprt = interleaved_linescan(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

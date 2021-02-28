@@ -4,13 +4,13 @@ from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import I
 import numpy as np
 
 
-class Line_Narrowing(QsimExperiment):
+class line_narrowing(QsimExperiment):
     """
     Repeats the interleaved linescan experiment at different (x, y, z) electric
     field multipoles specified by the user. Helpful for micromotion compensation
     """
 
-    name = 'Line_Narrowing'
+    name = 'Line Narrowing'
 
     exp_parameters = []
     exp_parameters.append(('Line_Narrowing', 'voltage_scan_x'))
@@ -63,6 +63,6 @@ class Line_Narrowing(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = Line_Narrowing(cxn=cxn)
+    exprt = line_narrowing(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

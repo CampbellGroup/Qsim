@@ -2,7 +2,7 @@ import labrad
 from Qsim.scripts.pulse_sequences.shelving_bright_spam import shelving_bright_spam as bright_sequence
 from Qsim.scripts.pulse_sequences.shelving_dark_spam import shelving_dark_spam as dark_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import interleaved_linescan
 import numpy as np
 from scipy.optimize import curve_fit as fit
 from labrad.units import WithUnit as U
@@ -337,7 +337,7 @@ class high_fidelity_measurement(QsimExperiment):
 
         linescan_context = self.sc.context()
 
-        self.line_tracker = self.make_experiment(InterleavedLinescan)
+        self.line_tracker = self.make_experiment(interleaved_linescan)
         self.line_tracker.initialize(self.cxn, linescan_context, self.ident)
         try:
             detunings, counts = self.line_tracker.run(self.cxn, linescan_context)
