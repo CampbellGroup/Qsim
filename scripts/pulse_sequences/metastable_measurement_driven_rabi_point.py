@@ -8,20 +8,20 @@ from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.Shelving import shelving
 from sub_sequences.Deshelving import deshelving
 from sub_sequences.HeraldedFourPreparation import heralded_four_preparation
-from sub_sequences.MetastableMeasurementDrivenGate_deltaTheta import metastable_measurement_driven_gate_deltaTheta
+from sub_sequences.MetastableMeasurementDrivenRabi import metastable_measurement_driven_rabi
 
 
-class metastable_measurement_driven_gate(pulse_sequence):
+class metastable_measurement_driven_rabi_point(pulse_sequence):
 
     required_subsequences = [
         turn_off_all,
-        metastable_state_detection, 
-        optical_pumping, 
+        metastable_state_detection,
+        optical_pumping,
         shelving,
-        shelving_doppler_cooling, 
+        shelving_doppler_cooling,
         deshelving,
         heralded_four_preparation,
-        metastable_measurement_driven_gate_deltaTheta,
+        metastable_measurement_driven_rabi,
         shelving_state_detection
         ]
 
@@ -41,7 +41,7 @@ class metastable_measurement_driven_gate(pulse_sequence):
         self.addSequence(optical_pumping)
         self.addSequence(shelving)
         self.addSequence(heralded_four_preparation)  # readout counts call 2
-        self.addSequence(metastable_measurement_driven_gate_deltaTheta)
+        self.addSequence(metastable_measurement_driven_rabi)
         self.addSequence(shelving_state_detection)  # readout counts call 3
         self.addSequence(metastable_state_detection)  # readout counts call 4
         self.addSequence(deshelving)

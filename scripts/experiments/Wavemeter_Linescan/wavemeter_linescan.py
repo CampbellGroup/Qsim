@@ -6,7 +6,7 @@ import numpy as np
 
 class wavemeter_linescan(QsimExperiment):
 
-    name = 'Wavemeter Line Scan'
+    name = 'Wavemeter Linescan'
 
     exp_parameters = []
 

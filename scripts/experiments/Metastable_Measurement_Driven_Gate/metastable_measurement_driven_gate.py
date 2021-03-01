@@ -4,7 +4,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 
 
-class MetastableMeasurementDrivenGate(QsimExperiment):
+class metastable_measurement_driven_gate(QsimExperiment):
 
     name = 'Metastable Measurement Driven Gate'
 
@@ -62,6 +62,6 @@ class MetastableMeasurementDrivenGate(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = MetastableMeasurementDrivenGate(cxn=cxn)
+    exprt = metastable_measurement_driven_gate(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

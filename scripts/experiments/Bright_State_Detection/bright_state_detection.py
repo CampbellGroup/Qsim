@@ -1,7 +1,7 @@
 import labrad
 from Qsim.scripts.pulse_sequences.bright_state_preparation import bright_state_preparation as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import interleaved_linescan
 from scipy.optimize import curve_fit as fit
 import numpy as np
 from labrad.units import WithUnit as U
@@ -141,7 +141,7 @@ class BrightStateDetection(QsimExperiment):
 
         linescan_context = self.sc.context()
 
-        self.line_tracker = self.make_experiment(InterleavedLinescan)
+        self.line_tracker = self.make_experiment(interleaved_linescan)
         self.line_tracker.initialize(self.cxn, linescan_context, self.ident)
         try:
             detunings, counts = self.line_tracker.run(self.cxn, linescan_context)

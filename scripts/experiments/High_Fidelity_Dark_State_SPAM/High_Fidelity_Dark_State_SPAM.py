@@ -6,7 +6,7 @@ import time
 
 from Qsim.scripts.pulse_sequences.shelving_dark_spam import shelving_dark_spam as dark_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.interleaved_linescan.interleaved_linescan import InterleavedLinescan
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import interleaved_linescan
 from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan import MicrowaveLineScan
 
 
@@ -252,7 +252,7 @@ class high_fidelity_dark_state_spam(QsimExperiment):
 
         linescan_context = self.sc.context()
 
-        self.line_tracker = self.make_experiment(InterleavedLinescan)
+        self.line_tracker = self.make_experiment(interleaved_linescan)
         self.line_tracker.initialize(self.cxn, linescan_context, self.ident)
         try:
             detunings, counts = self.line_tracker.run(self.cxn, linescan_context)
