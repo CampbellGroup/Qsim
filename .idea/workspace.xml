@@ -25,24 +25,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="added a lot of metastable qubit related code">
-      <change afterPath="$PROJECT_DIR$/../common/lib/servers/TPI1001B/TPI1001B.py" afterDir="false" />
+    <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/servers/Pulser2/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/Pulser2/api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/servers/Pulser2/pulse_sequences/pulse_sequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/Pulser2/pulse_sequences/pulse_sequence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/servers/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common/lib/servers/piezo_server/Piezo_Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/servers/piezo_server/Piezo_Server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/multiplexerclient_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/multiplexerclient_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/piezo_client_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/piezo_client_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/pulser/hardwareConfiguration.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/pulser/hardwareConfiguration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/scriptscanner_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/scriptscanner_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/switch_client_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/switch_client_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/experiments/Manifold_Detection/manifold_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Manifold_Detection/manifold_detection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +68,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/deprecated/deprecated_experiments" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -105,13 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00032" summary="traingle ramp sequence added for microwave interrogation">
-      <created>1584628722347</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1584628722347</updated>
     </task>
     <task id="LOCAL-00033" summary="traingle ramp sequence added for microwave interrogation">
       <created>1584638106064</created>
@@ -449,7 +427,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615488600858</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="General commit. Mostly formatting and small experiment changes">
+      <created>1615839256576</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1615839256579</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -465,7 +450,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="BUG FIX: when drift tracking, if you reprogram the initial sequence after you perform drift tracking, but attempt to stop the experiment before running the programmed sequence, the pulser will freeze and you lose control over the pulser!!!" />
     <MESSAGE value="added back in the parameters and functions needed for background free fluoresence experiment with the time harp&#10;&#10;also created an optical pumping rate experiment to look at the speed of quadrupole optical pumping" />
     <MESSAGE value="fixing cavity piezo lock server, added ability to readout the voltage history of the lock" />
     <MESSAGE value="created a frequency scan of the quadrupole optical pumping beam to find the correct DDS frequency to set for quadrupole OP" />
@@ -490,6 +474,7 @@
     <MESSAGE value="removed old unused versions of the QsimGUI" />
     <MESSAGE value="integrated automated drift tracking and correction into high fidelity measurement experiment." />
     <MESSAGE value="started work on a manifold detection experiment" />
-    <option name="LAST_COMMIT_MESSAGE" value="started work on a manifold detection experiment" />
+    <MESSAGE value="General commit. Mostly formatting and small experiment changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="General commit. Mostly formatting and small experiment changes" />
   </component>
 </project>

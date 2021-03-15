@@ -22,6 +22,8 @@ class off_resonant_shelving_measurement(QsimExperiment):
         self.pulser = cxn.pulser
         self.pmt = cxn.normalpmtflow
         self.pzt_server = cxn.piezo_server
+        self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
+        self.cavity_rails = (self.cavity_voltage-1, self.cavity_voltage+1)
 
     def run(self, cxn, context):
 
@@ -43,7 +45,7 @@ class off_resonant_shelving_measurement(QsimExperiment):
             # try to shelve an ion until it works
             is_shelved = False
             while is_shelved is False:
-                is_shelved = self.attempt_shelving
+                is_shelved = self.attempt_shelving()
 
             # set the brightness threshold
             self.fluorescence, counts = self.get_average_counts()
@@ -51,7 +53,7 @@ class off_resonant_shelving_measurement(QsimExperiment):
             self.current_fluorescence = self.fluorescence
 
             # run for 5 minutes or until fluorescence leaves acceptable range, binning the data and outputting it to datavault
-            while (time.time() - init_time < 300) or abs(self.current_fluorescence - self.fluorescence) < self.p.manifoldDetection.cavity_threshold
+            while (time.time() - init_time < 300) or abs(self.current_fluorescence - self.fluorescence) < self.p.manifoldDetection.cavity_threshold:
                 should_break = self.update_progress(np.random.random())
                 if should_break:
                     break
@@ -71,7 +73,7 @@ class off_resonant_shelving_measurement(QsimExperiment):
         delta = self.current_fluorescence - self.fluorescence
         j = 0
         while np.abs(delta) > self.p.manifoldDetection.cavity_threshold:
-            if j > 10:
+            if j > 10 or (self.cavity_voltage < self.cavity_rails[0], self.cavity_voltage > self.cavity_rails[1]):
                 return False
             # take advantage of the fact that +voltage=red, -voltage=blue if we're red of the line
             new_cavity_voltage = self.cavity_voltage + 0.01 * np.sign(delta)
@@ -80,6 +82,7 @@ class off_resonant_shelving_measurement(QsimExperiment):
             self.cavity_voltage = new_cavity_voltage
             self.current_fluorescence, counts = self.get_average_counts()
             delta = self.current_fluorescence - self.fluorescence
+            time.sleep(1)
         return True
 
     def attempt_shelving(self):
