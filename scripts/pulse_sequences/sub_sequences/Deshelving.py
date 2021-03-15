@@ -57,12 +57,12 @@ class deshelving(pulse_sequence):
                     p.Deshelving.duration,
                     p.ddsDefaults.repump_760_2_freq,
                     p.Deshelving.power2)
-
-        self.addDDS('976SP',
-                    self.start,
-                    p.Deshelving.duration,
-                    p.ddsDefaults.repump_976_freq,
-                    p.ddsDefaults.repump_976_power)
+        #
+        # self.addDDS('976SP',
+        #             self.start,
+        #             p.Deshelving.duration,
+        #             p.ddsDefaults.repump_976_freq,
+        #             p.ddsDefaults.repump_976_power)
 
         self.addDDS('ProtectionBeam',
                     self.start,
