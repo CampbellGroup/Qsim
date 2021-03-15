@@ -26,20 +26,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="added a lot of metastable qubit related code">
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Measurement_Driven_Rabi_Flop/metastable_measurement_driven_rabi_flop.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/experiments/Wavemeter_Linescan/__init__.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../common/lib/servers/TPI1001B/TPI1001B.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Qsim.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Qsim.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Bright_State_Detection/bright_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Dark_State_Detection/dark_state_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/High_Fidelity_Dark_State_SPAM/High_Fidelity_Dark_State_SPAM.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/High_Fidelity_Dark_State_SPAM/High_Fidelity_Dark_State_SPAM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Line_Narrowing/line_narrowing.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Line_Narrowing/line_narrowing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/Metastable_Measurement_Driven_Gate/metastable_measurement_driven_gate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Measurement_Driven_Gate/metastable_measurement_driven_gate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Metastable_Measurement_Driven_Rabi_Flop/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/experiments/wavemeter_linescan/wavemeter_linescan.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Wavemeter_Linescan/wavemeter_linescan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_measurement_driven_gate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/metastable_measurement_driven_gate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Deshelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/Shelving.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/VariableDeshelving.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/keithley_2231A_30_3/keithley_2231A_30_3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/piezo_client/Piezo_Client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../common/lib/clients/pulser_switch/pulser_switch_control.py" afterDir="false" />
@@ -114,13 +105,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00031" summary="traingle ramp sequence added for microwave interrogation">
-      <created>1584628549502</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1584628549502</updated>
     </task>
     <task id="LOCAL-00032" summary="traingle ramp sequence added for microwave interrogation">
       <created>1584628722347</created>
@@ -458,7 +442,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605824353961</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="started work on a manifold detection experiment">
+      <created>1615488600857</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1615488600858</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -474,7 +465,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added in pi_time feedback to the rabi_point_tracking experiment for testing. Might implement in the shelving experiment. &#10;&#10;Also removed the drift tracking code that has been commented out for a while. We have been manually drift tracking." />
     <MESSAGE value="BUG FIX: when drift tracking, if you reprogram the initial sequence after you perform drift tracking, but attempt to stop the experiment before running the programmed sequence, the pulser will freeze and you lose control over the pulser!!!" />
     <MESSAGE value="added back in the parameters and functions needed for background free fluoresence experiment with the time harp&#10;&#10;also created an optical pumping rate experiment to look at the speed of quadrupole optical pumping" />
     <MESSAGE value="fixing cavity piezo lock server, added ability to readout the voltage history of the lock" />
@@ -499,6 +489,7 @@
     <MESSAGE value="main big change is the addition of a dds default center frequency for the 369 double pass" />
     <MESSAGE value="removed old unused versions of the QsimGUI" />
     <MESSAGE value="integrated automated drift tracking and correction into high fidelity measurement experiment." />
-    <option name="LAST_COMMIT_MESSAGE" value="integrated automated drift tracking and correction into high fidelity measurement experiment." />
+    <MESSAGE value="started work on a manifold detection experiment" />
+    <option name="LAST_COMMIT_MESSAGE" value="started work on a manifold detection experiment" />
   </component>
 </project>
