@@ -28,6 +28,8 @@
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/Manifold_Detection/manifold_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Manifold_Detection/manifold_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ManifoldStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ManifoldStateDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../config/scriptscanner_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/scriptscanner_config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,20 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00033" summary="traingle ramp sequence added for microwave interrogation">
-      <created>1584638106064</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1584638106064</updated>
-    </task>
-    <task id="LOCAL-00034" summary="traingle ramp sequence added for microwave interrogation">
-      <created>1584671798318</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1584671798318</updated>
     </task>
     <task id="LOCAL-00035" summary="adding error padding for doppler cooling errors where padWidth determines how many experiments before/after the detected doppler error are to be thrown out">
       <created>1588266294259</created>
@@ -434,7 +422,21 @@
       <option name="project" value="LOCAL" />
       <updated>1615839256579</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="bugfixes to manifold detection">
+      <created>1615852552792</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1615852552792</updated>
+    </task>
+    <task id="LOCAL-00083" summary="bugfixes to manifold detection">
+      <created>1615852613806</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1615852613806</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -450,7 +452,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added back in the parameters and functions needed for background free fluoresence experiment with the time harp&#10;&#10;also created an optical pumping rate experiment to look at the speed of quadrupole optical pumping" />
     <MESSAGE value="fixing cavity piezo lock server, added ability to readout the voltage history of the lock" />
     <MESSAGE value="created a frequency scan of the quadrupole optical pumping beam to find the correct DDS frequency to set for quadrupole OP" />
     <MESSAGE value="added TTL switches to micowave sequences, along with some changes to where the microwaves are turned on/off" />
@@ -475,6 +476,7 @@
     <MESSAGE value="integrated automated drift tracking and correction into high fidelity measurement experiment." />
     <MESSAGE value="started work on a manifold detection experiment" />
     <MESSAGE value="General commit. Mostly formatting and small experiment changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="General commit. Mostly formatting and small experiment changes" />
+    <MESSAGE value="bugfixes to manifold detection" />
+    <option name="LAST_COMMIT_MESSAGE" value="bugfixes to manifold detection" />
   </component>
 </project>

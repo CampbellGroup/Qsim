@@ -1,19 +1,38 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.pulse_sequences.sub_sequences.ManifoldStateDetection import manifold_state_detection as sequence
+from Qsim.scripts.pulse_sequences.sub_sequences.Shelving import shelving as shelving_sequence
 from labrad.units import WithUnit as U
 import time
 import numpy as np
 
 
-class off_resonant_shelving_measurement(QsimExperiment):
+class manifold_detection(QsimExperiment):
 
     name = 'Manifold Detection'
 
     exp_parameters = [
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_power'),
-        ('ddsDefaults', 'DP411_power')
+        ('ddsDefaults', 'DP1_411_power'),
+        ('ManifoldDetection', 'cavity_threshold'),
+        ('ManifoldDetection', 'rescue_time'),
+        ('ManifoldDetection', 'shelving_attempt_time'),
+        ('ManifoldDetection', 'duration'),
+        ('ShelvingStateDetection', 'repump_power'),
+        ('ShelvingStateDetection', 'detuning'),
+        ('ShelvingStateDetection', 'CW_power'),
+        ('ShelvingStateDetection', 'repetitions'),
+        ('ShelvingStateDetection', 'state_readout_threshold'),
+        ('MicrowaveInterrogation', 'power'),
+        ('Transitions', 'main_cooling_369'),
+        ('ddsDefaults', 'doppler_cooling_freq'),
+        ('ddsDefaults', 'doppler_cooling_power'),
+        ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'qubit_dds_freq'),
+        ('ddsDefaults', 'DP369_freq'),
+        ('ddsDefaults', 'protection_beam_freq'),
+        ('ddsDefaults', 'protection_beam_power')
     ]
 
     def initialize(self, cxn, context, ident):
@@ -22,6 +41,7 @@ class off_resonant_shelving_measurement(QsimExperiment):
         self.pulser = cxn.pulser
         self.pmt = cxn.normalpmtflow
         self.pzt_server = cxn.piezo_server
+        self.cavity_chan = 1
         self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
         self.cavity_rails = (self.cavity_voltage-1, self.cavity_voltage+1)
 
@@ -42,10 +62,14 @@ class off_resonant_shelving_measurement(QsimExperiment):
             # check that the ion is still there
             still_there = self.rescue_ion(5.0)
 
+            print("ion present")
+
             # try to shelve an ion until it works
             is_shelved = False
             while is_shelved is False:
                 is_shelved = self.attempt_shelving()
+
+            print("successfully shelved")
 
             # set the brightness threshold
             self.fluorescence, counts = self.get_average_counts()
@@ -62,7 +86,7 @@ class off_resonant_shelving_measurement(QsimExperiment):
                 self.plot_hist(hist, folder_name='ManifoldDetection')
 
             # move fluorescence back to middle of range
-            self.correct_cavity_drift() #TODO: define this function
+            self.correct_cavity_drift()
 
     def get_average_counts(self):
         counts = self.run_sequence(max_runs=1000, num=1)
@@ -86,12 +110,16 @@ class off_resonant_shelving_measurement(QsimExperiment):
         return True
 
     def attempt_shelving(self):
-        self.toggle_repump_lasers('Off')
+        # self.toggle_repump_lasers('Off')
+        # before_counts = np.mean(self.pmt.get_next_counts('ON', True))
+        # self.toggle_shelving_laser('On')
+        # time.sleep(self.p.manifoldDetection.shelving_attempt_time)
+        # self.toggle_shelving_laser('Off')
+        # after_counts = np.mean(self.pmt.get_next_counts('ON', True))
         before_counts = np.mean(self.pmt.get_next_counts('ON', True))
-        self.toggle_shelving_laser('On')
-        time.sleep(self.p.manifoldDetection.shelving_attempt_time) #TODO: add this to the parameter vault
-        self.toggle_shelving_laser('Off')
+        self.program_pulser(shelving_sequence)
         after_counts = np.mean(self.pmt.get_next_counts('ON', True))
+
         if after_counts < before_counts * 0.6:
             return True
         return False
@@ -128,6 +156,6 @@ class off_resonant_shelving_measurement(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = off_resonant_shelving_measurement(cxn=cxn)
+    exprt = manifold_detection(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

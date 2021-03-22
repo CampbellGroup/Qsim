@@ -53,4 +53,4 @@ class manifold_state_detection(pulse_sequence):
                     p.ddsDefaults.doppler_cooling_freq,
                     p.ddsDefaults.doppler_cooling_power)
 
-        self.end = self.start + p.ShelvingStateDetection.duration
+        self.end = self.start + p.ManifoldDetection.duration
