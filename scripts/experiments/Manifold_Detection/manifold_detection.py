@@ -1,7 +1,6 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.pulse_sequences.sub_sequences.ManifoldStateDetection import manifold_state_detection as sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.Shelving import shelving as shelving_sequence
+# from Qsim.scripts.pulse_sequences.sub_sequences.ManifoldStateDetection import manifold_state_detection as sequence
 from labrad.units import WithUnit as U
 import time
 import numpy as np
@@ -14,25 +13,6 @@ class manifold_detection(QsimExperiment):
     exp_parameters = [
         ('ddsDefaults', 'repump_760_1_power'),
         ('ddsDefaults', 'repump_760_2_power'),
-        ('ddsDefaults', 'DP1_411_power'),
-        ('ManifoldDetection', 'cavity_threshold'),
-        ('ManifoldDetection', 'rescue_time'),
-        ('ManifoldDetection', 'shelving_attempt_time'),
-        ('ManifoldDetection', 'duration'),
-        ('ShelvingStateDetection', 'repump_power'),
-        ('ShelvingStateDetection', 'detuning'),
-        ('ShelvingStateDetection', 'CW_power'),
-        ('ShelvingStateDetection', 'repetitions'),
-        ('ShelvingStateDetection', 'state_readout_threshold'),
-        ('MicrowaveInterrogation', 'power'),
-        ('Transitions', 'main_cooling_369'),
-        ('ddsDefaults', 'doppler_cooling_freq'),
-        ('ddsDefaults', 'doppler_cooling_power'),
-        ('ddsDefaults', 'repump_935_freq'),
-        ('ddsDefaults', 'qubit_dds_freq'),
-        ('ddsDefaults', 'DP369_freq'),
-        ('ddsDefaults', 'protection_beam_freq'),
-        ('ddsDefaults', 'protection_beam_power')
     ]
 
     def initialize(self, cxn, context, ident):
@@ -47,87 +27,116 @@ class manifold_detection(QsimExperiment):
 
     def run(self, cxn, context):
 
-        self.setup_datavault('event_num', 'wait_time') #TODO: update this
+        self.setup_datavault()
 
-        self.program_pulser(sequence)
+        self.pmt.set_time_length(U(10, "ms"))
 
         still_there = True
         while still_there:
-            init_time = time.time()
+            dark_counts = []
+            bright_counts = []
+            for isdark in [True, False]:
+                init_time = time.time()
 
-            should_break = self.update_progress(np.random.random())
-            if should_break:
-                break
+                should_break = self.update_progress(0.01)
+                if should_break: break
 
-            # check that the ion is still there
-            still_there = self.rescue_ion(5.0)
+                self.fluorescence, counts = self.get_average_counts(100)
+                print('initial fluorescence is {} counts'.format(self.fluorescence))
 
-            print("ion present")
+                if isdark:
+                    # try to shelve an ion until it works
+                    is_shelved = False
+                    while is_shelved is False:
+                        is_shelved = self.attempt_shelving()
 
-            # try to shelve an ion until it works
-            is_shelved = False
-            while is_shelved is False:
-                is_shelved = self.attempt_shelving()
+                # set the brightness threshold
 
-            print("successfully shelved")
+                self.current_fluorescence = self.get_average_counts(10)
+                if self.current_fluorescence < 5.0:
+                    if not self.rescue_ion(5.0): break
+                else:
 
-            # set the brightness threshold
-            self.fluorescence, counts = self.get_average_counts()
-            print('initial fluorescence is {} counts'.format(self.fluorescence))
-            self.current_fluorescence = self.fluorescence
+                    # run for 5 minutes or until fluorescence leaves acceptable range, binning the data and outputting it to datavault
+                    while time.time() - init_time < 300:  # or abs(self.current_fluorescence - self.fluorescence) < 1.0:
+                        should_break = self.update_progress((time.time()-init_time)/300.0)
+                        if should_break: break
+                        self.current_fluorescence, counts = self.get_average_counts()
+                        print("   current fluorescence is {}".format(self.current_fluorescence))
+                        if isdark:
+                            self.dv.add(np.column_stack((np.arange(len(counts)), np.array(counts))),
+                                        context=self.dark_counts_context)
+                        else:
+                            self.dv.add(np.column_stack((np.arange(len(counts)), np.array(counts))),
+                                        context=self.bright_counts_context)
+                        # hist = self.process_data(counts)
+                        # self.plot_hist(hist, folder_name='ManifoldDetection')
 
-            # run for 5 minutes or until fluorescence leaves acceptable range, binning the data and outputting it to datavault
-            while (time.time() - init_time < 300) or abs(self.current_fluorescence - self.fluorescence) < self.p.manifoldDetection.cavity_threshold:
-                should_break = self.update_progress(np.random.random())
-                if should_break:
-                    break
-                self.current_fluorescence, counts = self.get_average_counts()
-                hist = self.process_data(counts)
-                self.plot_hist(hist, folder_name='ManifoldDetection')
+                    # move fluorescence back to middle of range
+                    still_there = self.rescue_ion(5.0)
+                    print len(dark_counts)
+                    if should_break or not still_there: break
+                    if not self.correct_cavity_drift(): break
 
-            # move fluorescence back to middle of range
-            self.correct_cavity_drift()
+            if should_break: break
 
-    def get_average_counts(self):
-        counts = self.run_sequence(max_runs=1000, num=1)
+
+    def setup_datavault(self):
+        self.dark_counts_context = self.dv.context()
+        self.dv.cd(['', 'Manifold Detection Counts'], True, context=self.dark_counts_context)
+        self.dark_counts_dataset = self.dv.new('counts', [('run', 'arb')],
+                                          [('counts', 'dark_counts', 'num')],
+                                          context=self.dark_counts_context)
+        self.bright_counts_context = self.dv.context()
+        self.dv.cd(['', 'Manifold Detection Counts'], True, context=self.bright_counts_context)
+        self.bright_counts_dataset = self.dv.new('counts_bright', [('run', 'arb')],
+                                          [('counts', 'bright_counts', 'num')],
+                                          context=self.bright_counts_context)
+
+
+    def get_average_counts(self, num=500):
+        counts = self.pmt.get_next_counts('ON', num)
         avg = np.mean(counts)
         return avg, counts
 
     def correct_cavity_drift(self):
+        self.current_fluorescence, counts = self.get_average_counts(100)
         delta = self.current_fluorescence - self.fluorescence
         j = 0
-        while np.abs(delta) > self.p.manifoldDetection.cavity_threshold:
+        print("checking cavity drift")
+        while np.abs(delta) > 0.2:
             if j > 10 or (self.cavity_voltage < self.cavity_rails[0], self.cavity_voltage > self.cavity_rails[1]):
+                return False
+            should_break = self.update_progress(0.5)
+            if should_break:
                 return False
             # take advantage of the fact that +voltage=red, -voltage=blue if we're red of the line
             new_cavity_voltage = self.cavity_voltage + 0.01 * np.sign(delta)
             print('Moving cavity from {} V to {} V'.format(self.cavity_voltage, new_cavity_voltage))
             self.pzt_server.set_voltage(self.cavity_chan, U(new_cavity_voltage, 'V'))
             self.cavity_voltage = new_cavity_voltage
-            self.current_fluorescence, counts = self.get_average_counts()
+            self.current_fluorescence, counts = self.get_average_counts(100)
             delta = self.current_fluorescence - self.fluorescence
-            time.sleep(1)
+            # time.sleep(0.5)
         return True
 
     def attempt_shelving(self):
-        # self.toggle_repump_lasers('Off')
-        # before_counts = np.mean(self.pmt.get_next_counts('ON', True))
-        # self.toggle_shelving_laser('On')
-        # time.sleep(self.p.manifoldDetection.shelving_attempt_time)
-        # self.toggle_shelving_laser('Off')
-        # after_counts = np.mean(self.pmt.get_next_counts('ON', True))
+        self.toggle_repump_lasers('Off')
         before_counts = np.mean(self.pmt.get_next_counts('ON', True))
-        self.program_pulser(shelving_sequence)
+        self.toggle_shelving_laser('On')
+        time.sleep(0.1)
+        self.toggle_shelving_laser('Off')
         after_counts = np.mean(self.pmt.get_next_counts('ON', True))
-
-        if after_counts < before_counts * 0.6:
+        if after_counts < before_counts * 0.7:
+            print("successfully shelved")
             return True
         return False
 
     def rescue_ion(self, threshold):
+        print("Rescuing ion")
         self.toggle_repump_lasers('On')
         self.toggle_shelving_laser('Off')
-        time.sleep(self.p.manifoldDetection.rescue_time) #should default to 10 seconds
+        time.sleep(10)  # should default to 10 seconds
         counts = self.pmt.get_next_counts('ON', True)
         if counts > threshold:
             return True
@@ -144,12 +153,13 @@ class manifold_detection(QsimExperiment):
 
     def toggle_shelving_laser(self, state):
         if state == 'Off':
-            self.pulser.amplitude('411DP', U(-46.0, 'dBm'))
+            self.pulser.amplitude('411DP1', U(-46.0, 'dBm'))
         if state == 'On':
-            self.pulser.amplitude('411DP', self.p.ddsDefaults.DP411_power)
+            self.pulser.amplitude('411DP1', U(-15.0, 'dBm'))# self.p.ddsDefaults.DP1_411_power)
 
     def finalize(self, cxn, context):
         self.toggle_repump_lasers('On')
+        self.pmt.set_time_length(U(100, "ms"))
         pass
 
 

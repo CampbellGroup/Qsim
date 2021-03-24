@@ -28,8 +28,6 @@
     <list default="true" id="42bef041-e023-4f73-ba05-d32e6595bf61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/experiments/Manifold_Detection/manifold_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/experiments/Manifold_Detection/manifold_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ManifoldStateDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pulse_sequences/sub_sequences/ManifoldStateDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../config/scriptscanner_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../config/scriptscanner_config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,13 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
-    </task>
-    <task id="LOCAL-00035" summary="adding error padding for doppler cooling errors where padWidth determines how many experiments before/after the detected doppler error are to be thrown out">
-      <created>1588266294259</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1588266294259</updated>
     </task>
     <task id="LOCAL-00036" summary="removing print statements">
       <created>1588266760887</created>
@@ -436,7 +427,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615852613806</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="bugfixes to manifold detection">
+      <created>1616453631246</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1616453631247</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
