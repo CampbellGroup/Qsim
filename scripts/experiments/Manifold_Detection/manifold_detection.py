@@ -26,6 +26,7 @@ class manifold_detection(QsimExperiment):
         self.cavity_rails = (self.cavity_voltage-1, self.cavity_voltage+1)
 
     def run(self, cxn, context):
+        ion_dead = False
 
         self.setup_datavault()
 
@@ -33,8 +34,6 @@ class manifold_detection(QsimExperiment):
 
         still_there = True
         while still_there:
-            dark_counts = []
-            bright_counts = []
             for isdark in [True, False]:
                 init_time = time.time()
 
@@ -44,21 +43,33 @@ class manifold_detection(QsimExperiment):
                 self.fluorescence, counts = self.get_average_counts(100)
                 print('initial fluorescence is {} counts'.format(self.fluorescence))
 
+                print('isdark: {}'.format(isdark))
                 if isdark:
                     # try to shelve an ion until it works
                     is_shelved = False
                     while is_shelved is False:
+                        should_break = self.update_progress((time.time() - init_time) / 300.0)
+                        if should_break: break
                         is_shelved = self.attempt_shelving()
 
                 # set the brightness threshold
 
-                self.current_fluorescence = self.get_average_counts(10)
+                self.current_fluorescence, counts = self.get_average_counts(10)
+                print("pre-loop fluorescence is {}".format(self.current_fluorescence))
                 if self.current_fluorescence < 5.0:
-                    if not self.rescue_ion(5.0): break
+                    print('Current fluorescence too low. Attempting to rescue ion')
+                    if not self.rescue_ion(5.0):
+                        ion_dead = True
+                        break
                 else:
 
                     # run for 5 minutes or until fluorescence leaves acceptable range, binning the data and outputting it to datavault
                     while time.time() - init_time < 300:  # or abs(self.current_fluorescence - self.fluorescence) < 1.0:
+                        if self.current_fluorescence < 5.0:
+                            print('Current fluorescence too low. Attempting to rescue ion')
+                            if not self.rescue_ion(5.0):
+                                ion_dead = True
+                                break
                         should_break = self.update_progress((time.time()-init_time)/300.0)
                         if should_break: break
                         self.current_fluorescence, counts = self.get_average_counts()
@@ -74,11 +85,10 @@ class manifold_detection(QsimExperiment):
 
                     # move fluorescence back to middle of range
                     still_there = self.rescue_ion(5.0)
-                    print len(dark_counts)
                     if should_break or not still_there: break
-                    if not self.correct_cavity_drift(): break
+                    #if not self.correct_cavity_drift(): break
 
-            if should_break: break
+            if should_break or ion_dead: break
 
 
     def setup_datavault(self):
@@ -155,10 +165,11 @@ class manifold_detection(QsimExperiment):
         if state == 'Off':
             self.pulser.amplitude('411DP1', U(-46.0, 'dBm'))
         if state == 'On':
-            self.pulser.amplitude('411DP1', U(-15.0, 'dBm'))# self.p.ddsDefaults.DP1_411_power)
+            self.pulser.amplitude('411DP1', U(-20.0, 'dBm'))# self.p.ddsDefaults.DP1_411_power)
 
     def finalize(self, cxn, context):
         self.toggle_repump_lasers('On')
+        self.toggle_shelving_laser('Off')
         self.pmt.set_time_length(U(100, "ms"))
         pass
 

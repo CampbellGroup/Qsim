@@ -91,13 +91,6 @@
       <option name="presentableId" value="Default" />
       <updated>1488816643992</updated>
     </task>
-    <task id="LOCAL-00036" summary="removing print statements">
-      <created>1588266760887</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1588266760887</updated>
-    </task>
     <task id="LOCAL-00037" summary="starting server to lock 369nm cavity piezo to wavemeter&#10;also adding more changes to experiments where default OP method is standard">
       <created>1588274301536</created>
       <option name="number" value="00037" />
@@ -434,7 +427,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616453631247</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="bugfixes to manifold detection">
+      <created>1616630291086</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1616630291087</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
