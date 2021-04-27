@@ -26,9 +26,9 @@ class bright_state_preparation(pulse_sequence):
 
         # standard bright state is the 1 state
         if mode == 'Standard':
+            self.addSequence(turn_off_all)
             self.addSequence(doppler_cooling)
             self.addSequence(bright_state_pumping)
-            self.addSequence(microwave_interrogation)
             self.addSequence(standard_state_detection)
 
         # shelving bright state is the 0 state
@@ -42,3 +42,4 @@ class bright_state_preparation(pulse_sequence):
             self.addSequence(shelving_state_detection)
 
             self.addSequence(deshelving)
+

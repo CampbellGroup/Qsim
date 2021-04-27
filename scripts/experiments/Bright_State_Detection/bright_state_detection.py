@@ -42,12 +42,15 @@ class BrightStateDetection(QsimExperiment):
         self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
         self.init_line_center = self.run_interleaved_linescan()
         self.pv.set_parameter(('Transitions', 'main_cooling_369', U(self.init_line_center, 'MHz')))
+        self.pv.set_parameter(('MicrowaveInterrogation', 'duration', self.p.Pi_times.qubit_0))
 
         self.setup_prob_datavault()
         i = 0
 
         # run loop continuously until user stops experiment
         while True:
+            self.pv.set_parameter(('MicrowaveInterrogation', 'duration', self.p.Pi_times.qubit_0))
+
             i += 1
             points_per_hist = self.p.StandardStateDetection.points_per_histogram
             self.program_pulser(sequence)
@@ -57,21 +60,13 @@ class BrightStateDetection(QsimExperiment):
                 bright_dataset = np.column_stack((np.arange(len(counts)), np.array(counts), np.array(doppler_counts)))
                 self.dv.add(bright_dataset, context=self.bright_state_counts)
 
-                detection_errors = np.where(counts < threshold)
                 doppler_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(counts, doppler_errors)
                 print('Mean detection counts on experiment ' + str(i) + ' = ' + str(np.mean(counts)))
-                if len(detection_errors[0]) > 0.0:
-                    print("Detection error on experiments " + str(detection_errors[0]) + ", with doppler counts " + str(doppler_counts[detection_errors]) + " where mean doppler counts were " + str(np.mean(doppler_counts)))
-                    try:
-                        print("Doppler counts before error = " + str(doppler_counts[detection_errors[0] - 1]))
-                        print("Doppler counts after error = " + str(doppler_counts[detection_errors[0] + 1]))
-                    except IndexError:
-                        pass
 
             # run and process data if detection mode is standard
             elif mode == 'Standard':
-                [counts] = self.run_sequence(max_runs=1000)
+                [counts] = self.run_sequence(max_runs=1000, num=1)
 
             # process counts into a histogram and plot on grapher
             if i % points_per_hist == 0:
@@ -79,14 +74,15 @@ class BrightStateDetection(QsimExperiment):
                 self.plot_hist(hist, folder_name='Bright_State_Detection')
 
             self.plot_prob(i, counts)
+            bright_only_counts = counts[np.where(counts>self.p.ShelvingStateDetection.state_readout_threshold)]
             if mode == 'Shelving':
                 if i == 1:
-                    self.hist_mean = np.mean(counts)
-                    self.hist_std_dev = np.sqrt(np.mean(counts))
+                    self.hist_mean = np.mean(bright_only_counts)
+                    self.hist_std_dev = np.sqrt(np.mean(bright_only_counts))
                     print('mean detection counts on first experiment is  = ' + str(self.hist_mean))
                 elif i > 1:
-                    diff = np.mean(counts) - self.hist_mean
-                    if np.abs(diff) > 5.0:
+                    diff = np.mean(bright_only_counts) - self.hist_mean
+                    if np.abs(diff) > 6.0:
                         self.cavity_voltage = self.cavity_voltage + np.sign(diff)*0.005
                         self.pzt_server.set_voltage(self.cavity_chan, U(self.cavity_voltage, 'V'))
                         print('Updated cavity voltage to ' + str(self.cavity_voltage) + ' V')

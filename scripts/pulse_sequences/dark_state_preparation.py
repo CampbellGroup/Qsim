@@ -37,8 +37,7 @@ class dark_state_preparation(pulse_sequence):
         elif mode == 'Shelving':
             self.addSequence(turn_off_all)
             self.addSequence(shelving_doppler_cooling)
-            self.addSequence(optical_pumping)
-            self.addSequence(microwave_interrogation)
+            self.addSequence(bright_state_pumping)
             self.addSequence(shelving)
             self.addSequence(shelving_state_detection)
             self.addSequence(deshelving)

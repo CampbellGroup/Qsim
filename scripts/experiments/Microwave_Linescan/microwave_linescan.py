@@ -3,7 +3,7 @@ from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequ
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
-
+from scipy.optimize import curve_fit as fit
 
 class MicrowaveLineScan(QsimExperiment):
     """
@@ -43,9 +43,13 @@ class MicrowaveLineScan(QsimExperiment):
 
         data = self.setup_datavault('frequency', 'probability')  # gives the x and y names to Data Vault
         qubit = self.p.Line_Selection.qubit
+        print(qubit)
+        print(self.p.MicrowaveInterrogation.pulse_sequence)
         self.setup_grapher('Microwave Linescan ' + qubit)
         self.detunings = self.get_scan_list(self.p.MicrowaveLinescan.scan, 'kHz')
         mode = self.p.Modes.state_detection_mode
+        self.pulser.line_trigger_state(self.p.MicrowaveInterrogation.AC_line_trigger == 'On')
+
 
         if qubit == 'qubit_0':
             center = self.p.Transitions.qubit_0
@@ -60,6 +64,7 @@ class MicrowaveLineScan(QsimExperiment):
             pi_time = self.p.Pi_times.qubit_minus
 
         self.p['MicrowaveInterrogation.duration'] = pi_time
+        deltas, probs = [], []
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i/float(len(self.detunings)))
             if should_break:
@@ -81,11 +86,27 @@ class MicrowaveLineScan(QsimExperiment):
 
             pop = self.get_pop(counts)
             self.dv.add(detuning + center['kHz'], pop)
+            deltas.append(detuning + center['kHz'])
+            probs.append(pop)
 
-        return should_break
+        if qubit != 'qubit_0':
+            param_guess = [20.0, deltas[np.argmax(probs)], np.min(probs), np.max(probs) - np.min(probs)]
+            popt, pcov = fit(self.sinc_fit, deltas, probs, p0=param_guess)
+            self.pv.set_parameter(('Transitions', qubit, U(popt[1], 'kHz')))
+            print('Updated ' + str(qubit) + ' frequency to ' + str(popt[1]) + ' kHz')
+
 
     def finalize(self, cxn, context):
+        self.pulser.line_trigger_state(False)
         pass
+
+
+    def sinc_fit(self, freq, omega, center, offset, scale):
+        """
+        This fits the sinc function created in an interleaved linescan,
+        identical to the fit function in RealSimpleGrapher
+        """
+        return scale*(omega**2/(omega**2 + (center - freq)**2)) * np.sin(np.sqrt(omega**2 + (center - freq)**2)*np.pi/(2*omega))**2 + offset
 
 
 if __name__ == '__main__':

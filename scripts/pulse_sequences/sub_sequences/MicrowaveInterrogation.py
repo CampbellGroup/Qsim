@@ -75,3 +75,8 @@ class microwave_interrogation(pulse_sequence):
             self.addSequence(standard_pi_pulse_clock)
             self.addSequence(knill_pi_pulse_minus)
 
+        elif p.MicrowaveInterrogation.pulse_sequence == 'TripleMicrowave':
+            self.addSequence(knill_pi_pulse_clock)
+            self.addSequence(knill_pi_pulse_minus)
+            self.addSequence(knill_pi_pulse_plus)
+
