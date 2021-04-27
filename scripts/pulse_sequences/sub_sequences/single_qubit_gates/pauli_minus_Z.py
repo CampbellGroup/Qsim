@@ -1,0 +1,15 @@
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+
+
+class pauli_minus_Z(pulse_sequence):
+    required_parameters = [
+        ('MicrowaveInterrogation', 'ttl_switch_delay'),
+        ('Pi_times', 'qubit_0')
+    ]
+
+    def sequence(self):
+        p = self.parameters
+        pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
+        pi_time = p.Pi_times.qubit_0
+
+        self.end = self.start + pi_time
