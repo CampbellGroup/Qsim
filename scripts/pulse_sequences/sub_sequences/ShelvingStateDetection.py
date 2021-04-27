@@ -1,5 +1,4 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from labrad.units import WithUnit as U
 
 
 class shelving_state_detection(pulse_sequence):
@@ -8,18 +7,14 @@ class shelving_state_detection(pulse_sequence):
         ('ShelvingStateDetection', 'duration'),
         ('ShelvingStateDetection', 'repump_power'),
         ('ShelvingStateDetection', 'detuning'),
-        ('ShelvingStateDetection', 'CW_power'),
+        ('ShelvingStateDetection', 'power'),
         ('ShelvingStateDetection', 'repetitions'),
         ('ShelvingStateDetection', 'state_readout_threshold'),
-        ('MicrowaveInterrogation', 'power'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
         ('ddsDefaults', 'repump_935_freq'),
-        ('ddsDefaults', 'qubit_dds_freq'),
-        ('ddsDefaults', 'DP369_freq'),
-        ('ddsDefaults', 'protection_beam_freq'),
-        ('ddsDefaults', 'protection_beam_power')
+        ('ddsDefaults', 'DP369_freq')
     ]
 
     def sequence(self):
@@ -45,7 +40,7 @@ class shelving_state_detection(pulse_sequence):
                     self.start,
                     p.ShelvingStateDetection.duration,
                     p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.ShelvingStateDetection.detuning/2.0,
-                    p.ShelvingStateDetection.CW_power)
+                    p.ShelvingStateDetection.power)
 
         self.addDDS('DopplerCoolingSP',
                     self.start,

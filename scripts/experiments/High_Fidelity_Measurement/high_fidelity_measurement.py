@@ -156,11 +156,11 @@ class high_fidelity_measurement(QsimExperiment):
                     return False
 
     def set_fixed_params(self):
-        self.p['Line_Selection.qubit'] = 'qubit_0'
-        self.pi_time = self.p.Pi_times.qubit_0
-        self.p['MicrowaveInterrogation.duration'] = self.pi_time
-        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
-        self.p['MicrowaveInterrogation.microwave_phase'] = U(0.0, 'deg')
+        #self.p['Line_Selection.qubit'] = 'qubit_0'
+        #self.pi_time = self.p.Pi_times.qubit_0
+        #self.p['MicrowaveInterrogation.duration'] = self.pi_time
+        #self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
+        #self.p['MicrowaveInterrogation.microwave_phase'] = U(0.0, 'deg')
         self.p['Modes.state_detection_mode'] = 'Shelving'
         self.p['Deshelving.power1'] = self.p.ddsDefaults.repump_760_1_power
         self.p['Deshelving.power2'] = self.p.ddsDefaults.repump_760_2_power

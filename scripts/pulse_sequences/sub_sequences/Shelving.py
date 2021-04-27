@@ -5,7 +5,6 @@ class shelving(pulse_sequence):
 
     required_parameters = [
         ('Shelving', 'duration'),
-        ('Shelving', 'repump_power'),
         ('Transitions', 'quadrupole'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'DP1_411_freq'),
@@ -41,30 +40,5 @@ class shelving(pulse_sequence):
                     p.Shelving.duration,
                     p.ddsDefaults.repump_935_freq,
                     p.ddsDefaults.repump_935_power)
-
-        """
-        self.addDDS('411DP2',
-                    self.start,
-                    p.Shelving.duration,
-                    p.ddsDefaults.DP2_411_freq,
-                    p.ddsDefaults.DP2_411_power)
-
-        self.addDDS('935SP',
-                    self.start,
-                    p.Shelving.duration,
-                    p.ddsDefaults.repump_935_freq,
-                    p.ddsDefaults.repump_935_power)
-        """
-        # self.addDDS('OpticalPumpingSP',
-        #             self.start,
-        #             p.Shelving.duration,
-        #             p.ddsDefaults.optical_pumping_freq,
-        #             p.ddsDefaults.optical_pumping_power)
-
-        # self.addDDS('369DP',
-        #             self.start,
-        #             p.Shelving.duration,
-        #             p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning / 2.0,
-        #             U(-10.0, 'dBm'))
 
         self.end = self.start + p.Shelving.duration

@@ -2,13 +2,12 @@ import labrad
 import numpy as np
 from scipy.optimize import curve_fit as fit
 from labrad.units import WithUnit as U
-import time
+from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 
 from Qsim.scripts.pulse_sequences.shelving_dark_spam import shelving_dark_spam as dark_sequence
-from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import interleaved_linescan
-from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan import MicrowaveLineScan
-
+from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan_minus import MicrowaveLineScanMinus
+from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan_plus import MicrowaveLineScanPlus
 
 
 class high_fidelity_dark_state_spam(QsimExperiment):
@@ -35,14 +34,13 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         self.context = context
         self.pzt_server = cxn.piezo_server
         self.ttl_server = cxn.arduinottl
-
         self.state_detection_ttl_chan = 12
         self.protection_beam_ttl_chan = 9
         self.cavity_chan = 1
         self.cavity_voltage = 0.0
         self.counts_track_mean = 0.0
         self.counts_track_std_dev = 0.0
-        self.init_line_center = 0.0  # self.p.Transitions.main_cooling_369['MHz']
+        self.init_line_center = 0.0
         self.wm_cxn = labrad.connect('10.97.112.2', password='lab')
         self.mp_server = self.wm_cxn.multiplexerserver
         self.dac_port_822 = 3
@@ -55,12 +53,7 @@ class high_fidelity_dark_state_spam(QsimExperiment):
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
-        self.ttl_server.ttl_output(self.state_detection_ttl_chan, True) #block the state detection beam
-        self.ttl_server.ttl_output(self.protection_beam_ttl_chan, True) #block the state detection beam
-
-        self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
-        self.init_line_center = self.run_interleaved_linescan()  # measure where the line is, needs to be before set_fixed_params
-        self.init_dac_port_822_voltage = self.mp_server.get_output_voltage(self.dac_port_822)  # gets the init dac port voltage for the M2 lock
+        break_1, break_2 = self.perform_initial_tweak_up()
         self.set_fixed_params()  # force certain parameters to have fixed values
         self.setup_high_fidelity_datavault()  # setup datavault folders for receiving HiFi data
         self.reps = self.p.ShelvingStateDetection.repetitions
@@ -68,35 +61,27 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         print('Init DAC voltage is ' + str(self.init_dac_port_822_voltage) + ' mV')
 
         i = 0
-        while i < self.p.HighFidelityMeasurement.sequence_iterations:
-
+        j = 0
+        while True:
+            j += 1
             i += 1
+            if break_1 or break_2:
+                break
 
             should_break = self.update_progress(np.random.random())
             if should_break:
                 break
 
-            detection_delay_dark = self.get_detection_timetags_offset()
-
             self.program_pulser(dark_sequence)
-
-            [counts_doppler_dark, counts_dark], ttDark = self.run_sequence_with_timetags(max_runs=250, num=2)
+            [counts_doppler_dark, counts_dark] = self.run_sequence(max_runs=500, num=2)
 
             dac_voltage = self.mp_server.get_output_voltage(self.dac_port_822)
             if np.abs(dac_voltage - self.init_dac_port_822_voltage) > 200.0:
                 print('M2 Etalon hopped on experiment ' + str(i) + ', killing experiment.')
                 break
 
-            if (sum(counts_doppler_dark) + sum(counts_dark)) > 30000.0:
-                print('Too many timetags, reduce number of experiments')
-                break
-
-            ttDark = ttDark[0]
-            ttD_dop, ttD_det = self.parse_timetags(ttDark, counts_doppler_dark, counts_dark)
-            ttD_det = np.array(ttD_det) - detection_delay_dark
-            self.save_dark_data([counts_dark, counts_doppler_dark], [ttD_det, ttD_dop])
-
-            countsDark, n_errors = self.delete_doppler_count_errors(counts_doppler_dark, counts_dark)
+            self.save_dark_data([counts_dark, counts_doppler_dark])
+            countsDark, countsDopFixed = self.delete_doppler_count_errors(counts_doppler_dark, counts_dark)
 
             # this checks to make sure we didn't lose the ion, effectively, and breaks the loop before a zero division
             # error occurs in plot_prob so that data gets saved
@@ -108,23 +93,33 @@ class high_fidelity_dark_state_spam(QsimExperiment):
             self.process_histogram(countsDark)
 
             # this part of the loop checks the doppler counts to make sure cavity isnt drifting
+
             if i == 1:
-                self.counts_track_mean = np.mean(counts_doppler_dark)
-                self.counts_track_std_dev = np.sqrt(self.counts_track_mean)
+                self.counts_track_mean = np.mean(countsDopFixed)
                 print('mean doppler counts on first experiment is  = ' + str(self.counts_track_mean))
             elif i > 1:
-                last_exp_mean = np.mean(counts_doppler_dark)
-                print('Mean doppler counts on last experiment was = ' + str(last_exp_mean) + ' counts')
-                if (last_exp_mean < (self.counts_track_mean - self.counts_track_std_dev)) or (last_exp_mean > (self.counts_track_mean + self.counts_track_std_dev)):
-                    success, iterations = self.correct_cavity_drift()
-                    if success == True & iterations == 1:
-                        self.counts_track_mean = last_exp_mean
-                        self.counts_track_std_dev = np.sqrt(last_exp_mean)
-                    elif success == True & iterations != 1:
-                        pass
-                    elif success == False:
-                        break
+                diff = np.mean(countsDopFixed) - self.counts_track_mean
+                if np.abs(diff) > 7.0:
+                    self.cavity_voltage = self.cavity_voltage + np.sign(diff) * 0.005
+                    if np.sign(diff)*0.005 < 0.2:
+                        self.pzt_server.set_voltage(self.cavity_chan, U(self.cavity_voltage, 'V'))
+                        print('Updated cavity voltage to ' + str(self.cavity_voltage) + ' V')
+                else:
+                    pass
 
+            if j >= self.p.HighFidelityMeasurement.sequence_iterations:
+                break_1, break_2 = self.periodic_tweak_up()
+                j = 0
+            if break_1 or break_2:
+                break
+
+    def perform_initial_tweak_up(self):
+        self.init_dac_port_822_voltage = self.mp_server.get_output_voltage(self.dac_port_822)  # gets the init dac port voltage for the M2 lock
+        self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
+        self.init_line_center = self.run_interleaved_linescan()  # measure where the line is, needs to be before set_fixed_params
+        should_break_1 = self.run_microwave_linescan(qubit='qubit_minus')
+        should_break_2 = self.run_microwave_linescan(qubit='qubit_plus')
+        return should_break_1, should_break_2
 
     def process_histogram(self, countsDark):
         # process the count_bins and return the histogram with bins and photon counts/bin
@@ -134,11 +129,7 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         self.plot_hist(hist_dark, folder_name='Shelving_Histogram')
 
     def set_fixed_params(self):
-        self.p['Line_Selection.qubit'] = 'qubit_0'
-        self.pi_time = self.p.Pi_times.qubit_0
-        self.p['MicrowaveInterrogation.duration'] = self.pi_time
-        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
-        self.p['MicrowaveInterrogation.microwave_phase'] = U(0.0, 'deg')
+
         self.p['Modes.state_detection_mode'] = 'Shelving'
         self.p['Deshelving.power1'] = self.p.ddsDefaults.repump_760_1_power
         self.p['Deshelving.power2'] = self.p.ddsDefaults.repump_760_2_power
@@ -151,30 +142,31 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         prob_dark = self.get_pop(counts_dark)
         self.dv.add(num, prob_dark, context=self.prob_context)
 
-    def save_dark_data(self, counts, timetags):
+    def save_dark_data(self, counts):
         [counts_dark, counts_doppler_dark] = counts
-        [timetags_det_dark, timetags_dop_dark] = timetags
 
         dark_data = np.column_stack((np.arange(len(counts_dark)), np.array(counts_dark), np.array(counts_doppler_dark)))
         self.dv.add(dark_data, context=self.hf_dark_context)
-        self.dv.add(np.column_stack((np.zeros(len(timetags_det_dark)), np.array(timetags_det_dark))),
-                    context=self.tt_dark_det_context)
-        self.dv.add(np.column_stack((np.zeros(len(timetags_dop_dark)), np.array(timetags_dop_dark))),
-                    context=self.tt_dark_dop_context)
+
+    def periodic_tweak_up(self):
+        line_center = self.run_interleaved_linescan()
+        if np.abs(line_center - self.init_line_center) > 3.0:
+            success, iterations = self.correct_cavity_drift()
+        should_break_1 = self.run_microwave_linescan(qubit='qubit_minus')
+        should_break_2 = self.run_microwave_linescan(qubit='qubit_plus')
+        return should_break_1, should_break_2
 
     def delete_doppler_count_errors(self, counts_doppler_dark, counts_dark):
         """
         takes in the photon counts from each experiment, and the doppler cooling counts for each experiment. Deletes
         the fidelity measurements where the doppler cooling counts were below a user specified threshold
         """
-        doppler_mean = np.mean(np.where(counts_doppler_dark > 20.0)[0])
-        doppler_std_dev = np.sqrt(doppler_mean)
-        dark_errors = np.where(counts_doppler_dark <= doppler_mean -
-                               self.p.Shelving_Doppler_Cooling.threshold_std_dev * doppler_std_dev)
-        counts_dark_fixed = np.delete(counts_dark, dark_errors)
 
-        total_doppler_errors = len(dark_errors[0])
-        return counts_dark_fixed, total_doppler_errors
+        dark_errors = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+        counts_dark_fixed = np.delete(counts_dark, dark_errors)
+        counts_dop_fixed = np.delete(counts_doppler_dark, dark_errors)
+
+        return counts_dark_fixed, counts_dop_fixed
 
     def setup_high_fidelity_datavault(self):
         # datavault setup for the run number vs probability plots
@@ -184,22 +176,6 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         self.dataset_prob = self.dv.new('shelving_measurement', [('run', 'prob')],
                                         [('Prob', 'dark_prep', 'num')], context=self.prob_context)
         self.grapher.plot(self.dataset_prob, 'Fidelity', False)
-        for parameter in self.p:
-            self.dv.add_parameter(parameter, self.p[parameter], context=self.prob_context)
-
-        self.tt_dark_det_context = self.dv.context()
-        self.dv.cd(['', 'shelving_det_timetags_dark_only'], True, context=self.tt_dark_det_context)
-        self.tt_dark_det_dataset = self.dv.new('timetags', [('arb', 'arb')],
-                                           [('time', 'timetags', 'num')], context=self.tt_dark_det_context)
-        for parameter in self.p:
-            self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_dark_det_context)
-
-        self.tt_dark_dop_context = self.dv.context()
-        self.dv.cd(['', 'shelving_dop_timetags_dark_only'], True, context=self.tt_dark_dop_context)
-        self.tt_dark_dop_dataset = self.dv.new('timetags', [('arb', 'arb')],
-                                           [('time', 'timetags', 'num')], context=self.tt_dark_dop_context)
-        for parameter in self.p:
-            self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_dark_dop_context)
 
         self.hf_dark_context = self.dv.context()
         self.dv.cd(['', 'shelving_counts_dark_only'], True, context=self.hf_dark_context)
@@ -209,43 +185,6 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.hf_dark_context)
 
-    def get_detection_timetags_offset(self):
-
-        op_method = self.p.OpticalPumping.method
-        if op_method == 'Standard':
-            op_time = self.p.OpticalPumping.duration + self.p.OpticalPumping.extra_repump_time
-        elif op_method == 'Both':
-            op_time = self.p.OpticalPumping.duration + self.p.OpticalPumping.quadrupole_op_duration + self.p.OpticalPumping.extra_repump_time
-        elif op_method == 'QuadrupoleOnly':
-            op_time = self.p.OpticalPumping.quadrupole_op_duration + self.p.OpticalPumping.extra_repump_time
-            print('You have selected QuadrupoleOnly optical pumping, rethink your choices')
-
-        uW_method = self.p.MicrowaveInterrogation.pulse_sequence
-        if uW_method == 'standard':
-            uW_duration = self.p.MicrowaveInterrogation.duration + self.p.MicrowaveInterrogation.ttl_switch_delay
-        elif uW_method == 'knill':
-            uW_duration = 5.0 * self.p.MicrowaveInterrogation.duration + 5.0 * self.p.MicrowaveInterrogation.ttl_switch_delay
-        elif uW_method == 'SpinEcho':
-            uW_duration = 2.0 * self.p.MicrowaveInterrogation.duration + 3.0 * self.p.MicrowaveInterrogation.ttl_switch_delay
-        elif uW_method == 'SuSequence':
-            uW_duration = 5.0 * self.p.MicrowaveInterrogation.duration + 2 * U(15.0, 'us')
-        elif uW_method == 'DoubleStandard':
-            uW_duration = self.p.Pi_times.qubit_0 + self.p.Pi_times.qubit_minus + U(200.0, 'us')
-        elif uW_method == 'ClockStandard_KnillZeeman':
-            uW_duration = (self.p.Pi_times.qubit_0 + U(2.0, 'us')) + (5 * self.p.Pi_times.qubit_minus + U(4.0, 'us'))
-        else:
-            uW_duration = U(0.0, 'us')
-            print('You have not selected a microwave sequence that is in the timetags offset')
-
-
-        t_dark = [
-            self.p.Shelving_Doppler_Cooling.duration['s'],
-            op_time['s'],
-            uW_duration['s'],
-            self.p.Shelving.duration['s']
-        ]
-
-        return sum(t_dark)
 
     def run_interleaved_linescan(self):
         self.pulser.line_trigger_state(False)
@@ -279,25 +218,6 @@ class high_fidelity_dark_state_spam(QsimExperiment):
 
         center = popt[0]
         return center
-
-    def parse_timetags(self, timetags, doppler_counts, detection_counts):
-        """
-        Takes in the timetags, doppler counts, and detection counts, and
-        parses them into separate lists of doppler and detection counts
-        to be saved separately
-        """
-
-        detection_timetags = []
-        doppler_timetags = []
-
-        for j in range(len(doppler_counts)):
-            nDop = doppler_counts[j]
-            nDet = detection_counts[j]
-            doppler_timetags += list(timetags[:int(nDop)])
-            detection_timetags += list(timetags[int(nDop):int(nDet + nDop)])
-            timetags = timetags[int(nDop + nDet):]
-
-        return doppler_timetags, detection_timetags
 
     def lorentzian_fit(self, detuning, center, fwhm, scale, offset):
         """
@@ -333,46 +253,48 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         print('Finished cavity tweak up, resuming experiment')
         return True, j
 
-    def sinc_fit(self, freq, omega, center, offset):
-        """
-        This fits the sinc function created in an interleaved linescan,
-        identical to the fit function in RealSimpleGrapher
-        """
-        return (omega**2/(omega**2 + (center - freq)**2)) * np.sin(np.sqrt(omega**2 + (center - freq)**2)*np.pi/(2*omega))**2 + offset
 
     def run_microwave_linescan(self, qubit='qubit_minus'):
-        self.pulser.line_trigger_state(False)
-        self.ttl_server.ttl_output(self.state_detection_ttl_chan, False)
-        time.sleep(5)  # make sure the shutter flips
 
-        uW_linescan_context = self.sc.context()
+        if qubit == 'qubit_minus':
+            self.pulser.line_trigger_state(False)
+            # gather initial parameters that will need to be reset before resuming main experiment
+            init_params = self.p
+            uW_minus_context = self.sc.context()
+            ###########################################################################
 
-        self.uW_linescan = self.make_experiment(MicrowaveLineScan)
-        self.uW_linescan.initialize(self.cxn, uW_linescan_context, self.ident)
-        freqs, prob = self.uW_linescan.run(self.cxn, uW_linescan_context)
+            self.uW_minus = self.make_experiment(MicrowaveLineScanMinus)
+            self.uW_minus.initialize(self.cxn, uW_minus_context, self.ident)
+            self.uW_minus.run(self.cxn, uW_minus_context)
 
-        if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
-            self.pulser.line_trigger_state(True)
-            self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
+            if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
+                self.pulser.line_trigger_state(True)
+                self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
-        fit_guess = [5.0, 30.0, 4000.0, 1.0]
-        try:
-            popt, pcov = fit(self.lorentzian_fit, detunings[1:], counts[1:], p0=fit_guess)
-        except RuntimeError:
-            print('Fit did not work, returning RuntimeError from scipy.curve_fit')
-            return RuntimeError
+            self.p = init_params
 
-        if popt[2] < 200.0:
-            return RuntimeError
+        elif qubit == 'qubit_plus':
+            self.pulser.line_trigger_state(False)
+            # gather initial parameters that will need to be reset before resuming main experiment
+            init_params = self.p
+            uW_plus_context = self.sc.context()
+            ###########################################################################
 
-        center = popt[0]
-        return center
+            self.uW_plus = self.make_experiment(MicrowaveLineScanPlus)
+            self.uW_plus.initialize(self.cxn, uW_plus_context, self.ident)
+            self.uW_plus.run(self.cxn, uW_plus_context)
+
+            if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
+                self.pulser.line_trigger_state(True)
+                self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
+
+            self.p = init_params
+
 
     def finalize(self, cxn, context):
         # reset the line trigger and delay to false
         self.pulser.line_trigger_state(False)
-        self.ttl_server.ttl_output(self.state_detection_ttl_chan, False)
-        self.ttl_server.ttl_output(self.protection_beam_ttl_chan, False)
+
 
 
 
