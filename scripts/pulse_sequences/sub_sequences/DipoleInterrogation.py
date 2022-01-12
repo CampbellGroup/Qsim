@@ -17,6 +17,8 @@ class dipole_interrogation(pulse_sequence):
         ('ddsDefaults', 'optical_pumping_power'),
         ('ddsDefaults', 'state_detection_power'),
         ('ddsDefaults', 'repump_935_freq'),
+        ('ddsDefaults', 'repump_976_freq'),
+        ('ddsDefaults', 'repump_976_power'),
         ('ddsDefaults', 'DP369_freq')
     ]
 
@@ -54,5 +56,12 @@ class dipole_interrogation(pulse_sequence):
                     p.DipoleInterrogation.duration,
                     p.ddsDefaults.repump_935_freq,
                     p.DipoleInterrogation.repump_power)
+
+        self.addDDS('976SP',
+                    self.start,
+                    p.DipoleInterrogation.duration,
+                    p.ddsDefaults.repump_976_freq,
+                    p.ddsDefaults.repump_976_power)
+
         self.addTTL('TimeResolvedCount', self.start, p.DipoleInterrogation.duration)
         self.end = self.start + p.DipoleInterrogation.duration

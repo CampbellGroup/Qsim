@@ -41,12 +41,9 @@ class BrightStateDetection(QsimExperiment):
         threshold = self.p.ShelvingStateDetection.state_readout_threshold
         self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
         self.init_line_center = self.run_interleaved_linescan()
-        self.pv.set_parameter(('Transitions', 'main_cooling_369', U(self.init_line_center, 'MHz')))
-        self.pv.set_parameter(('MicrowaveInterrogation', 'duration', self.p.Pi_times.qubit_0))
-
         self.setup_prob_datavault()
-        i = 0
 
+        i = 0
         # run loop continuously until user stops experiment
         while True:
             self.pv.set_parameter(('MicrowaveInterrogation', 'duration', self.p.Pi_times.qubit_0))
@@ -61,12 +58,15 @@ class BrightStateDetection(QsimExperiment):
                 self.dv.add(bright_dataset, context=self.bright_state_counts)
 
                 doppler_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+                doppler_errors = np.unique(np.concatenate((doppler_errors[0], doppler_errors[0] - 1.0)))
                 counts = np.delete(counts, doppler_errors)
                 print('Mean detection counts on experiment ' + str(i) + ' = ' + str(np.mean(counts)))
 
             # run and process data if detection mode is standard
             elif mode == 'Standard':
                 [counts] = self.run_sequence(max_runs=1000, num=1)
+                bright_dataset = np.column_stack((np.arange(len(counts)), np.arange(len(counts)), np.array(counts)))
+                self.dv.add(bright_dataset, context=self.bright_state_counts)
 
             # process counts into a histogram and plot on grapher
             if i % points_per_hist == 0:
@@ -133,37 +133,24 @@ class BrightStateDetection(QsimExperiment):
                                   context=self.bright_state_counts)
 
     def run_interleaved_linescan(self):
+
+        init_params = self.p
+        print(self.p['Transitions.main_cooling_369'])
         self.pulser.line_trigger_state(False)
 
         linescan_context = self.sc.context()
 
         self.line_tracker = self.make_experiment(interleaved_linescan)
         self.line_tracker.initialize(self.cxn, linescan_context, self.ident)
-        try:
-            detunings, counts = self.line_tracker.run(self.cxn, linescan_context)
-        except TypeError:
-            return TypeError
-
-        if max(counts) < 100:
-            print("Lorentzian is weak or missing")
-            return RuntimeError
+        self.line_tracker.run(self.cxn, linescan_context)
 
         if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
-        fit_guess = [5.0, 30.0, 4000.0, 1.0]
-        try:
-            popt, pcov = fit(self.lorentzian_fit, detunings[2:], counts[2:], p0=fit_guess)
-        except RuntimeError:
-            print('Fit did not work, returning RuntimeError from scipy.curve_fit')
-            return RuntimeError
+        self.reload_all_parameters()
 
-        center = popt[0]
-        return center
-
-    def lorentzian_fit(self, detuning, center, fwhm, scale, offset):
-        return offset + scale * 0.5 * fwhm / ((detuning - center) ** 2 + (0.5 * fwhm) ** 2)
+        print(self.p['Transitions.main_cooling_369'])
 
     def correct_cavity_drift(self):
         center_before = self.run_interleaved_linescan()

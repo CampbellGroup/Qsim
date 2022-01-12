@@ -6,13 +6,12 @@ from sub_sequences.OpticalPumping import optical_pumping
 from sub_sequences.MicrowaveInterrogation import microwave_interrogation
 from sub_sequences.Deshelving import deshelving
 from sub_sequences.TurnOffAll import turn_off_all
-from sub_sequences.EmptySequence import empty_sequence
 
 
 class shelving_dark_spam(pulse_sequence):
 
     required_subsequences = [shelving, shelving_doppler_cooling, shelving_state_detection, deshelving,
-                             optical_pumping, microwave_interrogation, turn_off_all, empty_sequence]
+                             optical_pumping, microwave_interrogation, turn_off_all]
 
     required_parameters = [
                            ]
@@ -23,6 +22,5 @@ class shelving_dark_spam(pulse_sequence):
         self.addSequence(optical_pumping)
         self.addSequence(microwave_interrogation)
         self.addSequence(shelving)
-        self.addSequence(empty_sequence)
         self.addSequence(shelving_state_detection)
         self.addSequence(deshelving)

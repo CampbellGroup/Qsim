@@ -1,5 +1,6 @@
 import labrad
 from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequence
+from Qsim.scripts.pulse_sequences.ramsey_microwave_line_scan_point import ramsey_microwave_line_scan_point as ramsey_scan
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
@@ -17,12 +18,14 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
     exp_parameters.append(('MicrowaveLinescan', 'scan'))
+    exp_parameters.append(('MicrowaveLinescan', 'linescan_type'))
 
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
 
     exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.extend(ramsey_scan.all_required_parameters())
     exp_parameters.remove(('MicrowaveInterrogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
@@ -50,6 +53,8 @@ class MicrowaveLineScan(QsimExperiment):
         mode = self.p.Modes.state_detection_mode
         self.pulser.line_trigger_state(self.p.MicrowaveInterrogation.AC_line_trigger == 'On')
 
+        linescan_type = self.p.MicrowaveLinescan.linescan_type
+
 
         if qubit == 'qubit_0':
             center = self.p.Transitions.qubit_0
@@ -71,13 +76,18 @@ class MicrowaveLineScan(QsimExperiment):
                 break
 
             self.p['MicrowaveInterrogation.detuning'] = U(detuning, 'kHz')
-            self.program_pulser(sequence)
+            if linescan_type == 'Rabi':
+                self.program_pulser(sequence)
+            if linescan_type == 'Ramsey':
+                self.program_pulser(ramsey_scan)
 
             if mode == 'Shelving':
                 [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
                 errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
             if mode == 'Standard':
+                [counts] = self.run_sequence()
+            if mode == 'StandardFiberEOM':
                 [counts] = self.run_sequence()
 
             if i % self.p.StandardStateDetection.points_per_histogram == 0:

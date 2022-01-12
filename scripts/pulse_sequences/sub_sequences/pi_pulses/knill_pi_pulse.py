@@ -103,7 +103,9 @@ class knill_pi_pulse_plus(pulse_sequence):
         pi_time_plus = p.Pi_times.qubit_plus
         ttl_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
-       # pulse 1
+        print(p.Transitions.qubit_plus)
+
+        # pulse 1
         self.addTTL('MicrowaveTTL',
                     self.start + ttl_delay,
                     pi_time_plus)
@@ -114,7 +116,7 @@ class knill_pi_pulse_plus(pulse_sequence):
                     p.MicrowaveInterrogation.power,
                     U(30.0, 'deg'))
 
-        # pulse 2
+        # pulse 2400.000000
         self.addTTL('MicrowaveTTL',
                     self.start + 2 * ttl_delay + pi_time_plus,
                     pi_time_plus)
@@ -175,13 +177,14 @@ class knill_pi_pulse_minus(pulse_sequence):
         ('ddsDefaults', 'qubit_dds_freq')
     ]
 
-
     def sequence(self):
         p = self.parameters
 
         DDS_minus = p.ddsDefaults.qubit_dds_freq - p.Transitions.qubit_minus
         pi_time_minus = p.Pi_times.qubit_minus
         ttl_delay = p.MicrowaveInterrogation.ttl_switch_delay
+
+        print(p.Transitions.qubit_minus)
 
         # pulse 1
         self.addTTL('MicrowaveTTL',

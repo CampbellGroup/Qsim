@@ -70,6 +70,8 @@ def find_last_gate(gate_sequence, initial_state):
                     ['z', 1, np.pi], ['z', -1, np.pi],
                     ['i', 1, np.pi], ['i', -1, np.pi]]
 
+
+
     final_sequence = gate_sequence
     state = initial_state
     for gate in gate_sequence:
@@ -84,6 +86,32 @@ def find_last_gate(gate_sequence, initial_state):
             break
 
     last_pauli = random.choice(final_paulis)
+
+    if last_pauli[0] == 'x' or 'y':
+        if final_clifford[0] == 'z':
+            if final_clifford[1] == 1:
+                if last_pauli[0] == 'x' and last_pauli[1] == 1:
+                    last_pauli[0] = 'y'
+                elif last_pauli[0] == 'y' and last_pauli[1] == 1:
+                    last_pauli[0] = 'x'
+                    last_pauli[1] = -1
+                elif last_pauli[0] == 'x' and last_pauli[1] == -1:
+                    last_pauli[0] = 'y'
+                elif last_pauli[0] == 'y' and last_pauli[1] == -1:
+                    last_pauli[0] = 'x'
+                    last_pauli[1] = 1
+            elif final_clifford[1] == -1:
+                if last_pauli[0] == 'x' and last_pauli[1] == 1:
+                    last_pauli[0] = 'y'
+                    last_pauli[1] = -1
+                elif last_pauli[0] == 'y' and last_pauli[1] == 1:
+                    last_pauli[0] = 'x'
+                elif last_pauli[0] == 'x' and last_pauli[1] == -1:
+                    last_pauli[0] = 'y'
+                    last_pauli[1] = 1
+                elif last_pauli[0] == 'y' and last_pauli[1] == -1:
+                    last_pauli[0] = 'x'
+
     state = make_gate(last_pauli) * state
     expected_final_state = qt.Qobj(
         [[state[0][0][0] * state[0][0][0].conj()], [state[1][0][0] * state[1][0][0].conj()]])

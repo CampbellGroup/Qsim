@@ -58,7 +58,7 @@ class LoadControl(QtGui.QWidget):
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
         self.shutter_widget = QCustomSwitchChannel('399/Oven/ProtectionBeam',
-                                                   ('Open/Oven On', 'Closed/Oven Off'))
+                                                   ('Closed/Oven Off', 'Open/Oven On'))
         self.shutter_widget.TTLswitch.toggled.connect(self.toggle)
         self.timer_widget = QCustomTimer('Loading Time', show_control=False)
         self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 3.0))
@@ -87,18 +87,18 @@ class LoadControl(QtGui.QWidget):
     def on_new_counts(self, signal, pmt_value):
         pass
         disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')  # this throws error on closeout since listner is yielding to server
-        switch_on = self.shutter_widget.TTLswitch.isChecked()
+        switch_on = not self.shutter_widget.TTLswitch.isChecked()
         if (pmt_value >= disc_value) and switch_on:
-            self.shutter_widget.TTLswitch.setChecked(False)
+            self.shutter_widget.TTLswitch.setChecked(True)
             self.its_trap.play()
         elif (self.timer_widget.time >= 600.0) and switch_on:
             self.vader.play()
-            self.shutter_widget.TTLswitch.setChecked(False)
+            self.shutter_widget.TTLswitch.setChecked(True)
 
     @inlineCallbacks
     def toggle(self, value):
         yield self.changeState(value)
-        if value:
+        if not value:
             self.timer_widget.reset()
             self.timer_widget.start()
             yield self.oven.oven_output(True)

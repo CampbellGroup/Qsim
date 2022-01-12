@@ -8,15 +8,13 @@ from BrightStatePumping import bright_state_pumping
 
 
 class fidelity_tweak_up(pulse_sequence):
-
     required_subsequences = [doppler_cooling, standard_state_detection, turn_off_all,
                              bright_state_pumping, optical_pumping, microwave_interrogation]
 
     required_parameters = [
-                           ]
+    ]
 
     def sequence(self):
-
         self.addSequence(turn_off_all)
         self.addSequence(doppler_cooling)
         self.addSequence(bright_state_pumping)

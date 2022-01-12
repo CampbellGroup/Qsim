@@ -118,6 +118,8 @@ class QsimExperiment(experiment):
             reps = self.p.ShelvingStateDetection.repetitions
         elif self.state_detection_mode == 'Standard':
             reps = self.p.StandardStateDetection.repetitions
+        elif self.state_detection_mode == 'StandardFiberEOM':
+            reps = self.p.StandardStateDetection.repetitions
 
         # program pulser for a given number of runs of the experiment, and collect readout counts
         for i in range(int(reps)/max_runs):
@@ -194,6 +196,8 @@ class QsimExperiment(experiment):
         if self.state_detection_mode == 'Shelving':
             threshold = self.p.ShelvingStateDetection.state_readout_threshold
         elif self.state_detection_mode == 'Standard':
+            threshold = self.p.StandardStateDetection.state_readout_threshold
+        elif self.state_detection_mode == 'StandardFiberEOM':
             threshold = self.p.StandardStateDetection.state_readout_threshold
         prob = float(len(np.where(counts >= threshold)[0]))/float(len(counts))
         return prob

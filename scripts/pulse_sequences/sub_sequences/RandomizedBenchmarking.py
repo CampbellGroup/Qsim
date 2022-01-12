@@ -12,12 +12,19 @@ from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_minus_X
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_Y import pauli_Y
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_minus_Y import pauli_minus_Y
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_Id import pauli_Id
+from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.single_sequence_rb_testing import single_sequence_rb_testing
 
 
 class randomized_benchmarking_pulse(pulse_sequence):
 
     required_parameters = [
-        ('RandomizedBenchmarking', 'file_selection')
+        ('RandomizedBenchmarking', 'file_selection'),
+        ('MicrowaveInterrogation', 'power'),
+        ('MicrowaveInterrogation', 'ttl_switch_delay'),
+        ('Line_Selection', 'qubit'),
+        ('Transitions', 'qubit_0'),
+        ('ddsDefaults', 'qubit_dds_freq'),
+        ('Pi_times', 'qubit_0'),
                            ]
 
     required_subsequences = [
@@ -30,7 +37,8 @@ class randomized_benchmarking_pulse(pulse_sequence):
         pauli_minus_X,
         pauli_Y,
         pauli_minus_Y,
-        pauli_Id
+        pauli_Id,
+        single_sequence_rb_testing
     ]
 
     def sequence(self):
@@ -49,6 +57,8 @@ class randomized_benchmarking_pulse(pulse_sequence):
 
         # gets the file with the pulse sequence
         rb_pulses = np.loadtxt(p.RandomizedBenchmarking.file_selection, delimiter=',')
-
+        # num_reps = 10
+        # for i in range(num_reps):
+        #     self.addSequence(single_sequence_rb_testing)
         for pulse in rb_pulses:
             self.addSequence(pulse_dict[str(list(pulse))])

@@ -43,7 +43,7 @@ class RandomizedBenchmarking(QsimExperiment):
         for i in os.listdir(path_to_files):
             sets.append(int(i.split('_')[2]))
         sequences = []
-        print(max(sets))
+        #print(max(sets))
         if self.p.RandomizedBenchmarking.sequence_generation == 'Use Most Recent Set':
             path = path_to_files + 'Sequence_Set_' + str(max(sets))
             expected_outcomes = np.loadtxt(path + '/Sequence_Final_States.csv', delimiter=',', dtype=np.str)
@@ -72,8 +72,9 @@ class RandomizedBenchmarking(QsimExperiment):
         self.setup_grapher('Randomized Benchmarking')
         total_number_sequences = len(sequences)
         np.random.shuffle(sequences)
-        print(self.p.Pi_times.qubit_0['us'])
-        print(self.p.MicrowaveInterrogation.ttl_switch_delay['us'])
+        #print(self.p.Pi_times.qubit_0['us'])
+        #print(self.p.MicrowaveInterrogation.ttl_switch_delay['us'])
+        #print(self.p.Transitions.qubit_0['kHz'])
         for i in range(len(sequences)):
             should_break = self.update_progress(i/float(total_number_sequences))
             if should_break:
@@ -82,6 +83,7 @@ class RandomizedBenchmarking(QsimExperiment):
             rb_sequence = sequences[i]
             rb_sequence_label = rb_sequence[9:-4]
             clifford_length = float(rb_sequence_label.split('_')[0])
+            #outcome = 1
             outcome = float(expected_outcomes[np.where(expected_outcomes[:, 0] == rb_sequence_label)[0]][0][1])
 
             self.p['RandomizedBenchmarking.file_selection'] = path + '/' + rb_sequence
@@ -98,10 +100,14 @@ class RandomizedBenchmarking(QsimExperiment):
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
 
+
             pop = self.get_pop(counts)
 
             if mode == 'Standard':
                 fid = (1.0 - (-1.0)**(outcome) * pop) - outcome
+
+            if fid < 0.85:
+                print(rb_sequence_label)
 
             self.dv.add(clifford_length, fid)
 

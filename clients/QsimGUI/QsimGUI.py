@@ -14,6 +14,7 @@ class QSIM_GUI(QtGui.QMainWindow):
     def __init__(self, reactor, clipboard, parent=None):
         super(QSIM_GUI, self).__init__(parent)
         self.clipboard = clipboard
+        self.clipboard = clipboard
         self.reactor = reactor
         self.connect_labrad()
 
@@ -34,11 +35,12 @@ class QSIM_GUI(QtGui.QMainWindow):
         script_scanner = self.makeScriptScannerWidget(reactor, cxn)
         wavemeter = self.makeWavemeterWidget(reactor, cxn)
         control = self.makeControlWidget(reactor, cxn)
-        Ultrafast = self.makeUltrafastWidget(reactor, cxn)
+       # Ultrafast = self.makeUltrafastWidget(reactor, cxn)
         Pulser = self.makePulserWidget(reactor, cxn)
         Config = self.makeConfigWidget(reactor, cxn)
-        Keithley = self.makeKeithleyWidget(reactor, cxn)
+        #Keithley = self.makeKeithleyWidget(reactor, cxn)
         PiezoBox = self.makePiezoWidget(reactor, cxn)
+        WF = self.makeWindfreakWidget(reactor, cxn)
 
         # add tabs
         self.tabWidget = QtGui.QTabWidget()
@@ -47,9 +49,10 @@ class QSIM_GUI(QtGui.QMainWindow):
         self.tabWidget.addTab(control, '&Control')
         self.tabWidget.addTab(Pulser, '&Pulser')
         self.tabWidget.addTab(Config, '&Config')
-        self.tabWidget.addTab(Ultrafast, '&Ultrafast')
-        self.tabWidget.addTab(Keithley, '&Keithleys')
+        #self.tabWidget.addTab(Ultrafast, '&Ultrafast')
+        #self.tabWidget.addTab(Keithley, '&Keithleys')
         self.tabWidget.addTab(PiezoBox, '&Piezo Box')
+        self.tabWidget.addTab(WF, '&Windfreak')
         self.tabWidget.setMovable(True)
 
         layout.addWidget(self.tabWidget)
@@ -81,42 +84,42 @@ class QSIM_GUI(QtGui.QMainWindow):
         qwidget.setLayout(gridLayout)
         return qwidget
 
-    def makeKeithleyWidget(self, reactor, cxn):
-        qwidget = QtGui.QWidget()
-        from Qsim.clients.kiethley_control.kiethley_controller import kiethleyclient as oven
-        from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import kiethleyclient as bfield
-        gridLayout = QtGui.QGridLayout()
-        ovenKiethley = oven(reactor, cxn)
-        bfieldKiethley = bfield(reactor, cxn)
-        ovenKiethley.setMaximumHeight(200)
-        bfieldKiethley.setMaximumHeight(400)
-        gridLayout.addWidget(ovenKiethley, 0, 0, 2, 0)
-        gridLayout.addWidget(bfieldKiethley, 1, 0, 2, 1)
-        qwidget.setLayout(gridLayout)
-        return qwidget
+    # def makeKeithleyWidget(self, reactor, cxn):
+    #     qwidget = QtGui.QWidget()
+    #     from Qsim.clients.kiethley_control.kiethley_controller import kiethleyclient as oven
+    #     from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import kiethleyclient as bfield
+    #     gridLayout = QtGui.QGridLayout()
+    #     ovenKiethley = oven(reactor, cxn)
+    #     bfieldKiethley = bfield(reactor, cxn)
+    #     ovenKiethley.setMaximumHeight(200)
+    #     bfieldKiethley.setMaximumHeight(400)
+    #     gridLayout.addWidget(ovenKiethley, 0, 0, 2, 0)
+    #     gridLayout.addWidget(bfieldKiethley, 1, 0, 2, 1)
+    #     qwidget.setLayout(gridLayout)
+    #     return qwidget
 
     def makeConfigWidget(self, reactor, cxn):
         from common.lib.clients.config_editor.config_editor import CONFIG_EDITOR
         widget = CONFIG_EDITOR(reactor, cxn)
         return widget
 
-    def makeUltrafastWidget(self, reactor, cxn):
-        twidget = QtGui.QWidget()
-        from common.lib.clients.evPump.evPumpClient import eVPumpClient
-        from common.lib.clients.bristol.bristol_client import bristol_client
-        #from Qsim.clients.time_harp_client.time_harp_client import TimeHarpClient
-        gridLayout = QtGui.QGridLayout()
-        evpump = eVPumpClient(reactor)
-        evpump.setMaximumHeight(500)
-        bristol = bristol_client(reactor)
-        #timeharp = TimeHarpClient(reactor, cxn)
-        #timeharp.setMaximumHeight(620)
-        bristol.setMaximumHeight(200)
-        gridLayout.addWidget(evpump, 0, 0)
-        gridLayout.addWidget(bristol, 1, 0, 1, 2)
-        #gridLayout.addWidget(timeharp, 0, 1)
-        twidget.setLayout(gridLayout)
-        return twidget
+    # def makeUltrafastWidget(self, reactor, cxn):
+    #     twidget = QtGui.QWidget()
+    #     from common.lib.clients.evPump.evPumpClient import eVPumpClient
+    #     from common.lib.clients.bristol.bristol_client import bristol_client
+    #     #from Qsim.clients.time_harp_client.time_harp_client import TimeHarpClient
+    #     gridLayout = QtGui.QGridLayout()
+    #     evpump = eVPumpClient(reactor)
+    #     evpump.setMaximumHeight(500)
+    #     bristol = bristol_client(reactor)
+    #     #timeharp = TimeHarpClient(reactor, cxn)
+    #     #timeharp.setMaximumHeight(620)
+    #     bristol.setMaximumHeight(200)
+    #     gridLayout.addWidget(evpump, 0, 0)
+    #     gridLayout.addWidget(bristol, 1, 0, 1, 2)
+    #     #gridLayout.addWidget(timeharp, 0, 1)
+    #     twidget.setLayout(gridLayout)
+    #     return twidget
 
     def makeScriptScannerWidget(self, reactor, cxn):
         from common.lib.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
@@ -157,6 +160,11 @@ class QSIM_GUI(QtGui.QMainWindow):
         gridLayout.setSpacing(1)
         widget.setLayout(gridLayout)
         return widget
+
+    def makeWindfreakWidget(self, reactor, cxn):
+        from Qsim.clients.windfreak_client.windfreak_client import windfreak_client
+        wfclient = windfreak_client(reactor)
+        return wfclient
 
     def closeEvent(self, x):
         self.reactor.stop()

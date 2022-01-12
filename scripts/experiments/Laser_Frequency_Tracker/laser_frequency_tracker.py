@@ -24,11 +24,11 @@ class laser_frequency_tracker(QsimExperiment):
 
         self.ident = ident
         self.cxnwlm = labrad.connect('10.97.112.2', name=socket.gethostname() + " Laser Monitor", password=os.environ['LABRADPASSWORD'])
-        self.cxn369 = labrad.connect('10.97.112.4', name=socket.gethostname() + " Laser Monitor", password=os.environ['LABRADPASSWORD'])
+        # self.cxn369 = labrad.connect('10.97.112.4', name=socket.gethostname() + " Laser Monitor", password=os.environ['LABRADPASSWORD'])
         self.wlm = self.cxnwlm.multiplexerserver
-        self.wlm369 = self.cxn369.multiplexerserver
+        # self.wlm369 = self.cxn369.multiplexerserver
         # self.chan_dict = {'369': 1, '760_1': 5, '935': 4, '399': 1, '760_2': 3, '822': 2, '976': 7}
-        self.chan_dict = {'369': 1, '760_1': 5, '935': 4, '399': 1, '760_2': 2, '822': 3, '976': 7}
+        self.chan_dict = {'369': 1, '760_1': 5, '935': 4, '399': 1, '760_2': 2, '822': 3, '976': 7, 'single_channel': 1}
 
     def run(self, cxn, context):
 
@@ -113,7 +113,7 @@ class laser_frequency_tracker(QsimExperiment):
 
     def finalize(self, cxn, context):
         self.cxnwlm.disconnect()
-        self.cxn369.disconnect()
+        # self.cxn369.disconnect()
 
 
 

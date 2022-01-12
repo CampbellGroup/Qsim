@@ -21,6 +21,8 @@ class shelving(pulse_sequence):
         ('DopplerCooling', 'detuning'),
         ('ddsDefaults', 'optical_pumping_freq'),
         ('ddsDefaults', 'optical_pumping_power'),
+        ('ddsDefaults', 'metastable_qubit_dds_power'),
+        ('ddsDefaults', 'metastable_qubit_dds_freq')
     ]
 
     def sequence(self):
@@ -29,16 +31,22 @@ class shelving(pulse_sequence):
         """
         This is the standard shelving stuff below
         """
-        self.addDDS('411DP1',
+        self.addDDS('411DP2',
                     self.start,
                     p.Shelving.duration,
-                    p.ddsDefaults.DP1_411_freq,
-                    p.ddsDefaults.DP1_411_power)
+                    p.ddsDefaults.DP2_411_freq,
+                    p.ddsDefaults.DP2_411_power)
 
         self.addDDS('935SP',
                     self.start,
                     p.Shelving.duration,
                     p.ddsDefaults.repump_935_freq,
                     p.ddsDefaults.repump_935_power)
+
+        #self.addDDS('3GHz_qubit',
+        #            self.start,
+        #            p.Shelving.duration,
+        #            p.ddsDefaults.metastable_qubit_dds_freq,
+        #            p.ddsDefaults.metastable_qubit_dds_power)
 
         self.end = self.start + p.Shelving.duration

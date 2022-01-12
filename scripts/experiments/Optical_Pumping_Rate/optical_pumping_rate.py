@@ -46,6 +46,13 @@ class optical_pumping_rate(QsimExperiment):
                 self.program_pulser(sequence)
                 [detection_counts] = self.run_sequence(num=1, max_runs=1000)
 
+            elif self.p.OpticalPumping.method == 'StandardFiberEOM':
+                self.p['OpticalPumping.quadrupole_op_duration'] = U(0.0, 'us')
+                self.p['OpticalPumping.duration'] = U(duration, 'us')
+                self.p['Modes.state_detection_mode'] = 'StandardFiberEOM'
+                self.program_pulser(sequence)
+                [detection_counts] = self.run_sequence(num=1, max_runs=1000)
+
             elif self.p.OpticalPumping.method == 'QuadrupoleOnly':
                 if self.p.Modes.state_detection_mode == 'Shelving':
                     self.p['OpticalPumping.duration'] = U(0.0, 'us')

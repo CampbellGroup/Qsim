@@ -15,6 +15,7 @@ class wavemeter_linescan(QsimExperiment):
     exp_parameters.append(('Transitions', 'shelving_411'))
     exp_parameters.append(('Transitions', 'Hudson'))
     exp_parameters.append(('Transitions', 'repump_760_repump'))
+    exp_parameters.append(('Transitions', 'repump_760_repump'))
     exp_parameters.append(('Transitions', 'repump_976'))
 
     exp_parameters.append(('wavemeterscan', 'scan_range_935'))
@@ -30,12 +31,13 @@ class wavemeter_linescan(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
 
+        print('initializing')
         self.ident = ident
         self.cxnwlm = labrad.connect('10.97.112.2', password='lab')
         self.wm = self.cxnwlm.multiplexerserver
-        if self.p.wavemeterscan.lasername == 'Hudson':
-            self.cxnhudwlm = labrad.connect('10.97.111.8', password='lab')
-            self.wm = self.cxnhudwlm.multiplexerserver
+        # if self.p.wavemeterscan.lasername == 'Hudson':
+        #    self.cxnhudwlm = labrad.connect('10.97.111.8', password='lab')
+        #    self.wm = self.cxnhudwlm.multiplexerserver
 
     def run(self, cxn, context):
 
@@ -66,11 +68,14 @@ class wavemeter_linescan(QsimExperiment):
 
         if len(self.tempdata) > 0:
             self.tempdata.sort()
-            if self.p.wavemeterscan.lasername in ['760', '760 (Repump)']:
-                self.setup_grapher('760_linescan')
-            else:
-                self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
             self.dv.add(self.tempdata)
+            try:
+                if self.p.wavemeterscan.lasername in ['760', '760 (Repump)']:
+                    self.setup_grapher('760_linescan')
+                else:
+                    self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
+            except KeyError:
+                pass
 
     def take_data(self, progress, delay):
         init_time = time.time()
@@ -78,8 +83,11 @@ class wavemeter_linescan(QsimExperiment):
             should_break = self.update_progress(progress)
             if should_break:
                 self.tempdata.sort()
-                self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
                 self.dv.add(self.tempdata)
+                try:
+                    self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
+                except KeyError:
+                    pass
                 return
 
             counts = self.pmt.get_next_counts('ON', 1, False)[0]
@@ -120,10 +128,10 @@ class wavemeter_linescan(QsimExperiment):
             self.dac_port = 3
 
         elif self.p.wavemeterscan.lasername == 'Hudson':
-            self.centerfrequency = self.p.Transitions.Hudson
-            self.scan_range = self.p.wavemeterscan.scan_range_Hudson
-            self.channel = 14
-            self.dac_port = 8
+           self.centerfrequency = self.p.Transitions.Hudson
+           self.scan_range = self.p.wavemeterscan.scan_range_Hudson
+           self.channel = 1
+           self.dac_port = 1
 
         self.wait_time = self.p.wavemeterscan.rail_wait_time
 
@@ -138,6 +146,7 @@ class wavemeter_linescan(QsimExperiment):
             return None
 
     def finalize(self, cxn, context):
+
         self.cxnwlm.disconnect()
 
 
