@@ -15,28 +15,28 @@ class pulser_phase_diagnostic(pulse_sequence):
         interrupt_duration = 0.33*duration
         interrupt_time = 0.33*duration
 
-        #start
+        # start
         self.addDDS('760SP',
                     start=self.start,
                     duration=interrupt_time,
                     frequency=f1,
                     amplitude=U(-5, 'dBm'))
 
-        #switch frequency at some time
+        # switch frequency at some time
         self.addDDS('760SP',
                     start=self.start + interrupt_time,
                     duration=interrupt_duration,
                     frequency=f2,
                     amplitude=U(-5, 'dBm'))
 
-        #switch back at a later time
+        # switch back at a later time
         self.addDDS('760SP',
                     start=self.start + interrupt_time + interrupt_duration,
                     duration=duration-interrupt_duration-interrupt_time,
                     frequency=f1,
                     amplitude=U(-5, 'dBm'))
 
-        #reference frequency never changes
+        # reference frequency never changes
         self.addDDS('3_GHz_qubit',
                     start=self.start,
                     duration=duration,

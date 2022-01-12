@@ -26,7 +26,6 @@ class microwave_ramsey_point(pulse_sequence):
     def sequence(self):
         mode = self.parameters.Modes.state_detection_mode
 
-
         if mode == 'Shelving':
             self.addSequence(turn_off_all)
             self.addSequence(shelving_doppler_cooling)

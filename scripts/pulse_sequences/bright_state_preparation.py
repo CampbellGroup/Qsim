@@ -39,4 +39,3 @@ class bright_state_preparation(pulse_sequence):
             self.addSequence(shelving)
             self.addSequence(shelving_state_detection)
             self.addSequence(deshelving)
-

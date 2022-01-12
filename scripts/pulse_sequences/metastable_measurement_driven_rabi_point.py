@@ -33,7 +33,6 @@ class metastable_measurement_driven_rabi_point(pulse_sequence):
         ]
 
     def sequence(self):
-
         p = self.parameters
 
         self.addSequence(turn_off_all)

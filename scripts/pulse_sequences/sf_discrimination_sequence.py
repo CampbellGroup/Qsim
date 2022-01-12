@@ -11,7 +11,7 @@ class sf_discrimination_sequence(pulse_sequence):
         ]
 
     def sequence(self):
-       p = self.parameters
+        p = self.parameters
 
-       self.addSequence(turn_off_all)
-       self.addSequence(sf_discrimination_detection)
+        self.addSequence(turn_off_all)
+        self.addSequence(sf_discrimination_detection)

@@ -72,7 +72,7 @@ class optical_pumping(pulse_sequence):
             self.addDDS('369DP',
                         self.start,
                         p.OpticalPumping.duration,
-                        p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq,#  + p.OpticalPumping.detuning/2.0,
+                        p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq,  # + p.OpticalPumping.detuning/2.0,
                         p.OpticalPumping.power)
             self.addDDS('935SP',
                         self.start,

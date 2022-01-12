@@ -1,5 +1,5 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from labrad.units import WithUnit as U
+
 
 class shelving(pulse_sequence):
 
@@ -36,17 +36,14 @@ class shelving(pulse_sequence):
                     p.Shelving.duration,
                     p.ddsDefaults.DP2_411_freq,
                     p.ddsDefaults.DP2_411_power)
-
         self.addDDS('935SP',
                     self.start,
                     p.Shelving.duration,
                     p.ddsDefaults.repump_935_freq,
                     p.ddsDefaults.repump_935_power)
-
-        #self.addDDS('3GHz_qubit',
+        # self.addDDS('3GHz_qubit',
         #            self.start,
         #            p.Shelving.duration,
         #            p.ddsDefaults.metastable_qubit_dds_freq,
         #            p.ddsDefaults.metastable_qubit_dds_power)
-
         self.end = self.start + p.Shelving.duration

@@ -25,7 +25,7 @@ class metastable_four_preparation(pulse_sequence):
         self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)  # readout counts call 1
         self.addSequence(optical_pumping)
-        #self.addSequence(microwave_interrogation)
+        # self.addSequence(microwave_interrogation)
         self.addSequence(shelving)
         self.addSequence(heralded_four_preparation)  # readout counts call 2
         self.addSequence(metastable_state_detection)  # readout counts call 3

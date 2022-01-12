@@ -6,7 +6,6 @@ from sub_sequences.StandardStateDetection import standard_state_detection
 from sub_sequences.OpticalPumping import optical_pumping
 
 
-
 class microwave_point_minus(pulse_sequence):
 
     required_subsequences = [turn_off_all, doppler_cooling,

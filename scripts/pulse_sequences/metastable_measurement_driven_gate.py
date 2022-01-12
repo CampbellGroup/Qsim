@@ -15,10 +15,10 @@ class metastable_measurement_driven_gate(pulse_sequence):
 
     required_subsequences = [
         turn_off_all,
-        metastable_state_detection, 
-        optical_pumping, 
+        metastable_state_detection,
+        optical_pumping,
         shelving,
-        shelving_doppler_cooling, 
+        shelving_doppler_cooling,
         deshelving,
         heralded_four_preparation,
         metastable_measurement_driven_gate_deltaTheta,
@@ -33,7 +33,6 @@ class metastable_measurement_driven_gate(pulse_sequence):
         ]
 
     def sequence(self):
-
         p = self.parameters
 
         self.addSequence(turn_off_all)

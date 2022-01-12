@@ -8,6 +8,7 @@ from sub_sequences.Deshelving import deshelving
 from sub_sequences.Shelving import shelving
 from sub_sequences.DoublePass369 import double_pass_369
 
+
 class doppler_cooling_leakthrough_test(pulse_sequence):
 
     required_subsequences = [doppler_cooling, standard_state_detection, optical_pumping,

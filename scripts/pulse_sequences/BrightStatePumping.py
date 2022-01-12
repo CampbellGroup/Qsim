@@ -2,9 +2,9 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from Qsim.scripts.pulse_sequences.sub_sequences.MicrowaveInterrogation import microwave_interrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.OpticalPumping import optical_pumping
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.Hadamard import hadamard
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.MicrowaveSequenceStandard_RandomPhase import microwave_sequence_standard_random_phase
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.MicrowaveSequenceStandard_RandomPhase import \
+    microwave_sequence_standard_random_phase
 from labrad.units import WithUnit as U
-import numpy as np
 
 
 class bright_state_pumping(pulse_sequence):
@@ -30,7 +30,6 @@ class bright_state_pumping(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        # self.end = self.start + p.BrightStatePumping.duration
 
         if p.BrightStatePumping.bright_prep_method == 'Doppler Cooling':
             self.addTTL('WindfreakSynthHDTTL',

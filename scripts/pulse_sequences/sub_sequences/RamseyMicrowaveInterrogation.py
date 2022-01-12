@@ -29,7 +29,7 @@ class ramsey_microwave_interrogation(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        #  select which mcirwave transition to drive
+        #  select which microwave transition to drive
         if p.Line_Selection.qubit == 'qubit_0':
             center = p.Transitions.qubit_0
             pi_time = p.Pi_times.qubit_0
@@ -41,6 +41,8 @@ class ramsey_microwave_interrogation(pulse_sequence):
         elif p.Line_Selection.qubit == 'qubit_minus':
             center = p.Transitions.qubit_minus
             pi_time = p.Pi_times.qubit_minus
+        else:
+            raise ValueError("Incorrect qubit selection")
 
         if p.MicrowaveInterrogation.microwave_source == 'HP+DDS':
             DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)

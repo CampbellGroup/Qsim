@@ -12,7 +12,6 @@ from sub_sequences.HeraldedFourPreparation import heralded_four_preparation
 
 
 class heralded_metastable_microwave_ramsey_point(pulse_sequence):
-
     required_subsequences = [turn_off_all, deshelving, shelving_doppler_cooling,
                              optical_pumping, empty_sequence, shelving,
                              metastable_ramsey_microwave_interrogation, microwave_interrogation,
@@ -22,10 +21,9 @@ class heralded_metastable_microwave_ramsey_point(pulse_sequence):
                            ('MetastableMicrowaveRamsey', 'delay_time'),
                            ('MetastableMicrowaveRamsey', 'fixed_delay_time'),
                            ('MetastableMicrowaveRamsey', 'phase_scan'),
-        ]
+                           ]
 
     def sequence(self):
-
         self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)  # readout counts 1
         self.addSequence(optical_pumping)
@@ -35,4 +33,3 @@ class heralded_metastable_microwave_ramsey_point(pulse_sequence):
         self.addSequence(metastable_ramsey_microwave_interrogation)
         self.addSequence(metastable_state_detection)  # readout counts 3
         self.addSequence(deshelving)
-

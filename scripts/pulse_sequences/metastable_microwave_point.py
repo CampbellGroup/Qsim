@@ -23,7 +23,7 @@ class metastable_microwave_point(pulse_sequence):
         self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)
         self.addSequence(optical_pumping)
-        #self.addSequence(microwave_interrogation)
+        # self.addSequence(microwave_interrogation)
         self.addSequence(shelving)
         self.addSequence(metastable_microwave_interrogation)
         self.addSequence(metastable_state_detection)

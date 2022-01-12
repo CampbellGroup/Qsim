@@ -38,7 +38,7 @@ class metastable_qnd_detection(pulse_sequence):
         self.addDDS('369DP',
                     self.start,
                     p.MetastableStateDetection.duration,
-                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning/2.0,
+                    p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning / 2.0,
                     p.MetastableStateDetection.CW_power)
 
         self.addDDS('DopplerCoolingSP',

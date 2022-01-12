@@ -1,5 +1,5 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from labrad.units import WithUnit as U
+
 
 class metastable_microwave_sequence_standard(pulse_sequence):
 
@@ -24,5 +24,4 @@ class metastable_microwave_sequence_standard(pulse_sequence):
                     p.Metastable_Microwave_Interrogation.duration,
                     DDS_freq,
                     p.ddsDefaults.metastable_qubit_dds_power)
-
         self.end = self.start + p.Metastable_Microwave_Interrogation.duration

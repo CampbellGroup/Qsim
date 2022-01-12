@@ -1,5 +1,4 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from labrad.units import WithUnit as U
 
 
 class heralded_four_preparation(pulse_sequence):
@@ -66,7 +65,7 @@ class heralded_four_preparation(pulse_sequence):
         self.addDDS('369DP',
                     self.start + p.Pi_times.metastable_qubit,
                     p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
-                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning/2.0,
+                    p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning / 2.0,
                     p.MetastableStateDetection.CW_power)
 
         self.addDDS('DopplerCoolingSP',

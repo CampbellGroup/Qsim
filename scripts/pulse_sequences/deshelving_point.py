@@ -16,7 +16,6 @@ class deshelving_point(pulse_sequence):
         self.addSequence(turn_off_all)
         self.addSequence(shelving_doppler_cooling)
         self.addSequence(shelving)
-        self.addSequence(variable_deshelving) #scannable duration hacks since cant replace parameter for just one
+        self.addSequence(variable_deshelving)  # scannable duration hacks since cant replace parameter for just one
         self.addSequence(shelving_state_detection)
         self.addSequence(deshelving)
-        

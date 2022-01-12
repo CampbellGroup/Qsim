@@ -47,7 +47,7 @@ class metastable_measurement_driven_rabi(pulse_sequence):
                         p.ddsDefaults.metastable_qubit_dds_power,
                         U(0.0, 'deg'))
 
-            #self.addDDS('760SP',
+            # self.addDDS('760SP',
             #            self.start + n*delta_t + n*(n-1.0)*delta_t + (n-1.0)*t_deshelve,
             #            t_deshelve,
             #            p.ddsDefaults.repump_760_1_freq,
