@@ -1,9 +1,9 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.microwave_pulse_sequences.MicrowaveInterrogationPlus import microwave_interrogation_plus
-from sub_sequences.TurnOffAll import turn_off_all
-from sub_sequences.StandardStateDetection import standard_state_detection
-from sub_sequences.OpticalPumping import optical_pumping
+from Qsim.scripts.pulse_sequences.sub_sequences.doppler_cooling import doppler_cooling
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.microwave_interrogation_plus import microwave_interrogation_plus
+from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import turn_off_all
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import standard_state_detection
+from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import optical_pumping
 
 
 class microwave_point_plus(pulse_sequence):

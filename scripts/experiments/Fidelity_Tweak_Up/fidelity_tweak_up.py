@@ -7,7 +7,7 @@ from labrad.units import WithUnit as U
 
 class fidelity_tweak_up(QsimExperiment):
     """
-    Performs a continuous state preparation and measurment experiment of the ion. This experiment has been
+    Performs a continuous state preparation and measurement experiment of the ion. This experiment has been
     modified to be exclusively used with standard I = 1/2 qubit state readout, and a separate experiment is
     written for Shelving readout of the qubit.
     """

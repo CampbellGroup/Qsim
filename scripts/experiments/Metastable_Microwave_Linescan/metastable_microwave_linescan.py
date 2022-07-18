@@ -1,6 +1,6 @@
 import labrad
-from Qsim.scripts.pulse_sequences.metastable_microwave_point import metastable_microwave_point as sequence
-from Qsim.scripts.pulse_sequences.heralded_metastable_microwave_point import heralded_metastable_microwave_point as heralded_sequence
+from Qsim.scripts.pulse_sequences.microwave_point.metastable_microwave_point import metastable_microwave_point as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.heralded_metastable_microwave_point import heralded_metastable_microwave_point as heralded_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
@@ -26,11 +26,6 @@ class MetastableMicrowaveLineScan(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_minus'))
 
     exp_parameters.extend(sequence.all_required_parameters())
-
-    # exp_parameters.remove(('MicrowaveInterogation', 'detuning'))
-    # exp_parameters.remove(('MicrowaveInterogation', 'duration'))
-    # exp_parameters.remove(('MetastableMicrowaveInterogation', 'detuning'))
-    # exp_parameters.remove(('MetastableMicrowaveInterogation', 'duration'))
 
     exp_parameters.append(('MetastableStateDetection', 'repetitions'))
     exp_parameters.append(('MetastableStateDetection', 'herald_state_prep'))

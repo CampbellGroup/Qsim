@@ -1,7 +1,7 @@
 """
 ### BEGIN EXPERIMENT INFO
 [info]
-name = image_fluorescence
+name = Image_Fluorescence
 load_into_scriptscanner = True
 allow_concurrent = []
 ### END EXPERIMENT INFO
@@ -14,11 +14,8 @@ import time
 import numpy as np
 
 class image_fluorescence(QsimExperiment):
-    """
-    This experiment integrates the total counts on the camera from the most recent image and
-    plots the integrated fluorescence from the image as a function of time
-    """
-    name = 'image_fluorescence'
+
+    name = 'Image_Fluorescence'
 
     exp_parameters = []
 

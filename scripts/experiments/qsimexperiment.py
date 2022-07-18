@@ -54,25 +54,21 @@ class QsimExperiment(experiment):
             error_message = error + '\n' + "Grapher is not running"
             raise KeyError(error_message)
 
-        #try:
+        # try:
         #    self.timeharp = self.cxn.servers['timeharpserver']
-        #except KeyError as error:
+        # except KeyError as error:
         #    error_message = str(error) + '\n' + "TimeHarp is not running"
         #    raise KeyError(error_message)
 
     def setup_datavault(self, x_axis, y_axis):
-
-        '''
+        """
         Adds parameters to datavault and parameter vault
-        '''
-
+        """
         self.dv.cd(['', self.name], True)
         self.dataset = self.dv.new(self.name, [(x_axis, 'num')],
                                    [(y_axis, '', 'num')])
-
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter])
-
         return self.dataset
 
     def setup_grapher(self, tab):
@@ -120,6 +116,8 @@ class QsimExperiment(experiment):
             reps = self.p.StandardStateDetection.repetitions
         elif self.state_detection_mode == 'StandardFiberEOM':
             reps = self.p.StandardStateDetection.repetitions
+        else:
+            return
 
         # program pulser for a given number of runs of the experiment, and collect readout counts
         for i in range(int(reps)/max_runs):
@@ -145,7 +143,6 @@ class QsimExperiment(experiment):
             counts_parsed.append(counts[i::num])
         return counts_parsed
 
-
     def run_sequence_with_timetags(self, max_runs=1000, num=1):
         # empty arrays to store photon counts and time tags
         counts = np.array([])
@@ -157,6 +154,8 @@ class QsimExperiment(experiment):
             reps = self.p.ShelvingStateDetection.repetitions
         elif self.state_detection_mode == 'Standard':
             reps = self.p.StandardStateDetection.repetitions
+        else:
+            return
 
         for i in range(int(reps) / max_runs):
             self.pulser.start_number(max_runs)
@@ -183,9 +182,7 @@ class QsimExperiment(experiment):
             counts_parsed.append(counts[i::num])
         return counts_parsed, [tt]
 
-
     def process_data(self, counts):
-        bins = []
         bins = list(np.arange(0, np.max(counts) + 1, 1))
         events = [list(counts).count(i) for i in bins]
         hist = np.column_stack((bins, events))
@@ -199,6 +196,8 @@ class QsimExperiment(experiment):
             threshold = self.p.StandardStateDetection.state_readout_threshold
         elif self.state_detection_mode == 'StandardFiberEOM':
             threshold = self.p.StandardStateDetection.state_readout_threshold
+        else:
+            return
         prob = float(len(np.where(counts >= threshold)[0]))/float(len(counts))
         return prob
 
@@ -238,7 +237,6 @@ class QsimExperiment(experiment):
             if timetag != 0:
                 timetags.append(timetag)
         return timetags
-
 
     def _finalize(self, cxn, context):
         self.pmt.set_mode(self.init_mode)

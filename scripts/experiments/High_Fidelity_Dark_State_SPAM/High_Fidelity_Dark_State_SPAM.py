@@ -307,8 +307,6 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         self.pulser.line_trigger_state(False)
 
 
-
-
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner

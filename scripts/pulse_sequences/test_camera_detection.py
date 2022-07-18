@@ -1,5 +1,5 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.TestCameraDetection import test_camera_detection
+from sub_sequences.test_camera_detection import test_camera_detection
 
 
 class test_camera_detection(pulse_sequence):

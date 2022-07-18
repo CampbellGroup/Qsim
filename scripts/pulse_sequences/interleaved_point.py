@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.DipoleInterrogation import dipole_interrogation
-from sub_sequences.TurnOffAll import turn_off_all
+from sub_sequences.doppler_cooling import doppler_cooling
+from sub_sequences.dipole_interrogation import dipole_interrogation
+from sub_sequences.turn_off_all import turn_off_all
 
 
 class interleaved_point(pulse_sequence):

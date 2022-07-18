@@ -93,6 +93,7 @@ trigger_modes = (
     'fm modulation',
 )
 
+
 class windfreak_wrapper(DeviceWrapper):
 
     @inlineCallbacks
@@ -177,7 +178,16 @@ class Windfreak_Server(DeviceServer):
         self.channel = 0
         self.onoff = [0, 0]
         self.phase = [0., 0.]
-        print('loading config info...',)
+        self.sweep_freq_low = [0., 0.]
+        self.sweep_freq_high = [0., 0.]
+        self.sweep_freq_step = [0., 0.]
+        self.sweep_time_step = [0., 0.]
+        self.sweep_type = 0
+        self.sweep_cont_onoff = [0, 0]
+        self.sweep_single_onoff = [0, 0]
+        self.sweep_power_low = [0., 0.]
+        self.sweep_power_high = [0., 0.]
+        self.sweep_single = [0, 0]
         self.reg = self.client.registry()
         yield self.loadConfigInfo()
         yield DeviceServer.initServer(self)
@@ -194,11 +204,9 @@ class Windfreak_Server(DeviceServer):
         reg = self.reg
         yield reg.cd(['', 'Servers', 'windfreak', 'Links'], True)
         dirs, keys = yield reg.dir()
-        #print(dirs, keys)
         p = reg.packet()
         for k in keys:
             p.get(k, key=k)
-            #print(p.get(k, key=k))
         ans = yield p.send()
         self.serialLinks = dict((k, ans[k]) for k in keys)
         # Get output state and last value of current set
@@ -221,7 +229,7 @@ class Windfreak_Server(DeviceServer):
                 continue
             server = self.client[serServer]
             ports = yield server.list_serial_ports()
-            print(ports)
+            print('found devices on {}'.format(ports))
             if port not in ports:
                 continue
             devName = '%s - %s' % (serServer, port)
@@ -264,7 +272,7 @@ class Windfreak_Server(DeviceServer):
 
     @setting(16, channel='i', freq='v')
     def set_freq(self, c, channel, freq):
-        if freq < 53.0 or freq > 13999.999999:
+        if freq < 53.0 or freq > 14800.999999:
             returnValue('Frequency must be between 53.0 and 13999.999999MHz.')
         else:
             self.frequency[channel] = freq
@@ -323,10 +331,14 @@ class Windfreak_Server(DeviceServer):
 
     @setting(27, channel='i', returns='b')
     def get_enable(self, c, channel):
-        returnValue(self.get_rf_enable(c, channel) and self.get_pa_enable(c, channel) and self.get_pll_enable(c, channel))
+        returnValue(self.get_rf_enable(c, channel)
+                    and self.get_pa_enable(c, channel)
+                    and self.get_pll_enable(c, channel))
 
-    @setting(28, channel='i', val='b')
-    def set_enable(self, c, channel, val):
+    @setting(28, channel='i', val='b', refmode='b')
+    def set_enable(self, c, channel, val, refmode=True):
+        if refmode:
+            yield self.set_reference_mode(c, 'internal 27mhz')
         yield self.set_rf_enable(c, channel, val)
         yield self.set_pa_enable(c, channel, val)
         yield self.set_pll_enable(c, channel, val)
@@ -365,12 +377,115 @@ class Windfreak_Server(DeviceServer):
             returnValue("reference frequency must be between 10 and 100 MHz")
         yield self.set_property(c, 'ref_frequency', freq)
 
+    # Sweep
+
+    @setting(36, channel='i', returns='v')
+    def get_sweep_freq_low(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_freq_low', chan=channel))
+
+    @setting(37, channel='i', freq='v')
+    def set_sweep_freq_low(self, c, channel, freq):
+        if freq < 53.0 or freq > 14800.999999:
+            returnValue('Frequency must be between 53.0 and 13999.999999MHz.')
+        else:
+            self.sweep_freq_low[channel] = freq
+            yield self.set_property(c, 'sweep_freq_low', freq, chan=channel)
+
+    @setting(38, channel='i', returns='v')
+    def get_sweep_freq_high(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_freq_high', chan=channel))
+
+    @setting(39, channel='i', freq='v')
+    def set_sweep_freq_high(self, c, channel, freq):
+        if freq < 53.0 or freq > 14800.999999:
+            returnValue('Frequency must be between 53.0 and 13999.999999MHz.')
+        else:
+            self.sweep_freq_high[channel] = freq
+            yield self.set_property(c, 'sweep_freq_high', freq, chan=channel)
+
+    @setting(40, channel='i', returns='v')
+    def get_sweep_freq_step(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_freq_step', chan=channel))
+
+    @setting(41, channel='i', step='v')
+    def set_sweep_freq_step(self, c, channel, step):
+        self.sweep_freq_step[channel] = step
+        yield self.set_property(c, 'sweep_freq_step', step, chan=channel)
+
+    @setting(42, channel='i', returns='v')
+    def get_sweep_time_step(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_time_step', chan=channel))
+
+    @setting(43, channel='i', step='v')
+    def set_sweep_time_step(self, c, channel, step):
+        self.sweep_time_step[channel] = step
+        yield self.set_property(c, 'sweep_time_step', step, chan=channel)
+
+    @setting(44, channel='i', returns='i')
+    def get_sweep_type(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_type', chan=channel))
+
+    @setting(45, channel='i', mode='i')
+    def set_sweep_type(self, c, channel, mode):
+        self.sweep_sweep_type[channel] = mode
+        yield self.set_property(c, 'sweep_type', mode, chan=channel)
+
+    @setting(46, channel='i', returns='b')
+    def get_sweep_single(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_single', chan=channel))
+
+    @setting(47, channel='i', val='b')
+    def set_sweep_single(self, c, channel, val):
+        self.sweep_single_onoff[channel] = (1 if val else 0)
+        yield self.set_property(c, 'sweep_single', val, chan=channel)
+
+    @setting(48, channel='i', returns='b')
+    def get_sweep_cont(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_cont', chan=channel))
+
+    @setting(49, channel='i', val='b')
+    def set_sweep_cont(self, c, channel, val):
+        self.sweep_cont_onoff[channel] = (1 if val else 0)
+        yield self.set_property(c, 'sweep_cont', val, chan=channel)
+
+    @setting(50, channel='i', returns='v')
+    def get_sweep_power_low(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_power_low', chan=channel))
+
+    @setting(51, channel='i', pow='v')
+    def set_sweep_power_low(self, c, channel, pow):
+        if pow < -60.0 or pow > 20.:
+            returnValue('Power must be between -60.0 and 20dBm.')
+        else:
+            self.sweep_power_low[channel] = pow
+            yield self.set_property(c, 'sweep_power_low', pow, chan=channel)
+
+    @setting(52, channel='i', returns='v')
+    def get_sweep_power_high(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_power_high', chan=channel))
+
+    @setting(53, channel='i', pow='v')
+    def set_sweep_power_high(self, c, channel, pow):
+        if pow < -60.0 or pow > 20.:
+            returnValue('Power must be between -60.0 and 20dBm.')
+        else:
+            self.sweep_power_high[channel] = pow
+            yield self.set_property(c, 'sweep_power_high', pow, chan=channel)
+
+    @setting(54, channel='i', returns='i')
+    def get_sweep_single(self, c, channel):
+        returnValue(self.get_property(c, 'sweep_single', chan=channel))
+
+    @setting(55, channel='i', val='b')
+    def set_sweep_single(self, c, channel, val):
+        self.sweep_single[channel] = (1 if val else 0)
+        yield self.set_property(c, 'sweep_single', val, chan=channel)
+
+    # TODO: modulation
+
     # TODO: temp compensation modes
 
     # TODO: vga dac stuff
-
-    # TODO: Sweep and modulation
-
 
 
 

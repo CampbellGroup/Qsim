@@ -34,13 +34,13 @@ class MicrowaveRabiFlopping(QsimExperiment):
         self.ident = ident
         self.pulser = cxn.pulser
         self.pzt_server = cxn.piezo_server
-        self.cavity_chan = 1
+        self.cavity_channel = 1
         self.cavity_voltage = 0.0
         self.counts_track_mean = 0.0
 
     def run(self, cxn, context):
 
-        self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
+        self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_channel)
         print(self.cavity_voltage)
         qubit = self.p.Line_Selection.qubit
         mode = self.p.Modes.state_detection_mode
@@ -50,14 +50,16 @@ class MicrowaveRabiFlopping(QsimExperiment):
         init_optical_pumping_method = self.p.OpticalPumping.method
 
         self.p['BrightStatePumping.method'] = 'Microwave'
-        #self.p['MicrowaveInterogation.pulse_sequence'] = 'standard'
+        # self.p['BrightStatePumping.method'] = 'Doppler Cooling Fiber EOM'
+
+        # self.p['MicrowaveInterrogation.pulse_sequence'] = 'standard'
 
         self.pulser.line_trigger_state(self.p.MicrowaveInterrogation.AC_line_trigger == 'On')
 
         self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
         if mode == 'Shelving':
             self.setup_shelving_rabi_datavault()
-        elif mode == 'Standard':
+        else:
             self.setup_datavault('time', 'probability')
         self.setup_grapher('Rabi Flopping ' + qubit)
 
@@ -70,10 +72,10 @@ class MicrowaveRabiFlopping(QsimExperiment):
                 break
             self.p['MicrowaveInterrogation.duration'] = U(duration, 'us')
 
-            if mode == 'Standard':
-                # force standard optical pumping if standard readout method used
-                # no sense in quadrupole optical pumping by accident if using standard readout
-                self.p['OpticalPumping.method'] = 'Standard'
+            # if mode == 'Standard':
+            #     # force standard optical pumping if standard readout method used
+            #     # no sense in quadrupole optical pumping by accident if using standard readout
+            #     self.p['OpticalPumping.method'] = 'Standard'
 
             self.program_pulser(sequence)
             if mode == 'Shelving':
@@ -81,10 +83,8 @@ class MicrowaveRabiFlopping(QsimExperiment):
                 errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
                 countsDopFixed = np.delete(doppler_counts, errors)
-            elif mode == 'Standard':
-                [counts] = self.run_sequence()
             else:
-                print 'Detection mode not selected!!!'
+                [counts] = self.run_sequence()
 
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
@@ -105,7 +105,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
                     if np.abs(diff) > 7.0:
                         self.cavity_voltage = self.cavity_voltage + np.sign(diff) * 0.005
                         if np.sign(diff)*0.005 < 0.2:
-                            self.pzt_server.set_voltage(self.cavity_chan, U(self.cavity_voltage, 'V'))
+                            self.pzt_server.set_voltage(self.cavity_channel, U(self.cavity_voltage, 'V'))
                             print('Updated cavity voltage to ' + str(self.cavity_voltage) + ' V')
                     else:
                         pass
@@ -130,6 +130,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
 
     def finalize(self, cxn, context):
         pass
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

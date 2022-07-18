@@ -67,12 +67,12 @@ class optical_pumping(pulse_sequence):
                         self.start,
                         p.OpticalPumping.duration)
             self.addTTL('WindfreakSynthHDTTL',
-                       self.start,
-                       p.OpticalPumping.duration)
+                        self.start,
+                        p.OpticalPumping.duration)
             self.addDDS('369DP',
                         self.start,
                         p.OpticalPumping.duration,
-                        p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq,  # + p.OpticalPumping.detuning/2.0,
+                        p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning/2.0,
                         p.OpticalPumping.power)
             self.addDDS('935SP',
                         self.start,
@@ -91,7 +91,7 @@ class optical_pumping(pulse_sequence):
                         p.ddsDefaults.repump_760_2_power)
             self.end = self.start + p.OpticalPumping.duration + p.OpticalPumping.extra_repump_time
 
-        if opMethod == 'QuadrupoleOnly':
+        elif opMethod == 'QuadrupoleOnly':
             self.addDDS('935SP',
                         self.start,
                         p.OpticalPumping.quadrupole_op_duration + p.OpticalPumping.extra_repump_time,

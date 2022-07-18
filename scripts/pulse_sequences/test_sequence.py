@@ -1,5 +1,5 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.TestSubSequence import test_sub_sequence
+from sub_sequences.test_sub_sequence import test_sub_sequence
 
 
 class test_sequence(pulse_sequence):

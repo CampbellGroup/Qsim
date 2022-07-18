@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point_clock import microwave_point_clock as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.microwave_point_clock import microwave_point_clock as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
@@ -48,7 +48,6 @@ class MicrowaveRabiFloppingClock(QsimExperiment):
             self.program_pulser(sequence)
             [counts] = self.run_sequence()
 
-
             if i % self.p.StandardStateDetection.points_per_histogram == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
@@ -66,8 +65,8 @@ class MicrowaveRabiFloppingClock(QsimExperiment):
         return popt[1]
 
     def set_default_parameters(self):
-        self.p['OpticalPumping.method'] = 'Standard'
-        self.p['StandardStateDetection.repetitions'] = 400.0
+        self.p['OpticalPumping.method'] = 'StandardFiberEOM'
+        self.p['StandardStateDetection.repetitions'] = 200.0
         self.p['Line_Selection.qubit'] = 'qubit_0'
         self.pi_time = self.pv.get_parameter('Pi_times', 'qubit_0')['us']
 

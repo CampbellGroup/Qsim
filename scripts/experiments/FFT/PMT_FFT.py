@@ -1,7 +1,7 @@
 #!scriptscanner
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.pulse_sequences.sub_sequences.RecordTimeTags import record_timetags
+from Qsim.scripts.pulse_sequences.sub_sequences.record_time_tags import record_timetags
 from treedict import TreeDict
 from processFFT import processFFT
 from labrad.units import WithUnit as U

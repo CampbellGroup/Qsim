@@ -1,10 +1,10 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.ShelvingStateDetection import shelving_state_detection
-from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
-from sub_sequences.Shelving import shelving
-from sub_sequences.Deshelving import deshelving
-from sub_sequences.VariableDeshelving import variable_deshelving
-from sub_sequences.TurnOffAll import turn_off_all
+from sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
+from sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
+from sub_sequences.shelving import shelving
+from sub_sequences.deshelving import deshelving
+from sub_sequences.variable_deshelving import variable_deshelving
+from sub_sequences.turn_off_all import turn_off_all
 
 
 class deshelving_point(pulse_sequence):

@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class shelving(pulse_sequence):
+class shelving_173(pulse_sequence):
 
     required_parameters = [
         ('Shelving', 'duration'),
@@ -13,6 +13,8 @@ class shelving(pulse_sequence):
         ('ddsDefaults', 'DP2_411_power'),
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_935_power'),
+        ('ddsDefaults', 'repump_976_freq'),
+        ('ddsDefaults', 'repump_976_power'),
         ('ddsDefaults', 'DP369_freq'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
@@ -29,21 +31,29 @@ class shelving(pulse_sequence):
         p = self.parameters
 
         """
-        This is the standard shelving stuff below
+        in 173 you have to keep the doppler cooling on while shelving, since there's no way to optically pump
         """
-        self.addDDS('411DP2',
+        self.addDDS('411DP1',
                     self.start,
                     p.Shelving.duration,
-                    p.ddsDefaults.DP2_411_freq,
-                    p.ddsDefaults.DP2_411_power)
+                    p.ddsDefaults.DP1_411_freq,
+                    p.ddsDefaults.DP1_411_power)
+        self.addDDS('369DP',
+                    self.start,
+                    p.Shelving.duration,
+                    p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning / 2.0,
+                    p.DopplerCooling.cooling_power)
         self.addDDS('935SP',
                     self.start,
                     p.Shelving.duration,
                     p.ddsDefaults.repump_935_freq,
-                    p.ddsDefaults.repump_935_power)
-        # self.addDDS('3GHz_qubit',
-        #            self.start,
-        #            p.Shelving.duration,
-        #            p.ddsDefaults.metastable_qubit_dds_freq,
-        #            p.ddsDefaults.metastable_qubit_dds_power)
+                    p.DopplerCooling.repump_power)
+        self.addDDS('976SP',
+                    self.start,
+                    p.Shelving.duration,
+                    p.ddsDefaults.repump_976_freq,
+                    p.ddsDefaults.repump_976_power)
+        self.addTTL('411TTL',
+                    self.start,
+                    p.Shelving.duration)
         self.end = self.start + p.Shelving.duration

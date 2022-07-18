@@ -1,14 +1,14 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.StandardStateDetection import standard_state_detection
-from sub_sequences.ShelvingStateDetection import shelving_state_detection
-from sub_sequences.TurnOffAll import turn_off_all
+from sub_sequences.doppler_cooling import doppler_cooling
+from sub_sequences.state_detection.standard_state_detection import standard_state_detection
+from sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
+from sub_sequences.turn_off_all import turn_off_all
 from BrightStatePumping import bright_state_pumping
-from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
-from sub_sequences.Shelving import shelving
-from sub_sequences.Deshelving import deshelving
-from sub_sequences.OpticalPumping import optical_pumping
-from sub_sequences.MicrowaveInterrogation import microwave_interrogation
+from sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
+from sub_sequences.shelving import shelving
+from sub_sequences.deshelving import deshelving
+from sub_sequences.optical_pumping import optical_pumping
+from sub_sequences.microwave_interrogation.microwave_interrogation import microwave_interrogation
 
 
 class bright_state_preparation(pulse_sequence):

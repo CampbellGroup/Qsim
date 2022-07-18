@@ -1,6 +1,6 @@
 import labrad
-from Qsim.scripts.pulse_sequences.metastable_microwave_point import metastable_microwave_point as sequence
-from Qsim.scripts.pulse_sequences.heralded_metastable_microwave_point import heralded_metastable_microwave_point as heralded_sequence
+from Qsim.scripts.pulse_sequences.microwave_point.metastable_microwave_point import metastable_microwave_point as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.heralded_metastable_microwave_point import heralded_metastable_microwave_point as heralded_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np

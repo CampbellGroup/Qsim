@@ -14,7 +14,7 @@ class wavemeter_linescan(QsimExperiment):
     exp_parameters.append(('Transitions', 'repump_760'))
     exp_parameters.append(('Transitions', 'shelving_411'))
     exp_parameters.append(('Transitions', 'Hudson'))
-    exp_parameters.append(('Transitions', 'repump_760_repump'))
+    # exp_parameters.append(('Transitions', 'repump_760_repump'))
     exp_parameters.append(('Transitions', 'repump_760_repump'))
     exp_parameters.append(('Transitions', 'repump_976'))
 
@@ -116,9 +116,9 @@ class wavemeter_linescan(QsimExperiment):
             self.dac_port = 5
 
         elif self.p.wavemeterscan.lasername == '760 (Repump)':
-            self.centerfrequency = self.p.Transitions.repump_760
+            self.centerfrequency = self.p.Transitions.repump_760_repump
             self.scan_range = self.p.wavemeterscan.scan_range_760_repump
-            self.channel = 3
+            self.channel = 8
             self.dac_port = 6
 
         elif self.p.wavemeterscan.lasername == '822':

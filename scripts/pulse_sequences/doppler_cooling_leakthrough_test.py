@@ -1,12 +1,12 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.OpticalPumping import optical_pumping
-from sub_sequences.StandardStateDetection import standard_state_detection
-from sub_sequences.ShelvingStateDetection import shelving_state_detection
-from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
-from sub_sequences.Deshelving import deshelving
-from sub_sequences.Shelving import shelving
-from sub_sequences.DoublePass369 import double_pass_369
+from sub_sequences.doppler_cooling import doppler_cooling
+from sub_sequences.optical_pumping import optical_pumping
+from sub_sequences.state_detection.standard_state_detection import standard_state_detection
+from sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
+from sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
+from sub_sequences.deshelving import deshelving
+from sub_sequences.shelving import shelving
+from sub_sequences.double_pass_369 import double_pass_369
 
 
 class doppler_cooling_leakthrough_test(pulse_sequence):

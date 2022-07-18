@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.MetastableMicrowaveSequenceStandard import \
+from Qsim.scripts.pulse_sequences.sub_sequences.metastable_microwave_sequence_standard import \
     metastable_microwave_sequence_standard
-from Qsim.scripts.pulse_sequences.sub_sequences.MetastableMicrowaveKnillSequence import \
+from Qsim.scripts.pulse_sequences.sub_sequences.metastable_microwave_knill_sequence import \
     metastable_microwave_knill_sequence
 
 

@@ -1,5 +1,4 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from labrad.units import WithUnit as U
 
 
 class microwave_sequence_standard(pulse_sequence):
@@ -28,12 +27,12 @@ class microwave_sequence_standard(pulse_sequence):
         #  select which zeeman level to prepare
         if p.Line_Selection.qubit == 'qubit_0':
             center = p.Transitions.qubit_0
-
         elif p.Line_Selection.qubit == 'qubit_plus':
             center = p.Transitions.qubit_plus
-
         elif p.Line_Selection.qubit == 'qubit_minus':
             center = p.Transitions.qubit_minus
+        else:
+            return
 
         if p.MicrowaveInterrogation.microwave_source == 'HP+DDS':
             DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)

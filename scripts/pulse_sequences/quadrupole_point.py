@@ -1,11 +1,11 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.MicrowaveInterrogation import microwave_interrogation
-from sub_sequences.DopplerCooling import doppler_cooling
-from sub_sequences.QuadrupoleInterrogation import quadrupole_interrogation
-from sub_sequences.TurnOffAll import turn_off_all
-from sub_sequences.StandardStateDetection import standard_state_detection
-from sub_sequences.OpticalPumping import optical_pumping
-from sub_sequences.Deshelving import deshelving
+from sub_sequences.microwave_interrogation.microwave_interrogation import microwave_interrogation
+from sub_sequences.doppler_cooling import doppler_cooling
+from sub_sequences.quadrupole_interrogation import quadrupole_interrogation
+from sub_sequences.turn_off_all import turn_off_all
+from sub_sequences.state_detection.standard_state_detection import standard_state_detection
+from sub_sequences.optical_pumping import optical_pumping
+from sub_sequences.deshelving import deshelving
 
 
 class quadrupole_point(pulse_sequence):
