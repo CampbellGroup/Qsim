@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class metastable_microwave_interrogation_173(pulse_sequence):
+class MetastableMicrowaveInterrogation173(pulse_sequence):
 
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
@@ -36,7 +36,7 @@ class metastable_microwave_interrogation_173(pulse_sequence):
         self.end = self.start + p.Metastable_Microwave_Interrogation.duration
 
 
-class swept_metastable_microwave_interrogation_173(pulse_sequence):
+class SweptMetastableMicrowaveInterrogation173(pulse_sequence):
 
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),

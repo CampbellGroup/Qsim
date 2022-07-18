@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class microwave_sequence_standard_hp_only(pulse_sequence):
+class MicrowaveSequenceStandardHpOnly(pulse_sequence):
     # this sequence is for when we use the DDS as a reference for the HP and
     # want to keep it on at all times, we will not change the oscillator frequency
 

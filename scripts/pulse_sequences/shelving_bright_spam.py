@@ -1,23 +1,23 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
-from sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
-from sub_sequences.shelving import shelving
-from sub_sequences.optical_pumping import optical_pumping
-from sub_sequences.deshelving import deshelving
-from sub_sequences.turn_off_all import turn_off_all
+from sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
+from sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
+from sub_sequences.shelving import Shelving
+from sub_sequences.optical_pumping import OpticalPumping
+from sub_sequences.deshelving import Deshelving
+from sub_sequences.turn_off_all import TurnOffAll
 
 
 class shelving_bright_spam(pulse_sequence):
-    required_subsequences = [shelving, shelving_doppler_cooling, shelving_state_detection, deshelving,
-                             optical_pumping, turn_off_all]
+    required_subsequences = [Shelving, ShelvingDopplerCooling, ShelvingStateDetection, Deshelving,
+                             OpticalPumping, TurnOffAll]
 
     required_parameters = [
     ]
 
     def sequence(self):
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)
-        self.addSequence(optical_pumping)
-        self.addSequence(shelving)
-        self.addSequence(shelving_state_detection)
-        self.addSequence(deshelving)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingDopplerCooling)
+        self.addSequence(OpticalPumping)
+        self.addSequence(Shelving)
+        self.addSequence(ShelvingStateDetection)
+        self.addSequence(Deshelving)

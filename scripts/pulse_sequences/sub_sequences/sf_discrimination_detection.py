@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class sf_discrimination_detection(pulse_sequence):
+class SFDiscriminationDetection(pulse_sequence):
 
     required_parameters = [
         ('SF_Discrimination', 'cooling_power'),

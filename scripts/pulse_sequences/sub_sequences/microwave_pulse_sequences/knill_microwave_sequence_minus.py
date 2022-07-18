@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class knill_sequence_minus(pulse_sequence):
+class KnillSequenceMinus(pulse_sequence):
     """
     This is a fixed Pi-pulse subsequence
     """

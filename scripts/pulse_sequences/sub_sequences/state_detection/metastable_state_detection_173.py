@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class metastable_state_detection_173(pulse_sequence):
+class MetastableStateDetection173(pulse_sequence):
 
     required_parameters = [
         ('MetastableStateDetection', 'duration'),

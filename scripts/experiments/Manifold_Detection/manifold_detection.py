@@ -6,7 +6,7 @@ import time
 import numpy as np
 
 
-class manifold_detection(QsimExperiment):
+class ManifoldDetection(QsimExperiment):
 
     name = 'Manifold Detection'
 
@@ -177,6 +177,6 @@ class manifold_detection(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = manifold_detection(cxn=cxn)
+    exprt = ManifoldDetection(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

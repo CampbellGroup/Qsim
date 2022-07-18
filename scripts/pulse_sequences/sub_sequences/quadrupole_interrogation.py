@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class quadrupole_interrogation(pulse_sequence):
+class QuadrupoleInterrogation(pulse_sequence):
 
     required_parameters = [
         ('QuadrupoleInterrogation', 'duration'),

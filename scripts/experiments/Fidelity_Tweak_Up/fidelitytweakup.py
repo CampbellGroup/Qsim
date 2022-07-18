@@ -5,7 +5,7 @@ import numpy as np
 from labrad.units import WithUnit as U
 
 
-class fidelity_tweak_up(QsimExperiment):
+class FidelityTweakUp(QsimExperiment):
     """
     Performs a continuous state preparation and measurement experiment of the ion. This experiment has been
     modified to be exclusively used with standard I = 1/2 qubit state readout, and a separate experiment is
@@ -95,6 +95,6 @@ class fidelity_tweak_up(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = fidelity_tweak_up(cxn=cxn)
+    exprt = FidelityTweakUp(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

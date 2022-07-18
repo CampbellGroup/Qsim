@@ -5,7 +5,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 
 
-class doppler_cooling_leakthrough_test(QsimExperiment):
+class DopplerCoolingLeakthroughTest(QsimExperiment):
     """
     this experiment will prepare the 0 state, then wait for a varying amount of time, and detect population in
     the 1 state either via shelving or standard state detection

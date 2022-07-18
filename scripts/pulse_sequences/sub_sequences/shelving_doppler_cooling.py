@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class shelving_doppler_cooling(pulse_sequence):
+class ShelvingDopplerCooling(pulse_sequence):
 
     required_parameters = [
         ('DopplerCooling', 'cooling_power'),

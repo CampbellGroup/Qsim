@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class knill_pulse_area_correcting_sequence(pulse_sequence):
+class KnillPulseAreaCorrectingSequence(pulse_sequence):
     """
      This sequence is based on the work by David Su, a modification of the Knill sequence that sacrifices
      correcting detuning errors for correcting amplitude errors.

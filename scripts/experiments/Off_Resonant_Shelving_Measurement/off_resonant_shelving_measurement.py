@@ -5,7 +5,7 @@ import time
 import numpy as np
 
 
-class off_resonant_shelving_measurement(QsimExperiment):
+class OffResonantShelvingMeasurement(QsimExperiment):
 
     name = 'Off Resonant Shelving Measurement'
 
@@ -88,6 +88,6 @@ class off_resonant_shelving_measurement(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = off_resonant_shelving_measurement(cxn=cxn)
+    exprt = OffResonantShelvingMeasurement(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

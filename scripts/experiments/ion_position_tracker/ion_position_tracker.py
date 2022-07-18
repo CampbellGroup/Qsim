@@ -13,7 +13,7 @@ from labrad.units import WithUnit
 import time
 import numpy as np
 
-class ion_position_tracker(QsimExperiment):
+class IonPositionTracker(QsimExperiment):
     """
     Track the (x, y) position of the ion on the camera as a function of time.
     Really useful if there are systematic DC voltage drifts in the experiment
@@ -83,6 +83,6 @@ class ion_position_tracker(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = ion_position_tracker(cxn=cxn)
+    exprt = IonPositionTracker(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

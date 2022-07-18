@@ -3,7 +3,7 @@ import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 
 
-class experiment_example(QsimExperiment):
+class ExperimentExample(QsimExperiment):
 
     name = 'Example Experiment'  # gives a name to display on scripscanner
 
@@ -74,6 +74,6 @@ if __name__ == '__main__':
     # Launches script if code is run from terminal instead of script scanner
     cxn = labrad.connect()  # creates LabRAD connection
     scanner = cxn.scriptscanner  # connects to script scanner server
-    exprt = experiment_example(cxn=cxn)  # instantiates the experiment
+    exprt = ExperimentExample(cxn=cxn)  # instantiates the experiment
     ident = scanner.register_external_launch(exprt.name)  # registers an experiment with Script Scanner
     exprt.execute(ident)  # executes the experiment

@@ -3,7 +3,7 @@ import numpy as np
 from labrad.units import WithUnit as U
 
 
-class metastable_measurement_driven_gate_deltaTheta(pulse_sequence):
+class MetastableMeasurementDrivenGateDeltaTheta(pulse_sequence):
 
     required_parameters = [
         ('MetastableMeasurementDrivenGate', 'total_num_sub_pulses'),

@@ -1,6 +1,6 @@
 import labrad
 from Qsim.scripts.pulse_sequences.microwave_point.metastable_microwave_point_173 \
-    import swept_metastable_microwave_point_173 as sequence
+    import SweptMetastableMicrowavePoint173 as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np

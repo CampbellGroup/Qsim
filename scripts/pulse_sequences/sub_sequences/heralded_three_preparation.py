@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class heralded_three_preparation(pulse_sequence):
+class HeraldedThreePreparation(pulse_sequence):
 
     required_parameters = [
         ('MetastableStateDetection', 'duration'),

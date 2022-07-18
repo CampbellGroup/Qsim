@@ -3,7 +3,7 @@ import numpy as np
 from labrad.units import WithUnit as U
 
 
-class metastable_measurement_driven_rabi(pulse_sequence):
+class MetastableMeasurementDrivenRabi(pulse_sequence):
 
     required_parameters = [
         ('MetastableMeasurementDrivenGate', 'total_num_sub_pulses'),

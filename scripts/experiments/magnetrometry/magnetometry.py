@@ -6,7 +6,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 
 
-class magnetometry(QsimExperiment):
+class Magnetometry(QsimExperiment):
     # TODO: magnetometry tab in grapher
 
     name = 'magnetometry'
@@ -34,11 +34,11 @@ class magnetometry(QsimExperiment):
         self.setup_grapher('magnetometry')  # sets up the grapher tab
         self.setup_parameters()
         if   self.coil_direction == 'Bx':
-            x_values = self.get_scan_list(self.p.magnetometry.current_scan_x, units=A)
+            x_values = self.get_scan_list(self.p.Magnetometry.current_scan_x, units=A)
         elif self.coil_direction == 'By':
-            x_values = self.get_scan_list(self.p.magnetometry.current_scan_y, units=A)
+            x_values = self.get_scan_list(self.p.Magnetometry.current_scan_y, units=A)
         elif self.coil_direction == 'Bz':
-            x_values = self.get_scan_list(self.p.magnetometry.current_scan_z, units=A)
+            x_values = self.get_scan_list(self.p.Magnetometry.current_scan_z, units=A)
 
         for i, current_step in enumerate(x_values):
             self.currents[self.coil_index] = current_step
@@ -56,7 +56,7 @@ class magnetometry(QsimExperiment):
                 return should_break
 
     def setup_parameters(self):
-        self.coil_direction = self.p.magnetometry.direction
+        self.coil_direction = self.p.Magnetometry.direction
         self.coil_index = self.coil_names[self.coil_direction]
         self.currents = np.array(self.init_currents)
 
@@ -67,6 +67,6 @@ class magnetometry(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = magnetometry(cxn=cxn)
+    exprt = Magnetometry(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

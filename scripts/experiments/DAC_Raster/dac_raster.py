@@ -13,7 +13,7 @@ import time
 import numpy as np
 
 
-class dacRaster(QsimExperiment):
+class DACRaster(QsimExperiment):
     """
     This experiment will scan through a user specified list of DAC voltages and can be run when
     first trying to load the trap, or if the loadable position in the trap has been lost.
@@ -66,6 +66,6 @@ class dacRaster(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = dacRaster(cxn=cxn)
+    exprt = DACRaster(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

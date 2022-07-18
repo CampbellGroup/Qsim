@@ -1,23 +1,23 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.doppler_cooling import doppler_cooling
-from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import turn_off_all
-from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import standard_state_detection
-from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
-from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
-from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import optical_pumping
-from Qsim.scripts.pulse_sequences.sub_sequences.empty_sequence import empty_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.shelving import shelving
-from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import deshelving
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.ramsey_microwave_interrogation import ramsey_microwave_interrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.doppler_cooling import DopplerCooling
+from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import StandardStateDetection
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
+from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
+from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
+from Qsim.scripts.pulse_sequences.sub_sequences.empty_sequence import EmptySequence
+from Qsim.scripts.pulse_sequences.sub_sequences.shelving import Shelving
+from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.ramsey_microwave_interrogation import RamseyMicrowaveInterrogation
 
 
-class microwave_ramsey_point(pulse_sequence):
+class MicrowaveRamseyPoint(pulse_sequence):
 
-    required_subsequences = [turn_off_all, doppler_cooling,
-                             shelving_state_detection,
-                             deshelving, standard_state_detection,
-                             optical_pumping, empty_sequence, shelving,
-                             ramsey_microwave_interrogation, shelving_doppler_cooling]
+    required_subsequences = [TurnOffAll, DopplerCooling,
+                             ShelvingStateDetection,
+                             Deshelving, StandardStateDetection,
+                             OpticalPumping, EmptySequence, Shelving,
+                             RamseyMicrowaveInterrogation, ShelvingDopplerCooling]
 
     required_parameters = [
                           ('Modes', 'state_detection_mode')
@@ -27,16 +27,16 @@ class microwave_ramsey_point(pulse_sequence):
         mode = self.parameters.Modes.state_detection_mode
 
         if mode == 'Shelving':
-            self.addSequence(turn_off_all)
-            self.addSequence(shelving_doppler_cooling)
-            self.addSequence(optical_pumping)
-            self.addSequence(ramsey_microwave_interrogation)
-            self.addSequence(shelving)
-            self.addSequence(shelving_state_detection)
-            self.addSequence(deshelving)
+            self.addSequence(TurnOffAll)
+            self.addSequence(ShelvingDopplerCooling)
+            self.addSequence(OpticalPumping)
+            self.addSequence(RamseyMicrowaveInterrogation)
+            self.addSequence(Shelving)
+            self.addSequence(ShelvingStateDetection)
+            self.addSequence(Deshelving)
         elif mode == 'Standard':
-            self.addSequence(turn_off_all)
-            self.addSequence(doppler_cooling)
-            self.addSequence(optical_pumping)
-            self.addSequence(ramsey_microwave_interrogation)
-            self.addSequence(standard_state_detection)
+            self.addSequence(TurnOffAll)
+            self.addSequence(DopplerCooling)
+            self.addSequence(OpticalPumping)
+            self.addSequence(RamseyMicrowaveInterrogation)
+            self.addSequence(StandardStateDetection)

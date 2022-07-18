@@ -1,10 +1,10 @@
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point.metastable_measurement_driven_rabi_point import metastable_measurement_driven_rabi_point as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.metastable_measurement_driven_rabi_point import MetastableMeasurementDrivenRabiPoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 
 
-class metastable_measurement_driven_rabi_flop(QsimExperiment):
+class MetastableMeasurementDrivenRabiFlop(QsimExperiment):
 
     name = 'Metastable Measurement Driven Rabi Flop'
 
@@ -63,6 +63,6 @@ class metastable_measurement_driven_rabi_flop(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = metastable_measurement_driven_rabi_flop(cxn=cxn)
+    exprt = MetastableMeasurementDrivenRabiFlop(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

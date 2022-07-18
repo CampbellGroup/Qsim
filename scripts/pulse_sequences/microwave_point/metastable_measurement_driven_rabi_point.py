@@ -1,28 +1,28 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
-from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import turn_off_all
-from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state_detection import metastable_state_detection
-from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
-from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
-from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import optical_pumping
-from Qsim.scripts.pulse_sequences.sub_sequences.shelving import shelving
-from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import deshelving
-from Qsim.scripts.pulse_sequences.sub_sequences.heralded_four_preparation import heralded_four_preparation
-from Qsim.scripts.pulse_sequences.sub_sequences.metastable_measurement_driven_rabi import metastable_measurement_driven_rabi
+from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state_detection import MetastableStateDetection
+from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
+from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
+from Qsim.scripts.pulse_sequences.sub_sequences.shelving import Shelving
+from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
+from Qsim.scripts.pulse_sequences.sub_sequences.heralded_four_preparation import HeraldedFourPreparation
+from Qsim.scripts.pulse_sequences.sub_sequences.metastable_measurement_driven_rabi import MetastableMeasurementDrivenRabi
 
 
-class metastable_measurement_driven_rabi_point(pulse_sequence):
+class MetastableMeasurementDrivenRabiPoint(pulse_sequence):
 
     required_subsequences = [
-        turn_off_all,
-        metastable_state_detection,
-        optical_pumping,
-        shelving,
-        shelving_doppler_cooling,
-        deshelving,
-        heralded_four_preparation,
-        metastable_measurement_driven_rabi,
-        shelving_state_detection
+        TurnOffAll,
+        MetastableStateDetection,
+        OpticalPumping,
+        Shelving,
+        ShelvingDopplerCooling,
+        Deshelving,
+        HeraldedFourPreparation,
+        MetastableMeasurementDrivenRabi,
+        ShelvingStateDetection
         ]
 
     required_parameters = [
@@ -35,12 +35,12 @@ class metastable_measurement_driven_rabi_point(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)  # readout counts call 1
-        self.addSequence(optical_pumping)
-        self.addSequence(shelving)
-        self.addSequence(heralded_four_preparation)  # readout counts call 2
-        self.addSequence(metastable_measurement_driven_rabi)
-        self.addSequence(shelving_state_detection)  # readout counts call 3
-        self.addSequence(metastable_state_detection)  # readout counts call 4
-        self.addSequence(deshelving)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingDopplerCooling)  # readout counts call 1
+        self.addSequence(OpticalPumping)
+        self.addSequence(Shelving)
+        self.addSequence(HeraldedFourPreparation)  # readout counts call 2
+        self.addSequence(MetastableMeasurementDrivenRabi)
+        self.addSequence(ShelvingStateDetection)  # readout counts call 3
+        self.addSequence(MetastableStateDetection)  # readout counts call 4
+        self.addSequence(Deshelving)

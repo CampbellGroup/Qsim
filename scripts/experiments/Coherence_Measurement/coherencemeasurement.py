@@ -5,7 +5,7 @@ from labrad.units import WithUnit as U
 import numpy as np
 
 
-class coherence_measurement(QsimExperiment):
+class CoherenceMeasurement(QsimExperiment):
     """
     Scan delay time between microwave pulses with variable pulse area
     """
@@ -82,6 +82,6 @@ class coherence_measurement(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = coherence_measurement(cxn=cxn)
+    exprt = CoherenceMeasurement(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

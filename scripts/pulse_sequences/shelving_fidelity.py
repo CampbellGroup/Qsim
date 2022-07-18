@@ -1,48 +1,48 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
-from sub_sequences.shelving import shelving
-from sub_sequences.turn_off_all import turn_off_all
-from sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
+from sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
+from sub_sequences.shelving import Shelving
+from sub_sequences.turn_off_all import TurnOffAll
+from sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
 from Qsim.scripts.pulse_sequences.BrightStatePumping import bright_state_pumping
-from sub_sequences.optical_pumping import optical_pumping
-from sub_sequences.deshelving import deshelving
+from sub_sequences.optical_pumping import OpticalPumping
+from sub_sequences.deshelving import Deshelving
 
 
 class shelving_fidelity(pulse_sequence):
 
-    required_subsequences = [shelving, shelving_doppler_cooling, shelving_state_detection, deshelving,
-                             turn_off_all, bright_state_pumping, optical_pumping]
+    required_subsequences = [Shelving, ShelvingDopplerCooling, ShelvingStateDetection, Deshelving,
+                             TurnOffAll, bright_state_pumping, OpticalPumping]
 
     required_parameters = [
                            ]
 
     def sequence(self):
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingDopplerCooling)
 
-        self.addSequence(turn_off_all)
+        self.addSequence(TurnOffAll)
         self.addSequence(bright_state_pumping)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving)
+        self.addSequence(TurnOffAll)
+        self.addSequence(Shelving)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_state_detection)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingStateDetection)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(deshelving)
+        self.addSequence(TurnOffAll)
+        self.addSequence(Deshelving)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingDopplerCooling)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(optical_pumping)
+        self.addSequence(TurnOffAll)
+        self.addSequence(OpticalPumping)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving)
+        self.addSequence(TurnOffAll)
+        self.addSequence(Shelving)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_state_detection)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingStateDetection)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(deshelving)
+        self.addSequence(TurnOffAll)
+        self.addSequence(Deshelving)

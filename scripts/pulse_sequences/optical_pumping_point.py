@@ -1,21 +1,21 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.doppler_cooling import doppler_cooling
-from sub_sequences.turn_off_all import turn_off_all
-from sub_sequences.optical_pumping import optical_pumping
-from sub_sequences.doppler_cooling_fiber_eom import doppler_cooling_fiber_eom
-from sub_sequences.state_detection.standard_state_detection_fiber_eom import standard_state_detection_fiber_eom
-from sub_sequences.state_detection.standard_state_detection import standard_state_detection
-from sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
-from sub_sequences.deshelving import deshelving
-from sub_sequences.shelving import shelving
+from sub_sequences.doppler_cooling import DopplerCooling
+from sub_sequences.turn_off_all import TurnOffAll
+from sub_sequences.optical_pumping import OpticalPumping
+from sub_sequences.doppler_cooling_fiber_eom import DopplerCoolingFiberEom
+from sub_sequences.state_detection.standard_state_detection_fiber_eom import StandardStateDetectionFiberEom
+from sub_sequences.state_detection.standard_state_detection import StandardStateDetection
+from sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
+from sub_sequences.deshelving import Deshelving
+from sub_sequences.shelving import Shelving
 
 
 class optical_pumping_point(pulse_sequence):
 
-    required_subsequences = [doppler_cooling, standard_state_detection, turn_off_all
-                             , optical_pumping, doppler_cooling, shelving_state_detection,
-                             deshelving, shelving, doppler_cooling_fiber_eom,
-                             standard_state_detection_fiber_eom]
+    required_subsequences = [DopplerCooling, StandardStateDetection, TurnOffAll
+                             , OpticalPumping, DopplerCooling, ShelvingStateDetection,
+                             Deshelving, Shelving, DopplerCoolingFiberEom,
+                             StandardStateDetectionFiberEom]
 
     required_parameters = [
         ('OpticalPumping', 'method'),
@@ -25,27 +25,27 @@ class optical_pumping_point(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addSequence(turn_off_all)
+        self.addSequence(TurnOffAll)
 
         if p.OpticalPumping.method == 'Standard':
-            self.addSequence(doppler_cooling)
-            self.addSequence(optical_pumping)
-            self.addSequence(standard_state_detection)
+            self.addSequence(DopplerCooling)
+            self.addSequence(OpticalPumping)
+            self.addSequence(StandardStateDetection)
 
         elif p.OpticalPumping.method == "StandardFiberEOM":
-            self.addSequence(doppler_cooling_fiber_eom)
-            self.addSequence(optical_pumping)
-            self.addSequence(standard_state_detection_fiber_eom)
+            self.addSequence(DopplerCoolingFiberEom)
+            self.addSequence(OpticalPumping)
+            self.addSequence(StandardStateDetectionFiberEom)
 
         elif p.OpticalPumping.method == 'QuadrupoleOnly':
             if p.Modes.state_detection_mode == 'Shelving':
-                self.addSequence(doppler_cooling)
-                self.addSequence(optical_pumping)
-                self.addSequence(shelving)
-                self.addSequence(shelving_state_detection)
-                self.addSequence(deshelving)
+                self.addSequence(DopplerCooling)
+                self.addSequence(OpticalPumping)
+                self.addSequence(Shelving)
+                self.addSequence(ShelvingStateDetection)
+                self.addSequence(Deshelving)
             if p.Modes.state_detection_mode == 'Standard':
-                self.addSequence(doppler_cooling)
-                self.addSequence(optical_pumping)
-                self.addSequence(standard_state_detection)
-                self.addSequence(deshelving)
+                self.addSequence(DopplerCooling)
+                self.addSequence(OpticalPumping)
+                self.addSequence(StandardStateDetection)
+                self.addSequence(Deshelving)

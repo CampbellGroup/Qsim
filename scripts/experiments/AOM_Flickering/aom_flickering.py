@@ -3,7 +3,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
 
 
-class aom_flickering(QsimExperiment):
+class AOMFlickering(QsimExperiment):
     """
     Literally just toggle an AOM on and off forever.
     You can choose which AOM to toggle, and how long to toggle it.
@@ -39,6 +39,6 @@ class aom_flickering(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = aom_flickering(cxn=cxn)
+    exprt = AOMFlickering(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

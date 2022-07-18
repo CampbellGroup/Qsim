@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class microwave_interrogation_minus(pulse_sequence):
+class MicrowaveInterrogationMinus(pulse_sequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),

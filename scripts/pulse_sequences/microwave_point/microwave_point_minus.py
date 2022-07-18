@@ -1,17 +1,17 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.doppler_cooling import doppler_cooling
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.microwave_interrogation_minus import microwave_interrogation_minus
-from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import turn_off_all
-from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import standard_state_detection
-from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import optical_pumping
+from Qsim.scripts.pulse_sequences.sub_sequences.doppler_cooling import DopplerCooling
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.microwave_interrogation_minus import MicrowaveInterrogationMinus
+from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import StandardStateDetection
+from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
 
 
-class microwave_point_minus(pulse_sequence):
+class MicrowavePointMinus(pulse_sequence):
 
-    required_subsequences = [turn_off_all, doppler_cooling,
-                             microwave_interrogation_minus,
-                             standard_state_detection,
-                             optical_pumping]
+    required_subsequences = [TurnOffAll, DopplerCooling,
+                             MicrowaveInterrogationMinus,
+                             StandardStateDetection,
+                             OpticalPumping]
 
     required_parameters = [
         ]
@@ -19,8 +19,8 @@ class microwave_point_minus(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addSequence(turn_off_all)
-        self.addSequence(doppler_cooling)
-        self.addSequence(optical_pumping)
-        self.addSequence(microwave_interrogation_minus)
-        self.addSequence(standard_state_detection)
+        self.addSequence(TurnOffAll)
+        self.addSequence(DopplerCooling)
+        self.addSequence(OpticalPumping)
+        self.addSequence(MicrowaveInterrogationMinus)
+        self.addSequence(StandardStateDetection)

@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class metastable_microwave_knill_sequence(pulse_sequence):
+class MetastableMicrowaveKnillSequence(pulse_sequence):
 
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),

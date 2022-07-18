@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class microwave_sequence_standard(pulse_sequence):
+class MicrowaveSequenceStandard(pulse_sequence):
     # this is a general microwave square pulse sequence where the different qubit lines
     # can be selected
 

@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class spin_echo_pi_pulse_clock(pulse_sequence):
+class SpinEchoPiPulseClock(pulse_sequence):
     """
     This is a spin echo corrective pulse sequence
     """

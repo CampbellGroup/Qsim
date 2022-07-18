@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class standard_state_detection_fiber_eom(pulse_sequence):
+class StandardStateDetectionFiberEom(pulse_sequence):
     required_parameters = [
         ('StandardStateDetection', 'duration'),
         ('StandardStateDetection', 'CW_power'),

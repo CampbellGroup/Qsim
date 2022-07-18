@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class hadamard(pulse_sequence):
+class Hadamard(pulse_sequence):
     # this is a fixed pi/2 gate with arbitrary phase, although it is only a true hadamard when a specific phase
     # is chosen i believe
 

@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class standard_state_detection(pulse_sequence):
+class StandardStateDetection(pulse_sequence):
 
     required_parameters = [
         ('StandardStateDetection', 'duration'),

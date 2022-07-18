@@ -2,7 +2,7 @@ import labrad
 import numpy as np
 import scipy.fftpack
 from common.lib.servers.script_scanner.scan_methods import experiment
-from Qsim.scripts.pulse_sequences.sub_sequences.record_time_tags import record_timetags
+from Qsim.scripts.pulse_sequences.sub_sequences.record_time_tags import RecordTimeTags
 from treedict import TreeDict
 
 
@@ -29,7 +29,7 @@ class TD_flourescence(experiment):
         #self.time_resolution = self.pulser.get_timetag_resolution()
 
     def programPulseSequence(self, record_time):
-        seq = record_timetags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': record_time}))
+        seq = RecordTimeTags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': record_time}))
         seq.programSequence(self.pulser)
 
     def run(self, cxn, context):

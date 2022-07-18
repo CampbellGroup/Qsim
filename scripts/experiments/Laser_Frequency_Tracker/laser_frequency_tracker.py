@@ -6,7 +6,7 @@ import labrad
 import numpy as np
 
 
-class laser_frequency_tracker(QsimExperiment):
+class LaserFrequencyTracker(QsimExperiment):
     """
     Plots the change in a laser's frequency as a function of time relative
     to the initial laser frequency reading. Can be extended to any wavemeter that
@@ -120,6 +120,6 @@ class laser_frequency_tracker(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = laser_frequency_tracker(cxn=cxn)
+    exprt = LaserFrequencyTracker(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

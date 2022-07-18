@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class manifold_state_detection(pulse_sequence):
+class ManifoldStateDetection(pulse_sequence):
 
     required_parameters = [
         ('ManifoldDetection', 'duration'),

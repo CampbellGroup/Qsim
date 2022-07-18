@@ -1,10 +1,10 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import interleaved_linescan
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
 import numpy as np
 
 
-class line_narrowing(QsimExperiment):
+class LineNarrowing(QsimExperiment):
     """
     Repeats the interleaved linescan experiment at different (x, y, z) electric
     field multipoles specified by the user. Helpful for micromotion compensation
@@ -17,12 +17,12 @@ class line_narrowing(QsimExperiment):
     exp_parameters.append(('Line_Narrowing', 'voltage_scan_y'))
     exp_parameters.append(('Line_Narrowing', 'voltage_scan_z'))
     exp_parameters.append(('Line_Narrowing', 'direction'))
-    exp_parameters.extend(interleaved_linescan.all_required_parameters())
+    exp_parameters.extend(InterleavedLinescan.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
         self.multipole_names = {'Ex': 2, 'Ey': 0, 'Ez': 1}
         self.ident = ident
-        self.linescan = self.make_experiment(interleaved_linescan)
+        self.linescan = self.make_experiment(InterleavedLinescan)
         self.linescan.initialize(cxn, context, ident)
         self.mps = self.cxn.multipole_server
         self.init_multipoles = cxn.multipole_server.get_multipoles()
@@ -63,6 +63,6 @@ class line_narrowing(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = line_narrowing(cxn=cxn)
+    exprt = LineNarrowing(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

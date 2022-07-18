@@ -1,9 +1,9 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from sub_sequences.microwave_interrogation.microwave_interrogation import microwave_interrogation
-from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import optical_pumping
-from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.Hadamard import hadamard
+from sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
+from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.Hadamard import Hadamard
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.microwave_sequence_standard_random_phase import \
-    microwave_sequence_standard_random_phase
+    MicrowaveSequenceStandardRandomPhase
 from labrad.units import WithUnit as U
 
 
@@ -27,8 +27,8 @@ class bright_state_pumping(pulse_sequence):
         ('ddsDefaults', 'repump_976_power'),
                            ]
 
-    required_subsequences = [optical_pumping, microwave_interrogation,
-                             hadamard, microwave_sequence_standard_random_phase]
+    required_subsequences = [OpticalPumping, MicrowaveInterrogation,
+                             Hadamard, MicrowaveSequenceStandardRandomPhase]
 
     def sequence(self):
         p = self.parameters
@@ -94,13 +94,13 @@ class bright_state_pumping(pulse_sequence):
             self.end = self.start + p.BrightStatePumping.duration
 
         elif p.BrightStatePumping.bright_prep_method == 'Microwave':
-            self.addSequence(optical_pumping)
+            self.addSequence(OpticalPumping)
             if p.BrightStatePumping.start_with_Hadamard == 'On':
                 print 'adding Hadamard gate'
-                self.addSequence(hadamard)
+                self.addSequence(Hadamard)
             if p.BrightStatePumping.microwave_phase_list == 'constant':
                 for i in range(int(p.MicrowaveInterrogation.repetitions)):
-                    self.addSequence(microwave_interrogation)
+                    self.addSequence(MicrowaveInterrogation)
             elif p.BrightStatePumping.microwave_phase_list == 'random':
                 for i in range(int(p.MicrowaveInterrogation.repetitions)):
-                    self.addSequence(microwave_sequence_standard_random_phase)
+                    self.addSequence(MicrowaveSequenceStandardRandomPhase)

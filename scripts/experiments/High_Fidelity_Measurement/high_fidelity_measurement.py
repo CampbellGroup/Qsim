@@ -2,7 +2,7 @@ import labrad
 from Qsim.scripts.pulse_sequences.shelving_bright_spam import shelving_bright_spam as bright_sequence
 from Qsim.scripts.pulse_sequences.shelving_dark_spam import shelving_dark_spam as dark_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import interleaved_linescan
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
 from Qsim.scripts.experiments.Microwave_Rabi_Flopping.microwave_rabi_flopping_clock import MicrowaveRabiFloppingClock as rabi_tweak_up
 import numpy as np
 from scipy.optimize import curve_fit as fit
@@ -10,7 +10,7 @@ from labrad.units import WithUnit as U
 import time
 
 
-class high_fidelity_measurement(QsimExperiment):
+class HighFidelityMeasurement(QsimExperiment):
     """
     This experiment is similar to the Shelving Fidelity measurement, but with a different organization
     of the pulse sequence and data analysis
@@ -160,7 +160,7 @@ class high_fidelity_measurement(QsimExperiment):
         self.pulser.line_trigger_state(False)
 
         linescan_context = self.sc.context()
-        self.line_tracker = self.make_experiment(interleaved_linescan)
+        self.line_tracker = self.make_experiment(InterleavedLinescan)
         self.line_tracker.initialize(self.cxn, linescan_context, self.ident)
         self.line_tracker.run(self.cxn, linescan_context)
 
@@ -386,6 +386,6 @@ class high_fidelity_measurement(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = high_fidelity_measurement(cxn=cxn)
+    exprt = HighFidelityMeasurement(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

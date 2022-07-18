@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class dipole_interrogation(pulse_sequence):
+class DipoleInterrogation(pulse_sequence):
 
     required_parameters = [
         ('DipoleInterrogation', 'duration'),

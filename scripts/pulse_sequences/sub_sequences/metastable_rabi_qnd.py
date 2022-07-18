@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class metastable_rabi_qnd(pulse_sequence):
+class MetastableRabiQND(pulse_sequence):
 
     required_parameters = [
         ('MetastableMicrowaveInterrogation', 'duration'),

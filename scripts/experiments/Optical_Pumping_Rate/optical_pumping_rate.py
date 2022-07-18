@@ -5,7 +5,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 
 
-class optical_pumping_rate(QsimExperiment):
+class OpticalPumpingRate(QsimExperiment):
     """
     Measure 411nm shelving rate to the F7/2
     """
@@ -81,6 +81,6 @@ class optical_pumping_rate(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = optical_pumping_rate(cxn=cxn)
+    exprt = OpticalPumpingRate(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

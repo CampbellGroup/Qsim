@@ -13,7 +13,7 @@ from labrad.units import WithUnit
 import time
 import numpy as np
 
-class image_fluorescence(QsimExperiment):
+class ImageFluorescence(QsimExperiment):
     """
     This experiment integrates the total counts on the camera from the most recent image and
     plots the integrated fluorescence from the image as a function of time
@@ -80,6 +80,6 @@ class image_fluorescence(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = image_fluorescence(cxn=cxn)
+    exprt = ImageFluorescence(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

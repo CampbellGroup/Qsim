@@ -5,7 +5,7 @@ import time
 import numpy as np
 
 
-class interleaved_linescan_935(QsimExperiment):
+class InterleavedLinescan935(QsimExperiment):
 
     name = 'Interleaved Linescan 935'
 
@@ -141,6 +141,6 @@ class interleaved_linescan_935(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = interleaved_linescan_935(cxn=cxn)
+    exprt = InterleavedLinescan935(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

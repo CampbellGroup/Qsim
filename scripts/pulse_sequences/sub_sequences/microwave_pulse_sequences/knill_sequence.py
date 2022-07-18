@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class knill(pulse_sequence):
+class Knill(pulse_sequence):
     """
     This is a knill sequence with variable pulse area and detuning
     """

@@ -1,18 +1,18 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from scripts.pulse_sequences.sub_sequences.quadrupole_interrogation import quadrupole_interogation
-from scripts.pulse_sequences.sub_sequences.turn_off_all import turn_off_all
-from scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import shelving_state_detection
-from scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
+from scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
+from scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
+from scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
 from deprecated.deprecated_sub_sequences.ZeemanOpticalPumping import zeeman_bright_optical_pumping
 from deprecated.deprecated_sub_sequences.ZeemanOpticalPumping import zeeman_dark_optical_pumping
-from scripts.pulse_sequences.sub_sequences.shelving import shelving
-from scripts.pulse_sequences.sub_sequences.deshelving import deshelving
+from scripts.pulse_sequences.sub_sequences.shelving import Shelving
+from scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
 
 
 class zeeman_fidelity(pulse_sequence):
 
-    required_subsequences = [turn_off_all, quadrupole_interogation, shelving_state_detection,
-                             shelving, shelving_doppler_cooling, deshelving,
+    required_subsequences = [TurnOffAll, quadrupole_interogation, ShelvingStateDetection,
+                             Shelving, ShelvingDopplerCooling, Deshelving,
                              zeeman_bright_optical_pumping, zeeman_dark_optical_pumping]
 
     required_parameters = [
@@ -20,15 +20,15 @@ class zeeman_fidelity(pulse_sequence):
 
     def sequence(self):
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingDopplerCooling)
         self.addSequence(zeeman_bright_optical_pumping)
-        self.addSequence(shelving)
-        self.addSequence(shelving_state_detection)
-        self.addSequence(deshelving)
+        self.addSequence(Shelving)
+        self.addSequence(ShelvingStateDetection)
+        self.addSequence(Deshelving)
 
-        self.addSequence(shelving_doppler_cooling)
+        self.addSequence(ShelvingDopplerCooling)
         self.addSequence(zeeman_dark_optical_pumping)
-        self.addSequence(shelving)
-        self.addSequence(shelving_state_detection)
-        self.addSequence(deshelving)
+        self.addSequence(Shelving)
+        self.addSequence(ShelvingStateDetection)
+        self.addSequence(Deshelving)

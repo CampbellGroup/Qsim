@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class microwave_interrogation_clock(pulse_sequence):
+class MicrowaveInterrogationClock(pulse_sequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),

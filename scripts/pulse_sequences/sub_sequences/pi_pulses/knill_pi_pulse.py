@@ -3,7 +3,7 @@ from labrad.units import WithUnit as U
 import numpy as np
 
 
-class knill_pi_pulse_clock(pulse_sequence):
+class KnillPiPulseClock(pulse_sequence):
     """
     This is a knill sequence with variable pulse area and detuning
     """

@@ -1,11 +1,11 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.metastable_microwave_sequence_standard import \
-    metastable_microwave_sequence_standard
+    MetastableMicrowaveSequenceStandard
 from Qsim.scripts.pulse_sequences.sub_sequences.metastable_microwave_knill_sequence import \
-    metastable_microwave_knill_sequence
+    MetastableMicrowaveKnillSequence
 
 
-class metastable_microwave_interrogation(pulse_sequence):
+class MetastableMicrowaveInterrogation(pulse_sequence):
 
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
@@ -17,14 +17,14 @@ class metastable_microwave_interrogation(pulse_sequence):
         ('ddsDefaults', 'metastable_qubit_dds_power'),
     ]
 
-    required_subsequences = [metastable_microwave_sequence_standard,
-                             metastable_microwave_knill_sequence]
+    required_subsequences = [MetastableMicrowaveSequenceStandard,
+                             MetastableMicrowaveKnillSequence]
 
     def sequence(self):
         p = self.parameters
 
         if p.Metastable_Microwave_Interrogation.pulse_sequence == 'Standard':
-            self.addSequence(metastable_microwave_sequence_standard)
+            self.addSequence(MetastableMicrowaveSequenceStandard)
 
         if p.Metastable_Microwave_Interrogation.pulse_sequence == 'Knill':
-            self.addSequence(metastable_microwave_knill_sequence)
+            self.addSequence(MetastableMicrowaveKnillSequence)

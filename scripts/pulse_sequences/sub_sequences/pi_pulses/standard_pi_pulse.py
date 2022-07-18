@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class standard_pi_pulse_clock(pulse_sequence):
+class StandardPiPulseClock(pulse_sequence):
     # this is a general microwave square pulse sequence where the different qubit lines
     # can be selected
 

@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 import numpy as np
 
-class microwave_sequence_standard_random_phase(pulse_sequence):
+class MicrowaveSequenceStandardRandomPhase(pulse_sequence):
     # this is a general microwave square pulse sequence where the different qubit lines
     # can be selected
 

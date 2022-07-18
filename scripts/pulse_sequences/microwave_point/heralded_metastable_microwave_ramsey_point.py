@@ -1,21 +1,21 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import turn_off_all
-from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import optical_pumping
-from Qsim.scripts.pulse_sequences.sub_sequences.empty_sequence import empty_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.shelving import shelving
-from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import deshelving
-from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import microwave_interrogation
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.metastable_ramsey_microwave_interrogation import metastable_ramsey_microwave_interrogation
-from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state_detection import metastable_state_detection
-from Qsim.scripts.pulse_sequences.sub_sequences.heralded_four_preparation import heralded_four_preparation
+from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
+from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
+from Qsim.scripts.pulse_sequences.sub_sequences.empty_sequence import EmptySequence
+from Qsim.scripts.pulse_sequences.sub_sequences.shelving import Shelving
+from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
+from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.metastable_ramsey_microwave_interrogation import MetastableRamseyMicrowaveInterrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state_detection import MetastableStateDetection
+from Qsim.scripts.pulse_sequences.sub_sequences.heralded_four_preparation import HeraldedFourPreparation
 
 
-class heralded_metastable_microwave_ramsey_point(pulse_sequence):
-    required_subsequences = [turn_off_all, deshelving, shelving_doppler_cooling,
-                             optical_pumping, empty_sequence, shelving,
-                             metastable_ramsey_microwave_interrogation, microwave_interrogation,
-                             metastable_state_detection, heralded_four_preparation]
+class HeraldedMetastableMicrowaveRamseyPoint(pulse_sequence):
+    required_subsequences = [TurnOffAll, Deshelving, ShelvingDopplerCooling,
+                             OpticalPumping, EmptySequence, Shelving,
+                             MetastableRamseyMicrowaveInterrogation, MicrowaveInterrogation,
+                             MetastableStateDetection, HeraldedFourPreparation]
 
     required_parameters = [('MetastableMicrowaveRamsey', 'scan_type'),
                            ('MetastableMicrowaveRamsey', 'delay_time'),
@@ -24,12 +24,12 @@ class heralded_metastable_microwave_ramsey_point(pulse_sequence):
                            ]
 
     def sequence(self):
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)  # readout counts 1
-        self.addSequence(optical_pumping)
-        self.addSequence(microwave_interrogation)
-        self.addSequence(shelving)
-        self.addSequence(heralded_four_preparation)  # readout counts 2
-        self.addSequence(metastable_ramsey_microwave_interrogation)
-        self.addSequence(metastable_state_detection)  # readout counts 3
-        self.addSequence(deshelving)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingDopplerCooling)  # readout counts 1
+        self.addSequence(OpticalPumping)
+        self.addSequence(MicrowaveInterrogation)
+        self.addSequence(Shelving)
+        self.addSequence(HeraldedFourPreparation)  # readout counts 2
+        self.addSequence(MetastableRamseyMicrowaveInterrogation)
+        self.addSequence(MetastableStateDetection)  # readout counts 3
+        self.addSequence(Deshelving)

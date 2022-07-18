@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class metastable_microwave_sequence_standard(pulse_sequence):
+class MetastableMicrowaveSequenceStandard(pulse_sequence):
 
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),

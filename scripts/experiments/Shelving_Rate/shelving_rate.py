@@ -5,7 +5,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 
 
-class shelving_rate(QsimExperiment):
+class ShelvingRate(QsimExperiment):
     """
     Measure 411nm shelving rate to the F7/2
     """
@@ -55,6 +55,6 @@ class shelving_rate(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = shelving_rate(cxn=cxn)
+    exprt = ShelvingRate(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

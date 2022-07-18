@@ -5,13 +5,13 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time as time
 
 from Qsim.scripts.pulse_sequences.shelving_dark_spam import shelving_dark_spam as dark_sequence
-from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import interleaved_linescan
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
 from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan_minus import MicrowaveLineScanMinus
 from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan_plus import MicrowaveLineScanPlus
 from Qsim.scripts.experiments.Microwave_Rabi_Flopping.microwave_rabi_flopping_clock import MicrowaveRabiFloppingClock as rabi_tweak_up
 
 
-class high_fidelity_dark_state_spam(QsimExperiment):
+class HighFidelityDarkStateSpam(QsimExperiment):
     """
     This experiment is similar to the high_fidelity_measurement experiment, but attempts to
     make further improvements by adding more drift tracking experiments and potentially trap
@@ -146,7 +146,7 @@ class high_fidelity_dark_state_spam(QsimExperiment):
         self.pulser.line_trigger_state(False)
 
         linescan_context = self.sc.context()
-        self.line_tracker = self.make_experiment(interleaved_linescan)
+        self.line_tracker = self.make_experiment(InterleavedLinescan)
         self.line_tracker.initialize(self.cxn, linescan_context, self.ident)
         self.line_tracker.run(self.cxn, linescan_context)
 
@@ -310,6 +310,6 @@ class high_fidelity_dark_state_spam(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = high_fidelity_dark_state_spam(cxn=cxn)
+    exprt = HighFidelityDarkStateSpam(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

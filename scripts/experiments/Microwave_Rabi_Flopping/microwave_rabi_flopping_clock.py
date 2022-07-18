@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point.microwave_point_clock import microwave_point_clock as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.microwave_point_clock import MicrowavePointClock as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np

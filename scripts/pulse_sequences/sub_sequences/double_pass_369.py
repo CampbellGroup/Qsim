@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class double_pass_369(pulse_sequence):
+class DoublePass369(pulse_sequence):
 
     required_parameters = [
         ('DoublePass369', 'duration'),

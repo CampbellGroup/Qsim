@@ -3,7 +3,7 @@ import numpy as np
 from labrad.units import WithUnit as U
 
 
-class bb1(pulse_sequence):
+class BB1(pulse_sequence):
     """
     This is a BB1 corrective pulse sequence
     """

@@ -5,7 +5,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.pulse_sequences.sf_discrimination_sequence import sf_discrimination_sequence as sequence
 
 
-class sf_discrimination_experiment(QsimExperiment):
+class SFDiscriminationExperiment(QsimExperiment):
 
     name = 'SF Discrimination Experiment'
 
@@ -82,6 +82,6 @@ class sf_discrimination_experiment(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = sf_discrimination_experiment(cxn=cxn)
+    exprt = SFDiscriminationExperiment(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

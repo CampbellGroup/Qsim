@@ -5,7 +5,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 
 
-class quadrupole_optical_pumping_linescan(QsimExperiment):
+class QuadrupoleOpticalPumpingLinescan(QsimExperiment):
 
 
     name = 'QuadrupoleOpticalPumpingLinescan'
@@ -66,6 +66,6 @@ class quadrupole_optical_pumping_linescan(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = quadrupole_optical_pumping_linescan(cxn=cxn)
+    exprt = QuadrupoleOpticalPumpingLinescan(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

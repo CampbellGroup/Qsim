@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class metastable_ramsey_microwave_interrogation(pulse_sequence):
+class MetastableRamseyMicrowaveInterrogation(pulse_sequence):
 
     required_parameters = [
         ('MetastableMicrowaveRamsey', 'detuning'),

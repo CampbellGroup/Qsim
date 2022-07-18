@@ -1,48 +1,48 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import microwave_interrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.metastable_microwave_interrogation_173 import \
-    metastable_microwave_interrogation_173, swept_metastable_microwave_interrogation_173
-from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import turn_off_all
-from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state_detection_173 import metastable_state_detection_173
-from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import shelving_doppler_cooling
-from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import optical_pumping
-from Qsim.scripts.pulse_sequences.sub_sequences.shelving_173 import shelving_173
-from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import deshelving
+    MetastableMicrowaveInterrogation173, SweptMetastableMicrowaveInterrogation173
+from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state_detection_173 import MetastableStateDetection173
+from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
+from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
+from Qsim.scripts.pulse_sequences.sub_sequences.shelving_173 import Shelving173
+from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
 
 
-class metastable_microwave_point_173(pulse_sequence):
+class MetastableMicrowavePoint173(pulse_sequence):
 
-    required_subsequences = [turn_off_all, metastable_microwave_interrogation_173,
-                             metastable_state_detection_173, optical_pumping, shelving_173,
-                             shelving_doppler_cooling, deshelving, microwave_interrogation]
-
-    required_parameters = [
-        ]
-
-    def sequence(self):
-
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)
-        self.addSequence(shelving_173)
-        self.addSequence(metastable_microwave_interrogation_173)
-        self.addSequence(metastable_state_detection_173)
-        self.addSequence(deshelving)
-
-
-class swept_metastable_microwave_point_173(pulse_sequence):
-
-    required_subsequences = [turn_off_all, swept_metastable_microwave_interrogation_173,
-                             metastable_state_detection_173, optical_pumping, shelving_173,
-                             shelving_doppler_cooling, deshelving, microwave_interrogation]
+    required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation173,
+                             MetastableStateDetection173, OpticalPumping, Shelving173,
+                             ShelvingDopplerCooling, Deshelving, MicrowaveInterrogation]
 
     required_parameters = [
         ]
 
     def sequence(self):
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)
-        self.addSequence(shelving_173)
-        self.addSequence(swept_metastable_microwave_interrogation_173)
-        self.addSequence(metastable_state_detection_173)
-        self.addSequence(deshelving)
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingDopplerCooling)
+        self.addSequence(Shelving173)
+        self.addSequence(MetastableMicrowaveInterrogation173)
+        self.addSequence(MetastableStateDetection173)
+        self.addSequence(Deshelving)
+
+
+class SweptMetastableMicrowavePoint173(pulse_sequence):
+
+    required_subsequences = [TurnOffAll, SweptMetastableMicrowaveInterrogation173,
+                             MetastableStateDetection173, OpticalPumping, Shelving173,
+                             ShelvingDopplerCooling, Deshelving, MicrowaveInterrogation]
+
+    required_parameters = [
+        ]
+
+    def sequence(self):
+
+        self.addSequence(TurnOffAll)
+        self.addSequence(ShelvingDopplerCooling)
+        self.addSequence(Shelving173)
+        self.addSequence(SweptMetastableMicrowaveInterrogation173)
+        self.addSequence(MetastableStateDetection173)
+        self.addSequence(Deshelving)

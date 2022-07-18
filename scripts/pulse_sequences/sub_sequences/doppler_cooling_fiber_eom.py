@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class doppler_cooling_fiber_eom(pulse_sequence):
+class DopplerCoolingFiberEom(pulse_sequence):
 
     required_parameters = [
         ('DopplerCooling', 'cooling_power'),

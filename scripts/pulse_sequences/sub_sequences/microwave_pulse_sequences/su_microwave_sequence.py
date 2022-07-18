@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 import numpy as np
 
-class su_sequence(pulse_sequence):
+class SuSequence(pulse_sequence):
     """
     """
 

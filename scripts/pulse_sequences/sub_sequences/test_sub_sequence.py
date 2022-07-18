@@ -1,7 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from labrad.units import WithUnit as U
 
-class test_sub_sequence(pulse_sequence):
+class TestSubSequence(pulse_sequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),

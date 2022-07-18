@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class test_camera_detection(pulse_sequence):
+class TestCameraDetection(pulse_sequence):
     required_parameters = [
     ]
 

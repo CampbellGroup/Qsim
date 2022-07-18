@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from labrad.units import WithUnit as U
 
 
-class coherence_measurement_microwave_sequence(pulse_sequence):
+class CoherenceMeasurementMicrowaveSequence(pulse_sequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),

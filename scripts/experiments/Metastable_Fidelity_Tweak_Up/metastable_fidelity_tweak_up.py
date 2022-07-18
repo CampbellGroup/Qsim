@@ -7,7 +7,7 @@ import numpy as np
 from labrad.units import WithUnit as U
 
 
-class metastable_fidelity_tweak_up(QsimExperiment):
+class MetastableFidelityTweakUp(QsimExperiment):
     """
    
     """
@@ -104,6 +104,6 @@ class metastable_fidelity_tweak_up(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = metastable_fidelity_tweak_up(cxn=cxn)
+    exprt = MetastableFidelityTweakUp(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

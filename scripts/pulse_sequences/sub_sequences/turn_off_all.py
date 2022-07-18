@@ -3,7 +3,7 @@ from config.pulser.hardwareConfiguration import hardwareConfiguration as hc
 from labrad.units import WithUnit
 
 
-class turn_off_all(pulse_sequence):
+class TurnOffAll(pulse_sequence):
     def sequence(self):
         dur = WithUnit(1., 'us')
         for channel in hc.ddsDict.keys():

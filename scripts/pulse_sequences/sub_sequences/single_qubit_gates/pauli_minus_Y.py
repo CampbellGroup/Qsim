@@ -1,9 +1,9 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
-from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.clifford_minus_Y import clifford_minus_Y
+from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.clifford_minus_Y import CliffordMinusY
 from labrad.units import WithUnit as U
 
 
-class pauli_minus_Y(pulse_sequence):
+class PauliMinusY(pulse_sequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),

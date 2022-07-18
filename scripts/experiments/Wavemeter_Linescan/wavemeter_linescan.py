@@ -4,7 +4,7 @@ import time
 import numpy as np
 
 
-class wavemeter_linescan(QsimExperiment):
+class WavemeterLinescan(QsimExperiment):
 
     name = 'Wavemeter Linescan'
 
@@ -153,6 +153,6 @@ class wavemeter_linescan(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = wavemeter_linescan(cxn=cxn)
+    exprt = WavemeterLinescan(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)
