@@ -11,7 +11,7 @@ from sub_sequences.deshelving import Deshelving
 from sub_sequences.coherence_measurement_microwave_sequence import CoherenceMeasurementMicrowaveSequence
 
 
-class coherence_measurement_point(pulse_sequence):
+class CoherenceMeasurementPoint(pulse_sequence):
 
     required_subsequences = [TurnOffAll, DopplerCooling,
                              ShelvingStateDetection,

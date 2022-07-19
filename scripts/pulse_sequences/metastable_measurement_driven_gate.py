@@ -11,7 +11,7 @@ from sub_sequences.heralded_four_preparation import HeraldedFourPreparation
 from sub_sequences.metastable_measurement_driven_gate_delta_theta import MetastableMeasurementDrivenGateDeltaTheta
 
 
-class metastable_measurement_driven_gate(pulse_sequence):
+class MetastableMeasurementDrivenGate(pulse_sequence):
 
     required_subsequences = [
         TurnOffAll,

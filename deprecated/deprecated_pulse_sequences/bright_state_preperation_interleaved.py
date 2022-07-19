@@ -4,7 +4,7 @@ from scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detect
 from scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
 from deprecated.deprecated_sub_sequences.MLStateDetection import ml_state_detection
 from scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
-from scripts.pulse_sequences.BrightStatePumping import bright_state_pumping
+from scripts.pulse_sequences.sub_sequences.bright_state_pumping import BrightStatePumping
 from scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
 from scripts.pulse_sequences.sub_sequences.shelving import Shelving
 
@@ -12,7 +12,7 @@ from scripts.pulse_sequences.sub_sequences.shelving import Shelving
 class bright_state_preperation_interleaved(pulse_sequence):
 
     required_subsequences = [DopplerCooling, StandardStateDetection, ml_state_detection,
-                             ShelvingStateDetection, TurnOffAll, bright_state_pumping,
+                             ShelvingStateDetection, TurnOffAll, BrightStatePumping,
                              ShelvingDopplerCooling, Shelving]
     required_parameters = [
         ('Modes', 'state_detection_mode'), ('BrightStateDetection', 'NumberInterleavedSequences')]
@@ -28,7 +28,7 @@ class bright_state_preperation_interleaved(pulse_sequence):
             self.addSequence(ShelvingDopplerCooling)
 
         self.addSequence(TurnOffAll)
-        self.addSequence(bright_state_pumping)
+        self.addSequence(BrightStatePumping)
 
         self.addSequence(TurnOffAll)
         if mode == 'Standard':

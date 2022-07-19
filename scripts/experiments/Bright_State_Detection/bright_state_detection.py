@@ -1,8 +1,7 @@
 import labrad
-from Qsim.scripts.pulse_sequences.bright_state_preparation import bright_state_preparation as sequence
+from Qsim.scripts.pulse_sequences.bright_state_preparation import BrightStatePreparation as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
-from scipy.optimize import curve_fit as fit
 import numpy as np
 from labrad.units import WithUnit as U
 

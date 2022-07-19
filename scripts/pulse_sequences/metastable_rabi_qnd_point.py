@@ -12,7 +12,7 @@ from sub_sequences.shelving import Shelving
 from sub_sequences.deshelving import Deshelving
 
 
-class metastable_rabi_qnd_point(pulse_sequence):
+class MetastableRabiQNDPoint(pulse_sequence):
 
     required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation,
                              MetastableStateDetection, OpticalPumping, Shelving,

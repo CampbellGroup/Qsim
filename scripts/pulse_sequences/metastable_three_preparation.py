@@ -11,7 +11,7 @@ from sub_sequences.heralded_four_preparation import HeraldedFourPreparation
 from sub_sequences.heralded_three_preparation import HeraldedThreePreparation
 
 
-class metastable_three_preparation(pulse_sequence):
+class MetastableThreePreparation(pulse_sequence):
 
     required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation,
                              MetastableStateDetection, OpticalPumping, Shelving,

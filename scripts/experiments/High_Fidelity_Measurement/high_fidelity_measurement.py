@@ -1,6 +1,6 @@
 import labrad
-from Qsim.scripts.pulse_sequences.shelving_bright_spam import shelving_bright_spam as bright_sequence
-from Qsim.scripts.pulse_sequences.shelving_dark_spam import shelving_dark_spam as dark_sequence
+from Qsim.scripts.pulse_sequences.shelving_bright_spam import ShelvingBrightSpam as bright_sequence
+from Qsim.scripts.pulse_sequences.shelving_dark_spam import ShelvingDarkSpam as dark_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
 from Qsim.scripts.experiments.Microwave_Rabi_Flopping.microwave_rabi_flopping_clock import MicrowaveRabiFloppingClock as rabi_tweak_up

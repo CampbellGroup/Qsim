@@ -3,7 +3,7 @@ from sub_sequences.doppler_cooling import DopplerCooling
 from sub_sequences.state_detection.standard_state_detection import StandardStateDetection
 from sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
 from sub_sequences.turn_off_all import TurnOffAll
-from BrightStatePumping import bright_state_pumping
+from sub_sequences.bright_state_pumping import BrightStatePumping
 from sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
 from sub_sequences.shelving import Shelving
 from sub_sequences.deshelving import Deshelving
@@ -11,10 +11,10 @@ from sub_sequences.optical_pumping import OpticalPumping
 from sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
 
 
-class bright_state_preparation(pulse_sequence):
+class BrightStatePreparation(pulse_sequence):
 
     required_subsequences = [DopplerCooling, StandardStateDetection,
-                             ShelvingStateDetection, TurnOffAll, bright_state_pumping,
+                             ShelvingStateDetection, TurnOffAll, BrightStatePumping,
                              ShelvingDopplerCooling, Shelving, Deshelving, OpticalPumping,
                              MicrowaveInterrogation]
     required_parameters = [
@@ -22,17 +22,17 @@ class bright_state_preparation(pulse_sequence):
 
     def sequence(self):
 
-        mode = self.parameters.Modes.state_detection_mode
+        state_detection_mode = self.parameters.Modes.state_detection_mode
 
         # standard bright state is the 1 state
-        if mode == 'Standard':
+        if state_detection_mode == 'Standard':
             self.addSequence(TurnOffAll)
             self.addSequence(DopplerCooling)
-            self.addSequence(bright_state_pumping)
+            self.addSequence(BrightStatePumping)
             self.addSequence(StandardStateDetection)
 
         # shelving bright state is the 0 state
-        elif mode == 'Shelving':
+        elif state_detection_mode == 'Shelving':
             self.addSequence(TurnOffAll)
             self.addSequence(ShelvingDopplerCooling)
             self.addSequence(OpticalPumping)

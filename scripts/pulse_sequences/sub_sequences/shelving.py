@@ -33,30 +33,49 @@ class Shelving(pulse_sequence):
         """
         This is the standard shelving stuff below
         """
-        self.addDDS('411DP1',
-                    self.start,
-                    p.Shelving.duration,
-                    p.ddsDefaults.DP1_411_freq,
-                    p.ddsDefaults.DP1_411_power)
+        mode = p.Modes.shelving
 
-        #self.addTTL('411TTL',
-        #            self.start,
-        #            p.Shelving.duration)
+        if mode == "Standard":
+            self.addDDS('411DP1',
+                        self.start,
+                        p.Shelving.duration,
+                        p.ddsDefaults.DP1_411_freq,
+                        p.ddsDefaults.DP1_411_power)
 
-        self.addDDS('935SP',
-                    self.start,
-                    p.Shelving.duration,
-                    p.ddsDefaults.repump_935_freq,
-                    p.ddsDefaults.repump_935_power)
-        #This is (for the time being) NOT a 976, but the other 935 for 173.
-        self.addDDS('976SP',
-                    self.start,
-                    p.Shelving.duration,
-                    p.ddsDefaults.repump_976_freq,
-                    p.ddsDefaults.repump_976_power)
-        # self.addDDS('3GHz_qubit',
-        #            self.start,
-        #            p.Shelving.duration,
-        #            p.ddsDefaults.metastable_qubit_dds_freq,
-        #            p.ddsDefaults.metastable_qubit_dds_power)
-        self.end = self.start + p.Shelving.duration
+            self.addDDS('935SP',
+                        self.start,
+                        p.Shelving.duration,
+                        p.ddsDefaults.repump_935_freq,
+                        p.ddsDefaults.repump_935_power)
+            # This is (for the time being) NOT a 976, but the other 935 for 173.
+            self.addDDS('976SP',
+                        self.start,
+                        p.Shelving.duration,
+                        p.ddsDefaults.repump_976_freq,
+                        p.ddsDefaults.repump_976_power)
+
+            self.end = self.start + p.Shelving.duration
+
+        if mode == "Cooling_on":
+            self.addDDS('411DP1',
+                        self.start,
+                        p.Shelving.duration,
+                        p.ddsDefaults.DP1_411_freq,
+                        p.ddsDefaults.DP1_411_power)
+            self.addDDS('369DP',
+                        self.start,
+                        p.Shelving.duration,
+                        p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning / 2.0,
+                        p.DopplerCooling.cooling_power)
+            self.addDDS('935SP',
+                        self.start,
+                        p.Shelving.duration,
+                        p.ddsDefaults.repump_935_freq,
+                        p.DopplerCooling.repump_power)
+            self.addDDS('976SP',
+                        self.start,
+                        p.Shelving.duration,
+                        p.ddsDefaults.repump_976_freq,
+                        p.ddsDefaults.repump_976_power)
+
+            self.end = self.start + p.Shelving.duration

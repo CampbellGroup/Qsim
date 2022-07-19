@@ -1,10 +1,8 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 from Qsim.scripts.pulse_sequences.sub_sequences.doppler_cooling import DopplerCooling
-from Qsim.scripts.pulse_sequences.sub_sequences.doppler_cooling_fiber_eom import DopplerCoolingFiberEom
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
 from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import StandardStateDetection
-from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection_fiber_eom import StandardStateDetectionFiberEom
 from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
 from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
 from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
@@ -17,8 +15,7 @@ class MicrowavePoint(pulse_sequence):
     required_subsequences = [TurnOffAll, DopplerCooling,
                              MicrowaveInterrogation,
                              StandardStateDetection, ShelvingStateDetection, Deshelving,
-                             OpticalPumping, Shelving, ShelvingDopplerCooling, DopplerCoolingFiberEom,
-                             StandardStateDetectionFiberEom]
+                             OpticalPumping, Shelving, ShelvingDopplerCooling,]
 
     required_parameters = [
         ('Modes', 'state_detection_mode'),

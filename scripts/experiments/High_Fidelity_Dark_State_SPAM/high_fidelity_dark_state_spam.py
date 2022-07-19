@@ -4,7 +4,7 @@ from labrad.units import WithUnit as U
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time as time
 
-from Qsim.scripts.pulse_sequences.shelving_dark_spam import shelving_dark_spam as dark_sequence
+from Qsim.scripts.pulse_sequences.shelving_dark_spam import ShelvingDarkSpam as dark_sequence
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
 from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan_minus import MicrowaveLineScanMinus
 from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan_plus import MicrowaveLineScanPlus

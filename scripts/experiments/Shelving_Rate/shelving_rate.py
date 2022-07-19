@@ -1,6 +1,6 @@
 import labrad
 import numpy as np
-from Qsim.scripts.pulse_sequences.shelving_point import shelving_point as sequence
+from Qsim.scripts.pulse_sequences.shelving_point import ShelvingPoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 

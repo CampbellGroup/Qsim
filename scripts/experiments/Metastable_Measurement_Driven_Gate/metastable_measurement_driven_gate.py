@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.metastable_measurement_driven_gate import metastable_measurement_driven_gate as sequence
+from Qsim.scripts.pulse_sequences.metastable_measurement_driven_gate import MetastableMeasurementDrivenGate as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 

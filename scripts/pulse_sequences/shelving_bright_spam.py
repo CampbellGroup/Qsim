@@ -7,7 +7,7 @@ from sub_sequences.deshelving import Deshelving
 from sub_sequences.turn_off_all import TurnOffAll
 
 
-class shelving_bright_spam(pulse_sequence):
+class ShelvingBrightSpam(pulse_sequence):
     required_subsequences = [Shelving, ShelvingDopplerCooling, ShelvingStateDetection, Deshelving,
                              OpticalPumping, TurnOffAll]
 

@@ -24,7 +24,7 @@ class DopplerCooling(pulse_sequence):
 
     def sequence(self):
         p = self.parameters
-        if p.DopplerCooling.method == 'Standard':
+        if p.Modes.laser_369 == 'Standard':
             self.addDDS('DopplerCoolingSP',
                         self.start,
                         p.DopplerCooling.duration,
@@ -57,7 +57,7 @@ class DopplerCooling(pulse_sequence):
                         p.ddsDefaults.repump_760_2_power)
             self.end = self.start + p.DopplerCooling.duration
 
-        if p.DopplerCooling.method == 'StandardFiberEOM':
+        if p.Modes.laser_369 == 'FiberEOM' or p.Modes.laser_369 == 'FiberEOM173':
             self.addDDS('369DP',
                         self.start,
                         p.DopplerCooling.duration,

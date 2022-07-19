@@ -5,7 +5,7 @@ import random as random
 from labrad.units import WithUnit as U
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import Qsim.scripts.experiments.Randomized_Benchmarking.generate_save_rb_sequences as generate_sequences
-from Qsim.scripts.pulse_sequences.randomized_benchmarking import randomized_benchmarking as sequence
+from Qsim.scripts.pulse_sequences.randomized_benchmarking import RandomizedBenchmarking as sequence
 
 
 class RandomizedBenchmarking(QsimExperiment):

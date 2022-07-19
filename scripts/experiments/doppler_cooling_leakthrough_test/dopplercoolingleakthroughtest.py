@@ -1,6 +1,6 @@
 import labrad
 import numpy as np
-from Qsim.scripts.pulse_sequences.doppler_cooling_leakthrough_test import doppler_cooling_leakthrough_test as sequence
+from Qsim.scripts.pulse_sequences.doppler_cooling_leakthrough_test import DopplerCoolingLeakthroughTest as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 

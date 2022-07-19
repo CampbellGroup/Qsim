@@ -29,11 +29,6 @@ class ManifoldStateDetection(pulse_sequence):
                     self.start,
                     p.ManifoldDetection.duration)
 
-        # # provides timetags
-        # self.addTTL('TimeResolvedCount',
-        #             self.start,
-        #             p.ShelvingStateDetection.duration)
-
         self.addDDS('935SP',
                     self.start,
                     p.ManifoldDetection.duration,

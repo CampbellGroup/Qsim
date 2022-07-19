@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.metastable_rabi_qnd_point import metastable_rabi_qnd_point as sequence
+from Qsim.scripts.pulse_sequences.metastable_rabi_qnd_point import MetastableRabiQNDPoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np

@@ -1,6 +1,6 @@
 import labrad
 from labrad.units import WithUnit as U
-from Qsim.scripts.pulse_sequences.dark_state_preparation import dark_state_preparation as sequence
+from Qsim.scripts.pulse_sequences.dark_state_preparation import DarkStatePreparation as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
 from scipy.optimize import curve_fit as fit

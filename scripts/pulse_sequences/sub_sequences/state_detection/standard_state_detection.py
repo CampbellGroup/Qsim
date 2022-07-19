@@ -20,7 +20,9 @@ class StandardStateDetection(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        if p.StandardStateDetection.method == 'Standard':
+        mode = p.Modes.laser_369
+
+        if mode == 'Standard':
             self.addTTL('ReadoutCount',
                         self.start,
                         p.StandardStateDetection.duration)
@@ -41,7 +43,7 @@ class StandardStateDetection(pulse_sequence):
                         p.StandardStateDetection.CW_power)
             self.end = self.start + p.StandardStateDetection.duration
 
-        elif p.StandardStateDetection.method == 'StandardFiberEOM':
+        elif mode == 'FiberEOM':
             self.addTTL('WindfreakSynthHDTTL',
                         self.start,
                         p.StandardStateDetection.duration)

@@ -1,6 +1,6 @@
 import labrad
 from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequence
-from Qsim.scripts.pulse_sequences.ramsey_microwave_line_scan_point import ramsey_microwave_line_scan_point as ramsey_scan
+from Qsim.scripts.pulse_sequences.ramsey_microwave_line_scan_point import RamseyMicrowaveLineScanPoint as ramsey_scan
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np

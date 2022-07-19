@@ -10,7 +10,7 @@ from sub_sequences.shelving import Shelving
 from sub_sequences.deshelving import Deshelving
 
 
-class ramsey_microwave_line_scan_point(pulse_sequence):
+class RamseyMicrowaveLineScanPoint(pulse_sequence):
 
     required_subsequences = [TurnOffAll, DopplerCooling,
                              RamseyMicrowaveInterrogation,

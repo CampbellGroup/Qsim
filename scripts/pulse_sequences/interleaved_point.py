@@ -4,7 +4,7 @@ from sub_sequences.dipole_interrogation import DipoleInterrogation
 from sub_sequences.turn_off_all import TurnOffAll
 
 
-class interleaved_point(pulse_sequence):
+class InterleavedPoint(pulse_sequence):
 
     required_subsequences = [TurnOffAll, DopplerCooling, DipoleInterrogation]
 

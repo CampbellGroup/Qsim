@@ -11,7 +11,7 @@ from sub_sequences.microwave_pulse_sequences.MicrowaveSequenceStandard import Mi
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
 
 
-class randomized_benchmarking(pulse_sequence):
+class RandomizedBenchmarking(pulse_sequence):
 
     required_subsequences = [DopplerCooling, StandardStateDetection,
                              ShelvingStateDetection, TurnOffAll,

@@ -7,7 +7,7 @@ from sub_sequences.variable_deshelving import VariableDeshelving
 from sub_sequences.turn_off_all import TurnOffAll
 
 
-class deshelving_point(pulse_sequence):
+class DeshelvingPoint(pulse_sequence):
 
     required_subsequences = [TurnOffAll, ShelvingDopplerCooling, Shelving,
                              Deshelving, VariableDeshelving, ShelvingStateDetection]

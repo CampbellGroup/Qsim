@@ -3,15 +3,15 @@ from sub_sequences.state_detection.shelving_state_detection import ShelvingState
 from sub_sequences.shelving import Shelving
 from sub_sequences.turn_off_all import TurnOffAll
 from sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
-from Qsim.scripts.pulse_sequences.BrightStatePumping import bright_state_pumping
+from sub_sequences.bright_state_pumping import BrightStatePumping
 from sub_sequences.optical_pumping import OpticalPumping
 from sub_sequences.deshelving import Deshelving
 
 
-class shelving_fidelity(pulse_sequence):
+class ShelvingFidelity(pulse_sequence):
 
     required_subsequences = [Shelving, ShelvingDopplerCooling, ShelvingStateDetection, Deshelving,
-                             TurnOffAll, bright_state_pumping, OpticalPumping]
+                             TurnOffAll, BrightStatePumping, OpticalPumping]
 
     required_parameters = [
                            ]
@@ -21,7 +21,7 @@ class shelving_fidelity(pulse_sequence):
         self.addSequence(ShelvingDopplerCooling)
 
         self.addSequence(TurnOffAll)
-        self.addSequence(bright_state_pumping)
+        self.addSequence(BrightStatePumping)
 
         self.addSequence(TurnOffAll)
         self.addSequence(Shelving)

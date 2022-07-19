@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.quadrupole_point import quadrupole_point as sequence
+from Qsim.scripts.pulse_sequences.quadrupole_point import QuadrupolePoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np

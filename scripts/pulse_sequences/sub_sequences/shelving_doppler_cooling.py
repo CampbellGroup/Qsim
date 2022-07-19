@@ -29,7 +29,9 @@ class ShelvingDopplerCooling(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        if p.Shelving_Doppler_Cooling.method == 'Standard':
+        mode = p.modes.laser_369
+
+        if mode == 'Standard':
             self.addDDS('DopplerCoolingSP',
                         self.start,
                         p.Shelving_Doppler_Cooling.duration,
@@ -55,11 +57,6 @@ class ShelvingDopplerCooling(pulse_sequence):
                         p.Shelving_Doppler_Cooling.duration,
                         p.ddsDefaults.repump_760_2_freq,
                         p.ddsDefaults.repump_760_2_power)
-            # self.addDDS('ProtectionBeam',
-            #             self.start,
-            #             p.Shelving_Doppler_Cooling.duration,
-            #             p.ddsDefaults.protection_beam_freq,
-            #             p.ddsDefaults.protection_beam_power)
             self.addTTL('ReadoutCount',
                         self.start,
                         p.Shelving_Doppler_Cooling.duration)
@@ -68,7 +65,7 @@ class ShelvingDopplerCooling(pulse_sequence):
                         p.Shelving_Doppler_Cooling.duration)
             self.end = self.start + p.Shelving_Doppler_Cooling.duration
 
-        if p.Shelving_Doppler_Cooling.method == 'StandardFiberEOM':
+        if mode == 'FiberEOM' or mode == 'FiberEOM173':
             self.addDDS('369DP',
                         self.start,
                         p.Shelving_Doppler_Cooling.duration,

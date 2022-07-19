@@ -8,7 +8,7 @@ from sub_sequences.optical_pumping import OpticalPumping
 from sub_sequences.deshelving import Deshelving
 
 
-class quadrupole_point(pulse_sequence):
+class QuadrupolePoint(pulse_sequence):
 
     required_subsequences = [TurnOffAll, DopplerCooling, QuadrupoleInterrogation,
                              Deshelving, OpticalPumping, MicrowaveInterrogation,

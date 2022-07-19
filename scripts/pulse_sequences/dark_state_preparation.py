@@ -6,16 +6,16 @@ from sub_sequences.state_detection.standard_state_detection import StandardState
 from sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
 from sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
 from sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
-from BrightStatePumping import bright_state_pumping
+from sub_sequences.bright_state_pumping import BrightStatePumping
 from sub_sequences.shelving import Shelving
 from sub_sequences.deshelving import Deshelving
 
 
-class dark_state_preparation(pulse_sequence):
+class DarkStatePreparation(pulse_sequence):
 
     required_subsequences = [TurnOffAll, DopplerCooling, StandardStateDetection,
                              ShelvingStateDetection, OpticalPumping, Shelving, ShelvingDopplerCooling,
-                             Deshelving, bright_state_pumping, MicrowaveInterrogation]
+                             Deshelving, BrightStatePumping, MicrowaveInterrogation]
 
     required_parameters = [
         ('Modes', 'state_detection_mode'),
@@ -30,14 +30,14 @@ class dark_state_preparation(pulse_sequence):
             self.addSequence(DopplerCooling)
             self.addSequence(OpticalPumping)
             if self.parameters.BrightStatePumping.start_with_Hadamard == 'On':
-                self.addSequence(bright_state_pumping)
+                self.addSequence(BrightStatePumping)
             self.addSequence(StandardStateDetection)
 
         # shelving dark state is the |1> state
         elif mode == 'Shelving':
             self.addSequence(TurnOffAll)
             self.addSequence(ShelvingDopplerCooling)
-            self.addSequence(bright_state_pumping)
+            self.addSequence(BrightStatePumping)
             self.addSequence(Shelving)
             self.addSequence(ShelvingStateDetection)
             self.addSequence(Deshelving)

@@ -1,6 +1,6 @@
 import labrad
 import numpy as np
-from Qsim.scripts.pulse_sequences.deshelving_point import deshelving_point as sequence
+from Qsim.scripts.pulse_sequences.deshelving_point import DeshelvingPoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 

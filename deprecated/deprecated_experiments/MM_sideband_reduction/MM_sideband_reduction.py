@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.interleaved_point import interleaved_point as sequence
+from Qsim.scripts.pulse_sequences.interleaved_point import InterleavedPoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit
 import numpy as np

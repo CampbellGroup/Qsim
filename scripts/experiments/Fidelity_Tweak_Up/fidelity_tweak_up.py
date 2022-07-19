@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.fidelity_tweak_up import fidelity_tweak_up as sequence
+from Qsim.scripts.pulse_sequences.fidelity_tweak_up import FidelityTweakUp as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 from labrad.units import WithUnit as U

@@ -2,7 +2,7 @@ import labrad
 import numpy as np
 from labrad.units import WithUnit as U
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.pulse_sequences.sf_discrimination_sequence import sf_discrimination_sequence as sequence
+from Qsim.scripts.pulse_sequences.sf_discrimination_sequence import SFDiscriminationSequence as sequence
 
 
 class SFDiscriminationExperiment(QsimExperiment):

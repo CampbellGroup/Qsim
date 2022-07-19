@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from sub_sequences.test_sub_sequence import TestSubSequence
 
 
-class test_sequence(pulse_sequence):
+class TestSequence(pulse_sequence):
 
     required_subsequences = [TestSubSequence]
 

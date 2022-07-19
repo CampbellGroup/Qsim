@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.coherence_measurement_point import coherence_measurement_point as sequence
+from Qsim.scripts.pulse_sequences.coherence_measurement_point import CoherenceMeasurementPoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np

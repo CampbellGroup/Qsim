@@ -1,5 +1,5 @@
 import labrad
-from Qsim.scripts.pulse_sequences.test_sequence import test_sequence as sequence
+from Qsim.scripts.pulse_sequences.test_sequence import TestSequence as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np

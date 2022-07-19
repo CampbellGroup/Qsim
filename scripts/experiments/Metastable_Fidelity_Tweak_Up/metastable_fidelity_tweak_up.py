@@ -1,7 +1,7 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.pulse_sequences.metastable_three_preparation import metastable_three_preparation as metastable_bright_sequence  # this is where I define which state is bright
-from Qsim.scripts.pulse_sequences.metastable_four_preparation import metastable_four_preparation as metastable_dark_sequence
+from Qsim.scripts.pulse_sequences.metastable_three_preparation import MetastableThreePreparation as metastable_bright_sequence  # this is where I define which state is bright
+from Qsim.scripts.pulse_sequences.metastable_four_preparation import MetastableFourPreparation as metastable_dark_sequence
 
 import numpy as np
 from labrad.units import WithUnit as U

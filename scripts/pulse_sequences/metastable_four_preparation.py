@@ -10,7 +10,7 @@ from sub_sequences.deshelving import Deshelving
 from sub_sequences.heralded_four_preparation import HeraldedFourPreparation
 
 
-class metastable_four_preparation(pulse_sequence):
+class MetastableFourPreparation(pulse_sequence):
 
     required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation,
                              MetastableStateDetection, OpticalPumping, Shelving,

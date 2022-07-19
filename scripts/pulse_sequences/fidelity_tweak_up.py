@@ -4,12 +4,12 @@ from sub_sequences.state_detection.standard_state_detection import StandardState
 from sub_sequences.turn_off_all import TurnOffAll
 from sub_sequences.optical_pumping import OpticalPumping
 from sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
-from BrightStatePumping import bright_state_pumping
+from sub_sequences.bright_state_pumping import BrightStatePumping
 
 
-class fidelity_tweak_up(pulse_sequence):
+class FidelityTweakUp(pulse_sequence):
     required_subsequences = [DopplerCooling, StandardStateDetection, TurnOffAll,
-                             bright_state_pumping, OpticalPumping, MicrowaveInterrogation]
+                             BrightStatePumping, OpticalPumping, MicrowaveInterrogation]
 
     required_parameters = [
     ]
@@ -17,7 +17,7 @@ class fidelity_tweak_up(pulse_sequence):
     def sequence(self):
         self.addSequence(TurnOffAll)
         self.addSequence(DopplerCooling)
-        self.addSequence(bright_state_pumping)
+        self.addSequence(BrightStatePumping)
         self.addSequence(StandardStateDetection)
 
         self.addSequence(DopplerCooling)
