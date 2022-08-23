@@ -9,7 +9,7 @@ class ShelvingDopplerCooling(pulse_sequence):
         ('DopplerCooling', 'detuning'),
         ('Shelving_Doppler_Cooling', 'duration'),
         ('Shelving_Doppler_Cooling', 'doppler_counts_threshold'),
-        ('Shelving_Doppler_Cooling', 'method'),
+        ('Modes', 'laser_369'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),

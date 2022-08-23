@@ -29,7 +29,6 @@ class FidelityTweakUp(QsimExperiment):
     exp_parameters.remove(('MicrowaveInterrogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
-
     def initialize(self, cxn, context, ident):
         self.ident = ident
 
@@ -37,14 +36,15 @@ class FidelityTweakUp(QsimExperiment):
 
         qubit = self.p.Line_Selection.qubit
         reps = self.p.MicrowaveInterrogation.repetitions
-        if qubit == 'qubit_0':
-            pi_time = self.p.Pi_times.qubit_0
 
-        elif qubit == 'qubit_plus':
+        if qubit == 'qubit_plus':
             pi_time = self.p.Pi_times.qubit_plus
 
         elif qubit == 'qubit_minus':
             pi_time = self.p.Pi_times.qubit_minus
+
+        else:
+            pi_time = self.p.Pi_times.qubit_0
 
         self.p['MicrowaveInterrogation.duration'] = reps*pi_time
         self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')

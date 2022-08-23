@@ -5,6 +5,7 @@ class Shelving(pulse_sequence):
 
     required_parameters = [
         ('Shelving', 'duration'),
+        ('Modes', 'shelving'),
         ('Transitions', 'quadrupole'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'DP1_411_freq'),

@@ -8,7 +8,7 @@ class DopplerCooling(pulse_sequence):
         ('DopplerCooling', 'repump_power'),
         ('DopplerCooling', 'detuning'),
         ('DopplerCooling', 'duration'),
-        ('DopplerCooling', 'method'),
+        ('Modes', 'laser_369'),
         ('Transitions', 'main_cooling_369'),
         ('ddsDefaults', 'doppler_cooling_freq'),
         ('ddsDefaults', 'doppler_cooling_power'),
@@ -20,7 +20,7 @@ class DopplerCooling(pulse_sequence):
         ('ddsDefaults', 'repump_760_2_freq'),
         ('ddsDefaults', 'repump_760_2_power'),
         ('ddsDefaults', 'DP369_freq'),
-                           ]
+        ]
 
     def sequence(self):
         p = self.parameters
