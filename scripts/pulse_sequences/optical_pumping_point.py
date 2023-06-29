@@ -26,7 +26,7 @@ class OpticalPumpingPoint(pulse_sequence):
 
         mode = p.Modes.optical_pumping
 
-        if mode == 'Standard':
+        if mode == 'Standard' or mode == 'StandardFiberEOM':
             self.addSequence(DopplerCooling)
             self.addSequence(OpticalPumping)
             self.addSequence(StandardStateDetection)

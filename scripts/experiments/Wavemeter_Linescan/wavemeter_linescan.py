@@ -5,7 +5,12 @@ import numpy as np
 
 
 class WavemeterLinescan(QsimExperiment):
+    """
+Moves the wavemeter lock to produce a scan of ion fluorescence as a function of laser frequency. Useful especially
+for performing scans with repump lasers.
 
+Before running the scan, care should be taken to make sure that the laser powers are set correctly in the pulser tab.
+"""
     name = 'Wavemeter Linescan'
 
     exp_parameters = []
@@ -14,7 +19,6 @@ class WavemeterLinescan(QsimExperiment):
     exp_parameters.append(('Transitions', 'repump_760'))
     exp_parameters.append(('Transitions', 'shelving_411'))
     exp_parameters.append(('Transitions', 'Hudson'))
-    # exp_parameters.append(('Transitions', 'repump_760_repump'))
     exp_parameters.append(('Transitions', 'repump_760_repump'))
     exp_parameters.append(('Transitions', 'repump_976'))
 
@@ -26,7 +30,7 @@ class WavemeterLinescan(QsimExperiment):
     exp_parameters.append(('wavemeterscan', 'scan_range_Hudson'))
 
     exp_parameters.append(('wavemeterscan', 'lasername'))
-
+    exp_parameters.append(('wavemeterscan', 'noise_floor'))
     exp_parameters.append(('wavemeterscan', 'rail_wait_time'))
 
     def initialize(self, cxn, context, ident):
@@ -52,15 +56,18 @@ class WavemeterLinescan(QsimExperiment):
         delay = self.wait_time['s']
         for i in range(100):
             progress = i/200.0
-            self.take_data(progress, delay)
+            should_break = self.take_data(progress, delay)
+            if should_break:
+                return
             self.wm.set_pid_course(self.dac_port, str(low_x[i]))
-
         self.wm.set_pid_course(self.dac_port, str(self.centerfrequency['THz']))
         time.sleep(5*delay)
 
         for i in range(100):
             progress = (100 + i)/200.0
-            self.take_data(progress, delay)
+            should_break = self.take_data(progress, delay)
+            if should_break:
+                return
             self.wm.set_pid_course(self.dac_port, str(high_x[i]))
 
         self.wm.set_pid_course(self.dac_port, str(self.centerfrequency['THz']))
@@ -88,11 +95,11 @@ class WavemeterLinescan(QsimExperiment):
                     self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
                 except KeyError:
                     pass
-                return
+                return True
 
             counts = self.pmt.get_next_counts('ON', 1, False)[0]
             currentfreq = self.currentfrequency()
-            if currentfreq and counts:
+            if currentfreq and (counts > self.p.wavemeterscan.noise_floor):
                 self.tempdata.append([1e6 * currentfreq, counts])
 
     def setup_parameters(self):
@@ -146,7 +153,7 @@ class WavemeterLinescan(QsimExperiment):
             return None
 
     def finalize(self, cxn, context):
-
+        self.wm.set_pid_course(self.dac_port, str(self.centerfrequency['THz']))
         self.cxnwlm.disconnect()
 
 

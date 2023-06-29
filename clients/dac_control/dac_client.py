@@ -27,12 +27,13 @@ class Electrode():
         self.spinBox.spinLevel.setDecimals(4)
 
 
-class dacclient(QtGui.QWidget):
+class dacclient(QtGui.QFrame):
 
     def __init__(self, reactor, parent=None):
 
         super(dacclient, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
+        self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Plain)
         self.reactor = reactor
         self.connect()
 
@@ -74,7 +75,7 @@ class dacclient(QtGui.QWidget):
             layout.addWidget(spinbox, 3 + j, i + 1, 1, 1)
             self.multipoles.append(spinbox)
 
-        layout.addWidget(self.electrodeind, 0, 1, 1, 3)
+        layout.addWidget(self.electrodeind, 0, 1, 1,  4)
 
         for key, channel in self.elec_dict.iteritems():
             electrode = Electrode(channel.dacChannelNumber, channel.octantNumber,
@@ -111,6 +112,7 @@ class dacclient(QtGui.QWidget):
 
     def closeEvent(self, event):
         pass
+
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])

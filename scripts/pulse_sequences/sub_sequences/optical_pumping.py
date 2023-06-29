@@ -25,7 +25,8 @@ class OpticalPumping(pulse_sequence):
         ('ddsDefaults', 'DP2_411_power'),
         ('ddsDefaults', 'DP2_411_freq'),
         ('ddsDefaults', 'repump_976_freq'),
-        ('ddsDefaults', 'repump_976_power')
+        ('ddsDefaults', 'repump_976_power'),
+        ('Modes', 'laser_369')
     ]
 
     def sequence(self):

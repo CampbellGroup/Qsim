@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.microwave_point import MicrowavePoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
@@ -7,8 +9,33 @@ import numpy as np
 
 class MicrowaveRabiFlopping(QsimExperiment):
     """
-    repeatedly prepare the |0> state, interrogate with resonant microwaves for
-    a variable time t and measure the population in the bright state
+repeatedly prepare the |0> state, interrogate with resonant microwaves for
+a variable time t and measure the population in the bright state
+
+Pulse sequence diagram:
+
+Standard:
+    369SP            |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    DopplerCoolingSP |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    StateDetectionSP |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    OpticalPumpingSP |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    MicrowaveTTL     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
+    Microwave_qubit  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
+    935SP/976SP      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    760SP/760SP2     |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+         (TurnOffAll) DC          OP          MI~~~~~~~~~~StandardSD
+
+FiberEOM:
+    369SP            |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████████████████
+    WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    MicrowaveTTL     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
+    Microwave_qubit  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
+    935SP/976SP      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    760SP/760SP2     |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+         (TurnOffAll) DC          OP          MI~~~~~~~~~~StandardSD
     """
 
     name = 'Microwave Rabi Flopping'

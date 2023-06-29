@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import labrad
 from Qsim.scripts.pulse_sequences.fidelity_tweak_up import FidelityTweakUp as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
@@ -7,10 +9,33 @@ from labrad.units import WithUnit as U
 
 class FidelityTweakUp(QsimExperiment):
     """
-    Performs a continuous state preparation and measurement experiment of the ion. This experiment has been
-    modified to be exclusively used with standard I = 1/2 qubit state readout, and a separate experiment is
-    written for Shelving readout of the qubit.
-    """
+Performs a continuous state preparation and measurement experiment of the ion. This experiment's paramters can be
+modified on the fly, for use in tuning the fidelity of the ion.
+
+This experiment has been modified to be exclusively used with standard I = 1/2 qubit state readout, and a separate
+experiment is written for Shelving readout of the qubit.
+
+Pulse sequence diagram (369DP, 935SP, and 976SP always on):
+
+Standard:
+    DopplerCoolingSP |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁|████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁
+    StateDetectionSP |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    OpticalPumpingSP |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    760SP/760SP2     |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁|████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+         (TurnOffAll) DC          OP          StandardSD   DC          BSP*        StandardSD
+
+FiberEOM:
+    WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    760SP/760SP2     |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁|████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+         (TurnOffAll) DC          OP          StandardSD   DC          BSP*        StandardSD
+
+*The BrightStatePumping subsequence shown above is for Doppler-cooling-based pumping. In general, a microwave pulse is
+usually used to perform the pumping operation
+"""
+
 
     name = 'Fidelity Tweak Up'
 
@@ -19,6 +44,8 @@ class FidelityTweakUp(QsimExperiment):
     exp_parameters.append(('Pi_times', 'qubit_0'))
     exp_parameters.append(('Pi_times', 'qubit_plus'))
     exp_parameters.append(('Pi_times', 'qubit_minus'))
+    exp_parameters.append(('Modes', 'state_detection_mode'))
+    exp_parameters.append(('Modes', 'bright_state_pumping'))
     exp_parameters.append(('MicrowaveInterrogation', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
@@ -31,6 +58,8 @@ class FidelityTweakUp(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
+        self.pulser = cxn.pulser
+        self.context = context
 
     def run(self, cxn, context):
 
@@ -39,10 +68,8 @@ class FidelityTweakUp(QsimExperiment):
 
         if qubit == 'qubit_plus':
             pi_time = self.p.Pi_times.qubit_plus
-
         elif qubit == 'qubit_minus':
             pi_time = self.p.Pi_times.qubit_minus
-
         else:
             pi_time = self.p.Pi_times.qubit_0
 
@@ -95,6 +122,6 @@ class FidelityTweakUp(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = FidelityTweakUp(cxn=cxn)
-    ident = scanner.register_external_launch(exprt.name)
-    exprt.execute(ident)
+    experiment = FidelityTweakUp(cxn=cxn)
+    ident = scanner.register_external_launch(experiment.name)
+    experiment.execute(ident)

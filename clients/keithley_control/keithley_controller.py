@@ -1,28 +1,26 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
-from common.lib.clients.qtui.q_custom_text_changing_button import \
-    TextChangingButton
+# from common.lib.clients.qtui.q_custom_text_changing_button import \
+#     TextChangingButton
 
 
-class kiethleyclient(QtGui.QWidget):
+class KeithleyClient(QtGui.QWidget):
 
-    def __init__(self, reactor, parent = None):
-        """initializels the GUI creates the reactor
-        """
-        super(kiethleyclient, self).__init__()
+    def __init__(self, reactor, parent=None):
+        """initializes the GUI creates the reactor"""
+        super(KeithleyClient, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.connect()
         self.reactor = reactor
 
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connection
-        """
+        """Creates an Asynchronous connection"""
         from labrad.wrappers import connectAsync
         from labrad.units import WithUnit as U
         self.U = U
-        self.cxn = yield connectAsync(name = "kiethley client")
+        self.cxn = yield connectAsync(name="keithley client")
         self.server = self.cxn.keithley_2230g_server
         yield self.server.select_device(0)
         self.initializeGUI()
@@ -31,22 +29,22 @@ class kiethleyclient(QtGui.QWidget):
 
         layout = QtGui.QGridLayout()
 
-        self.setWindowTitle('kiethley Control')
+        self.setWindowTitle('keithley Control')
 
-        qBox = QtGui.QGroupBox('Kiethley 2230G')
+        qBox = QtGui.QGroupBox('Keithley 2230G')
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0)
 
-
-
         self.volt1widget = QCustomSpinBox('Amplitude (Vpp)', (0, 30))
         self.volt2widget = QCustomSpinBox('Amplitude (Vpp)', (0, 30))
 
-        self.volt1widget.spinLevel.valueChanged.connect(lambda value = self.volt1widget.spinLevel.value(), chan = 1 : self.voltchanged(chan, value))
-        self.volt2widget.spinLevel.valueChanged.connect(lambda value = self.volt2widget.spinLevel.value(), chan = 2 : self.voltchanged(chan, value))
-        subLayout.addWidget(self.volt1widget, 1,1)
-        subLayout.addWidget(self.volt2widget, 1,3)
+        self.volt1widget.spinLevel.valueChanged.connect(
+            lambda value=self.volt1widget.spinLevel.value(), chan=1: self.voltchanged(chan, value))
+        self.volt2widget.spinLevel.valueChanged.connect(
+            lambda value=self.volt2widget.spinLevel.value(), chan=2: self.voltchanged(chan, value))
+        subLayout.addWidget(self.volt1widget, 1, 1)
+        subLayout.addWidget(self.volt2widget, 1, 3)
         self.setLayout(layout)
 
     @inlineCallbacks
@@ -54,15 +52,15 @@ class kiethleyclient(QtGui.QWidget):
         value = self.U(value, 'V')
         yield self.server.voltage(chan, value)
 
-
     def closeEvent(self, x):
         self.reactor.stop()
+
 
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
-    kiethleyWidget = kiethleyclient(reactor)
-    kiethleyWidget.show()
+    keithleyWidget = KeithleyClient(reactor)
+    keithleyWidget.show()
     run = reactor.run()

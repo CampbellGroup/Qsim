@@ -18,8 +18,8 @@ class RamseyMicrowaveInterrogation(pulse_sequence):
         ('ddsDefaults', 'qubit_dds_freq'),
         ('ddsDefaults', 'qubit_dds_x32_freq'),
         ('ddsDefaults', 'qubit_dds_x32_power'),
-        ('ddsDefaults', 'DP2_411_freq'),
-        ('ddsDefaults', 'DP2_411_power'),
+        ('ddsDefaults', 'SP_532_freq'),
+        ('ddsDefaults', 'SP_532_power'),
         ('EmptySequence', 'duration'),
         ('Pi_times', 'qubit_0'),
         ('Pi_times', 'qubit_minus'),
@@ -33,11 +33,9 @@ class RamseyMicrowaveInterrogation(pulse_sequence):
         if p.Line_Selection.qubit == 'qubit_0':
             center = p.Transitions.qubit_0
             pi_time = p.Pi_times.qubit_0
-
         elif p.Line_Selection.qubit == 'qubit_plus':
             center = p.Transitions.qubit_plus
             pi_time = p.Pi_times.qubit_plus
-
         elif p.Line_Selection.qubit == 'qubit_minus':
             center = p.Transitions.qubit_minus
             pi_time = p.Pi_times.qubit_minus
@@ -60,13 +58,13 @@ class RamseyMicrowaveInterrogation(pulse_sequence):
                         p.MicrowaveInterrogation.power,
                         U(0.0, 'deg'))
 
-            # This 411 part is for the AC stark shift measurement to try to get the 411 beam waist...
-            #
-            # self.addDDS('411DP2',
+            # Uncomment this part if you're trying to perform light shift measurements
+
+            # self.addDDS('532SP',
             #             self.start + pi_time/2.0 + pulse_delay,
             #             p.EmptySequence.duration,
-            #             p.ddsDefaults.DP2_411_freq,
-            #             p.ddsDefaults.DP2_411_power,
+            #             p.ddsDefaults.SP_532_freq,
+            #             p.ddsDefaults.SP_532_power,
             #             U(0.0, 'deg'))
 
             self.addTTL('MicrowaveTTL',

@@ -73,7 +73,7 @@ class QsimExperiment(experiment):
 
     def setup_grapher(self, tab):
         if self.grapher is None:
-            print 'grapher not running'
+            print('grapher not running')
         self.grapher.plot(self.dataset, tab, False)
 
     def update_progress(self, progress):
@@ -230,7 +230,6 @@ class QsimExperiment(experiment):
     def convert_timetags(self, data):
         timetags = []
         for i, stamp in enumerate(data):
-            print stamp
             timetag = (stamp >> 10) & 2 ** 15 - 1
             timetag = (stamp >> 10) & (2 ** 15 - 1)
             timetag = timetag * 25. / 1000.  # time in nanoseconds

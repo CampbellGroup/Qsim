@@ -15,6 +15,7 @@ class StandardStateDetection(pulse_sequence):
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'qubit_dds_freq'),
         ('ddsDefaults', 'DP369_freq'),
+        ('Modes', 'laser_369'),
     ]
 
     def sequence(self):
@@ -43,11 +44,11 @@ class StandardStateDetection(pulse_sequence):
                         p.StandardStateDetection.CW_power)
             self.end = self.start + p.StandardStateDetection.duration
 
-        elif mode == 'FiberEOM':
-            self.addTTL('WindfreakSynthHDTTL',
+        elif mode == 'FiberEOM' or mode == 'FiberEOM173':
+            self.addTTL('ReadoutCount',
                         self.start,
                         p.StandardStateDetection.duration)
-            self.addTTL('ReadoutCount',
+            self.addTTL('WindfreakSynthHDTTL',
                         self.start,
                         p.StandardStateDetection.duration)
             self.addDDS('935SP',
@@ -61,3 +62,6 @@ class StandardStateDetection(pulse_sequence):
                         p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.StandardStateDetection.detuning / 2.0,
                         p.StandardStateDetection.CW_power)
             self.end = self.start + p.StandardStateDetection.duration
+
+        else:
+            print('unknown laser_369 mode')

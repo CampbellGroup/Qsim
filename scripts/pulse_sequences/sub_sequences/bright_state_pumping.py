@@ -2,8 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequ
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.Hadamard import Hadamard
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.microwave_sequence_standard_random_phase import \
-    MicrowaveSequenceStandardRandomPhase
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.microwave_sequence_standard_random_phase import MicrowaveSequenceStandardRandomPhase
 from labrad.units import WithUnit as U
 
 
@@ -25,6 +24,7 @@ class BrightStatePumping(pulse_sequence):
         ('ddsDefaults', 'repump_935_freq'),
         ('ddsDefaults', 'repump_976_freq'),
         ('ddsDefaults', 'repump_976_power'),
+        ('Modes', 'bright_state_pumping')
                            ]
 
     required_subsequences = [OpticalPumping, MicrowaveInterrogation,
@@ -33,7 +33,7 @@ class BrightStatePumping(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        prep_method = p.Modes.BrightStatePumping
+        prep_method = p.Modes.bright_state_pumping
         laser_mode = p.Modes.laser_369
 
         if prep_method == 'Doppler Cooling':
@@ -59,9 +59,9 @@ class BrightStatePumping(pulse_sequence):
                 self.end = self.start + p.BrightStatePumping.duration
 
             elif laser_mode == 'FiberEOM173':
-                self.addTTL('WindfreakSynthHDTTL',
-                            self.start,
-                            p.BrightStatePumping.duration)
+                # self.addTTL('WindfreakSynthHDTTL',
+                #             self.start,
+                #             p.BrightStatePumping.duration)
                 self.addDDS('369DP',
                             self.start,
                             p.BrightStatePumping.duration,
@@ -100,7 +100,7 @@ class BrightStatePumping(pulse_sequence):
         elif prep_method == 'Microwave':
             self.addSequence(OpticalPumping)
             if p.BrightStatePumping.start_with_Hadamard == 'On':
-                print 'adding Hadamard gate'
+                print('adding Hadamard gate')
                 self.addSequence(Hadamard)
             if p.BrightStatePumping.microwave_phase_list == 'constant':
                 for i in range(int(p.MicrowaveInterrogation.repetitions)):

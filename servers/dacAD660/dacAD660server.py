@@ -29,9 +29,9 @@ class Voltage(object):
         self.analog_voltage = analog_voltage
 
     def program(self, set_num):
-        '''
+        """
         Compute the hex code to program this voltage
-        '''
+        """
         self.set_num = set_num
         if self.analog_voltage is not None:
             (vMin, vMax) = self.channel.allowedVoltageRange
@@ -66,7 +66,7 @@ class Queue(object):
         self.current_set = 1
 
     def insert(self, v):
-        ''' Always insert voltages to the current queue position, takes a voltage object '''
+        """ Always insert voltages to the current queue position, takes a voltage object """
         v.program(self.current_set)
         self.set_dict[self.current_set].append(v)
 
@@ -107,7 +107,7 @@ class DACServer(LabradServer):
 
     @inlineCallbacks
     def setCalibrations(self):
-        ''' Go through the list of electrodes and try to detect calibrations '''
+        """ Go through the list of electrodes and try to detect calibrations """
         yield self.registry.cd(self.registry_path + ['Calibrations'], True)
         subs, keys = yield self.registry.dir()
         for chan in self.dac_dict.values():
@@ -123,7 +123,7 @@ class DACServer(LabradServer):
             else:
                 (vMin, vMax) = chan.boardVoltageRange
                 prec = hc.PREC_BITS
-                chan.calibration = [2**(prec - 1), float(2**(prec))/(vMax - vMin)]
+                chan.calibration = [2**(prec - 1), float(2**prec)/(vMax - vMin)]
 
     @setting(4, "Set Individual Digital Voltages", digital_voltages='*(si)')
     def setIndividualDigitalVoltages(self, c, digital_voltages):
@@ -164,9 +164,9 @@ class DACServer(LabradServer):
 
     @setting(14, "Get DAC  Channel Name", port_number='i', returns='s')
     def getDACChannelName(self, c, port_number):
-        '''
+        """
         Return the channel name for a given port port number.
-        '''
+        """
         for key in self.dac_dict.keys():
             if self.dac_dict[key].dacChannelNumber == port_number:
                 return key
@@ -188,6 +188,7 @@ class DACServer(LabradServer):
         except:
             pass
         self.onNewUpdate('Channels updated', notified)
+
 
 if __name__ == "__main__":
     from labrad import util

@@ -50,9 +50,9 @@ class Multipole_Server(LabradServer):
 
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connection to dac8718 Server and
-        connects incoming signals to relavent functions
-
+        """
+        Creates an Asynchronous connection to dac8718 Server and
+        connects incoming signals to relevant functions
         """
 
         from labrad.wrappers import connectAsync
@@ -69,9 +69,9 @@ class Multipole_Server(LabradServer):
         self.electrodes = {}
         for chan_name, channel in self.hc.elec_dict.iteritems():
             electrode = Electrode(channel.dacChannelNumber, channel.octantNumber,
-                                  minval = -10.0, maxval = 10.0)
+                                  minval=-10.0, maxval=10.0)
             self.electrodes[electrode.octant] = electrode
-            #self.update_dac(0.0, channel)
+            # self.update_dac(0.0, channel)
 
         self.lc.start(5.0)  # start registry saving looping call
 

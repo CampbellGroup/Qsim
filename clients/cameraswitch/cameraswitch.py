@@ -4,11 +4,12 @@ from common.lib.clients.connection import connection
 from PyQt4 import QtGui
 
 
-class cameraswitch(QtGui.QWidget):
+class cameraswitch(QtGui.QFrame):
 
     def __init__(self, reactor, cxn=None):
         super(cameraswitch, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Plain)
         self.reactor = reactor
         self.cxn = cxn
         self.connect()
@@ -45,8 +46,9 @@ class cameraswitch(QtGui.QWidget):
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
         widget = QCustomSwitchChannel('Camera/PMT Toggle', ('PMT', 'Camera'))
-        take_image_widget = QtGui.QPushButton('Save Image')
-        self.last_saved_label = QtGui.QLabel('file:')
+        widget.setFrameStyle(QtGui.QFrame.NoFrame)
+        # take_image_widget = QtGui.QPushButton('Save Image')
+        # self.last_saved_label = QtGui.QLabel('file:')
         if 'cameraswitch' in self.settings:
             value = yield self.reg.get('cameraswitch')
             value = bool(value)
@@ -55,10 +57,10 @@ class cameraswitch(QtGui.QWidget):
             widget.TTLswitch.setChecked(False)
 
         widget.TTLswitch.toggled.connect(self.toggle)
-        take_image_widget.clicked.connect(self.take_image)
+        # take_image_widget.clicked.connect(self.take_image)
         layout.addWidget(widget)
-        layout.addWidget(take_image_widget)
-        layout.addWidget(self.last_saved_label)
+        # layout.addWidget(take_image_widget)
+        # layout.addWidget(self.last_saved_label)
         self.setLayout(layout)
 
     @inlineCallbacks

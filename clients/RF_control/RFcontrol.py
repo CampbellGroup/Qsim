@@ -36,7 +36,7 @@ class RFcontrol(QtGui.QWidget):
         layout = QtGui.QGridLayout()
         chans = yield self.server.get_dds_channels()
         if self.chan in chans:
-            widget = QCustomFreqPower(self.chan)
+            widget = QCustomFreqPower(title='Trap RF Control')
             MinPower, MaxPower = yield self.server.get_dds_amplitude_range(self.chan)
             MinFreq, MaxFreq = yield self.server.get_dds_frequency_range(self.chan)
             widget.setPowerRange((MinPower, MaxPower))

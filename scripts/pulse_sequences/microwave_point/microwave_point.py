@@ -15,7 +15,7 @@ class MicrowavePoint(pulse_sequence):
     required_subsequences = [TurnOffAll, DopplerCooling,
                              MicrowaveInterrogation,
                              StandardStateDetection, ShelvingStateDetection, Deshelving,
-                             OpticalPumping, Shelving, ShelvingDopplerCooling,]
+                             OpticalPumping, Shelving, ShelvingDopplerCooling, ]
 
     required_parameters = [
         ('Modes', 'state_detection_mode'),

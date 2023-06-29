@@ -3,13 +3,15 @@ from twisted.internet.defer import inlineCallbacks, returnValue
 from common.lib.clients.connection import connection
 from PyQt4 import QtGui
 
-'''
+"""
 The DDS Control GUI lets the user control the DDS channels of the Pulser
-'''
+"""
+
+
 class DDS_CHAN(QCustomFreqPower):
     def __init__(self, chan, reactor, cxn, context, parent=None):
         super(DDS_CHAN, self).__init__('DDS: {}'.format(chan), True, parent)
-        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor
         self.context = context
         self.chan = chan
@@ -24,21 +26,21 @@ class DDS_CHAN(QCustomFreqPower):
         self.setupWidget()
 
     @inlineCallbacks
-    def setupWidget(self, connect = True):
-        #get ranges
+    def setupWidget(self, connect=True):
+        # get ranges
         self.server = yield self.cxn.get_server('Pulser')
-        MinPower,MaxPower = yield self.server.get_dds_amplitude_range(self.chan, context = self.context)
-        MinFreq,MaxFreq = yield self.server.get_dds_frequency_range(self.chan, context = self.context)
-        self.setPowerRange((MinPower,MaxPower))
-        self.setFreqRange((MinFreq,MaxFreq))
-        #get initial values
-        initpower = yield self.server.amplitude(self.chan, context = self.context)
-        initfreq = yield self.server.frequency(self.chan, context = self.context)
-        initstate = yield self.server.output(self.chan, context = self.context)
-        self.setStateNoSignal(initstate)
-        self.setPowerNoSignal(initpower['dBm'])
-        self.setFreqNoSignal(initfreq['MHz'])
-        #connect functions
+        MinPower, MaxPower = yield self.server.get_dds_amplitude_range(self.chan, context=self.context)
+        MinFreq, MaxFreq = yield self.server.get_dds_frequency_range(self.chan, context=self.context)
+        self.setPowerRange((MinPower, MaxPower))
+        self.setFreqRange((MinFreq, MaxFreq))
+        # get initial values
+        init_power = yield self.server.amplitude(self.chan, context=self.context)
+        init_freq = yield self.server.frequency(self.chan, context=self.context)
+        init_state = yield self.server.output(self.chan, context=self.context)
+        self.setStateNoSignal(init_state)
+        self.setPowerNoSignal(init_power['dBm'])
+        self.setFreqNoSignal(init_freq['MHz'])
+        # connect functions
         if connect:
             self.spinPower.valueChanged.connect(self.powerChanged)
             self.spinFreq.valueChanged.connect(self.freqChanged) 
@@ -56,9 +58,9 @@ class DDS_CHAN(QCustomFreqPower):
     def powerChanged(self, pwr):
         val = self.T.Value(pwr, 'dBm')
         try:
-            yield self.server.amplitude(self.chan, val, context = self.context)
+            yield self.server.amplitude(self.chan, val, context=self.context)
         except self.Error as e:
-            old_value =  yield self.server.amplitude(self.chan, context = self.context)
+            old_value = yield self.server.amplitude(self.chan, context=self.context)
             self.setPowerNoSignal(old_value)
             self.displayError(e.msg)
             
@@ -66,24 +68,23 @@ class DDS_CHAN(QCustomFreqPower):
     def freqChanged(self, freq):
         val = self.T.Value(freq, 'MHz')
         try:
-            yield self.server.frequency(self.chan, val, context = self.context)
+            yield self.server.frequency(self.chan, val, context=self.context)
         except self.Error as e:
-            old_value =  yield self.server.frequency(self.chan, context = self.context)
+            old_value = yield self.server.frequency(self.chan, context=self.context)
             self.setFreqNoSignal(old_value)
             self.displayError(e.msg)
-            
-    
+
     @inlineCallbacks
     def switchChanged(self, pressed):
         try:
-            yield self.server.output(self.chan,pressed, context = self.context)
+            yield self.server.output(self.chan, pressed, context=self.context)
         except self.Error as e:
-            old_value =  yield self.server.frequency(self.chan, context = self.context)
+            old_value = yield self.server.frequency(self.chan, context=self.context)
             self.setStateNoSignal(old_value)
             self.displayError(e.msg)
     
     def displayError(self, text):
-        #runs the message box in a non-blocking method
+        # runs the message box in a non-blocking method
         message = QtGui.QMessageBox(self)
         message.setText(text)
         message.open()
@@ -93,14 +94,15 @@ class DDS_CHAN(QCustomFreqPower):
     def closeEvent(self, x):
         self.reactor.stop()
 
+
 class DDS_CONTROL(QtGui.QFrame):
     
     SIGNALID = 319182
     
-    def __init__(self, reactor, cxn = None):
+    def __init__(self, reactor, cxn=None):
         super(DDS_CONTROL, self).__init__()
-        self.setFrameStyle(QtGui.QFrame.Panel  | QtGui.QFrame.Sunken)
-        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Plain)
+        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         self.reactor = reactor
         self.cxn = cxn
         self.initialized = False
@@ -116,9 +118,9 @@ class DDS_CONTROL(QtGui.QFrame):
             from labrad.types import Error
             self.Error = Error
             yield self.initialize()
-        except Exception, e:
-            print e
-            print 'DDS CONTROL: Pulser not available'
+        except Exception as e:
+            print(e)
+            print('DDS CONTROL: Pulser not available')
             self.setDisabled(True)
         self.cxn.add_on_connect('Pulser', self.reinitialize)
         self.cxn.add_on_disconnect('Pulser', self.disable)
@@ -126,8 +128,8 @@ class DDS_CONTROL(QtGui.QFrame):
     @inlineCallbacks
     def initialize(self):
         server = yield self.cxn.get_server('Pulser')
-        yield server.signal__new_dds_parameter(self.SIGNALID, context = self.context)
-        yield server.addListener(listener = self.followSignal, source = None, ID = self.SIGNALID, context = self.context)
+        yield server.signal__new_dds_parameter(self.SIGNALID, context=self.context)
+        yield server.addListener(listener=self.followSignal, source=None, ID=self.SIGNALID, context=self.context)
         self.display_channels, self.widgets_per_row = yield self.get_displayed_channels()
         self.widgets = {}.fromkeys(self.display_channels)
         self.do_layout()
@@ -135,12 +137,12 @@ class DDS_CONTROL(QtGui.QFrame):
     
     @inlineCallbacks
     def get_displayed_channels(self):
-        '''
+        """
         get a list of all available channels from the pulser. only show the ones
         listed in the registry. If there is no listing, will display all channels.
-        '''
+        """
         server = yield self.cxn.get_server('Pulser')
-        all_channels = yield server.get_dds_channels(context = self.context)
+        all_channels = yield server.get_dds_channels(context=self.context)
         channels_to_display, widgets_per_row = yield self.registry_load_displayed(all_channels, 1)
         if channels_to_display is None:
             channels_to_display = all_channels
@@ -152,22 +154,22 @@ class DDS_CONTROL(QtGui.QFrame):
     @inlineCallbacks
     def registry_load_displayed(self, all_names, default_widgets_per_row):
         reg = yield self.cxn.get_server('Registry')
-        yield reg.cd(['Clients','DDS Control'], True, context = self.context)
+        yield reg.cd(['Clients', 'DDS Control'], True, context=self.context)
         try:
-            displayed = yield reg.get('display_channels', context = self.context)
+            displayed = yield reg.get('display_channels', context=self.context)
         except self.Error as e:
             if e.code == 21:
-                #key error
-                yield reg.set('display_channels', all_names, context = self.context)
+                # key error
+                yield reg.set('display_channels', all_names, context=self.context)
                 displayed = None
             else:
                 raise
         try:
-            widgets_per_row = yield reg.get('widgets_per_row', context = self.context)
+            widgets_per_row = yield reg.get('widgets_per_row', context=self.context)
         except self.Error as e:
             if e.code == 21:
-                #key error
-                yield reg.set('widgets_per_row', 1, context = self.context)
+                # key error
+                yield reg.set('widgets_per_row', 1, context=self.context)
                 widgets_per_row = None
             else:
                 raise
@@ -178,25 +180,29 @@ class DDS_CONTROL(QtGui.QFrame):
         self.setDisabled(False)
         server = yield self.cxn.get_server('Pulser')
         if not self.initialized:
-            yield server.signal__new_dds_parameter(self.SIGNALID, context = self.context)
-            yield server.addListener(listener = self.followSignal, source = None, ID = self.SIGNALID, context = self.context)
+            yield server.signal__new_dds_parameter(self.SIGNALID, context=self.context)
+            yield server.addListener(listener=self.followSignal, source=None, ID=self.SIGNALID, context=self.context)
             self.do_layout()
             self.initialized = True
         else:
-            #update any changes in the parameters
-            yield server.signal__new_dds_parameter(self.SIGNALID, context = self.context)
-            #iterating over all setup channels
+            # update any changes in the parameters
+            yield server.signal__new_dds_parameter(self.SIGNALID, context=self.context)
+            # iterating over all setup channels
             for widget in self.widgets.values():
                 if widget is not None:
-                    yield widget.setupWidget(connect = False)
+                    yield widget.setupWidget(connect=False)
     
     def do_layout(self):
         layout = QtGui.QGridLayout()
+        qBox = QtGui.QGroupBox('Pulser DDS Control')
+        sub_layout = QtGui.QGridLayout()
+        qBox.setLayout(sub_layout)
+        layout.addWidget(qBox)
         item = 0
         for chan in self.display_channels:
             widget = DDS_CHAN(chan, self.reactor, self.cxn, self.context)
             self.widgets[chan] = widget
-            layout.addWidget(widget, item // self.widgets_per_row, item % self.widgets_per_row)
+            sub_layout.addWidget(widget, item // self.widgets_per_row, item % self.widgets_per_row)
             item += 1
         self.setLayout(layout)
         
@@ -208,17 +214,18 @@ class DDS_CONTROL(QtGui.QFrame):
     def followSignal(self, x, y):
         chan, param, val = y
         if chan in self.widgets.keys():
-            #this check is neeed in case signal comes in about a channel that is not displayed
+            # this check is needed in case signal comes in about a channel that is not displayed
             self.widgets[chan].setParamNoSignal(param, val)
 
     def closeEvent(self, x):
         self.reactor.stop()
-        
-if __name__=="__main__":
-    a = QtGui.QApplication( [] )
+
+
+if __name__ == "__main__":
+    a = QtGui.QApplication([])
     import qt4reactor
     qt4reactor.install()
     from twisted.internet import reactor
-    trapdriveWidget = DDS_CONTROL(reactor)
-    trapdriveWidget.show()
+    trap_drive_Widget = DDS_CONTROL(reactor)
+    trap_drive_Widget.show()
     reactor.run()

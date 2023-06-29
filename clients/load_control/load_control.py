@@ -9,11 +9,12 @@ from pygame import mixer
 SIGNALID = 112983
 
 
-class LoadControl(QtGui.QWidget):
+class LoadControl(QtGui.QFrame):
 
     def __init__(self, reactor, cxn=None):
         super(LoadControl, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.MinimumExpanding)
+        self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Plain)
         mixer.init()
         self.its_trap = mixer.Sound('/home/qsimexpcontrol/Music/trap.wav')
         self.vader = mixer.Sound('/home/qsimexpcontrol/Music/swvader01.wav')
@@ -25,9 +26,9 @@ class LoadControl(QtGui.QWidget):
 
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connection to arduinottl and
-        connects incoming signals to relavent functions
-
+        """
+        Creates an Asynchronous connection to arduinottl and
+        connects incoming signals to relevant functions
         """
         from labrad.units import WithUnit as U
         self.U = U
@@ -57,8 +58,9 @@ class LoadControl(QtGui.QWidget):
     @inlineCallbacks
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
-        self.shutter_widget = QCustomSwitchChannel('399/Oven/ProtectionBeam',
+        self.shutter_widget = QCustomSwitchChannel('399/Oven',
                                                    ('Closed/Oven Off', 'Open/Oven On'))
+        self.shutter_widget.setFrameStyle(QtGui.QFrame.NoFrame)
         self.shutter_widget.TTLswitch.toggled.connect(self.toggle)
         self.timer_widget = QCustomTimer('Loading Time', show_control=False)
         self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 3.0))
@@ -78,9 +80,9 @@ class LoadControl(QtGui.QWidget):
         else:
             self.shutter_widget.TTLswitch.setChecked(False)
 
-        layout.addWidget(self.current_widget, 1, 1)
-        layout.addWidget(self.shutter_widget, 0, 0)
-        layout.addWidget(self.timer_widget, 0, 1)
+        layout.addWidget(self.shutter_widget, 0, 0, 2, 1)
+        layout.addWidget(self.current_widget, 1, 1, 1, 1)
+        layout.addWidget(self.timer_widget, 2, 0, 1, 2)
         self.setLayout(layout)
 
     @inlineCallbacks

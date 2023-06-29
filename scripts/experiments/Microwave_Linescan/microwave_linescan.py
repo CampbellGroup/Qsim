@@ -1,15 +1,43 @@
+# -*- coding: utf-8 -*-
+
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point import microwave_point as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.microwave_point import MicrowavePoint as sequence
 from Qsim.scripts.pulse_sequences.ramsey_microwave_line_scan_point import RamseyMicrowaveLineScanPoint as ramsey_scan
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
 from scipy.optimize import curve_fit as fit
 
+
 class MicrowaveLineScan(QsimExperiment):
     """
-    Scan 12.6 GHz microwave source over the qubit transition
-    """
+Scan 12.6 GHz microwave source over the qubit transition.
+
+Pulse sequence diagram:
+
+Standard:
+    369SP            |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    DopplerCoolingSP |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    StateDetectionSP |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    OpticalPumpingSP |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    MicrowaveTTL     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
+    Microwave_qubit  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▓▓▓▓▓▓▓▓▓▓▁▁▁▁▁▁▁▁▁▁▁▁
+    935SP/976SP      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    760SP/760SP2     |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+         (TurnOffAll) DC          OP          MI          StandardSD
+
+FiberEOM:
+    369SP            |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    MicrowaveTTL     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
+    Microwave_qubit  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▓▓▓▓▓▓▓▓▓▓▁▁▁▁▁▁▁▁▁▁▁▁
+    935SP/976SP      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+    760SP/760SP2     |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+         (TurnOffAll) DC          OP          MI          StandardSD
+"""
 
     name = 'Microwave Line Scan'
 
@@ -105,11 +133,9 @@ class MicrowaveLineScan(QsimExperiment):
             self.pv.set_parameter(('Transitions', qubit, U(popt[1], 'kHz')))
             print('Updated ' + str(qubit) + ' frequency to ' + str(popt[1]) + ' kHz')
 
-
     def finalize(self, cxn, context):
         self.pulser.line_trigger_state(False)
         pass
-
 
     def sinc_fit(self, freq, omega, center, offset, scale):
         """

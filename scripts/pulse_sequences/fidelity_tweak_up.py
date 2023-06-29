@@ -9,7 +9,7 @@ from sub_sequences.bright_state_pumping import BrightStatePumping
 
 class FidelityTweakUp(pulse_sequence):
     required_subsequences = [DopplerCooling, StandardStateDetection, TurnOffAll,
-                             BrightStatePumping, OpticalPumping, MicrowaveInterrogation]
+                             BrightStatePumping, OpticalPumping]
 
     required_parameters = [
     ]
@@ -20,6 +20,7 @@ class FidelityTweakUp(pulse_sequence):
         self.addSequence(BrightStatePumping)
         self.addSequence(StandardStateDetection)
 
+        self.addSequence(TurnOffAll)
         self.addSequence(DopplerCooling)
         self.addSequence(OpticalPumping)
         self.addSequence(StandardStateDetection)

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
 import socket
@@ -31,24 +33,19 @@ class LaserFrequencyTracker(QsimExperiment):
         self.chan_dict = {'369': 1, '760_1': 5, '935': 4, '399': 1, '760_2': 2, '822': 3, '976': 7, 'single_channel': 1}
 
     def run(self, cxn, context):
-
-        '''
-        Main loop
-        '''
-
         self.inittime = time.time()
         if self.p.LaserMonitor.laser in ['369', '399']:
             self.initfreq = self.wlm369.get_frequency(1)
-            print self.initfreq
+            print(self.initfreq)
         else:
             if self.p.LaserMonitor.laser == 'shelving lasers':
                 self.initfreq_760_1 = self.wlm.get_frequency(self.chan_dict['760_1'])
                 self.initfreq_760_2 = self.wlm.get_frequency(self.chan_dict['760_2'])
                 self.initfreq_822 = self.wlm.get_frequency(self.chan_dict['822'])
-                print self.initfreq_760_1, self.initfreq_760_2, self.initfreq_822
+                print(self.initfreq_760_1, self.initfreq_760_2, self.initfreq_822)
             else:
                 self.initfreq = self.wlm.get_frequency(self.chan_dict[str(self.p.LaserMonitor.laser)])
-                print self.initfreq
+                print(self.initfreq)
 
         self.setup_datavault('Elapsed Time', 'Frequency Deviation')
         self.setup_grapher('Frequency Monitor')

@@ -18,7 +18,7 @@ timeout = 20
 
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks, returnValue
-from twisted.internet.task import LoopingCall
+# from twisted.internet.task import LoopingCall
 import os
 import socket
 from labrad.units import WithUnit as U
@@ -37,7 +37,7 @@ class OvenServer(LabradServer):
     @inlineCallbacks
     def connect(self):
         """Creates an Asynchronous connection to arduinottl and
-        connects incoming signals to relavent functions
+        connects incoming signals to relevant functions
 
         """
         from labrad.wrappers import connectAsync
@@ -66,6 +66,7 @@ class OvenServer(LabradServer):
     @inlineCallbacks
     def stopServer(self):
         yield self.server.output(3, False)
+
 
 if __name__ == "__main__":
     from labrad import util

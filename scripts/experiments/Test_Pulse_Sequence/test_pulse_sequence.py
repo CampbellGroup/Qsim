@@ -4,15 +4,19 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
 
+
 class TestPulseSequence(QsimExperiment):
     """
     generic pulse sequence with its own sequence and sub sequence that can be altered 
-    to test any partiular sequence desired without affecting any other experiment
+    to test any particular sequence desired without affecting any other experiment
     """
 
     name = 'Test Pulse Sequence'
 
     exp_parameters = []
+    exp_parameters.append(('StandardStateDetection', 'repetitions'))
+    exp_parameters.append(('Modes', 'state_detection_mode'))
+
     exp_parameters.extend(sequence.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -23,13 +27,13 @@ class TestPulseSequence(QsimExperiment):
     def run(self, cxn, context):
 
         i = 0
+        self.program_pulser(sequence)
         while True:
             should_break = self.update_progress(np.random.rand())
             if should_break:
                 break
-            self.program_pulser(sequence)
-            counts = self.run_test_sequence()
-            print counts
+            [counts0, counts1] = self.run_sequence(max_runs=500, num=2)
+            print(counts0, counts1)
             i += 1
 
     def run_test_sequence(self):

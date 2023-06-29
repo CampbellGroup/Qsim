@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import labrad
 from Qsim.scripts.pulse_sequences.interleaved_point import InterleavedPoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
@@ -7,11 +9,28 @@ from scipy.optimize import curve_fit as fit
 
 class InterleavedLinescan(QsimExperiment):
     """
-    Scan the 369 laser with the AOM double pass interleaved
-    with doppler cooling to reveal the lineshape. This experiment helps
-    to diagnose problems with micromotion compensation and cooling laser
-    intensity
-    """
+Scan the 369 laser with the AOM double pass interleaved with Doppler cooling to reveal the lineshape. This experiment
+helps to diagnose problems with micromotion compensation and cooling laser intensity
+
+Pulse sequence diagram:
+
+Standard
+    369DP             |████████████████████████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+    DopplerCoolingSP  |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    935SP/976SP       |████████████████████████████████████████████████
+    760SP/760SP2      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    TimeResolvedCount |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████
+          (TurnOffAll) DopplerCooling          DipoleInterrogation
+
+FiberEOM
+    369DP             |████████████████████████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+    WindfreakSynthHD  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    935SP/976SP       |████████████████████████████████████████████████
+    760SP/760SP2      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    TimeResolvedCount |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████
+          (TurnOffAll) DopplerCooling          DipoleInterrogation
+
+"""
 
     name = 'Interleaved Line Scan'
 

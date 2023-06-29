@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import labrad
 import numpy as np
 from Qsim.scripts.pulse_sequences.optical_pumping_point import OpticalPumpingPoint as sequence
@@ -7,8 +9,29 @@ from labrad.units import WithUnit as U
 
 class OpticalPumpingRate(QsimExperiment):
     """
-    Measure 411nm shelving rate to the F7/2
-    """
+    Measure the optical pumping rate
+
+Pulse sequence diagram (non-quadrupole):
+
+Standard
+    369DP             |████████████████████████████████████████████████████████████████████████
+    DopplerCoolingSP  |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    OpticalPumpingSP  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    StateDetectionSP  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████
+    935SP/976SP       |████████████████████████████████████████████████████████████████████████
+    760SP/760SP2      |████████████████████████████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    ReadoutCount      |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████
+          (TurnOffAll) DopplerCooling          OpticalPumping ~~~~~~~~ StandardStateDetection
+
+FiberEOM
+    369DP             |████████████████████████████████████████████████████████████████████████
+    WindfreakSynthHD  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████████████████████████████
+    WindfreakSynthNV  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    935SP/976SP       |████████████████████████████████████████████████████████████████████████
+    760SP/760SP2      |████████████████████████████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    TimeResolvedCount |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████
+          (TurnOffAll) DopplerCooling          OpticalPumping ~~~~~~~~ StandardStateDetection
+          """
 
     name = 'OpticalPumpingRate'
 

@@ -28,10 +28,9 @@ class LineNarrowing(QsimExperiment):
         self.init_multipoles = cxn.multipole_server.get_multipoles()
 
     def run(self, cxn, context):
-
-        '''
+        """
         Main loop
-        '''
+        """
 
         self.setup_parameters()
         if self.multipole_direction == 'Ex':

@@ -3,30 +3,30 @@
 
 import sys
 from PyQt4 import QtGui, QtCore
-from itertools import product
-import numpy as np
 
 
-class Wedge():
+class Wedge:
 
-    def __init__(self, xcoord, ycoord, startingangle,
+    def __init__(self, x_coord, y_coord, starting_angle,
                  top_voltage=0.0, bottom_voltage=0.0):
         self.top_voltage = top_voltage
         self.bottom_voltage = bottom_voltage
-        self.xcoord = xcoord
-        self.ycoord = ycoord
-        self.startingangle = startingangle
-        self.change_color(0.0)
+        self.x_coord = x_coord
+        self.y_coord = y_coord
+        self.starting_angle = starting_angle
+        self.top_color = compute_color(0.0)
+        self.bottom_color = compute_color(0.0)
 
-    def change_color(self, voltage):
-        brightness = 150
-        darkness = 255 - brightness
 
-        R = int(brightness + voltage * darkness / 15.)
-        G = int(brightness - abs(voltage * darkness / 15.))
-        B = int(brightness - voltage * darkness / 15.)
+def compute_color(voltage):
+    saturation_voltage = 7.0
 
-        self.color = QtGui.QColor(R, G, B, 127)
+    R = 255 if voltage > 0 else 0
+    G = 0
+    B = 255 if voltage < 0 else 0
+    A = min(int(255 * abs(voltage)/saturation_voltage), 255)
+
+    return QtGui.QColor(R, G, B, A)
 
 
 class ElectrodeIndicator(QtGui.QWidget):
@@ -51,7 +51,6 @@ class ElectrodeIndicator(QtGui.QWidget):
         self.setWindowTitle('Electrode Indicator')
         self.show()
 
-
     def paintEvent(self, e):
         qp = QtGui.QPainter()
         qp.begin(self)
@@ -59,54 +58,64 @@ class ElectrodeIndicator(QtGui.QWidget):
         self.draw_values(qp)
         qp.end()
 
-
     def draw_wedges(self, qp):
-        framewidth = self.frameGeometry().width()
-        frameheight = self.frameGeometry().height()
-        trapdim = .75 * min(framewidth, frameheight)
-        center = QtCore.QPoint(framewidth / 2, frameheight / 2)
+        frame_width = self.frameGeometry().width()
+        frame_height = self.frameGeometry().height()
+        trap_diameter = .9  * min(frame_height, frame_width/2 )
+        center_top = QtCore.QPoint(frame_width / 4, frame_height / 2)
+        center_bottom = QtCore.QPoint(3 * frame_width / 4, frame_height / 2)
 
-        xcoord = (framewidth - trapdim) / 2
-        ycoord = (frameheight - trapdim) / 2
+        x_coord_top = frame_width / 4 - trap_diameter / 2
+        y_coord_top = (frame_height - trap_diameter) / 2
 
-        pen = QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.SolidLine)
-        qp.setPen(pen)
+        x_coord_bottom = 3 * frame_width / 4 - trap_diameter / 2
+        y_coord_bottom = (frame_height - trap_diameter) / 2
 
         signs = [(1, -2), (-2, -2), (-2, 1), (1, 1)]
 
-        for i in range(4):
-            qp.drawText(center + QtCore.QPoint(signs[i][0] * trapdim / 8,
-                                               signs[i][1] * trapdim / 8), str(round(self.quads[i].top_voltage, 4)))
-            qp.drawText(center + QtCore.QPoint(signs[i][0] * trapdim / 8 + 20,
-                                               signs[i][1] * trapdim / 8 + 20), str(round(self.quads[i].bottom_voltage, 4)))
-
-        pen = QtGui.QPen(QtCore.Qt.gray, 2, QtCore.Qt.SolidLine)
+        pen = QtGui.QPen(QtCore.Qt.lightGray, 2, QtCore.Qt.SolidLine)
         qp.setPen(pen)
 
-        for quad in self.quads:
-            qp.setBrush(quad.color)
-            path = QtGui.QPainterPath(center)
-            path.arcTo(xcoord, ycoord,
-                       trapdim, trapdim, quad.startingangle, 90.0)
-            path.lineTo(center)
+        for quad in self.quads[:4]:
+            qp.setBrush(quad.top_color)
+            path = QtGui.QPainterPath(center_top)
+            path.arcTo(x_coord_top, y_coord_top,
+                       trap_diameter, trap_diameter,
+                       quad.starting_angle, 90.0)
+            path.lineTo(center_top)
             qp.drawPath(path)
 
+            qp.setBrush(quad.bottom_color)
+            path = QtGui.QPainterPath(center_bottom)
+            path.arcTo(x_coord_bottom, y_coord_bottom,
+                       trap_diameter, trap_diameter,
+                       quad.starting_angle, 90.0)
+            path.lineTo(center_bottom)
+            qp.drawPath(path)
+
+        pen = QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.SolidLine)
+        qp.setPen(pen)
+        for i in range(4):
+            qp.drawText(center_top + QtCore.QPoint(signs[i][0] * trap_diameter / 8,
+                                                   signs[i][1] * trap_diameter / 8),
+                        str(round(self.quads[i].top_voltage, 4)))
+            qp.drawText(center_bottom + QtCore.QPoint(signs[i][0] * trap_diameter / 8,
+                                                      signs[i][1] * trap_diameter / 8),
+                        str(round(self.quads[i].bottom_voltage, 4)))
 
     def draw_values(self, qp):
         pen = QtGui.QPen(QtCore.Qt.red, 2, QtCore.Qt.SolidLine)
         qp.setPen(pen)
 
-
     def update_octant(self, octant, value):
         if octant in [1, 2, 3, 4]:
             self.quads[octant - 1].top_voltage = value
-            value2 = self.quads[octant - 1].bottom_voltage
-            self.quads[octant - 1].change_color(np.mean([value, value2]))
+            self.quads[octant - 1].top_color = compute_color(value)
 
         if octant in [5, 6, 7, 8]:
             self.quads[octant - 5].bottom_voltage = value
-            value2 = self.quads[octant - 5].top_voltage
-            self.quads[octant - 5].change_color(np.mean([value, value2]))
+            self.quads[octant - 5].bottom_color = compute_color(value)
+
         self.repaint()
 
 

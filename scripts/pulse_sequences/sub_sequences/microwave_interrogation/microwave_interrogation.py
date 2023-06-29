@@ -17,6 +17,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse imp
 from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse import spin_echo_pi_pulse_plus
 from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse import spin_echo_pi_pulse_minus
 
+
 class MicrowaveInterrogation(pulse_sequence):
 
     required_parameters = [
