@@ -34,9 +34,11 @@ class MicrowaveRamseyPoint(pulse_sequence):
             self.addSequence(Shelving)
             self.addSequence(ShelvingStateDetection)
             self.addSequence(Deshelving)
-        elif mode == 'Standard':
+        elif mode == 'Standard' or mode == 'StandardFiberEOM':
             self.addSequence(TurnOffAll)
             self.addSequence(DopplerCooling)
             self.addSequence(OpticalPumping)
             self.addSequence(RamseyMicrowaveInterrogation)
             self.addSequence(StandardStateDetection)
+        else:
+            raise Exception("Unknown operating mode '{}'".format(mode))
