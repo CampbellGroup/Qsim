@@ -78,7 +78,7 @@ class RamseyMicrowaveInterrogation(pulse_sequence):
                         p.MicrowaveInterrogation.power,
                         p.MicrowaveInterrogation.microwave_phase)
 
-            self.end = self.start + pi_time + p.EmptySequence.duration + pulse_delay
+            self.end = self.start + pi_time + p.EmptySequence.duration + 2 * pulse_delay
 
         elif p.MicrowaveInterrogation.microwave_source == 'DDSx32':
             DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center)/32.0
