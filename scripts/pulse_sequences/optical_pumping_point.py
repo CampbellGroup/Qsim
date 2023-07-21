@@ -9,15 +9,14 @@ from sub_sequences.shelving import Shelving
 
 
 class OpticalPumpingPoint(pulse_sequence):
-
-    required_subsequences = [DopplerCooling, StandardStateDetection, TurnOffAll
-                             , OpticalPumping, DopplerCooling, ShelvingStateDetection,
+    required_subsequences = [DopplerCooling, StandardStateDetection, TurnOffAll,
+                             OpticalPumping, DopplerCooling, ShelvingStateDetection,
                              Deshelving, Shelving]
 
     required_parameters = [
         ('OpticalPumping', 'method'),
         ('Modes', 'state_detection_mode')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters

@@ -65,21 +65,12 @@ FiberEOM:
         self.ident = ident
 
     def run(self, cxn, context):
-
         if self.p.MicrowaveInterrogation.AC_line_trigger == 'On':
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
         scan_parameter = self.p.MicrowaveRamsey.scan_type
         mode = self.p.Modes.state_detection_mode
-
-        qubit = self.p.Line_Selection.qubit
-        if qubit == 'qubit_0':
-            pi_time = self.p.Pi_times.qubit_0
-        elif qubit == 'qubit_plus':
-            pi_time = self.p.Pi_times.qubit_plus
-        elif qubit == 'qubit_minus':
-            pi_time = self.p.Pi_times.qubit_minus
 
         self.p['MicrowaveInterrogation.detuning'] = self.p.MicrowaveRamsey.detuning
 
