@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point.microwave_ramsey_light_shift import MicrowaveRamseyPoint as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.microwave_ramsey_light_shift import MicrowaveRamseyPoint532 as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
+from scipy.optimize import curve_fit as fit
 import numpy as np
 
 
-class MicrowaveRamseyExperiment(QsimExperiment):
+class MicrowaveRamseyLightShift(QsimExperiment):
     """
     Scan delay time between microwave pulses with an interrogation pulse during the dark time,
     allowing you to measure the light shift induced by the interrogation lasers
@@ -40,7 +42,7 @@ FiberEOM:
          (TurnOffAll) DC          OP          RMI    ~~~~~~~~~     StandardSD
     """
 
-    name = 'Microwave Ramsey Experiment'
+    name = 'Microwave Ramsey 532'
 
     exp_parameters = []
     exp_parameters.append(('DopplerCooling', 'detuning'))
@@ -53,12 +55,15 @@ FiberEOM:
     exp_parameters.append(('MicrowaveRamsey', 'phase_scan'))
     exp_parameters.append(('MicrowaveInterrogation', 'AC_line_trigger'))
     exp_parameters.append(('MicrowaveInterrogation', 'delay_from_line_trigger'))
+    exp_parameters.append(('MicrowaveInterrogation', 'delay_from_line_trigger'))
     exp_parameters.append(('Modes', 'state_detection_mode'))
     exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'repetitions'))
     exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
     exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
     exp_parameters.append(('Shelving_Doppler_Cooling', 'doppler_counts_threshold'))
+    exp_parameters.append(('LightShift', 'percent'))
+    exp_parameters.append(('LightShift', 'power'))
 
     exp_parameters.extend(sequence.all_required_parameters())
 
@@ -66,6 +71,8 @@ FiberEOM:
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
+        self.pzt_server = cxn.piezo_server
+        self.cavity_chan = 1
 
     def run(self, cxn, context):
 
@@ -76,17 +83,12 @@ FiberEOM:
         scan_parameter = self.p.MicrowaveRamsey.scan_type
         mode = self.p.Modes.state_detection_mode
 
-        qubit = self.p.Line_Selection.qubit
-        if qubit == 'qubit_0':
-            pi_time = self.p.Pi_times.qubit_0
-        elif qubit == 'qubit_plus':
-            pi_time = self.p.Pi_times.qubit_plus
-        elif qubit == 'qubit_minus':
-            pi_time = self.p.Pi_times.qubit_minus
-
         self.p['MicrowaveInterrogation.detuning'] = self.p.MicrowaveRamsey.detuning
 
         if scan_parameter == "delay_time":
+            self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
+            self.init_line_center = self.run_interleaved_linescan()
+            print('Initial line center at ' + str(self.init_line_center))
             self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
             self.setup_grapher('Microwave Ramsey Experiment')
             self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, 'ms')
@@ -107,32 +109,56 @@ FiberEOM:
                     self.plot_hist(hist)
                 pop = self.get_pop(counts)
                 self.dv.add(dark_time, pop)
+                if i % 3 == 0 and i != 0:
+                    success = self.correct_cavity_drift()
 
         elif scan_parameter == "phase":
-            self.setup_datavault('phase', 'probability')
-            self.setup_grapher('Microwave Ramsey Experiment')
-            self.phase_list = self.get_scan_list(self.p.MicrowaveRamsey.phase_scan, 'deg')
-            self.p['EmptySequence.duration'] = self.p.MicrowaveRamsey.fixed_delay_time
-            print(str(self.p.MicrowaveRamsey.fixed_delay_time))
-            for i, phase in enumerate(self.phase_list):
-                should_break = self.update_progress(i/float(len(self.phase_list)))
-                if should_break:
-                    break
-                self.p['MicrowaveInterrogation.microwave_phase'] = U(phase, 'deg')
-                self.program_pulser(sequence)
-                if mode == 'Shelving':
-                    [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
-                    errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-                    counts = np.delete(detection_counts, errors)
-                else:
-                    [counts] = self.run_sequence()
-                if i % self.p.StandardStateDetection.points_per_histogram == 0:
-                    hist = self.process_data(counts)
-                    self.plot_hist(hist)
-                pop = self.get_pop(counts)
-                print(len(counts))
-                print(str(phase) + ' deg , ' + str(pop) + 'population')
-                self.dv.add(phase, pop)
+            print("not implemented")
+
+    def run_interleaved_linescan(self):
+        self.pulser.line_trigger_state(False)
+
+        linescan_context = self.sc.context()
+
+        self.line_tracker = self.make_experiment(InterleavedLinescan)
+        self.line_tracker.initialize(self.cxn, linescan_context, self.ident)
+        try:
+            popt, pcov = self.line_tracker.run(self.cxn, linescan_context)
+        except TypeError as e:
+            return e
+
+        print(popt)
+        center = popt[0]
+        return center
+
+    def lorentzian_fit(self, detuning, center, fwhm, scale, offset):
+        return offset + scale * 0.5 * fwhm / ((detuning - center) ** 2 + (0.5 * fwhm) ** 2)
+
+    def correct_cavity_drift(self):
+        center_before = self.run_interleaved_linescan()
+        if (center_before == RuntimeError) or (center_before == TypeError):
+            return False
+
+        delta = (self.init_line_center - center_before)  # cavity shift in MHz, no labrad units
+        while np.abs(delta) > 1.0:
+
+            new_cavity_voltage = self.cavity_voltage + (delta * 0.01)  # 0.01 V/ MHz on cavity
+            if np.abs(new_cavity_voltage - self.cavity_voltage) < 0.5:
+                self.pzt_server.set_voltage(self.cavity_chan, U(new_cavity_voltage, 'V'))
+                self.cavity_voltage = new_cavity_voltage
+            else:
+                print('Linescan fit did not work, killing tweak up')
+                break
+
+            center_after = self.run_interleaved_linescan()
+            if (center_after == RuntimeError) or (center_after == TypeError):
+                return False
+
+            delta = (self.init_line_center - center_after)
+
+        print('Finished cavity tweak up, resuming experiment')
+        return True
+
 
     def finalize(self, cxn, context):
         self.pulser.line_trigger_state(False)
@@ -142,6 +168,6 @@ FiberEOM:
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = MicrowaveRamseyExperiment(cxn=cxn)
+    exprt = MicrowaveRamseyLightShift(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)

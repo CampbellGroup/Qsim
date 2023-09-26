@@ -72,6 +72,7 @@ FiberEOM
         # in parametervault to the fitted center
         popt, pcov = fit(self.lorentzian_fit, return_detuning[2:], return_counts[2:], p0=self.fit_guess)
         self.pv.set_parameter(('Transitions', 'main_cooling_369', U(popt[0], 'MHz')))
+        return popt, pcov
 
     def program_pulser(self, freq, detuning):
         self.p['DipoleInterrogation.frequency'] = freq
