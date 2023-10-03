@@ -56,7 +56,7 @@ class wavemeter_linescan_399(experiment):
        
     #def waitforstart(self):
     #    self.timeout += 1
-    #    self.currentfrequency()
+    #    self.current_frequency()
     #    if self.currentfreq != self.minval:
      #       if self.timeout != 300:
      #           time.sleep(0.1)

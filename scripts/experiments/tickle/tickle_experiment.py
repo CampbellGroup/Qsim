@@ -24,9 +24,9 @@ class ticklescan(QsimExperiment):
 
     def run(self, cxn, context):
 
-        '''
+        """
         Main loop
-        '''
+        """
 
         self.setup_datavault('Frequency', 'kCounts/sec')
         self.setup_grapher('tickle_scan')
@@ -48,17 +48,17 @@ class ticklescan(QsimExperiment):
 
     def set_scannable_parameters(self):
 
-        '''
+        """
         gets parameters, called in run so scan works
-        '''
+        """
 
         self.amplitude = self.p.ticklescan.amplitude
         self.offset = self.p.ticklescan.offset
         self.average = int(self.p.ticklescan.average)
 
     def finalize(self, cxn, context):
-        self.rg.set_output(self.chan, False)
-        self.rg.frequency(self.chan, WithUnit(self.x_values[0], 'Hz'))
+        self.rg.set_output(self.chan, True)
+        self.rg.applywaveform("DC", WithUnit(0.0, "Hz"), WithUnit(0.0, "V"), self.offset, self.chan)
 
 
 if __name__ == '__main__':

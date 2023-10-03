@@ -64,7 +64,7 @@ class rear_port_client(QtGui.QWidget):
         self.continuous_switch = QCustomSwitchChannel('Continuous Measure')
         self.continuous_switch.TTLswitch.toggled.connect(self.toggle)
         self.widget.spinFreq.setValue(float(hint))
-        self.widget.currentfrequency.setStyleSheet('color: rgb' + str(color))
+        self.widget.current_frequency.setStyleSheet('color: rgb' + str(color))
         subLayout.addWidget(self.widget, 0, 0, 1, 3)
         subLayout.addWidget(self.continuous_switch, 1, 0, 1, 1)
         self.setLayout(layout)
@@ -76,7 +76,7 @@ class rear_port_client(QtGui.QWidget):
 
         self.reactor.callLater(1, self.update_value)
         if not self.widget.measSwitch.isChecked():
-            self.widget.currentfrequency.setText('Not Measured')
+            self.widget.current_frequency.setText('Not Measured')
             return
 
         if self.continuous:
@@ -100,11 +100,11 @@ class rear_port_client(QtGui.QWidget):
 
     def set_freq(self, freq):
         if freq == -3.0:
-            self.widget.currentfrequency.setText('Under Exposed')
+            self.widget.current_frequency.setText('Under Exposed')
         elif freq == -4.0:
-            self.widget.currentfrequency.setText('Over Exposed')
+            self.widget.current_frequency.setText('Over Exposed')
         else:
-            self.widget.currentfrequency.setText(str(freq)[0:10])
+            self.widget.current_frequency.setText(str(freq)[0:10])
 
     def toggle(self, state):
 
