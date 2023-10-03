@@ -66,12 +66,12 @@ class QsimGUI(QtGui.QMainWindow):
     ###############################################################
 
     def make_pulser_widget(self, reactor, cxn):
-        from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
+        from Qsim.clients.DDS.dds_control import DDSControlWidget
         from common.lib.clients.pulser_switch.pulser_switch_control import switchWidget
         puls_widget = QtGui.QWidget()
         grid_layout = QtGui.QGridLayout()
 
-        dds = DDS_CONTROL(reactor, cxn)
+        dds = DDSControlWidget(reactor, cxn)
         switch = switchWidget(reactor)
         grid_layout.addWidget(dds)
         grid_layout.addWidget(switch)
@@ -117,16 +117,16 @@ class QsimGUI(QtGui.QMainWindow):
         return widget
 
     def make_script_scanner_widget(self, reactor, cxn):
-        from common.lib.clients.script_scanner_gui.script_scanner_gui import script_scanner_gui
-        scriptscanner = script_scanner_gui(reactor, cxn=cxn)
+        from common.lib.clients.script_scanner_gui.script_scanner_gui import ScriptScannerGui
+        scriptscanner = ScriptScannerGui(reactor, cxn=cxn)
         return scriptscanner
 
     def make_wavemeter_widget(self, reactor, cxn):
         # widget = QtGui.QWidget()
-        from common.lib.clients.Multiplexer.multiplexerclient import wavemeterclient
+        from common.lib.clients.Multiplexer.multiplexerclient import WavemeterClient
         # from Qsim.clients.single_wavemeter_channel.single_channel_wm import single_channel_wm
         # gridLayout = QtGui.QGridLayout()
-        wavemeter = wavemeterclient(reactor, cxn)
+        wavemeter = WavemeterClient(reactor, cxn)
         # ws7 = single_channel_wm(reactor)
         # gridLayout.addWidget(wavemeter)
         # gridLayout.addWidget(ws7)
@@ -146,7 +146,7 @@ class QsimGUI(QtGui.QMainWindow):
         from common.lib.clients.piezo_client.Piezo_Client import Piezo_Client
         from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import keithleyclient
 
-        from Qsim.clients.DDS.DDS_CONTROL import DDS_CONTROL
+        from Qsim.clients.DDS.dds_control import DDSControlWidget
         from common.lib.clients.pulser_switch.pulser_switch_control import switchWidget
         from Qsim.clients.windfreak_client.windfreak_client import windfreak_client
 
@@ -175,7 +175,7 @@ class QsimGUI(QtGui.QMainWindow):
 
         col_three_widget = QtGui.QWidget()
         col_three = QtGui.QVBoxLayout()
-        col_three.addWidget(DDS_CONTROL(reactor, cxn))
+        col_three.addWidget(DDSControlWidget(reactor, cxn))
         col_three.addWidget(switchWidget(reactor))
         col_three.addWidget(keithleyclient(reactor, cxn))
         col_three.addStretch(1)
