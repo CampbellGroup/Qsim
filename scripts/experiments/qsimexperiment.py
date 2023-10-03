@@ -86,7 +86,7 @@ class QsimExperiment(experiment):
         self.sc.script_set_progress(self.ident, 100*progress)
         return should_stop
 
-    def get_scan_list(self, scan, units):
+    def get_scan_list(self, scan, units, shuffle=False):
         if units is None:
             minvalue = scan[0]
             maxvalue = scan[1]
@@ -96,6 +96,8 @@ class QsimExperiment(experiment):
 
         num_steps = scan[2]
         scan_list = np.linspace(minvalue, maxvalue, num_steps)
+        if shuffle:
+            return np.random.shuffle(list(scan_list))
         return list(scan_list)
 
     def program_pulser(self, pulse_sequence):
