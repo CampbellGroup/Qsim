@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point.microwave_ramsey_light_shift import MicrowaveRamseyPoint532 as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.microwave_ramsey_light_shift import \
+    MicrowaveRamseyPoint532 as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
 from scipy.optimize import curve_fit as fit
 import numpy as np
+#
+import time
 
+
+#
 
 class MicrowaveRamseyLightShift(QsimExperiment):
     """
@@ -91,9 +96,11 @@ FiberEOM:
             print('Initial line center at ' + str(self.init_line_center))
             self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
             self.setup_grapher('Microwave Ramsey Experiment')
-            self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, 'ms')
+            self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, 'ms', shuffle=True)
+            last_scanned = time.time()  # initialize time (not sure if this is the best spot to do this)
+            time.sleep(2)
             for i, dark_time in enumerate(self.dark_time):
-                should_break = self.update_progress(i/float(len(self.dark_time)))
+                should_break = self.update_progress(i / float(len(self.dark_time)))
                 if should_break:
                     break
                 self.p['EmptySequence.duration'] = U(dark_time, 'ms')
@@ -108,9 +115,14 @@ FiberEOM:
                     hist = self.process_data(counts)
                     self.plot_hist(hist)
                 pop = self.get_pop(counts)
-                self.dv.add(dark_time, pop)
-                if i % 3 == 0 and i != 0:
+                self.dv.add(dark_time, pop, context=self.ls_context)
+                # if i % 3 == 0 and i != 0: # every three data points do a linescan. change to once every three minutes
+                if time.time() - last_scanned > 180:  # linescan if it has been more than 3 minutes
+                    print("Correcting Cavity Drift")
                     success = self.correct_cavity_drift()
+                    last_scanned = time.time()  # update time
+                    time.sleep(1)
+
 
         elif scan_parameter == "phase":
             print("not implemented")
@@ -127,19 +139,30 @@ FiberEOM:
         except TypeError as e:
             return e
 
-        print(popt)
+        print("line center {}".format(popt[0]))
         center = popt[0]
         return center
+
+    def setup_datavault(self, x_axis, y_axis):
+        """
+        Adds parameters to datavault and parameter vault
+        """
+        self.ls_context = self.dv.context()
+        self.dv.cd(['', self.name], True, context=self.ls_context)
+        self.dataset = self.dv.new(self.name, [(x_axis, 'num')],
+                                   [(y_axis, '', 'num')],
+                                   context=self.ls_context)
+        for parameter in self.p:
+            self.dv.add_parameter(parameter, self.p[parameter], context=self.ls_context)
+        return self.dataset
 
     def lorentzian_fit(self, detuning, center, fwhm, scale, offset):
         return offset + scale * 0.5 * fwhm / ((detuning - center) ** 2 + (0.5 * fwhm) ** 2)
 
     def correct_cavity_drift(self):
         center_before = self.run_interleaved_linescan()
-        if (center_before == RuntimeError) or (center_before == TypeError):
-            return False
-
         delta = (self.init_line_center - center_before)  # cavity shift in MHz, no labrad units
+
         while np.abs(delta) > 1.0:
 
             new_cavity_voltage = self.cavity_voltage + (delta * 0.01)  # 0.01 V/ MHz on cavity
@@ -151,14 +174,10 @@ FiberEOM:
                 break
 
             center_after = self.run_interleaved_linescan()
-            if (center_after == RuntimeError) or (center_after == TypeError):
-                return False
-
             delta = (self.init_line_center - center_after)
 
         print('Finished cavity tweak up, resuming experiment')
         return True
-
 
     def finalize(self, cxn, context):
         self.pulser.line_trigger_state(False)

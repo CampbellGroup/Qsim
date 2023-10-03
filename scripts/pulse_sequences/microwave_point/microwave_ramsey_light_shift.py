@@ -8,16 +8,16 @@ from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPu
 from Qsim.scripts.pulse_sequences.sub_sequences.empty_sequence import EmptySequence
 from Qsim.scripts.pulse_sequences.sub_sequences.shelving import Shelving
 from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.ramsey_microwave_interrogation_532 import RamseyMicrowaveInterrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.ramsey_microwave_interrogation_532 import RamseyMicrowaveInterrogation_532
 
 
-class MicrowaveRamseyPoint(pulse_sequence):
+class MicrowaveRamseyPoint532(pulse_sequence):
 
     required_subsequences = [TurnOffAll, DopplerCooling,
                              ShelvingStateDetection,
                              Deshelving, StandardStateDetection,
                              OpticalPumping, EmptySequence, Shelving,
-                             RamseyMicrowaveInterrogation, ShelvingDopplerCooling]
+                             RamseyMicrowaveInterrogation_532, ShelvingDopplerCooling]
 
     required_parameters = [
                           ('Modes', 'state_detection_mode')
@@ -30,13 +30,15 @@ class MicrowaveRamseyPoint(pulse_sequence):
             self.addSequence(TurnOffAll)
             self.addSequence(ShelvingDopplerCooling)
             self.addSequence(OpticalPumping)
-            self.addSequence(RamseyMicrowaveInterrogation)
+            self.addSequence(RamseyMicrowaveInterrogation_532)
             self.addSequence(Shelving)
             self.addSequence(ShelvingStateDetection)
             self.addSequence(Deshelving)
-        elif mode == 'Standard':
+        elif mode == 'Standard' or mode == 'StandardFiberEOM':
             self.addSequence(TurnOffAll)
             self.addSequence(DopplerCooling)
             self.addSequence(OpticalPumping)
-            self.addSequence(RamseyMicrowaveInterrogation)
+            self.addSequence(RamseyMicrowaveInterrogation_532)
             self.addSequence(StandardStateDetection)
+        else:
+            raise Exception("Unknown operating mode '{}'".format(mode))
