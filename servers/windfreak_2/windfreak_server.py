@@ -93,6 +93,11 @@ trigger_modes = (
     'fm modulation',
 )
 
+reference_modes = (
+    'external',
+    'internal 27mhz',
+    'internal 10mhz'
+)
 
 class windfreak_wrapper(DeviceWrapper):
 
@@ -372,14 +377,15 @@ class Windfreak_Server(DeviceServer):
 
     @setting(29, returns='s')
     def get_reference_mode(self, c):
-        val = yield self.get_property(c, 'reference_mode')
+        key = yield self.get_property(c, 'reference_mode')
+        val = reference_modes[key]
         returnValue(val)
 
     @setting(30, mode='s')
     def set_reference_mode(self, c, mode):
         if mode not in ('external', 'internal 27mhz', 'internal 10mhz'):
             raise ValueError('Expected str in set ("external", "internal 27mhz", "internal 10mhz")')
-        yield self.set_property(c, 'reference_mode', ('external', 'internal 27mhz', 'internal 10mhz').index(mode))
+        yield self.set_property(c, 'reference_mode', reference_modes.index(mode))
 
     @setting(31, returns='s')
     def get_trigger_mode(self, c):

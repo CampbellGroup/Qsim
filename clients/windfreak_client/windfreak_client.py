@@ -5,6 +5,25 @@ import os
 from Qsim.clients.windfreak_client.windfreak_gui import QCustomWindfreakGui
 import sys
 
+trigger_modes = (
+    'disabled',
+    'full frequency sweep',
+    'single frequency step',
+    'stop all',
+    'rf enable',
+    'remove interrupts',
+    'reserved',
+    'reserved',
+    'am modulation',
+    'fm modulation',
+)
+
+reference_modes = [
+    'external',
+    'internal 27mhz',
+    'internal 10mhz'
+]
+
 
 class windfreak_client(QtGui.QWidget):
     def __init__(self, reactor, parent=None):
@@ -42,6 +61,8 @@ class windfreak_client(QtGui.QWidget):
         init_sweep_low_power = yield self.server.get_sweep_power_low(0)
         init_sweep_high_power = yield self.server.get_sweep_power_high(0)
         init_sweep_single = yield self.server.get_sweep_single(0)
+#
+        init_phase = yield self.server.get_phase(0)
 
         self.gui.a.freq_input.spinLevel.setValue(float(init_freq))
         self.gui.a.power_input.spinLevel.setValue(float(init_power))
@@ -54,6 +75,9 @@ class windfreak_client(QtGui.QWidget):
         self.gui.a.sweep_low_power_input.spinLevel.setValue(float(init_sweep_low_power))
         self.gui.a.sweep_high_power_input.spinLevel.setValue(float(init_sweep_high_power))
         self.gui.a.sweep_single_onoff_button.setDown(init_sweep_single)
+#
+        self.gui.a.phase_input.spinLevel.setValue(float(init_phase))
+
 
         self.gui.a.freq_input.spinLevel.valueChanged.connect(
             lambda: self.changeFreq(0, float(self.gui.a.freq_input.spinLevel.text())))
@@ -77,6 +101,10 @@ class windfreak_client(QtGui.QWidget):
             lambda state=self.gui.a.sweep_onoff_button.isDown(): self.toggle_sweep(0, state))
         self.gui.a.sweep_single_onoff_button.toggled.connect(
             lambda state=self.gui.a.sweep_single_onoff_button.isDown(): self.toggle_sweep_single(0, state))
+#
+        self.gui.a.phase_input.spinLevel.valueChanged.connect(
+            lambda: self.changePhase(0, float(self.gui.a.phase_input.spinLevel.text())))
+
 
         init_freq = yield self.server.get_freq(1)
         init_power = yield self.server.get_power(1)
@@ -90,6 +118,8 @@ class windfreak_client(QtGui.QWidget):
         init_sweep_high_power = yield self.server.get_sweep_power_high(1)
         init_sweep_single = yield self.server.get_sweep_single(1)
 
+        init_phase = yield self.server.get_phase(1)
+
         self.gui.b.freq_input.spinLevel.setValue(float(init_freq))
         self.gui.b.power_input.spinLevel.setValue(float(init_power))
         self.gui.b.onoff_button.setDown(init_onoff)
@@ -101,6 +131,8 @@ class windfreak_client(QtGui.QWidget):
         self.gui.b.sweep_low_power_input.spinLevel.setValue(float(init_sweep_low_power))
         self.gui.b.sweep_high_power_input.spinLevel.setValue(float(init_sweep_high_power))
         self.gui.b.sweep_single_onoff_button.setDown(init_sweep_single)
+
+        self.gui.b.phase_input.spinLevel.setValue(float(init_phase))
 
         self.gui.b.freq_input.spinLevel.valueChanged.connect(
             lambda: self.changeFreq(1, float(self.gui.b.freq_input.spinLevel.text())))
@@ -125,9 +157,26 @@ class windfreak_client(QtGui.QWidget):
         self.gui.b.sweep_single_onoff_button.toggled.connect(
             lambda state=self.gui.a.sweep_single_onoff_button.isDown(): self.toggle_sweep_single(1, state))
 
+        self.gui.b.phase_input.spinLevel.valueChanged.connect(
+            lambda: self.changePhase(1, float(self.gui.b.phase_input.spinLevel.text())))
+
+        trig_mode = yield self.server.get_trigger_mode()
+        init_trigger_mode = trigger_modes.index(trig_mode)
+        ref_mode = yield self.server.get_reference_mode()
+        init_reference_mode = reference_modes.index(ref_mode)
+
+        self.gui.c.trigger_mode.setCurrentIndex(init_trigger_mode)
+        self.gui.c.reference_mode.setCurrentIndex(init_reference_mode)
+
+        self.gui.c.trigger_mode.activated.connect(
+            lambda: self.changeTrigger(self.gui.c.trigger_mode.currentIndex()))
+        self.gui.c.reference_mode.activated.connect(
+            lambda: self.changeReference(self.gui.c.reference_mode.currentIndex()))
+
         layout.addWidget(self.gui)
         # layout.minimumSize()
         self.setLayout(layout)
+
 
     @inlineCallbacks
     def sweepSingle_on(self, chan):
@@ -182,6 +231,18 @@ class windfreak_client(QtGui.QWidget):
     @inlineCallbacks
     def toggle_sweep_single(self, chan, state):
         yield self.server.set_sweep_single(chan, state)
+
+    @inlineCallbacks
+    def changePhase(self, chan, num):
+        yield self.server.set_phase(chan, num)
+
+    @inlineCallbacks
+    def changeTrigger(self, idx):
+        yield self.server.set_trigger_mode(trigger_modes[idx])
+
+    @inlineCallbacks
+    def changeReference(self, idx):
+        yield self.server.set_reference_mode(reference_modes[idx])
 
 
 if __name__ == "__main__":
