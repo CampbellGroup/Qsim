@@ -44,6 +44,7 @@ class ticklescan(QsimExperiment):
 
             self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))
             counts = self.pmt.get_next_counts('ON', self.average, True)
+            time.sleep(0.1)
             self.dv.add(freq, counts)
 
     def set_scannable_parameters(self):

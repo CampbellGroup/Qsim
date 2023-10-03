@@ -22,6 +22,7 @@ from labrad.server import LabradServer, setting
 
 dev_name = '/dev/usbtmc2'
 
+
 class DG1022_Rigol_Server(LabradServer):
     name = 'DG1022_Rigol_Server'
 

@@ -222,6 +222,7 @@ class DarkStateDetection(QsimExperiment):
         print('Finished cavity tweak up, resuming experiment')
         return True
 
+
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
