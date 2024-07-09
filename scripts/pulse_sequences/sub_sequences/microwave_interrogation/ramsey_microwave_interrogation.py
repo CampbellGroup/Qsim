@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class RamseyMicrowaveInterrogation(pulse_sequence):
+class RamseyMicrowaveInterrogation(PulseSequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'detuning'),
@@ -47,16 +47,16 @@ class RamseyMicrowaveInterrogation(pulse_sequence):
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
             # first pi/2 pulse, DDS turns on 800 us before the ttl allows it through
-            self.addTTL('MicrowaveTTL',
-                        self.start + pulse_delay,
-                        pi_time/2.0)
+            self.add_ttl('MicrowaveTTL',
+                         self.start + pulse_delay,
+                         pi_time / 2.0)
 
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        pi_time/2.0 + pulse_delay,
-                        DDS_freq,
-                        p.MicrowaveInterrogation.power,
-                        U(0.0, 'deg'))
+            self.add_dds('Microwave_qubit',
+                         self.start,
+                         pi_time / 2.0 + pulse_delay,
+                         DDS_freq,
+                         p.MicrowaveInterrogation.power,
+                         U(0.0, 'deg'))
 
             # Uncomment this part if you're trying to perform light shift measurements
 
@@ -67,16 +67,16 @@ class RamseyMicrowaveInterrogation(pulse_sequence):
             #             p.ddsDefaults.SP_532_power,
             #             U(0.0, 'deg'))
 
-            self.addTTL('MicrowaveTTL',
-                        self.start + pi_time / 2.0 + p.EmptySequence.duration + pulse_delay,
-                        pi_time / 2.0)
+            self.add_ttl('MicrowaveTTL',
+                         self.start + pi_time / 2.0 + p.EmptySequence.duration + pulse_delay,
+                         pi_time / 2.0)
 
-            self.addDDS('Microwave_qubit',
-                        self.start + pi_time / 2.0 + p.EmptySequence.duration,
-                        pi_time/2.0 + pulse_delay,
-                        DDS_freq,
-                        p.MicrowaveInterrogation.power,
-                        p.MicrowaveInterrogation.microwave_phase)
+            self.add_dds('Microwave_qubit',
+                         self.start + pi_time / 2.0 + p.EmptySequence.duration,
+                         pi_time / 2.0 + pulse_delay,
+                         DDS_freq,
+                         p.MicrowaveInterrogation.power,
+                         p.MicrowaveInterrogation.microwave_phase)
 
             self.end = self.start + pi_time + p.EmptySequence.duration + 2 * pulse_delay
 
@@ -84,24 +84,24 @@ class RamseyMicrowaveInterrogation(pulse_sequence):
             DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center)/32.0
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
-            self.addTTL('MicrowaveTTL',
-                        self.start + pulse_delay,
-                        pi_time / 2.0)
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        pi_time / 2.0 + pulse_delay,
-                        DDS_freq,
-                        p.ddsDefaults.qubit_dds_x32_power,
-                        U(0.0, 'deg')/32.0)
+            self.add_ttl('MicrowaveTTL',
+                         self.start + pulse_delay,
+                         pi_time / 2.0)
+            self.add_dds('Microwave_qubit',
+                         self.start,
+                         pi_time / 2.0 + pulse_delay,
+                         DDS_freq,
+                         p.ddsDefaults.qubit_dds_x32_power,
+                         U(0.0, 'deg') / 32.0)
 
-            self.addTTL('MicrowaveTTL',
-                        self.start + pi_time / 2.0 + p.EmptySequence.duration,
-                        pi_time / 2.0 + pulse_delay)
-            self.addDDS('Microwave_qubit',
-                        self.start + pi_time / 2.0 + p.EmptySequence.duration,
-                        pi_time / 2.0 + pulse_delay,
-                        DDS_freq,
-                        p.ddsDefaults.qubit_dds_x32_power,
-                        p.MicrowaveInterrogation.microwave_phase/32.0)
+            self.add_ttl('MicrowaveTTL',
+                         self.start + pi_time / 2.0 + p.EmptySequence.duration,
+                         pi_time / 2.0 + pulse_delay)
+            self.add_dds('Microwave_qubit',
+                         self.start + pi_time / 2.0 + p.EmptySequence.duration,
+                         pi_time / 2.0 + pulse_delay,
+                         DDS_freq,
+                         p.ddsDefaults.qubit_dds_x32_power,
+                         p.MicrowaveInterrogation.microwave_phase / 32.0)
 
             self.end = self.start + pi_time + p.EmptySequence.duration + pulse_delay

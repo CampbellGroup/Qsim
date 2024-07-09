@@ -1,7 +1,7 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 
-class ShelvingStateDetection(pulse_sequence):
+class ShelvingStateDetection(PulseSequence):
 
     required_parameters = [
         ('ShelvingStateDetection', 'duration'),
@@ -23,37 +23,37 @@ class ShelvingStateDetection(pulse_sequence):
         p = self.parameters
 
         # standard readout count TTL, provides number of detected photons
-        self.addTTL('ReadoutCount',
-                    self.start,
-                    p.ShelvingStateDetection.duration)
+        self.add_ttl('ReadoutCount',
+                     self.start,
+                     p.ShelvingStateDetection.duration)
 
         # provides timetags
-        self.addTTL('TimeResolvedCount',
-                    self.start,
-                    p.ShelvingStateDetection.duration)
+        self.add_ttl('TimeResolvedCount',
+                     self.start,
+                     p.ShelvingStateDetection.duration)
 
-        self.addDDS('935SP',
-                    self.start,
-                    p.ShelvingStateDetection.duration,
-                    p.ddsDefaults.repump_935_freq,
-                    p.ShelvingStateDetection.repump_power)
+        self.add_dds('935SP',
+                     self.start,
+                     p.ShelvingStateDetection.duration,
+                     p.ddsDefaults.repump_935_freq,
+                     p.ShelvingStateDetection.repump_power)
 
-        self.addDDS('976SP',
-                    self.start,
-                    p.ShelvingStateDetection.duration,
-                    p.ddsDefaults.repump_976_freq,
-                    p.ddsDefaults.repump_976_power)
+        self.add_dds('976SP',
+                     self.start,
+                     p.ShelvingStateDetection.duration,
+                     p.ddsDefaults.repump_976_freq,
+                     p.ddsDefaults.repump_976_power)
 
         #self.addTTL('WindfreakSynthHDTTL',
         #            self.start,
         #            p.ShelvingStateDetection.duration)
 
 
-        self.addDDS('369DP',
-                    self.start,
-                    p.ShelvingStateDetection.duration,
-                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.ShelvingStateDetection.detuning/2.0,
-                    p.ShelvingStateDetection.power)
+        self.add_dds('369DP',
+                     self.start,
+                     p.ShelvingStateDetection.duration,
+                     p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.ShelvingStateDetection.detuning / 2.0,
+                     p.ShelvingStateDetection.power)
         #Commented out because we are using the fiber EOM right now, not the DC/SD/OP path
         #self.addDDS('DopplerCoolingSP',
         #            self.start,

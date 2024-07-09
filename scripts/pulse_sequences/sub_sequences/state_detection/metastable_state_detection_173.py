@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class MetastableStateDetection173(pulse_sequence):
+class MetastableStateDetection173(PulseSequence):
 
     required_parameters = [
         ('MetastableStateDetection', 'duration'),
@@ -24,32 +24,32 @@ class MetastableStateDetection173(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addDDS('760SP',
-                    self.start,
-                    p.MetastableStateDetection.deshelving_duration,
-                    p.ddsDefaults.repump_760_1_freq,
-                    p.ddsDefaults.repump_760_1_power)
+        self.add_dds('760SP',
+                     self.start,
+                     p.MetastableStateDetection.deshelving_duration,
+                     p.ddsDefaults.repump_760_1_freq,
+                     p.ddsDefaults.repump_760_1_power)
 
-        self.addDDS('976SP',
-                    self.start,
-                    p.MetastableStateDetection.deshelving_duration + p.MetastableStateDetection.duration,
-                    p.ddsDefaults.repump_976_freq,
-                    p.ddsDefaults.repump_976_power)
+        self.add_dds('976SP',
+                     self.start,
+                     p.MetastableStateDetection.deshelving_duration + p.MetastableStateDetection.duration,
+                     p.ddsDefaults.repump_976_freq,
+                     p.ddsDefaults.repump_976_power)
 
-        self.addDDS('935SP',
-                    self.start,
-                    p.MetastableStateDetection.duration + p.MetastableStateDetection.deshelving_duration,
-                    p.ddsDefaults.repump_935_freq,
-                    p.MetastableStateDetection.repump_power)
+        self.add_dds('935SP',
+                     self.start,
+                     p.MetastableStateDetection.duration + p.MetastableStateDetection.deshelving_duration,
+                     p.ddsDefaults.repump_935_freq,
+                     p.MetastableStateDetection.repump_power)
 
-        self.addTTL('ReadoutCount',
-                    self.start + p.MetastableStateDetection.deshelving_duration,
-                    p.MetastableStateDetection.duration)
+        self.add_ttl('ReadoutCount',
+                     self.start + p.MetastableStateDetection.deshelving_duration,
+                     p.MetastableStateDetection.duration)
 
-        self.addDDS('369DP',
-                    self.start,
-                    p.MetastableStateDetection.duration + p.MetastableStateDetection.deshelving_duration,
-                    p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning / 2.0,
-                    p.MetastableStateDetection.CW_power)
+        self.add_dds('369DP',
+                     self.start,
+                     p.MetastableStateDetection.duration + p.MetastableStateDetection.deshelving_duration,
+                     p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning / 2.0,
+                     p.MetastableStateDetection.CW_power)
 
         self.end = self.start + p.MetastableStateDetection.duration + p.MetastableStateDetection.deshelving_duration

@@ -1,4 +1,4 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.metastable_microwave_interrogation import MetastableMicrowaveInterrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
@@ -9,7 +9,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.shelving import Shelving
 from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
 
 
-class MetastableMicrowavePoint(pulse_sequence):
+class MetastableMicrowavePoint(PulseSequence):
 
     required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation,
                              MetastableStateDetection, OpticalPumping, Shelving,
@@ -20,11 +20,11 @@ class MetastableMicrowavePoint(pulse_sequence):
 
     def sequence(self):
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingDopplerCooling)
-        self.addSequence(OpticalPumping)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingDopplerCooling)
+        self.add_sequence(OpticalPumping)
         # self.addSequence(microwave_interrogation)
-        self.addSequence(Shelving)
-        self.addSequence(MetastableMicrowaveInterrogation)
-        self.addSequence(MetastableStateDetection)
-        self.addSequence(Deshelving)
+        self.add_sequence(Shelving)
+        self.add_sequence(MetastableMicrowaveInterrogation)
+        self.add_sequence(MetastableStateDetection)
+        self.add_sequence(Deshelving)

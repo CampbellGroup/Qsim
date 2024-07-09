@@ -1,4 +1,4 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
 from scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
 from scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
@@ -7,7 +7,7 @@ from sub_sequences.BrightStatePumping import bright_state_pumping
 from scripts.pulse_sequences.sub_sequences.shelving import Shelving
 
 
-class manifold_measurement(pulse_sequence):
+class manifold_measurement(PulseSequence):
 
     required_subsequences = [ShelvingDopplerCooling, ShelvingStateDetection,
                              TurnOffAll, bright_state_pumping, Shelving, Deshelving]
@@ -17,23 +17,23 @@ class manifold_measurement(pulse_sequence):
                            ]
 
     def sequence(self):
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingDopplerCooling)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingDopplerCooling)
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(bright_state_pumping)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(bright_state_pumping)
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingStateDetection)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingStateDetection)
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingDopplerCooling)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingDopplerCooling)
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(Shelving)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(Shelving)
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingStateDetection)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingStateDetection)
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(Deshelving)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(Deshelving)

@@ -1,4 +1,4 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from sub_sequences.DopplerCooling import doppler_cooling
 from sub_sequences.TurnOffAll import turn_off_all
 from sub_sequences.OpticalPumping import optical_pumping
@@ -8,7 +8,7 @@ from sub_sequences.MLStateDetection import ml_state_detection
 from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 
 
-class ML_dark_state_preparation(pulse_sequence):
+class ML_dark_state_preparation(PulseSequence):
 
     required_subsequences = [shelving, turn_off_all, shelving_doppler_cooling, doppler_cooling, ml_state_detection, optical_pumping, deshelving]
 
@@ -16,17 +16,17 @@ class ML_dark_state_preparation(pulse_sequence):
 
     def sequence(self):
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving_doppler_cooling)
+        self.add_sequence(turn_off_all)
+        self.add_sequence(shelving_doppler_cooling)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(optical_pumping)
+        self.add_sequence(turn_off_all)
+        self.add_sequence(optical_pumping)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(shelving)
+        self.add_sequence(turn_off_all)
+        self.add_sequence(shelving)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(ml_state_detection)
+        self.add_sequence(turn_off_all)
+        self.add_sequence(ml_state_detection)
 
-        self.addSequence(turn_off_all)
-        self.addSequence(deshelving)
+        self.add_sequence(turn_off_all)
+        self.add_sequence(deshelving)

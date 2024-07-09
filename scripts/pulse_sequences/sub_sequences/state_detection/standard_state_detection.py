@@ -1,7 +1,7 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 
-class StandardStateDetection(pulse_sequence):
+class StandardStateDetection(PulseSequence):
 
     required_parameters = [
         ('StandardStateDetection', 'duration'),
@@ -24,43 +24,43 @@ class StandardStateDetection(pulse_sequence):
         mode = p.Modes.laser_369
 
         if mode == 'Standard':
-            self.addTTL('ReadoutCount',
-                        self.start,
-                        p.StandardStateDetection.duration)
-            self.addDDS('935SP',
-                        self.start,
-                        p.StandardStateDetection.duration,
-                        p.ddsDefaults.repump_935_freq,
-                        p.StandardStateDetection.repump_power)
-            self.addDDS('StateDetectionSP',
-                        self.start,
-                        p.StandardStateDetection.duration,
-                        p.ddsDefaults.state_detection_freq,
-                        p.ddsDefaults.state_detection_power)
-            self.addDDS('369DP',
-                        self.start,
-                        p.StandardStateDetection.duration,
-                        p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.StandardStateDetection.detuning / 2.0,
-                        p.StandardStateDetection.CW_power)
+            self.add_ttl('ReadoutCount',
+                         self.start,
+                         p.StandardStateDetection.duration)
+            self.add_dds('935SP',
+                         self.start,
+                         p.StandardStateDetection.duration,
+                         p.ddsDefaults.repump_935_freq,
+                         p.StandardStateDetection.repump_power)
+            self.add_dds('StateDetectionSP',
+                         self.start,
+                         p.StandardStateDetection.duration,
+                         p.ddsDefaults.state_detection_freq,
+                         p.ddsDefaults.state_detection_power)
+            self.add_dds('369DP',
+                         self.start,
+                         p.StandardStateDetection.duration,
+                         p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.StandardStateDetection.detuning / 2.0,
+                         p.StandardStateDetection.CW_power)
             self.end = self.start + p.StandardStateDetection.duration
 
         elif mode == 'FiberEOM' or mode == 'FiberEOM173':
-            self.addTTL('ReadoutCount',
-                        self.start,
-                        p.StandardStateDetection.duration)
-            self.addTTL('WindfreakSynthHDTTL',
-                        self.start,
-                        p.StandardStateDetection.duration)
-            self.addDDS('935SP',
-                        self.start,
-                        p.StandardStateDetection.duration,
-                        p.ddsDefaults.repump_935_freq,
-                        p.StandardStateDetection.repump_power)
-            self.addDDS('369DP',
-                        self.start,
-                        p.StandardStateDetection.duration,
-                        p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.StandardStateDetection.detuning / 2.0,
-                        p.StandardStateDetection.CW_power)
+            self.add_ttl('ReadoutCount',
+                         self.start,
+                         p.StandardStateDetection.duration)
+            self.add_ttl('WindfreakSynthHDTTL',
+                         self.start,
+                         p.StandardStateDetection.duration)
+            self.add_dds('935SP',
+                         self.start,
+                         p.StandardStateDetection.duration,
+                         p.ddsDefaults.repump_935_freq,
+                         p.StandardStateDetection.repump_power)
+            self.add_dds('369DP',
+                         self.start,
+                         p.StandardStateDetection.duration,
+                         p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.StandardStateDetection.detuning / 2.0,
+                         p.StandardStateDetection.CW_power)
             self.end = self.start + p.StandardStateDetection.duration
 
         else:

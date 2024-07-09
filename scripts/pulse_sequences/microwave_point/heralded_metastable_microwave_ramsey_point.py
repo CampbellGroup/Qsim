@@ -1,4 +1,4 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
 from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
 from Qsim.scripts.pulse_sequences.sub_sequences.empty_sequence import EmptySequence
@@ -11,7 +11,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state
 from Qsim.scripts.pulse_sequences.sub_sequences.heralded_four_preparation import HeraldedFourPreparation
 
 
-class HeraldedMetastableMicrowaveRamseyPoint(pulse_sequence):
+class HeraldedMetastableMicrowaveRamseyPoint(PulseSequence):
     required_subsequences = [TurnOffAll, Deshelving, ShelvingDopplerCooling,
                              OpticalPumping, EmptySequence, Shelving,
                              MetastableRamseyMicrowaveInterrogation, MicrowaveInterrogation,
@@ -24,12 +24,12 @@ class HeraldedMetastableMicrowaveRamseyPoint(pulse_sequence):
                            ]
 
     def sequence(self):
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingDopplerCooling)  # readout counts 1
-        self.addSequence(OpticalPumping)
-        self.addSequence(MicrowaveInterrogation)
-        self.addSequence(Shelving)
-        self.addSequence(HeraldedFourPreparation)  # readout counts 2
-        self.addSequence(MetastableRamseyMicrowaveInterrogation)
-        self.addSequence(MetastableStateDetection)  # readout counts 3
-        self.addSequence(Deshelving)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingDopplerCooling)  # readout counts 1
+        self.add_sequence(OpticalPumping)
+        self.add_sequence(MicrowaveInterrogation)
+        self.add_sequence(Shelving)
+        self.add_sequence(HeraldedFourPreparation)  # readout counts 2
+        self.add_sequence(MetastableRamseyMicrowaveInterrogation)
+        self.add_sequence(MetastableStateDetection)  # readout counts 3
+        self.add_sequence(Deshelving)

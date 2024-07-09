@@ -30,7 +30,7 @@ class TD_flourescence(experiment):
 
     def programPulseSequence(self, record_time):
         seq = RecordTimeTags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': record_time}))
-        seq.programSequence(self.pulser)
+        seq.program_sequence(self.pulser)
 
     def run(self, cxn, context):
         self.programPulseSequence(self.record_time)

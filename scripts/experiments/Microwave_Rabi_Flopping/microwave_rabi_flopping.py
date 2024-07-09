@@ -73,7 +73,7 @@ FiberEOM:
         mode = self.p.Modes.state_detection_mode
 
         init_bright_state_pumping_method = self.p.BrightStatePumping.method
-        init_microwave_pulse_sequence = self.p.MicrowaveInterrogation.pulse_sequence
+        init_microwave_pulse_sequence = self.p.MicrowaveInterrogation.PulseSequence
         init_optical_pumping_method = self.p.OpticalPumping.method
 
         self.p['BrightStatePumping.method'] = 'Microwave'

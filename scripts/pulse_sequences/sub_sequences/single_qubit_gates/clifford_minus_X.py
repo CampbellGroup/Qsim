@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class CliffordMinusX(pulse_sequence):
+class CliffordMinusX(PulseSequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),
@@ -24,15 +24,15 @@ class CliffordMinusX(pulse_sequence):
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
             pi_time = p.Pi_times.qubit_0
 
-            self.addTTL('MicrowaveTTL',
-                        self.start + pulse_delay,
-                        pi_time / 2.0)
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        pi_time / 2.0 + pulse_delay,
-                        DDS_freq,
-                        p.MicrowaveInterrogation.power,
-                        U(180.0, 'deg') + p.MicrowaveInterrogation.overall_phase)
+            self.add_ttl('MicrowaveTTL',
+                         self.start + pulse_delay,
+                         pi_time / 2.0)
+            self.add_dds('Microwave_qubit',
+                         self.start,
+                         pi_time / 2.0 + pulse_delay,
+                         DDS_freq,
+                         p.MicrowaveInterrogation.power,
+                         U(180.0, 'deg') + p.MicrowaveInterrogation.overall_phase)
             self.end = self.start + pi_time / 2.0 + pulse_delay
 
         elif p.MicrowaveInterrogation.microwave_source == 'DDSx32':
@@ -41,13 +41,13 @@ class CliffordMinusX(pulse_sequence):
             pi_time = p.Pi_times.qubit_0
             phase = U(180.0, 'deg')/32.0 + p.MicrowaveInterrogation.overall_phase
 
-            self.addTTL('MicrowaveTTL',
-                        self.start + pulse_delay,
-                        pi_time / 2.0)
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        pi_time / 2.0 + pulse_delay,
-                        DDS_freq,
-                        p.ddsDefaults.qubit_dds_x32_power,
-                        phase)
+            self.add_ttl('MicrowaveTTL',
+                         self.start + pulse_delay,
+                         pi_time / 2.0)
+            self.add_dds('Microwave_qubit',
+                         self.start,
+                         pi_time / 2.0 + pulse_delay,
+                         DDS_freq,
+                         p.ddsDefaults.qubit_dds_x32_power,
+                         phase)
             self.end = self.start + pi_time / 2.0 + pulse_delay

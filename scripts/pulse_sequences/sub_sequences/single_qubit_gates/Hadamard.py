@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class Hadamard(pulse_sequence):
+class Hadamard(PulseSequence):
     # this is a fixed pi/2 gate with arbitrary phase, although it is only a true hadamard when a specific phase
     # is chosen i believe
 
@@ -41,14 +41,14 @@ class Hadamard(pulse_sequence):
 
         pulse_delay = U(800.0, 'us')
 
-        self.addTTL('MicrowaveTTL',
-                    self.start + pulse_delay,
-                    pi_time/2.0)
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time/2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    p.MicrowaveInterrogation.microwave_phase)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pulse_delay,
+                     pi_time / 2.0)
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     p.MicrowaveInterrogation.microwave_phase)
 
         self.end = self.start + pi_time/2.0 + pulse_delay

@@ -1,9 +1,9 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 import numpy as np
 from labrad.units import WithUnit as U
 
 
-class BB1(pulse_sequence):
+class BB1(PulseSequence):
     """
     This is a BB1 corrective pulse sequence
     """
@@ -44,31 +44,31 @@ class BB1(pulse_sequence):
         phi2 = 3.0*phi1
 
         # initial attempt at rotation angle theta
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    p.MicrowaveInterrogation.duration,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     p.MicrowaveInterrogation.duration,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(0.0, 'deg'))
 
         # corrective portion of the sequence
-        self.addDDS('Microwave_qubit',
-                    self.start + p.MicrowaveInterrogation.duration,
-                    pi_time,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(phi1, 'deg'))
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time + p.MicrowaveInterrogation.duration,
-                    2.0*pi_time,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(phi2, 'deg'))
-        self.addDDS('Microwave_qubit',
-                    self.start + 3.0*pi_time + p.MicrowaveInterrogation.duration,
-                    pi_time,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(phi1, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + p.MicrowaveInterrogation.duration,
+                     pi_time,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(phi1, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time + p.MicrowaveInterrogation.duration,
+                     2.0 * pi_time,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(phi2, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + 3.0 * pi_time + p.MicrowaveInterrogation.duration,
+                     pi_time,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(phi1, 'deg'))
 
         self.end = self.start + 4.0*pi_time + p.MicrowaveInterrogation.duration

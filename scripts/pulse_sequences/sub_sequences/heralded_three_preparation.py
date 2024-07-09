@@ -1,7 +1,7 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 
-class HeraldedThreePreparation(pulse_sequence):
+class HeraldedThreePreparation(PulseSequence):
 
     required_parameters = [
         ('MetastableStateDetection', 'duration'),
@@ -31,53 +31,53 @@ class HeraldedThreePreparation(pulse_sequence):
         p = self.parameters
         qubitFreq = p.ddsDefaults.metastable_qubit_dds_freq + p.Transitions.MetastableQubit/8.0
 
-        self.addTTL('ReadoutCount',
-                    self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
-                    p.MetastableStateDetection.duration)
+        self.add_ttl('ReadoutCount',
+                     self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
+                     p.MetastableStateDetection.duration)
 
         # perform pi pulse on the desired transition
-        self.addDDS('3GHz_qubit',
-                    self.start,
-                    p.Pi_times.metastable_qubit,
-                    qubitFreq,
-                    p.ddsDefaults.metastable_qubit_dds_power)
+        self.add_dds('3GHz_qubit',
+                     self.start,
+                     p.Pi_times.metastable_qubit,
+                     qubitFreq,
+                     p.ddsDefaults.metastable_qubit_dds_power)
 
         # deshelve population in the F = 4 manifold that is left over from poor Pi Pulse
-        self.addDDS('760SP2',
-                    self.start + p.Pi_times.metastable_qubit,
-                    p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
-                    p.ddsDefaults.repump_760_2_freq,
-                    p.ddsDefaults.repump_760_2_power)
+        self.add_dds('760SP2',
+                     self.start + p.Pi_times.metastable_qubit,
+                     p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
+                     p.ddsDefaults.repump_760_2_freq,
+                     p.ddsDefaults.repump_760_2_power)
 
         # detect any population in the ground state, at first here we will use the state detection parameters
-        self.addDDS('935SP',
-                    self.start,
-                    p.MetastableStateDetection.duration + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
-                    p.ddsDefaults.repump_935_freq,
-                    p.MetastableStateDetection.repump_power)
+        self.add_dds('935SP',
+                     self.start,
+                     p.MetastableStateDetection.duration + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,
+                     p.ddsDefaults.repump_935_freq,
+                     p.MetastableStateDetection.repump_power)
 
-        self.addDDS('976SP',
-                    self.start,
-                    p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
-                    p.ddsDefaults.repump_976_freq,
-                    p.ddsDefaults.repump_976_power)
+        self.add_dds('976SP',
+                     self.start,
+                     p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
+                     p.ddsDefaults.repump_976_freq,
+                     p.ddsDefaults.repump_976_power)
 
-        self.addDDS('369DP',
-                    self.start + p.Pi_times.metastable_qubit,
-                    p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
-                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning/2.0,
-                    p.MetastableStateDetection.CW_power)
+        self.add_dds('369DP',
+                     self.start + p.Pi_times.metastable_qubit,
+                     p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
+                     p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning / 2.0,
+                     p.MetastableStateDetection.CW_power)
 
-        self.addDDS('DopplerCoolingSP',
-                    self.start + p.Pi_times.metastable_qubit,
-                    p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
-                    p.ddsDefaults.doppler_cooling_freq,
-                    p.ddsDefaults.doppler_cooling_power)
+        self.add_dds('DopplerCoolingSP',
+                     self.start + p.Pi_times.metastable_qubit,
+                     p.MetastableStateDetection.duration + p.HeraldedStatePreparation.deshelving_duration,
+                     p.ddsDefaults.doppler_cooling_freq,
+                     p.ddsDefaults.doppler_cooling_power)
 
-        self.addDDS('ProtectionBeam',
-                    self.start + p.Pi_times.metastable_qubit,
-                    p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
-                    p.ddsDefaults.protection_beam_freq,
-                    p.ddsDefaults.protection_beam_power)
+        self.add_dds('ProtectionBeam',
+                     self.start + p.Pi_times.metastable_qubit,
+                     p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration,
+                     p.ddsDefaults.protection_beam_freq,
+                     p.ddsDefaults.protection_beam_power)
 
         self.end = self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration + p.MetastableStateDetection.duration

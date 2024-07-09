@@ -1,7 +1,7 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 
-class VariableDeshelving(pulse_sequence):
+class VariableDeshelving(PulseSequence):
 
     required_parameters = [
         ('VariableDeshelving', 'duration'),
@@ -24,35 +24,35 @@ class VariableDeshelving(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addDDS('369DP',
-                    self.start,
-                    p.VariableDeshelving.duration,
-                    p.Transitions.main_cooling_369/2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning/2.0,
-                    p.DopplerCooling.cooling_power)
+        self.add_dds('369DP',
+                     self.start,
+                     p.VariableDeshelving.duration,
+                     p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning / 2.0,
+                     p.DopplerCooling.cooling_power)
 
-        self.addDDS('DopplerCoolingSP',
-                    self.start,
-                    p.VariableDeshelving.duration,
-                    p.ddsDefaults.doppler_cooling_freq,
-                    p.ddsDefaults.doppler_cooling_power)
+        self.add_dds('DopplerCoolingSP',
+                     self.start,
+                     p.VariableDeshelving.duration,
+                     p.ddsDefaults.doppler_cooling_freq,
+                     p.ddsDefaults.doppler_cooling_power)
 
-        self.addDDS('935SP',
-                    self.start,
-                    p.VariableDeshelving.duration,
-                    p.ddsDefaults.repump_935_freq,
-                    p.Deshelving.repump_power)
+        self.add_dds('935SP',
+                     self.start,
+                     p.VariableDeshelving.duration,
+                     p.ddsDefaults.repump_935_freq,
+                     p.Deshelving.repump_power)
 
-        self.addDDS('760SP',
-                    self.start,
-                    p.VariableDeshelving.duration,
-                    p.ddsDefaults.repump_760_1_freq,
-                    p.Deshelving.power1)
+        self.add_dds('760SP',
+                     self.start,
+                     p.VariableDeshelving.duration,
+                     p.ddsDefaults.repump_760_1_freq,
+                     p.Deshelving.power1)
 
-        self.addDDS('760SP2',
-                    self.start,
-                    p.VariableDeshelving.duration,
-                    p.ddsDefaults.repump_760_2_freq,
-                    p.Deshelving.power2)
+        self.add_dds('760SP2',
+                     self.start,
+                     p.VariableDeshelving.duration,
+                     p.ddsDefaults.repump_760_2_freq,
+                     p.Deshelving.power2)
         #
         # self.addDDS('976SP',
         #             self.start,

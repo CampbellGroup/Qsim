@@ -1,17 +1,17 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
-from sub_sequences.turn_off_all import TurnOffAll
-from sub_sequences.state_detection.metastable_state_detection import MetastableStateDetection
-from sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
-from sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
-from sub_sequences.optical_pumping import OpticalPumping
-from sub_sequences.shelving import Shelving
-from sub_sequences.deshelving import Deshelving
-from sub_sequences.heralded_four_preparation import HeraldedFourPreparation
-from sub_sequences.metastable_measurement_driven_gate_delta_theta import MetastableMeasurementDrivenGateDeltaTheta
+from .sub_sequences.turn_off_all import TurnOffAll
+from .sub_sequences.state_detection.metastable_state_detection import MetastableStateDetection
+from .sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
+from .sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
+from .sub_sequences.optical_pumping import OpticalPumping
+from .sub_sequences.shelving import Shelving
+from .sub_sequences.deshelving import Deshelving
+from .sub_sequences.heralded_four_preparation import HeraldedFourPreparation
+from .sub_sequences.metastable_measurement_driven_gate_delta_theta import MetastableMeasurementDrivenGateDeltaTheta
 
 
-class MetastableMeasurementDrivenGate(pulse_sequence):
+class MetastableMeasurementDrivenGate(PulseSequence):
 
     required_subsequences = [
         TurnOffAll,
@@ -35,12 +35,12 @@ class MetastableMeasurementDrivenGate(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingDopplerCooling)  # readout counts call 1
-        self.addSequence(OpticalPumping)
-        self.addSequence(Shelving)
-        self.addSequence(HeraldedFourPreparation)  # readout counts call 2
-        self.addSequence(MetastableMeasurementDrivenGateDeltaTheta)
-        self.addSequence(ShelvingStateDetection)  # readout counts call 3
-        self.addSequence(MetastableStateDetection)  # readout counts call 4
-        self.addSequence(Deshelving)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingDopplerCooling)  # readout counts call 1
+        self.add_sequence(OpticalPumping)
+        self.add_sequence(Shelving)
+        self.add_sequence(HeraldedFourPreparation)  # readout counts call 2
+        self.add_sequence(MetastableMeasurementDrivenGateDeltaTheta)
+        self.add_sequence(ShelvingStateDetection)  # readout counts call 3
+        self.add_sequence(MetastableStateDetection)  # readout counts call 4
+        self.add_sequence(Deshelving)

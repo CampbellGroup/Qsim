@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class CliffordZ(pulse_sequence):
+class CliffordZ(PulseSequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),

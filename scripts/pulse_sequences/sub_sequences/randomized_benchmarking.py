@@ -1,5 +1,5 @@
 import numpy as np
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.clifford_X import CliffordX
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.clifford_minus_X import CliffordMinusX
@@ -15,7 +15,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_Id impo
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.single_sequence_rb_testing import SingleSequenceRbTesting
 
 
-class RandomizedBenchmarkingPulse(pulse_sequence):
+class RandomizedBenchmarkingPulse(PulseSequence):
 
     required_parameters = [
         ('RandomizedBenchmarking', 'file_selection'),
@@ -61,4 +61,4 @@ class RandomizedBenchmarkingPulse(pulse_sequence):
         # for i in range(num_reps):
         #     self.addSequence(single_sequence_rb_testing)
         for pulse in rb_pulses:
-            self.addSequence(pulse_dict[str(list(pulse))])
+            self.add_sequence(pulse_dict[str(list(pulse))])

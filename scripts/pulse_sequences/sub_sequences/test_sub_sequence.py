@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class TestSubSequence(pulse_sequence):
+class TestSubSequence(PulseSequence):
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),
         ('MicrowaveInterrogation', 'detuning'),
@@ -47,18 +47,18 @@ class TestSubSequence(pulse_sequence):
         mode = p.Modes.laser_369
 
         if mode == 'Standard':
-            self.addTTL('ReadoutCount',
-                        self.start,
-                        duration)
-            self.addTTL('WindfreakSynthHDTTL',
-                        self.start,
-                        duration)
+            self.add_ttl('ReadoutCount',
+                         self.start,
+                         duration)
+            self.add_ttl('WindfreakSynthHDTTL',
+                         self.start,
+                         duration)
             self.end = self.start + duration
         elif mode == 'FiberEOM':
-            self.addTTL('ReadoutCount',
-                        self.start,
-                        duration)
-            self.addTTL('WindfreakSynthHDTTL',
-                        self.start,
-                        duration)
+            self.add_ttl('ReadoutCount',
+                         self.start,
+                         duration)
+            self.add_ttl('WindfreakSynthHDTTL',
+                         self.start,
+                         duration)
             self.end = self.start + duration

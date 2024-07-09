@@ -1,7 +1,7 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 
-class MicrowaveSequenceStandard(pulse_sequence):
+class MicrowaveSequenceStandard(PulseSequence):
     # this is a general microwave square pulse sequence where the different qubit lines
     # can be selected
 
@@ -38,15 +38,15 @@ class MicrowaveSequenceStandard(pulse_sequence):
             DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
-            self.addTTL('MicrowaveTTL',
-                        self.start + pulse_delay,
-                        p.MicrowaveInterrogation.duration)
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        p.MicrowaveInterrogation.duration + pulse_delay,
-                        DDS_freq,
-                        p.MicrowaveInterrogation.power,
-                        p.MicrowaveInterrogation.microwave_phase)
+            self.add_ttl('MicrowaveTTL',
+                         self.start + pulse_delay,
+                         p.MicrowaveInterrogation.duration)
+            self.add_dds('Microwave_qubit',
+                         self.start,
+                         p.MicrowaveInterrogation.duration + pulse_delay,
+                         DDS_freq,
+                         p.MicrowaveInterrogation.power,
+                         p.MicrowaveInterrogation.microwave_phase)
 
             self.end = self.start + p.MicrowaveInterrogation.duration + pulse_delay
 
@@ -54,14 +54,14 @@ class MicrowaveSequenceStandard(pulse_sequence):
             DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center)/32.0
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
-            self.addTTL('MicrowaveTTL',
-                        self.start + pulse_delay,
-                        p.MicrowaveInterrogation.duration)
-            self.addDDS('Microwave_qubit',
-                        self.start,
-                        p.MicrowaveInterrogation.duration + pulse_delay,
-                        DDS_freq,
-                        p.ddsDefaults.qubit_dds_x32_power,
-                        p.MicrowaveInterrogation.microwave_phase/32.0)
+            self.add_ttl('MicrowaveTTL',
+                         self.start + pulse_delay,
+                         p.MicrowaveInterrogation.duration)
+            self.add_dds('Microwave_qubit',
+                         self.start,
+                         p.MicrowaveInterrogation.duration + pulse_delay,
+                         DDS_freq,
+                         p.ddsDefaults.qubit_dds_x32_power,
+                         p.MicrowaveInterrogation.microwave_phase / 32.0)
 
             self.end = self.start + p.MicrowaveInterrogation.duration + pulse_delay

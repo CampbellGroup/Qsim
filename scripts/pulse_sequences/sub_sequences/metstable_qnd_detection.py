@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class MetastableQNDDetection(pulse_sequence):
+class MetastableQNDDetection(PulseSequence):
 
     required_parameters = [
         ('MetastableStateDetection', 'duration'),
@@ -21,30 +21,30 @@ class MetastableQNDDetection(pulse_sequence):
 
         # first we deshelve the F=3 manifold
 
-        self.addTTL('976SP',
-                    self.start,
-                    p.MetastableStateDetection.duration)
+        self.add_ttl('976SP',
+                     self.start,
+                     p.MetastableStateDetection.duration)
 
-        self.addDDS('935SP',
-                    self.start,
-                    p.MetastableStateDetection.duration,
-                    p.ddsDefaults.repump_935_freq,
-                    p.MetastableStateDetection.repump_power)
+        self.add_dds('935SP',
+                     self.start,
+                     p.MetastableStateDetection.duration,
+                     p.ddsDefaults.repump_935_freq,
+                     p.MetastableStateDetection.repump_power)
 
-        self.addTTL('ReadoutCount',
-                    self.start,
-                    p.MetastableStateDetection.duration)
+        self.add_ttl('ReadoutCount',
+                     self.start,
+                     p.MetastableStateDetection.duration)
 
-        self.addDDS('369DP',
-                    self.start,
-                    p.MetastableStateDetection.duration,
-                    p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning / 2.0,
-                    p.MetastableStateDetection.CW_power)
+        self.add_dds('369DP',
+                     self.start,
+                     p.MetastableStateDetection.duration,
+                     p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.MetastableStateDetection.detuning / 2.0,
+                     p.MetastableStateDetection.CW_power)
 
-        self.addDDS('DopplerCoolingSP',
-                    self.start,
-                    p.MetastableStateDetection.duration,
-                    p.ddsDefaults.doppler_cooling_freq,
-                    p.ddsDefaults.doppler_cooling_power)
+        self.add_dds('DopplerCoolingSP',
+                     self.start,
+                     p.MetastableStateDetection.duration,
+                     p.ddsDefaults.doppler_cooling_freq,
+                     p.ddsDefaults.doppler_cooling_power)
 
         self.end = self.start + p.MetastableStateDetection.duration

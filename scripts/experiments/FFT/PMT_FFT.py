@@ -36,7 +36,7 @@ class PMT_FFT(QsimExperiment):
 
     def programPulseSequence(self, record_time):
         seq = RecordTimeTags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': record_time}))
-        seq.programSequence(self.pulser)
+        seq.program_sequence(self.pulser)
 
     def run(self, cxn, context):
 
@@ -49,7 +49,7 @@ class PMT_FFT(QsimExperiment):
         pwr = np.zeros_like(self.freqs)
         for i in range(self.average):
             seq = RecordTimeTags(TreeDict.fromdict({'RecordTimetags.record_timetags_duration': self.record_time}))
-            seq.programSequence(self.pulser)
+            seq.program_sequence(self.pulser)
             self.pulser.reset_timetags()
             self.pulser.start_single()
             self.pulser.wait_sequence_done()

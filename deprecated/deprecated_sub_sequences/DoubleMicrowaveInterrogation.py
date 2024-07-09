@@ -1,4 +1,4 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.standard_pi_pulse import StandardPiPulseClock
 from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.standard_pi_pulse import standard_pi_pulse_plus
 from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.knill_pi_pulse import KnillPiPulseClock
@@ -8,7 +8,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse imp
 
 
 
-class double_microwave_sequence(pulse_sequence):
+class double_microwave_sequence(PulseSequence):
     # this sequence is exclusively used for F = 1 manifold preparation, so we only want
     # to do Pi-pulses
     required_parameters = [
@@ -22,14 +22,14 @@ class double_microwave_sequence(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        if p.MicrowaveInterrogation.pulse_sequence == 'standard':
-            self.addSequence(StandardPiPulseClock)
-            self.addSequence(standard_pi_pulse_plus)
+        if p.MicrowaveInterrogation.PulseSequence == 'standard':
+            self.add_sequence(StandardPiPulseClock)
+            self.add_sequence(standard_pi_pulse_plus)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'knill':
-            self.addSequence(KnillPiPulseClock)
-            self.addSequence(knill_pi_pulse_plus)
+        elif p.MicrowaveInterrogation.PulseSequence == 'knill':
+            self.add_sequence(KnillPiPulseClock)
+            self.add_sequence(knill_pi_pulse_plus)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'SpinEcho + KnillZeeman':
-            self.addSequence(SpinEchoPiPulseClock)
-            self.addSequence(knill_pi_pulse_plus)
+        elif p.MicrowaveInterrogation.PulseSequence == 'SpinEcho + KnillZeeman':
+            self.add_sequence(SpinEchoPiPulseClock)
+            self.add_sequence(knill_pi_pulse_plus)

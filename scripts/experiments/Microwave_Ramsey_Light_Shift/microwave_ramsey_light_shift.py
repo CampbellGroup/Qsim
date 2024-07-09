@@ -89,14 +89,14 @@ FiberEOM:
         mode = self.p.Modes.state_detection_mode
 
         self.p['MicrowaveInterrogation.detuning'] = self.p.MicrowaveRamsey.detuning
-
+        self.init_line_center = None#########
         if scan_parameter == "delay_time":
             self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
-            self.init_line_center = self.run_interleaved_linescan()
+            #self.init_line_center = self.run_interleaved_linescan()
             print('Initial line center at ' + str(self.init_line_center))
             self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
             self.setup_grapher('Microwave Ramsey Experiment')
-            self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, 'ms', shuffle=True)
+            self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, 'ms', shuffle=False)
             last_scanned = time.time()  # initialize time (not sure if this is the best spot to do this)
             time.sleep(2)
             for i, dark_time in enumerate(self.dark_time):
@@ -110,19 +110,22 @@ FiberEOM:
                     errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                     counts = np.delete(detection_counts, errors)
                 else:
-                    [counts] = self.run_sequence()
+                    [counts, counts_control] = self.run_sequence(max_runs=500, num=2)
                 if i % self.p.StandardStateDetection.points_per_histogram == 0:
                     hist = self.process_data(counts)
                     self.plot_hist(hist)
                 pop = self.get_pop(counts)
+                pop_control = self.get_pop(counts_control)
                 self.dv.add(dark_time, pop, context=self.ls_context)
-                # if i % 3 == 0 and i != 0: # every three data points do a linescan. change to once every three minutes
-                if time.time() - last_scanned > 180:  # linescan if it has been more than 3 minutes
+                self.dv.add(dark_time, pop_control, context=self.control_context)
+                if time.time() - last_scanned > 600:  # linescan if it has been more than 4 minutes
                     print("Correcting Cavity Drift")
+                    if self.init_line_center is None:#######
+                        self.init_line_center = self.run_interleaved_linescan()#######
+                        continue#######
                     success = self.correct_cavity_drift()
                     last_scanned = time.time()  # update time
                     time.sleep(1)
-
 
         elif scan_parameter == "phase":
             print("not implemented")
@@ -152,9 +155,20 @@ FiberEOM:
         self.dataset = self.dv.new(self.name, [(x_axis, 'num')],
                                    [(y_axis, '', 'num')],
                                    context=self.ls_context)
+        self.control_context = self.dv.context()
+        self.dv.cd(['', self.name], True, context=self.control_context)
+        self.dataset_control = self.dv.new(self.name + '_control', [(x_axis, 'num')],
+                                   [(y_axis, '', 'num')],
+                                   context=self.control_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.ls_context)
         return self.dataset
+
+    def setup_grapher(self, tab):
+        if self.grapher is None:
+            print('grapher not running')
+        self.grapher.plot(self.dataset, tab, False)
+        self.grapher.plot(self.dataset_control, tab, False)
 
     def lorentzian_fit(self, detuning, center, fwhm, scale, offset):
         return offset + scale * 0.5 * fwhm / ((detuning - center) ** 2 + (0.5 * fwhm) ** 2)

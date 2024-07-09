@@ -75,14 +75,13 @@ FiberEOM:
         data = self.setup_datavault('frequency', 'probability')  # gives the x and y names to Data Vault
         qubit = self.p.Line_Selection.qubit
         print(qubit)
-        print(self.p.MicrowaveInterrogation.pulse_sequence)
+        print(self.p.MicrowaveInterrogation.PulseSequence)
         self.setup_grapher('Microwave Linescan ' + qubit)
         self.detunings = self.get_scan_list(self.p.MicrowaveLinescan.scan, 'kHz')
         mode = self.p.Modes.state_detection_mode
         self.pulser.line_trigger_state(self.p.MicrowaveInterrogation.AC_line_trigger == 'On')
 
         linescan_type = self.p.MicrowaveLinescan.linescan_type
-
 
         if qubit == 'qubit_0':
             center = self.p.Transitions.qubit_0

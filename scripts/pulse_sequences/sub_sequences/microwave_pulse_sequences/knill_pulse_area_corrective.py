@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class KnillPulseAreaCorrectingSequence(pulse_sequence):
+class KnillPulseAreaCorrectingSequence(PulseSequence):
     """
      This sequence is based on the work by David Su, a modification of the Knill sequence that sacrifices
      correcting detuning errors for correcting amplitude errors.
@@ -40,73 +40,73 @@ class KnillPulseAreaCorrectingSequence(pulse_sequence):
         start_delay = U(3.0, 'us')
 
         # pulse 1
-        self.addTTL('MicrowaveTTL',
-                    self.start + ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration - ttl_delay)
-        self.addTTL('MicrowaveTTL3',
-                    self.start + ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration)
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    p.MicrowaveInterrogation.duration + ttl_off + start_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(30.0, 'deg'))
+        self.add_ttl('MicrowaveTTL',
+                     self.start + ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration - ttl_delay)
+        self.add_ttl('MicrowaveTTL3',
+                     self.start + ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration)
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     p.MicrowaveInterrogation.duration + ttl_off + start_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(30.0, 'deg'))
 
         # pulse 2
-        self.addTTL('MicrowaveTTL',
-                    self.start + p.MicrowaveInterrogation.duration + 2 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration - ttl_delay)
-        self.addTTL('MicrowaveTTL3',
-                    self.start + p.MicrowaveInterrogation.duration + 2 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration)
-        self.addDDS('Microwave_qubit',
-                    self.start + p.MicrowaveInterrogation.duration + ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration + ttl_off,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(180.0, 'deg'))
+        self.add_ttl('MicrowaveTTL',
+                     self.start + p.MicrowaveInterrogation.duration + 2 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration - ttl_delay)
+        self.add_ttl('MicrowaveTTL3',
+                     self.start + p.MicrowaveInterrogation.duration + 2 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration)
+        self.add_dds('Microwave_qubit',
+                     self.start + p.MicrowaveInterrogation.duration + ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration + ttl_off,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(180.0, 'deg'))
 
         # pulse 3
-        self.addTTL('MicrowaveTTL',
-                    self.start + 2 * p.MicrowaveInterrogation.duration + 3 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration - ttl_delay)
-        self.addTTL('MicrowaveTTL3',
-                    self.start + 2 * p.MicrowaveInterrogation.duration + 3 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration)
-        self.addDDS('Microwave_qubit',
-                    self.start + 2 * p.MicrowaveInterrogation.duration + 2 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration + ttl_off,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(90.0, 'deg'))
+        self.add_ttl('MicrowaveTTL',
+                     self.start + 2 * p.MicrowaveInterrogation.duration + 3 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration - ttl_delay)
+        self.add_ttl('MicrowaveTTL3',
+                     self.start + 2 * p.MicrowaveInterrogation.duration + 3 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration)
+        self.add_dds('Microwave_qubit',
+                     self.start + 2 * p.MicrowaveInterrogation.duration + 2 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration + ttl_off,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(90.0, 'deg'))
 
         # pulse 4
-        self.addTTL('MicrowaveTTL',
-                    self.start + + 3 * p.MicrowaveInterrogation.duration + 4 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration - ttl_delay)
-        self.addTTL('MicrowaveTTL3',
-                    self.start + + 3 * p.MicrowaveInterrogation.duration + 4 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration)
-        self.addDDS('Microwave_qubit',
-                    self.start + 3 * p.MicrowaveInterrogation.duration + 3 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration + ttl_off,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(180.0, 'deg'))
+        self.add_ttl('MicrowaveTTL',
+                     self.start + + 3 * p.MicrowaveInterrogation.duration + 4 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration - ttl_delay)
+        self.add_ttl('MicrowaveTTL3',
+                     self.start + + 3 * p.MicrowaveInterrogation.duration + 4 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration)
+        self.add_dds('Microwave_qubit',
+                     self.start + 3 * p.MicrowaveInterrogation.duration + 3 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration + ttl_off,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(180.0, 'deg'))
 
         # pulse 5
-        self.addTTL('MicrowaveTTL',
-                    self.start + + 4 * p.MicrowaveInterrogation.duration + 5 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration - ttl_delay)
-        self.addTTL('MicrowaveTTL3',
-                    self.start + + 4 * p.MicrowaveInterrogation.duration + 5 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration)
-        self.addDDS('Microwave_qubit',
-                    self.start + 4 * p.MicrowaveInterrogation.duration + 4 * ttl_off + start_delay,
-                    p.MicrowaveInterrogation.duration + ttl_off,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(30.0, 'deg'))
+        self.add_ttl('MicrowaveTTL',
+                     self.start + + 4 * p.MicrowaveInterrogation.duration + 5 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration - ttl_delay)
+        self.add_ttl('MicrowaveTTL3',
+                     self.start + + 4 * p.MicrowaveInterrogation.duration + 5 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration)
+        self.add_dds('Microwave_qubit',
+                     self.start + 4 * p.MicrowaveInterrogation.duration + 4 * ttl_off + start_delay,
+                     p.MicrowaveInterrogation.duration + ttl_off,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(30.0, 'deg'))
 
         self.end = self.start + 5 * p.MicrowaveInterrogation.duration + 5 * ttl_off + start_delay

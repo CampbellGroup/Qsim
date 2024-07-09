@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class MetastableMicrowaveKnillSequence(pulse_sequence):
+class MetastableMicrowaveKnillSequence(PulseSequence):
 
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
@@ -18,34 +18,34 @@ class MetastableMicrowaveKnillSequence(pulse_sequence):
         center = p.Transitions.MetastableQubit
         DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq - (p.MetastableMicrowaveInterrogation.detuning + center)
 
-        self.addDDS('3GHz_qubit',
-                    self.start,
-                    p.MetastableMicrowaveInterrogation.duration,
-                    DDS_freq,
-                    p.ddsDefaults.metastable_qubit_dds_power,
-                    U(30.0, 'deg'))
-        self.addDDS('3GHz_qubit',
-                    self.start + p.MetastableMicrowaveInterrogation.duration,
-                    p.MetastableMicrowaveInterrogation.duration,
-                    DDS_freq,
-                    p.ddsDefaults.metastable_qubit_dds_power,
-                    U(0.0, 'deg'))
-        self.addDDS('3GHz_qubit',
-                    self.start + 2*p.MetastableMicrowaveInterrogation.duration,
-                    p.MetastableMicrowaveInterrogation.duration,
-                    DDS_freq,
-                    p.ddsDefaults.metastable_qubit_dds_power,
-                    U(90.0, 'deg'))
-        self.addDDS('3GHz_qubit',
-                    self.start + 3*p.MetastableMicrowaveInterrogation.duration,
-                    p.MetastableMicrowaveInterrogation.duration,
-                    DDS_freq,
-                    p.ddsDefaults.metastable_qubit_dds_power,
-                    U(0.0, 'deg'))
-        self.addDDS('3GHz_qubit',
-                    self.start + 4*p.MetastableMicrowaveInterrogation.duration,
-                    p.MetastableMicrowaveInterrogation.duration,
-                    DDS_freq,
-                    p.ddsDefaults.metastable_qubit_dds_power,
-                    U(30.0, 'deg'))
+        self.add_dds('3GHz_qubit',
+                     self.start,
+                     p.MetastableMicrowaveInterrogation.duration,
+                     DDS_freq,
+                     p.ddsDefaults.metastable_qubit_dds_power,
+                     U(30.0, 'deg'))
+        self.add_dds('3GHz_qubit',
+                     self.start + p.MetastableMicrowaveInterrogation.duration,
+                     p.MetastableMicrowaveInterrogation.duration,
+                     DDS_freq,
+                     p.ddsDefaults.metastable_qubit_dds_power,
+                     U(0.0, 'deg'))
+        self.add_dds('3GHz_qubit',
+                     self.start + 2 * p.MetastableMicrowaveInterrogation.duration,
+                     p.MetastableMicrowaveInterrogation.duration,
+                     DDS_freq,
+                     p.ddsDefaults.metastable_qubit_dds_power,
+                     U(90.0, 'deg'))
+        self.add_dds('3GHz_qubit',
+                     self.start + 3 * p.MetastableMicrowaveInterrogation.duration,
+                     p.MetastableMicrowaveInterrogation.duration,
+                     DDS_freq,
+                     p.ddsDefaults.metastable_qubit_dds_power,
+                     U(0.0, 'deg'))
+        self.add_dds('3GHz_qubit',
+                     self.start + 4 * p.MetastableMicrowaveInterrogation.duration,
+                     p.MetastableMicrowaveInterrogation.duration,
+                     DDS_freq,
+                     p.ddsDefaults.metastable_qubit_dds_power,
+                     U(30.0, 'deg'))
         self.end = self.start + 5*p.MetastableMicrowaveInterrogation.duration

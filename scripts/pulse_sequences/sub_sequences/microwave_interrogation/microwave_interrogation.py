@@ -1,4 +1,4 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.knill_sequence import Knill
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.MicrowaveSequenceStandard import MicrowaveSequenceStandard
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.bb1_sequence import BB1
@@ -18,7 +18,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse imp
 from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse import spin_echo_pi_pulse_minus
 
 
-class MicrowaveInterrogation(pulse_sequence):
+class MicrowaveInterrogation(PulseSequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),
@@ -45,39 +45,39 @@ class MicrowaveInterrogation(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        if p.MicrowaveInterrogation.pulse_sequence == 'standard':
-            self.addSequence(MicrowaveSequenceStandard)
+        if p.MicrowaveInterrogation.PulseSequence == 'standard':
+            self.add_sequence(MicrowaveSequenceStandard)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'knill':
-            self.addSequence(Knill)
+        elif p.MicrowaveInterrogation.PulseSequence == 'knill':
+            self.add_sequence(Knill)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'BB1':
-            self.addSequence(BB1)
+        elif p.MicrowaveInterrogation.PulseSequence == 'BB1':
+            self.add_sequence(BB1)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'SpinEcho':
-            self.addSequence(SpinEcho)
+        elif p.MicrowaveInterrogation.PulseSequence == 'SpinEcho':
+            self.add_sequence(SpinEcho)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'SuSequence':
-            self.addSequence(SuSequence)
+        elif p.MicrowaveInterrogation.PulseSequence == 'SuSequence':
+            self.add_sequence(SuSequence)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'DoubleStandard':
-            self.addSequence(StandardPiPulseClock)
-            self.addSequence(standard_pi_pulse_minus)
+        elif p.MicrowaveInterrogation.PulseSequence == 'DoubleStandard':
+            self.add_sequence(StandardPiPulseClock)
+            self.add_sequence(standard_pi_pulse_minus)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'DoubleKnill':
-            self.addSequence(KnillPiPulseClock)
-            self.addSequence(knill_pi_pulse_minus)
+        elif p.MicrowaveInterrogation.PulseSequence == 'DoubleKnill':
+            self.add_sequence(KnillPiPulseClock)
+            self.add_sequence(knill_pi_pulse_minus)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'DoubleSpinEcho':
-            self.addSequence(SpinEchoPiPulseClock)
-            self.addSequence(spin_echo_pi_pulse_minus)
+        elif p.MicrowaveInterrogation.PulseSequence == 'DoubleSpinEcho':
+            self.add_sequence(SpinEchoPiPulseClock)
+            self.add_sequence(spin_echo_pi_pulse_minus)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'ClockStandard_KnillZeeman':
-            self.addSequence(StandardPiPulseClock)
-            self.addSequence(knill_pi_pulse_minus)
+        elif p.MicrowaveInterrogation.PulseSequence == 'ClockStandard_KnillZeeman':
+            self.add_sequence(StandardPiPulseClock)
+            self.add_sequence(knill_pi_pulse_minus)
 
-        elif p.MicrowaveInterrogation.pulse_sequence == 'TripleMicrowave':
-            self.addSequence(KnillPiPulseClock)
-            self.addSequence(knill_pi_pulse_minus)
-            self.addSequence(knill_pi_pulse_plus)
+        elif p.MicrowaveInterrogation.PulseSequence == 'TripleMicrowave':
+            self.add_sequence(KnillPiPulseClock)
+            self.add_sequence(knill_pi_pulse_minus)
+            self.add_sequence(knill_pi_pulse_plus)
 

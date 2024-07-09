@@ -27,7 +27,7 @@ class TimeHarp_Interleaved(QsimExperiment):
 
     def program_pulser(self):
         pulse_sequence = sequence(self.p)
-        pulse_sequence.programSequence(self.pulser)
+        pulse_sequence.program_sequence(self.pulser)
         self.pulser.start_number(int(self.p.TimeHarp_Interleaved.iterations))
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()

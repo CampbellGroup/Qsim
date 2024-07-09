@@ -1,4 +1,4 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.metastable_microwave_interrogation_173 import \
     MetastableMicrowaveInterrogation173, SweptMetastableMicrowaveInterrogation173
@@ -10,7 +10,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.shelving import Shelving
 from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
 
 
-class MetastableMicrowavePoint173(pulse_sequence):
+class MetastableMicrowavePoint173(PulseSequence):
 
     required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation173,
                              MetastableStateDetection173, OpticalPumping, Shelving,
@@ -21,15 +21,15 @@ class MetastableMicrowavePoint173(pulse_sequence):
 
     def sequence(self):
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingDopplerCooling)
-        self.addSequence(Shelving)
-        self.addSequence(MetastableMicrowaveInterrogation173)
-        self.addSequence(MetastableStateDetection173)
-        self.addSequence(Deshelving)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingDopplerCooling)
+        self.add_sequence(Shelving)
+        self.add_sequence(MetastableMicrowaveInterrogation173)
+        self.add_sequence(MetastableStateDetection173)
+        self.add_sequence(Deshelving)
 
 
-class SweptMetastableMicrowavePoint173(pulse_sequence):
+class SweptMetastableMicrowavePoint173(PulseSequence):
 
     required_subsequences = [TurnOffAll, SweptMetastableMicrowaveInterrogation173,
                              MetastableStateDetection173, OpticalPumping, Shelving,
@@ -40,9 +40,9 @@ class SweptMetastableMicrowavePoint173(pulse_sequence):
 
     def sequence(self):
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingDopplerCooling)
-        self.addSequence(Shelving)
-        self.addSequence(SweptMetastableMicrowaveInterrogation173)
-        self.addSequence(MetastableStateDetection173)
-        self.addSequence(Deshelving)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingDopplerCooling)
+        self.add_sequence(Shelving)
+        self.add_sequence(SweptMetastableMicrowaveInterrogation173)
+        self.add_sequence(MetastableStateDetection173)
+        self.add_sequence(Deshelving)

@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class SpinEchoPiPulseClock(pulse_sequence):
+class SpinEchoPiPulseClock(PulseSequence):
     """
     This is a spin echo corrective pulse sequence
     """
@@ -26,45 +26,45 @@ class SpinEchoPiPulseClock(pulse_sequence):
         pulse_delay = U(800.0, 'us')
 
         # Pi/2 around X
-        self.addTTL('MicrowaveTTL',
-                    self.start + pulse_delay,
-                    pi_time / 2.0)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pulse_delay,
+                     pi_time / 2.0)
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time / 2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(0.0, 'deg'))
 
         # Pi around Y
-        self.addTTL('MicrowaveTTL',
-                    self.start + pi_time / 2.0 + 2 * pulse_delay,
-                    pi_time)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pi_time / 2.0 + 2 * pulse_delay,
+                     pi_time)
 
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time / 2.0 + pulse_delay,
-                    pi_time + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(90.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time / 2.0 + pulse_delay,
+                     pi_time + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(90.0, 'deg'))
 
         # Pi/2 around X
-        self.addTTL('MicrowaveTTL',
-                    self.start + 3.0 * pi_time / 2.0 + 3 * pulse_delay,
-                    pi_time / 2.0)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + 3.0 * pi_time / 2.0 + 3 * pulse_delay,
+                     pi_time / 2.0)
 
-        self.addDDS('Microwave_qubit',
-                    self.start + 3.0 * pi_time / 2.0 + 2 * pulse_delay,
-                    pi_time / 2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + 3.0 * pi_time / 2.0 + 2 * pulse_delay,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(0.0, 'deg'))
 
         self.end = self.start + 2.0 * pi_time + 3.0 * pulse_delay
 
 
-class spin_echo_pi_pulse_plus(pulse_sequence):
+class spin_echo_pi_pulse_plus(PulseSequence):
     """
     This is a spin echo corrective pulse sequence
     """
@@ -88,45 +88,45 @@ class spin_echo_pi_pulse_plus(pulse_sequence):
         pulse_delay = U(10.0, 'us')
 
         # Pi/2 around X
-        self.addTTL('MicrowaveTTL',
-                    self.start + pulse_delay,
-                    pi_time / 2.0)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pulse_delay,
+                     pi_time / 2.0)
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time / 2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(0.0, 'deg'))
 
         # Pi around Y
-        self.addTTL('MicrowaveTTL',
-                    self.start + pi_time / 2.0 + 2 * pulse_delay,
-                    pi_time)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pi_time / 2.0 + 2 * pulse_delay,
+                     pi_time)
 
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time / 2.0 + pulse_delay,
-                    pi_time + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(90.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time / 2.0 + pulse_delay,
+                     pi_time + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(90.0, 'deg'))
 
         # Pi/2 around X
-        self.addTTL('MicrowaveTTL',
-                    self.start + 3.0 * pi_time / 2.0 + 3 * pulse_delay,
-                    pi_time / 2.0)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + 3.0 * pi_time / 2.0 + 3 * pulse_delay,
+                     pi_time / 2.0)
 
-        self.addDDS('Microwave_qubit',
-                    self.start + 3.0 * pi_time / 2.0 + 2 * pulse_delay,
-                    pi_time / 2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + 3.0 * pi_time / 2.0 + 2 * pulse_delay,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(0.0, 'deg'))
 
         self.end = self.start + 2.0 * pi_time + 3.0 * pulse_delay
 
 
-class spin_echo_pi_pulse_minus(pulse_sequence):
+class spin_echo_pi_pulse_minus(PulseSequence):
     """
     This is a spin echo corrective pulse sequence
     """
@@ -150,39 +150,39 @@ class spin_echo_pi_pulse_minus(pulse_sequence):
         pulse_delay = U(10.0, 'us')
 
         # Pi/2 around X
-        self.addTTL('MicrowaveTTL',
-                    self.start + pulse_delay,
-                    pi_time / 2.0)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pulse_delay,
+                     pi_time / 2.0)
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time / 2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(0.0, 'deg'))
 
         # Pi around Y
-        self.addTTL('MicrowaveTTL',
-                    self.start + pi_time / 2.0 + 2 * pulse_delay,
-                    pi_time)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pi_time / 2.0 + 2 * pulse_delay,
+                     pi_time)
 
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time / 2.0 + pulse_delay,
-                    pi_time + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(90.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time / 2.0 + pulse_delay,
+                     pi_time + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(90.0, 'deg'))
 
         # Pi/2 around X
-        self.addTTL('MicrowaveTTL',
-                    self.start + 3.0 * pi_time / 2.0 + 3 * pulse_delay,
-                    pi_time / 2.0)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + 3.0 * pi_time / 2.0 + 3 * pulse_delay,
+                     pi_time / 2.0)
 
-        self.addDDS('Microwave_qubit',
-                    self.start + 3.0 * pi_time / 2.0 + 2 * pulse_delay,
-                    pi_time / 2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + 3.0 * pi_time / 2.0 + 2 * pulse_delay,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(0.0, 'deg'))
 
         self.end = self.start + 2.0 * pi_time + 3.0 * pulse_delay

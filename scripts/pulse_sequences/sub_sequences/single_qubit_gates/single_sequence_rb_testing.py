@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class SingleSequenceRbTesting(pulse_sequence):
+class SingleSequenceRbTesting(PulseSequence):
 
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),
@@ -24,47 +24,47 @@ class SingleSequenceRbTesting(pulse_sequence):
         #self.addTTL('MicrowaveTTL',
         #            self.start + pulse_delay,
         #            pi_time)
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time + pulse_delay,
-                    DDS_freq,
-                    U(-46.0, 'dBm'),
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time + pulse_delay,
+                     DDS_freq,
+                     U(-46.0, 'dBm'),
+                     U(0.0, 'deg'))
 
         # Clifford y
-        self.addTTL('MicrowaveTTL',
-                    self.start + pulse_delay + pi_time + pulse_delay,
-                    pi_time / 2.0)
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time + pulse_delay,
-                    pi_time / 2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(90.0, 'deg'))
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pulse_delay + pi_time + pulse_delay,
+                     pi_time / 2.0)
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time + pulse_delay,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(90.0, 'deg'))
 
 
         # Pauli minus y
-        self.addTTL('MicrowaveTTL',
-                    self.start + pulse_delay + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay,
-                    pi_time)
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay,
-                    pi_time + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(270.0, 'deg'))
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pulse_delay + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay,
+                     pi_time)
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay,
+                     pi_time + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(270.0, 'deg'))
 
 
         #Clifford y
-        self.addTTL('MicrowaveTTL',
-                    self.start + pulse_delay + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
-                    pi_time / 2.0)
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
-                    pi_time / 2.0 + pulse_delay,
-                    DDS_freq,
-                    p.MicrowaveInterrogation.power,
-                    U(90.0, 'deg'))
+        self.add_ttl('MicrowaveTTL',
+                     self.start + pulse_delay + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
+                     pi_time / 2.0)
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
+                     pi_time / 2.0 + pulse_delay,
+                     DDS_freq,
+                     p.MicrowaveInterrogation.power,
+                     U(90.0, 'deg'))
 
         # Pauli minus y
         # self.addTTL('MicrowaveTTL',
@@ -80,12 +80,12 @@ class SingleSequenceRbTesting(pulse_sequence):
         # self.end = self.start + (3 * pi_time) + (2 * (pi_time / 2.0)) + (pulse_delay * 5)
 
         # Pauli Identity
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay  + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
-                    pi_time + pulse_delay,
-                    DDS_freq,
-                    U(-46.0, 'dBm'),
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
+                     pi_time + pulse_delay,
+                     DDS_freq,
+                     U(-46.0, 'dBm'),
+                     U(0.0, 'deg'))
 
         self.end = self.start + (3 * pi_time) + (2 * (pi_time / 2.0)) + (pulse_delay * 5)
 

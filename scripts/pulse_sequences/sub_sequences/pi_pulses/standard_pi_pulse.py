@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class StandardPiPulseClock(pulse_sequence):
+class StandardPiPulseClock(PulseSequence):
     # this is a general microwave square pulse sequence where the different qubit lines
     # can be selected
 
@@ -25,21 +25,21 @@ class StandardPiPulseClock(pulse_sequence):
         DDS_0 = p.ddsDefaults.qubit_dds_freq - p.Transitions.qubit_0
         ttl_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
-        self.addTTL('MicrowaveTTL',
-                    self.start + ttl_delay,
-                    pi_time_0)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + ttl_delay,
+                     pi_time_0)
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time_0 + ttl_delay,
-                    DDS_0,
-                    p.MicrowaveInterrogation.power,
-                    p.MicrowaveInterrogation.microwave_phase)
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time_0 + ttl_delay,
+                     DDS_0,
+                     p.MicrowaveInterrogation.power,
+                     p.MicrowaveInterrogation.microwave_phase)
 
         self.end = self.start + pi_time_0 + ttl_delay
 
 
-class standard_pi_pulse_plus(pulse_sequence):
+class standard_pi_pulse_plus(PulseSequence):
     # this is a general microwave square pulse sequence where the different qubit lines
     # can be selected
 
@@ -62,21 +62,21 @@ class standard_pi_pulse_plus(pulse_sequence):
         DDS_plus = p.ddsDefaults.qubit_dds_freq - p.Transitions.qubit_plus
         ttl_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
-        self.addTTL('MicrowaveTTL',
-                    self.start + ttl_delay,
-                    pi_time_plus)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + ttl_delay,
+                     pi_time_plus)
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time_plus + ttl_delay,
-                    DDS_plus,
-                    p.MicrowaveInterrogation.power,
-                    U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time_plus + ttl_delay,
+                     DDS_plus,
+                     p.MicrowaveInterrogation.power,
+                     U(0.0, 'deg'))
 
         self.end = self.start + pi_time_plus + ttl_delay
 
 
-class standard_pi_pulse_minus(pulse_sequence):
+class standard_pi_pulse_minus(PulseSequence):
     # this is a general microwave square pulse sequence where the different qubit lines
     # can be selected
 
@@ -99,15 +99,15 @@ class standard_pi_pulse_minus(pulse_sequence):
         DDS_minus = p.ddsDefaults.qubit_dds_freq - p.Transitions.qubit_minus
         ttl_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
-        self.addTTL('MicrowaveTTL',
-                    self.start + ttl_delay,
-                    pi_time_minus)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + ttl_delay,
+                     pi_time_minus)
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time_minus + ttl_delay,
-                    DDS_minus,
-                    p.MicrowaveInterrogation.power,
-                    p.MicrowaveInterrogation.microwave_phase)
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time_minus + ttl_delay,
+                     DDS_minus,
+                     p.MicrowaveInterrogation.power,
+                     p.MicrowaveInterrogation.microwave_phase)
 
         self.end = self.start + pi_time_minus + ttl_delay

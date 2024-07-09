@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class KnillSequenceMinus(pulse_sequence):
+class KnillSequenceMinus(PulseSequence):
     """
     This is a fixed Pi-pulse subsequence
     """
@@ -24,34 +24,34 @@ class KnillSequenceMinus(pulse_sequence):
         pi_time = p.Pi_times.qubit_minus
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterogation.detuning + center)
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    pi_time,
-                    DDS_freq,
-                    p.MicrowaveInterogation.power,
-                    U(30.0, 'deg'))
-        self.addDDS('Microwave_qubit',
-                    self.start + pi_time,
-                    pi_time,
-                    DDS_freq,
-                    p.MicrowaveInterogation.power,
-                    U(0.0, 'deg'))
-        self.addDDS('Microwave_qubit',
-                    self.start + 2*pi_time,
-                    pi_time,
-                    DDS_freq,
-                    p.MicrowaveInterogation.power,
-                    U(90.0, 'deg'))
-        self.addDDS('Microwave_qubit',
-                    self.start + 3*pi_time,
-                    pi_time,
-                    DDS_freq,
-                    p.MicrowaveInterogation.power,
-                    U(0.0, 'deg'))
-        self.addDDS('Microwave_qubit',
-                    self.start + 4*pi_time,
-                    pi_time,
-                    DDS_freq,
-                    p.MicrowaveInterogation.power,
-                    U(30.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     pi_time,
+                     DDS_freq,
+                     p.MicrowaveInterogation.power,
+                     U(30.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + pi_time,
+                     pi_time,
+                     DDS_freq,
+                     p.MicrowaveInterogation.power,
+                     U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + 2 * pi_time,
+                     pi_time,
+                     DDS_freq,
+                     p.MicrowaveInterogation.power,
+                     U(90.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + 3 * pi_time,
+                     pi_time,
+                     DDS_freq,
+                     p.MicrowaveInterogation.power,
+                     U(0.0, 'deg'))
+        self.add_dds('Microwave_qubit',
+                     self.start + 4 * pi_time,
+                     pi_time,
+                     DDS_freq,
+                     p.MicrowaveInterogation.power,
+                     U(30.0, 'deg'))
         self.end = self.start + 5*pi_time

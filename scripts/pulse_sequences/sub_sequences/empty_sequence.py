@@ -1,7 +1,7 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 
-class EmptySequence(pulse_sequence):
+class EmptySequence(PulseSequence):
 
     required_parameters = [('EmptySequence', 'duration')]
 

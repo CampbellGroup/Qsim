@@ -1,4 +1,4 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
 from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state_detection import MetastableStateDetection
@@ -11,7 +11,7 @@ from Qsim.scripts.pulse_sequences.sub_sequences.heralded_four_preparation import
 from Qsim.scripts.pulse_sequences.sub_sequences.metastable_measurement_driven_rabi import MetastableMeasurementDrivenRabi
 
 
-class MetastableMeasurementDrivenRabiPoint(pulse_sequence):
+class MetastableMeasurementDrivenRabiPoint(PulseSequence):
 
     required_subsequences = [
         TurnOffAll,
@@ -35,12 +35,12 @@ class MetastableMeasurementDrivenRabiPoint(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addSequence(TurnOffAll)
-        self.addSequence(ShelvingDopplerCooling)  # readout counts call 1
-        self.addSequence(OpticalPumping)
-        self.addSequence(Shelving)
-        self.addSequence(HeraldedFourPreparation)  # readout counts call 2
-        self.addSequence(MetastableMeasurementDrivenRabi)
-        self.addSequence(ShelvingStateDetection)  # readout counts call 3
-        self.addSequence(MetastableStateDetection)  # readout counts call 4
-        self.addSequence(Deshelving)
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(ShelvingDopplerCooling)  # readout counts call 1
+        self.add_sequence(OpticalPumping)
+        self.add_sequence(Shelving)
+        self.add_sequence(HeraldedFourPreparation)  # readout counts call 2
+        self.add_sequence(MetastableMeasurementDrivenRabi)
+        self.add_sequence(ShelvingStateDetection)  # readout counts call 3
+        self.add_sequence(MetastableStateDetection)  # readout counts call 4
+        self.add_sequence(Deshelving)

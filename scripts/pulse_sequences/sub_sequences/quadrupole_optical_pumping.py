@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class OpticalPumping(pulse_sequence):
+class OpticalPumping(PulseSequence):
 
     required_parameters = [
         ('QuadrupoleOpticalPumping', 'duration'),
@@ -31,29 +31,29 @@ class OpticalPumping(pulse_sequence):
     def sequence(self):
         p = self.parameters
 
-        self.addDDS('935SP',
-                    self.start,
-                    p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time,
-                    p.ddsDefaults.repump_935_freq,
-                    p.QuadrupoleOpticalPumping.repump_power)
-        self.addDDS('760SP',
-                    self.start,
-                    p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time,
-                    p.ddsDefaults.repump_760_1_freq,
-                    p.ddsDefaults.repump_760_1_power)
-        self.addDDS('760SP2',
-                    self.start,
-                    p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time,
-                    p.ddsDefaults.repump_760_2_freq,
-                    p.ddsDefaults.repump_760_2_power)
-        self.addDDS('411DP2',
-                    self.start,
-                    p.QuadrupoleOpticalPumping.duration,
-                    p.ddsDefaults.DP2_411_freq,
-                    p.ddsDefaults.DP2_411_power)
-        self.addDDS('976SP',
-                    self.start,
-                    p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time,
-                    p.ddsDefaults.repump_976_freq,
-                    p.ddsDefaults.repump_976_power)
+        self.add_dds('935SP',
+                     self.start,
+                     p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time,
+                     p.ddsDefaults.repump_935_freq,
+                     p.QuadrupoleOpticalPumping.repump_power)
+        self.add_dds('760SP',
+                     self.start,
+                     p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time,
+                     p.ddsDefaults.repump_760_1_freq,
+                     p.ddsDefaults.repump_760_1_power)
+        self.add_dds('760SP2',
+                     self.start,
+                     p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time,
+                     p.ddsDefaults.repump_760_2_freq,
+                     p.ddsDefaults.repump_760_2_power)
+        self.add_dds('411DP2',
+                     self.start,
+                     p.QuadrupoleOpticalPumping.duration,
+                     p.ddsDefaults.DP2_411_freq,
+                     p.ddsDefaults.DP2_411_power)
+        self.add_dds('976SP',
+                     self.start,
+                     p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time,
+                     p.ddsDefaults.repump_976_freq,
+                     p.ddsDefaults.repump_976_power)
         self.end = self.start + p.QuadrupoleOpticalPumping.duration + p.QuadrupoleOpticalPumping.extra_repump_time

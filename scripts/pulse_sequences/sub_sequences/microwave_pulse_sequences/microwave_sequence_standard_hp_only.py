@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class MicrowaveSequenceStandardHpOnly(pulse_sequence):
+class MicrowaveSequenceStandardHpOnly(PulseSequence):
     # this sequence is for when we use the DDS as a reference for the HP and
     # want to keep it on at all times, we will not change the oscillator frequency
 
@@ -21,8 +21,8 @@ class MicrowaveSequenceStandardHpOnly(pulse_sequence):
         # then turn back on for the next pi pulse
 
         buffer_time = U(2000.0, 'us')
-        self.addTTL('MicrowaveTTL',
-                    self.start + buffer_time,
-                    p.MicrowaveInterrogation.duration)
+        self.add_ttl('MicrowaveTTL',
+                     self.start + buffer_time,
+                     p.MicrowaveInterrogation.duration)
 
         self.end = self.start + p.MicrowaveInterrogation.duration + buffer_time

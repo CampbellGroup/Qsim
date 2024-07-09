@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class MetastableMicrowaveInterrogation173(pulse_sequence):
+class MetastableMicrowaveInterrogation173(PulseSequence):
 
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
@@ -22,21 +22,21 @@ class MetastableMicrowaveInterrogation173(pulse_sequence):
         DDS_freq = p.ddsDefaults.metastable_qubit_173_dds_freq + (
                     p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
 
-        self.addDDS('3GHz_qubit',
-                    self.start,
-                    p.Metastable_Microwave_Interrogation.duration,
-                    DDS_freq,
-                    p.ddsDefaults.metastable_qubit_173_dds_power)
-        self.addTTL('WindfreakSynthHDTTL',
-                    self.start,
-                    p.Metastable_Microwave_Interrogation.duration)
-        self.addTTL('WindfreakSynthNVTTL',
-                    self.start,
-                    p.Metastable_Microwave_Interrogation.duration)
+        self.add_dds('3GHz_qubit',
+                     self.start,
+                     p.Metastable_Microwave_Interrogation.duration,
+                     DDS_freq,
+                     p.ddsDefaults.metastable_qubit_173_dds_power)
+        self.add_ttl('WindfreakSynthHDTTL',
+                     self.start,
+                     p.Metastable_Microwave_Interrogation.duration)
+        self.add_ttl('WindfreakSynthNVTTL',
+                     self.start,
+                     p.Metastable_Microwave_Interrogation.duration)
         self.end = self.start + p.Metastable_Microwave_Interrogation.duration
 
 
-class SweptMetastableMicrowaveInterrogation173(pulse_sequence):
+class SweptMetastableMicrowaveInterrogation173(PulseSequence):
 
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
@@ -58,17 +58,17 @@ class SweptMetastableMicrowaveInterrogation173(pulse_sequence):
                     p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
         ramp_rate = U(p.Metastable_Microwave_Interrogation.ramp_width['MHz'] / p.Metastable_Microwave_Interrogation.duration['ms'], 'MHz')
 
-        self.addDDS('3GHz_qubit',
-                    self.start,
-                    p.Metastable_Microwave_Interrogation.duration,
-                    DDS_freq,
-                    p.ddsDefaults.metastable_qubit_173_dds_power,
-                    U(0.0, 'deg'),
-                    ramp_rate)
-        self.addTTL('WindfreakSynthHDTTL',
-                    self.start,
-                    p.Metastable_Microwave_Interrogation.duration)
-        self.addTTL('WindfreakSynthNVTTL',
-                    self.start,
-                    p.Metastable_Microwave_Interrogation.duration)
+        self.add_dds('3GHz_qubit',
+                     self.start,
+                     p.Metastable_Microwave_Interrogation.duration,
+                     DDS_freq,
+                     p.ddsDefaults.metastable_qubit_173_dds_power,
+                     U(0.0, 'deg'),
+                     ramp_rate)
+        self.add_ttl('WindfreakSynthHDTTL',
+                     self.start,
+                     p.Metastable_Microwave_Interrogation.duration)
+        self.add_ttl('WindfreakSynthNVTTL',
+                     self.start,
+                     p.Metastable_Microwave_Interrogation.duration)
         self.end = self.start + p.Metastable_Microwave_Interrogation.duration
