@@ -3,7 +3,9 @@ from twisted.internet.defer import inlineCallbacks
 from PyQt5.QtWidgets import *
 from config.dac_ad660_config import HardwareConfiguration as HC
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 class Electrode:
 
@@ -72,7 +74,7 @@ class DACClient(QFrame):
             # noinspection PyUnresolvedReferences
             # electrode.spinBox.spinLevel.setValue(self.init_voltages[channel.name])
             electrode.spinBox.spinLevel.valueChanged.connect(lambda value=electrode.spinBox.spinLevel.value(),
-                                                             elec=electrode: self.update_dac(value, elec))
+                                                                    elec=electrode: self.update_dac(value, elec))
         self.setLayout(layout)
 
     @inlineCallbacks
@@ -90,8 +92,10 @@ class DACClient(QFrame):
 if __name__ == "__main__":
     a = QApplication([])
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
+
     dacWidget = DACClient(reactor)
     dacWidget.show()
     # noinspection PyUnresolvedReferences

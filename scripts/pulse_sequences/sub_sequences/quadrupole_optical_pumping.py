@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class OpticalPumping(PulseSequence):
-
     required_parameters = [
         ('QuadrupoleOpticalPumping', 'duration'),
         ('QuadrupoleOpticalPumping', 'power'),

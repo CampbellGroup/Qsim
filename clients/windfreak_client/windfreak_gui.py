@@ -158,7 +158,7 @@ class QCustomWindfreakGui(QFrame):
 
         layout = QGridLayout()
         qBox = QGroupBox('Windfreak SynthHD')
-#        sublayout = QHBoxLayout()
+        #        sublayout = QHBoxLayout()
         sublayout = QGridLayout()
         self.a = QCustomWindfreakSubGui(title="Channel A")
         self.b = QCustomWindfreakSubGui(title="Channel B")

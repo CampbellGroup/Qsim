@@ -51,17 +51,21 @@ class cal_toggle_switch(QtGui.QWidget):
             yield self.server.set_switcher_mode(False)
             yield self.server.set_active_channel(9)
         else:
-            yield self.server.set_active_channel(1) # this is because the wavemeter has a bug if switched when in cal mode
+            # this is because the wavemeter has a bug if switched when in cal mode
+            yield self.server.set_active_channel(1)
             yield self.server.set_switcher_mode(True)
 
     def closeEvent(self, x):
         self.reactor.stop()
 
+
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
+
     qt4reactor.install()
     from twisted.internet import reactor
+
     cal_toggle_Widget = cal_toggle_switch(reactor)
     cal_toggle_Widget.show()
     reactor.run()

@@ -13,7 +13,7 @@ class MicrowaveSequenceStandardHpOnly(PulseSequence):
         ('Transitions', 'qubit_plus'),
         ('Transitions', 'qubit_minus'),
         ('ddsDefaults', 'qubit_dds_freq')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters

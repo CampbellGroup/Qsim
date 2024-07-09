@@ -25,7 +25,6 @@ dev_name = '/dev/usbtmc0'
 
 
 class DS1052E_Server(LabradServer):
-
     name = 'DS1052E Scope Server'
 
     def initServer(self):
@@ -39,7 +38,6 @@ class DS1052E_Server(LabradServer):
 
     @setting(13, chan='w', returns='s')
     def measureVPP(self, c, chan):
-
         self.write(':MEAS:SOUR CHAN' + str(chan))
         time.sleep(0.1)
         self.write(':MEAS:VPP? [CHAN' + str(chan) + ']')
@@ -53,6 +51,8 @@ class DS1052E_Server(LabradServer):
         data = os.read(self.device, 300)
         return data
 
+
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(DS1052E_Server())

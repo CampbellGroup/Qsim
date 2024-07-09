@@ -4,6 +4,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
 
+
 class TestCameraDetection(QsimExperiment):
     """
     test experiment to get EMCCD camera detection working
@@ -19,7 +20,6 @@ class TestCameraDetection(QsimExperiment):
         self.pulser = cxn.pulser
         self.context = context
         self.cam = cxn.andor_server
-        
 
     def run(self, cxn, context):
         # number of images to acquire and show on the GUI
@@ -45,7 +45,6 @@ class TestCameraDetection(QsimExperiment):
         init_trigger_mode = cam.get_trigger_mode()
         if init_trigger_mode != 'External':
             cam.set_trigger_mode('External')
-
 
 
 if __name__ == '__main__':

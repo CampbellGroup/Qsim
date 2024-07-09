@@ -13,8 +13,8 @@ from labrad.units import WithUnit
 import time
 import numpy as np
 
-class image_fluorescence(QsimExperiment):
 
+class image_fluorescence(QsimExperiment):
     name = 'Image_Fluorescence'
 
     exp_parameters = []
@@ -31,7 +31,6 @@ class image_fluorescence(QsimExperiment):
         self.cam = cxn.andor_server
         self.exposure = self.cam.get_exposure_time
 
-
     def run(self, cxn, context):
         elapsed = WithUnit(0.0, 's')
         self.setup_datavault('time', 'fluorescence')
@@ -41,10 +40,10 @@ class image_fluorescence(QsimExperiment):
         init_time = time.time()
         while elapsed <= self.p.images.measure_time:
             data = self.cam.get_most_recent_image()
-            data = data.sum()/float(len(data))
+            data = data.sum() / float(len(data))
             elapsed = WithUnit(time.time() - init_time, 's')
             self.dv.add(elapsed['s'], data)
-            should_break = self.update_progress(elapsed['s']/self.p.images.measure_time['s'])
+            should_break = self.update_progress(elapsed['s'] / self.p.images.measure_time['s'])
             if should_break:
                 break
 
@@ -56,12 +55,12 @@ class image_fluorescence(QsimExperiment):
         self.cam.start_live_display()
 
     def set_scannable_parameters(self):
-        center_y = self.p.images.image_center_x['pix'] #  switched for same reason
+        center_y = self.p.images.image_center_x['pix']  # switched for same reason
         center_x = self.p.images.image_center_y['pix']
         height = self.p.images.image_width['pix']
         width = self.p.images.image_height['pix']  # switched due to transpose of camera data
-        self.x_pixel_range = [int(center_x - width/2), int(center_x + width/2)] # rounds image size
-        self.y_pixel_range = [int(center_y - height/2), int(center_y + height/2)]
+        self.x_pixel_range = [int(center_x - width / 2), int(center_x + width / 2)]  # rounds image size
+        self.y_pixel_range = [int(center_y - height / 2), int(center_y + height / 2)]
         self.image_x_length = self.x_pixel_range[-1] - self.x_pixel_range[0] + 1
         self.image_y_length = self.y_pixel_range[-1] - self.y_pixel_range[0] + 1
         self.data_size = [self.image_x_length, self.image_y_length]
@@ -72,8 +71,8 @@ class image_fluorescence(QsimExperiment):
         self.cam.abort_acquisition()
         self.cam.set_image_region([1, 1, hor_min, hor_max, ver_min, ver_max])
         self.cam.start_live_display()
-        
-    
+
+
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner

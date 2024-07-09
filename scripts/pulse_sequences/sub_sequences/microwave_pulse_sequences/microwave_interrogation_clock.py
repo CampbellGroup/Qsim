@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class MicrowaveInterrogationClock(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),
         ('MicrowaveInterrogation', 'detuning'),

@@ -6,7 +6,6 @@ import numpy as np
 
 
 class OffResonantShelvingMeasurement(QsimExperiment):
-
     name = 'Off Resonant Shelving Measurement'
 
     exp_parameters = [

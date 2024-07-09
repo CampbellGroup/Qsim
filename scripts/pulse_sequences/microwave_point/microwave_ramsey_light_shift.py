@@ -8,12 +8,13 @@ from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPu
 from Qsim.scripts.pulse_sequences.sub_sequences.empty_sequence import EmptySequence
 from Qsim.scripts.pulse_sequences.sub_sequences.shelving import Shelving
 from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.ramsey_microwave_interrogation_532 import RamseyMicrowaveInterrogation_532
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.ramsey_microwave_interrogation import RamseyMicrowaveInterrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.ramsey_microwave_interrogation_532 import \
+    RamseyMicrowaveInterrogation_532
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.ramsey_microwave_interrogation import \
+    RamseyMicrowaveInterrogation
 
 
 class MicrowaveRamseyPoint532(PulseSequence):
-
     required_subsequences = [TurnOffAll, DopplerCooling,
                              ShelvingStateDetection,
                              Deshelving, StandardStateDetection,
@@ -22,9 +23,9 @@ class MicrowaveRamseyPoint532(PulseSequence):
                              RamseyMicrowaveInterrogation]
 
     required_parameters = [
-                          ('Modes', 'state_detection_mode'),
-                            ('LightShift', 'power')
-        ]
+        ('Modes', 'state_detection_mode'),
+        ('LightShift', 'power')
+    ]
 
     def sequence(self):
         mode = self.parameters.Modes.state_detection_mode

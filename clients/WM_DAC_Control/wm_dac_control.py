@@ -47,11 +47,14 @@ class wm_dac_control(QWidget):
     def closeEvent(self, x):
         self.reactor.stop()
 
+
 if __name__ == "__main__":
     a = QApplication([])
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
+
     Widget = wm_dac_control(reactor)
     Widget.show()
     reactor.run()

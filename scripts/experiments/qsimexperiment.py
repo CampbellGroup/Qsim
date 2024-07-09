@@ -10,7 +10,7 @@ class QsimExperiment(experiment):
         return cls.exp_parameters
 
     def __init__(self, name=None, required_parameters=None, cxn=None,
-                 min_progress=0.0, max_progress=100.0,):
+                 min_progress=0.0, max_progress=100.0, ):
 
         required_parameters = self.all_required_parameters()
         super(experiment, self).__init__(name, required_parameters)
@@ -83,7 +83,7 @@ class QsimExperiment(experiment):
             progress = 0.0
 
         should_stop = self.pause_or_stop()
-        self.sc.script_set_progress(self.ident, 100*progress)
+        self.sc.script_set_progress(self.ident, 100 * progress)
         return should_stop
 
     def get_scan_list(self, scan, units, shuffle=False):
@@ -122,7 +122,7 @@ class QsimExperiment(experiment):
             return
 
         # program pulser for a given number of runs of the experiment, and collect readout counts
-        for i in range(int(reps)/max_runs):
+        for i in range(int(reps) / max_runs):
             self.pulser.start_number(max_runs)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
@@ -200,7 +200,7 @@ class QsimExperiment(experiment):
             threshold = self.p.StandardStateDetection.state_readout_threshold
         else:
             return
-        prob = float(len(np.where(counts >= threshold)[0]))/float(len(counts))
+        prob = float(len(np.where(counts >= threshold)[0])) / float(len(counts))
         return prob
 
     def plot_hist(self, hist, folder_name='Histograms', create_new=True):
@@ -214,7 +214,7 @@ class QsimExperiment(experiment):
 
     def get_timeharp_timetags(self, measure_time, buffer_size=131072):
         self.timeharp.start_measure(measure_time)
-        time.sleep(measure_time/1000.)
+        time.sleep(measure_time / 1000.)
         data = self.timeharp.read_fifo(buffer_size)
         stamps = data[0]
         data_length = data[1]

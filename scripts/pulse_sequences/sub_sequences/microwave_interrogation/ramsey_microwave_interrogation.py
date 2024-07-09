@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class RamseyMicrowaveInterrogation(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'detuning'),
         ('MicrowaveInterrogation', 'power'),
@@ -24,7 +23,7 @@ class RamseyMicrowaveInterrogation(PulseSequence):
         ('Pi_times', 'qubit_0'),
         ('Pi_times', 'qubit_minus'),
         ('Pi_times', 'qubit_plus'),
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -81,7 +80,7 @@ class RamseyMicrowaveInterrogation(PulseSequence):
             self.end = self.start + pi_time + p.EmptySequence.duration + 2 * pulse_delay
 
         elif p.MicrowaveInterrogation.microwave_source == 'DDSx32':
-            DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center)/32.0
+            DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center) / 32.0
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
             self.add_ttl('MicrowaveTTL',

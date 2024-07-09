@@ -39,7 +39,7 @@ class QuadrupoleLineScan(QsimExperiment):
         self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_0
 
         for i, detuning in enumerate(self.detunings):
-            should_break = self.update_progress(i/float(len(self.detunings)))
+            should_break = self.update_progress(i / float(len(self.detunings)))
             if should_break:
                 break
             self.p['QuadrupoleInterrogation.detuning'] = U(detuning, 'kHz')
@@ -48,7 +48,7 @@ class QuadrupoleLineScan(QsimExperiment):
             pop = self.get_pop(counts)
             hist = self.process_data(counts)
             self.plot_hist(hist)
-            self.dv.add(detuning/1000. + center['MHz'], pop)
+            self.dv.add(detuning / 1000. + center['MHz'], pop)
 
     def finalize(self, cxn, context):
         self.pulser.line_trigger_state(False)

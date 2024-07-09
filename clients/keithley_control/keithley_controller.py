@@ -1,6 +1,8 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
+
+
 # from common.lib.clients.qtui.q_custom_text_changing_button import \
 #     TextChangingButton
 
@@ -26,7 +28,6 @@ class KeithleyClient(QtGui.QWidget):
         self.initializeGUI()
 
     def initializeGUI(self):
-
         layout = QtGui.QGridLayout()
 
         self.setWindowTitle('keithley Control')
@@ -59,8 +60,10 @@ class KeithleyClient(QtGui.QWidget):
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
+
     qt4reactor.install()
     from twisted.internet import reactor
+
     keithleyWidget = KeithleyClient(reactor)
     keithleyWidget.show()
     run = reactor.run()

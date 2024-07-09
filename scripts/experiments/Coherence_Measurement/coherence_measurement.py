@@ -43,14 +43,16 @@ class CoherenceMeasurement(QsimExperiment):
         self.setup_grapher('Microwave Ramsey Experiment')
         self.dark_time = self.get_scan_list(self.p.CoherenceMeasurement.delay_times, 'ms')
         for i, dark_time in enumerate(self.dark_time):
-            should_break = self.update_progress(i/float(len(self.dark_time)))
+            should_break = self.update_progress(i / float(len(self.dark_time)))
             if should_break:
                 break
             self.p['EmptySequence.duration'] = U(dark_time, 'ms')
             self.program_pulser(sequence)
             if mode == 'Shelving':
                 [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
-                self.dv.add(np.column_stack((np.arange(len(doppler_counts)), np.array(detection_counts), np.array(doppler_counts))), context=self.counts_context)
+                self.dv.add(np.column_stack(
+                    (np.arange(len(doppler_counts)), np.array(detection_counts), np.array(doppler_counts))),
+                            context=self.counts_context)
                 errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                 counts = np.delete(detection_counts, errors)
             else:
@@ -67,7 +69,8 @@ class CoherenceMeasurement(QsimExperiment):
         self.dv.cd(['coherence_measurement', 'shelving_counts'], True, context=self.counts_context)
 
         self.coherence_counts_dataset = self.dv.new('counts', [('run', 'arb')],
-                                                    [('counts', 'detection_counts', 'num'), ('counts', 'doppler_counts', 'num')],
+                                                    [('counts', 'detection_counts', 'num'),
+                                                     ('counts', 'doppler_counts', 'num')],
                                                     context=self.counts_context)
 
         for parameter in self.p:

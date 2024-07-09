@@ -1,6 +1,6 @@
-
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as sequence
+
 
 class QsimPulseExperiment(QsimExperiment):
     """
@@ -23,9 +23,9 @@ class QsimPulseExperiment(QsimExperiment):
     def run(self, cxn, context):
 
         self.setup_prob_datavault()
-        i=0
+        i = 0
         while True:
-            i+=1
+            i += 1
             counts = self.program_pulser()
             hist = self.process_data(counts)
             if i % 10 == 0:
@@ -50,12 +50,11 @@ class QsimPulseExperiment(QsimExperiment):
         return counts
 
     def setup_hist_datavault(self):
-        self.dv.cd(['','pulse_runner', sequence.__name__ + 'hist'], True, context=self.hist_ctx)
+        self.dv.cd(['', 'pulse_runner', sequence.__name__ + 'hist'], True, context=self.hist_ctx)
         self.dataset_hist = self.dv.new(sequence.__name__, [('run', 'arb u')],
-                                        [('Counts', 'Counts', 'num')], context = self.hist_ctx)
+                                        [('Counts', 'Counts', 'num')], context=self.hist_ctx)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.hist_ctx)
-
 
     def setup_prob_datavault(self):
         self.dv.cd(['', 'pulse_runner', sequence.__name__ + 'prob'], True, context=self.prob_ctx)
@@ -63,7 +62,7 @@ class QsimPulseExperiment(QsimExperiment):
                                         [('Counts', 'Counts', 'num')], context=self.prob_ctx)
         self.rsg.plot(self.dataset_prob, 'Fidelity', False)
         for parameter in self.p:
-            self.dv.add_parameter(parameter, self.p[parameter], context = self.prob_ctx)
+            self.dv.add_parameter(parameter, self.p[parameter], context=self.prob_ctx)
 
     def process_data(self, counts):
         data = np.column_stack((np.arange(self.p.StateDetection.repetitions), counts))
@@ -81,8 +80,8 @@ class QsimPulseExperiment(QsimExperiment):
 
     def plot_prob(self, num, counts):
         self.thresholdVal = self.p.StateDetection.state_readout_threshold
-        prob = len(np.where(counts > self.thresholdVal)[0])/float(len(counts))
-        self.dv.add(num, prob, context = self.prob_ctx)
+        prob = len(np.where(counts > self.thresholdVal)[0]) / float(len(counts))
+        self.dv.add(num, prob, context=self.prob_ctx)
 
     def finalize(self, cxn, context):
         self.pmt.set_mode(self.init_mode)

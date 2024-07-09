@@ -37,7 +37,6 @@ class multipole_monitor(LabradServer):
         self.time = 0
         connected = self.connect()
 
-
     @inlineCallbacks
     def connect(self):
         """
@@ -48,8 +47,8 @@ class multipole_monitor(LabradServer):
         # connect to multipole server and datavault computers
 
         self.cxn = yield connectAsync('10.97.112.4',
-                                       name=self.name,
-                                       password=self.password)
+                                      name=self.name,
+                                      password=self.password)
         # connect to servers
         self.server = yield self.cxn.multipole_server()
 
@@ -74,16 +73,18 @@ class multipole_monitor(LabradServer):
 
         # yield self.dv.add(self.time, mps[0], mps[1], mps[2], mps[3], mps[4], mps[5], mps[6], mps[7])
 
-
     @inlineCallbacks
     def setup_datavault(self, x_axis, y_axis):
         """
         adds parameters to datavault and parameter vault, define contexts for each laser
         """
         yield self.dv.cd(['', self.name], True)
-        self.dataset = yield self.dv.new(self.name, [( 't', 'num')], [('Ex', '', 'num')], [('Ey', '', 'num')], [('Ez', '', 'num')], [('M1', '', 'num')], [('M2', '', 'num')], [('M3', '', 'num')], [('M4', '', 'num')], [('M5', '', 'num')])
+        self.dataset = yield self.dv.new(self.name, [('t', 'num')], [('Ex', '', 'num')], [('Ey', '', 'num')],
+                                         [('Ez', '', 'num')], [('M1', '', 'num')], [('M2', '', 'num')],
+                                         [('M3', '', 'num')], [('M4', '', 'num')], [('M5', '', 'num')])
 
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(multipole_monitor())

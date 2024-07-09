@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class SFDiscriminationDetection(PulseSequence):
-
     required_parameters = [
         ('SF_Discrimination', 'cooling_power'),
         ('DopplerCooling', 'repump_power'),
@@ -18,7 +17,7 @@ class SFDiscriminationDetection(PulseSequence):
         ('ddsDefaults', 'repump_760_2_freq'),
         ('ddsDefaults', 'repump_760_2_power'),
         ('ddsDefaults', 'DP369_freq'),
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters

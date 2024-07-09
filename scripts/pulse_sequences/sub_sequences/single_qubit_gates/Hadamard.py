@@ -19,7 +19,7 @@ class Hadamard(PulseSequence):
         ('Pi_times', 'qubit_plus'),
         ('Pi_times', 'qubit_minus'),
         ('ddsDefaults', 'qubit_dds_freq')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -51,4 +51,4 @@ class Hadamard(PulseSequence):
                      p.MicrowaveInterrogation.power,
                      p.MicrowaveInterrogation.microwave_phase)
 
-        self.end = self.start + pi_time/2.0 + pulse_delay
+        self.end = self.start + pi_time / 2.0 + pulse_delay

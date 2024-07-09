@@ -4,7 +4,6 @@ from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.clifford_minu
 
 
 class PauliMinusX(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),
         ('MicrowaveInterrogation', 'ttl_switch_delay'),
@@ -24,6 +23,7 @@ class PauliMinusX(PulseSequence):
         self.addSequence(clifford_minus_X)
         self.addSequence(clifford_minus_X)
     '''
+
     def sequence(self):
         p = self.parameters
 
@@ -44,10 +44,10 @@ class PauliMinusX(PulseSequence):
             self.end = self.start + pi_time + pulse_delay
 
         elif p.MicrowaveInterrogation.microwave_source == 'DDSx32':
-            DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + p.Transitions.qubit_0/32.0
+            DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + p.Transitions.qubit_0 / 32.0
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
             pi_time = p.Pi_times.qubit_0
-            phase = U(180.0, 'deg')/32.0 + p.MicrowaveInterrogation.overall_phase
+            phase = U(180.0, 'deg') / 32.0 + p.MicrowaveInterrogation.overall_phase
 
             self.add_ttl('MicrowaveTTL',
                          self.start + pulse_delay,

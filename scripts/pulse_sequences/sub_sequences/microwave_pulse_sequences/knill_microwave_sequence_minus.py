@@ -8,13 +8,13 @@ class KnillSequenceMinus(PulseSequence):
     """
 
     required_parameters = [
-                           ('MicrowaveInterogation', 'duration'),
-                           ('MicrowaveInterogation', 'detuning'),
-                           ('MicrowaveInterogation', 'power'),
-                           ('Transitions', 'qubit_minus'),
-                           ('Pi_times', 'qubit_minus'),
-                           ('ddsDefaults', 'qubit_dds_freq')
-                           ]
+        ('MicrowaveInterogation', 'duration'),
+        ('MicrowaveInterogation', 'detuning'),
+        ('MicrowaveInterogation', 'power'),
+        ('Transitions', 'qubit_minus'),
+        ('Pi_times', 'qubit_minus'),
+        ('ddsDefaults', 'qubit_dds_freq')
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -54,4 +54,4 @@ class KnillSequenceMinus(PulseSequence):
                      DDS_freq,
                      p.MicrowaveInterogation.power,
                      U(30.0, 'deg'))
-        self.end = self.start + 5*pi_time
+        self.end = self.start + 5 * pi_time

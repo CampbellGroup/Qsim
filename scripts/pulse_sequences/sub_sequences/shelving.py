@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class Shelving(PulseSequence):
-
     required_parameters = [
         ('Shelving', 'duration'),
         ('Modes', 'shelving'),

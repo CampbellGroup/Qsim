@@ -12,7 +12,6 @@ from .sub_sequences.metastable_measurement_driven_gate_delta_theta import Metast
 
 
 class MetastableMeasurementDrivenGate(PulseSequence):
-
     required_subsequences = [
         TurnOffAll,
         MetastableStateDetection,
@@ -23,14 +22,14 @@ class MetastableMeasurementDrivenGate(PulseSequence):
         HeraldedFourPreparation,
         MetastableMeasurementDrivenGateDeltaTheta,
         ShelvingStateDetection
-        ]
+    ]
 
     required_parameters = [
         ('MetastableMeasurementDrivenGate', 'total_num_sub_pulses'),
         ('MetastableMeasurementDrivenGate', 'current_pulse_index'),
         ('Pi_times', 'metastable_qubit'),
         ('Metastable_Microwave_Interrogation', 'duration')
-        ]
+    ]
 
     def sequence(self):
         p = self.parameters

@@ -5,7 +5,6 @@ from .sub_sequences.turn_off_all import TurnOffAll
 
 
 class InterleavedPoint(PulseSequence):
-
     required_subsequences = [TurnOffAll, DopplerCooling, DipoleInterrogation]
 
     def sequence(self):

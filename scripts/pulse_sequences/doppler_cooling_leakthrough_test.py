@@ -10,7 +10,6 @@ from .sub_sequences.double_pass_369 import DoublePass369
 
 
 class DopplerCoolingLeakthroughTest(PulseSequence):
-
     required_subsequences = [DopplerCooling, StandardStateDetection, OpticalPumping,
                              DopplerCooling, ShelvingStateDetection, Deshelving,
                              Shelving, ShelvingDopplerCooling, DoublePass369]
@@ -18,7 +17,7 @@ class DopplerCoolingLeakthroughTest(PulseSequence):
     required_parameters = [
         ('Modes', 'state_detection_mode'),
         ('EmptySequence', 'scan_empty_duration')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters

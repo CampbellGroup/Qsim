@@ -1,11 +1,11 @@
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point.metastable_measurement_driven_rabi_point import MetastableMeasurementDrivenRabiPoint as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.metastable_measurement_driven_rabi_point import \
+    MetastableMeasurementDrivenRabiPoint as sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 
 
 class MetastableMeasurementDrivenRabiFlop(QsimExperiment):
-
     name = 'Metastable Measurement Driven Rabi Flop'
 
     exp_parameters = []
@@ -29,7 +29,8 @@ class MetastableMeasurementDrivenRabiFlop(QsimExperiment):
 
             self.p['MetastableMeasurementDrivenGate.current_pulse_index'] = pulse_num
             self.program_pulser(sequence)
-            [doppler_counts, herald_counts, failed_gate_counts, detection_counts] = self.run_sequence(max_runs=250, num=4)
+            [doppler_counts, herald_counts, failed_gate_counts, detection_counts] = self.run_sequence(max_runs=250,
+                                                                                                      num=4)
 
             # work up the results to return a success and failure rate
             doppler_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
@@ -41,16 +42,16 @@ class MetastableMeasurementDrivenRabiFlop(QsimExperiment):
             detection_fixed = np.delete(detection_counts, all_errors)
 
             uW_time = pulse_num * self.p.Pi_times.metastable_qubit / self.p.MetastableMeasurementDrivenGate.total_num_sub_pulses
-            prob = len(np.where(detection_fixed >= self.p.ShelvingStateDetection.state_readout_threshold)[0])/float(len(detection_fixed))
-            self.dv.add(uW_time['us'], prob) #, float(len(detection_fixed)))
+            prob = len(np.where(detection_fixed >= self.p.ShelvingStateDetection.state_readout_threshold)[0]) / float(
+                len(detection_fixed))
+            self.dv.add(uW_time['us'], prob)  # , float(len(detection_fixed)))
             print('Number of experiments = ' + str(len(detection_fixed)))
             print('Microwave interrogation time = ' + str(uW_time) + ', probability = ' + str(prob))
-
 
     def finalize(self, cxn, context):
         pass
 
-    #def setup_datavault_rabi(self, x_axis, y_axis):
+    # def setup_datavault_rabi(self, x_axis, y_axis):
     #    self.counts_context = self.dv.context()
     #    self.dv.cd(['', self.name], True, context=self.counts_context)
     #    self.dataset = self.dv.new(self.name, [(x_axis, 'us')],

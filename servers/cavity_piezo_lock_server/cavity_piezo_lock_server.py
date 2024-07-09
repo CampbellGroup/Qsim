@@ -29,7 +29,6 @@ import time
 
 
 class cavity_piezo_lock_server(LabradServer):
-
     name = 'Cavity Piezo Lock Server'
 
     def initServer(self):
@@ -44,12 +43,11 @@ class cavity_piezo_lock_server(LabradServer):
         self.connect()
         self.lc = LoopingCall(self.loop)
 
-
     @inlineCallbacks
     def connect(self):
-        '''
+        """
         Creates asynchronous connection
-        '''
+        """
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync('10.97.112.4', name=self.name, password=self.password)
         self.wavemeter = self.cxn.multiplexerserver
@@ -66,10 +64,10 @@ class cavity_piezo_lock_server(LabradServer):
         init_voltage = yield self.piezo.get_voltage(self.chan)
         init_voltage = U(float(init_voltage), 'V')
         frequency_reading = yield self.wavemeter.get_frequency(1)
-        delta = (frequency_reading - self.set_point)*1e6  # want the frequency in MHz for convenience
+        delta = (frequency_reading - self.set_point) * 1e6  # want the frequency in MHz for convenience
 
         if time.time() < self.init_time + 2.0:
-            print self.set_point
+            print(self.set_point)
 
         if np.abs(delta) < 2.0:
             # dont do anything if within a certain range
@@ -82,7 +80,7 @@ class cavity_piezo_lock_server(LabradServer):
                 yield self.piezo.set_voltage(self.chan, set_voltage)
                 self.voltage_history.append([time.time() - self.init_time, set_voltage['V']])
             elif set_voltage > self.max_voltage:
-                print 'Maximum voltage exceeded'
+                print('Maximum voltage exceeded')
             time.sleep(self.sleep_time)
 
         elif (delta > 0.0) and (np.abs(delta) < 40.0):
@@ -92,7 +90,7 @@ class cavity_piezo_lock_server(LabradServer):
                 yield self.piezo.set_voltage(self.chan, set_voltage)
                 self.voltage_history.append([time.time() - self.init_time, set_voltage['V']])
             elif set_voltage > self.max_voltage:
-                print 'Maximum voltage exceeded'
+                print('Maximum voltage exceeded')
             time.sleep(self.sleep_time)
 
         elif delta > 40.0:
@@ -122,4 +120,5 @@ class cavity_piezo_lock_server(LabradServer):
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(cavity_piezo_lock_server())

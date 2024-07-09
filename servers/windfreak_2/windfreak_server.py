@@ -24,61 +24,61 @@ from twisted.internet.defer import inlineCallbacks, returnValue
 TIMEOUT = Value(5.0, 's')
 
 API = {
-        # name              type    write      read
-        'channel': (int, 'C{}\n', 'C?\n'),  # Select channel
-        'frequency': (float, 'f{:.8f}\n', 'f?\n'),  # Frequency in MHz
-        'power': (float, 'W{:.3f}\n', 'W?\n'),  # Power in dBm
-        'calibrated': (bool, None, 'V\n'),
-        'temp_comp_mode': (int, 'Z{}\n', 'Z?\n'),
-        'vga_dac': (int, 'a{}\n', 'a?\n'),  # VGA DAC value [0, 45000]
-        'phase_step': (float, '~{:.3f}\n', '~?\n'),  # Phase step in degrees
-        'rf_enable': (bool, 'h{}\n', 'h?\n'),
-        'pa_power_on': (bool, 'r{}\n', 'r?\n'),
-        'pll_power_on': (bool, 'E{}\n', 'E?\n'),
-        'model_type': (str, None, '+\n'),  # Model type
-        'serial_number': (int, None, '-\n'),  # Serial number
-        'fw_version': (str, None, 'v0\n'),  # Firmware version
-        'hw_version': (str, None, 'v1\n'),  # Hardware version
-        'sub_version': (str, None, 'v2\n'),  # Sub-version: "HD" or "HDPRO". Only Synth HD >= v2.
-        'save': ((), 'e', None),  # Program all settings to EEPROM
-        'reference_mode': (int, 'x{}\n', 'x?\n'),
-        'trig_function': (int, 'w{}\n', 'w?\n'),
-        'pll_lock': (bool, None, 'p\n'),
-        'temperature': (float, None, 'z\n'),  # Temperature in Celsius
-        'ref_frequency': (float, '*{:.8f}\n', '*?\n'),  # Reference frequency in MHz
+    # name              type    write      read
+    'channel': (int, 'C{}\n', 'C?\n'),  # Select channel
+    'frequency': (float, 'f{:.8f}\n', 'f?\n'),  # Frequency in MHz
+    'power': (float, 'W{:.3f}\n', 'W?\n'),  # Power in dBm
+    'calibrated': (bool, None, 'V\n'),
+    'temp_comp_mode': (int, 'Z{}\n', 'Z?\n'),
+    'vga_dac': (int, 'a{}\n', 'a?\n'),  # VGA DAC value [0, 45000]
+    'phase_step': (float, '~{:.3f}\n', '~?\n'),  # Phase step in degrees
+    'rf_enable': (bool, 'h{}\n', 'h?\n'),
+    'pa_power_on': (bool, 'r{}\n', 'r?\n'),
+    'pll_power_on': (bool, 'E{}\n', 'E?\n'),
+    'model_type': (str, None, '+\n'),  # Model type
+    'serial_number': (int, None, '-\n'),  # Serial number
+    'fw_version': (str, None, 'v0\n'),  # Firmware version
+    'hw_version': (str, None, 'v1\n'),  # Hardware version
+    'sub_version': (str, None, 'v2\n'),  # Sub-version: "HD" or "HDPRO". Only Synth HD >= v2.
+    'save': ((), 'e', None),  # Program all settings to EEPROM
+    'reference_mode': (int, 'x{}\n', 'x?\n'),
+    'trig_function': (int, 'w{}\n', 'w?\n'),
+    'pll_lock': (bool, None, 'p\n'),
+    'temperature': (float, None, 'z\n'),  # Temperature in Celsius
+    'ref_frequency': (float, '*{:.8f}\n', '*?\n'),  # Reference frequency in MHz
 
-        'sweep_freq_low': (float, 'l{:.8f}\n', 'l?\n'),  # Sweep lower frequency in MHz
-        'sweep_freq_high': (float, 'u{:.8f}\n', 'u?\n'),  # Sweep upper frequency in MHz
-        'sweep_freq_step': (float, 's{:.8f}\n', 's?\n'),  # Sweep frequency step in MHz
-        'sweep_time_step': (float, 't{:.3f}\n', 't?\n'),  # Sweep time step in [4, 10000] ms
-        'sweep_power_low': (float, '[{:.3f}\n', '[?\n'),  # Sweep lower power [-60, +20] dBm
-        'sweep_power_high': (float, ']{:.3f}\n', ']?\n'),  # Sweep upper power [-60, +20] dBm
-        'sweep_direction': (int, '^{}\n', '^?\n'),  # Sweep direction
-        'sweep_diff_freq': (float, 'k{:.8f}\n', 'k?\n'),  # Sweep differential frequency in MHz
-        'sweep_diff_meth': (int, 'n{}\n', 'n?\n'),  # Sweep differential method
-        'sweep_type': (int, 'X{}\n', 'X?\n'),  # Sweep type {0: linear, 1: tabular}
-        'sweep_single': (bool, 'g{}\n', 'g?\n'),
-        'sweep_cont': (bool, 'c{}\n', 'c?\n'),
+    'sweep_freq_low': (float, 'l{:.8f}\n', 'l?\n'),  # Sweep lower frequency in MHz
+    'sweep_freq_high': (float, 'u{:.8f}\n', 'u?\n'),  # Sweep upper frequency in MHz
+    'sweep_freq_step': (float, 's{:.8f}\n', 's?\n'),  # Sweep frequency step in MHz
+    'sweep_time_step': (float, 't{:.3f}\n', 't?\n'),  # Sweep time step in [4, 10000] ms
+    'sweep_power_low': (float, '[{:.3f}\n', '[?\n'),  # Sweep lower power [-60, +20] dBm
+    'sweep_power_high': (float, ']{:.3f}\n', ']?\n'),  # Sweep upper power [-60, +20] dBm
+    'sweep_direction': (int, '^{}\n', '^?\n'),  # Sweep direction
+    'sweep_diff_freq': (float, 'k{:.8f}\n', 'k?\n'),  # Sweep differential frequency in MHz
+    'sweep_diff_meth': (int, 'n{}\n', 'n?\n'),  # Sweep differential method
+    'sweep_type': (int, 'X{}\n', 'X?\n'),  # Sweep type {0: linear, 1: tabular}
+    'sweep_single': (bool, 'g{}\n', 'g?\n'),
+    'sweep_cont': (bool, 'c{}\n', 'c?\n'),
 
-        'am_time_step': (int, 'F{}\n', 'F?\n'),  # Time step in microseconds
-        'am_num_samples': (int, 'q{}\n', 'q?\n'),  # Number of samples in one burst
-        'am_cont': (bool, 'A{}\n', 'A?\n'),  # Enable continuous AM modulation
-        'am_lookup_table': ((int, float), '@{}a{:.3f}\n', '@{}a?\n'),  # Program row in lookup table in dBm
+    'am_time_step': (int, 'F{}\n', 'F?\n'),  # Time step in microseconds
+    'am_num_samples': (int, 'q{}\n', 'q?\n'),  # Number of samples in one burst
+    'am_cont': (bool, 'A{}\n', 'A?\n'),  # Enable continuous AM modulation
+    'am_lookup_table': ((int, float), '@{}a{:.3f}\n', '@{}a?\n'),  # Program row in lookup table in dBm
 
-        'pulse_on_time': (int, 'P{}\n', 'P?\n'),  # Pulse on time in range [1, 10e6] us
-        'pulse_off_time': (int, 'O{}\n', 'O?\n'),  # Pulse off time in range [2, 10e6] uS
-        'pulse_num_rep': (int, 'R{}\n', 'R?\n'),  # Number of repetitions in range [1, 65500]
-        'pulse_invert': (bool, ':{}\n', ':?\n'),  # Invert pulse polarity
-        'pulse_single': ((), 'G\n', None),
-        'pulse_cont': (bool, 'j{}\n', 'j?\n'),
-        'dual_pulse_mod': (bool, 'D{}\n', 'D?\n'),
+    'pulse_on_time': (int, 'P{}\n', 'P?\n'),  # Pulse on time in range [1, 10e6] us
+    'pulse_off_time': (int, 'O{}\n', 'O?\n'),  # Pulse off time in range [2, 10e6] uS
+    'pulse_num_rep': (int, 'R{}\n', 'R?\n'),  # Number of repetitions in range [1, 65500]
+    'pulse_invert': (bool, ':{}\n', ':?\n'),  # Invert pulse polarity
+    'pulse_single': ((), 'G\n', None),
+    'pulse_cont': (bool, 'j{}\n', 'j?\n'),
+    'dual_pulse_mod': (bool, 'D{}\n', 'D?\n'),
 
-        'fm_frequency': (int, '<{}\n', '<?\n'),
-        'fm_deviation': (int, '>{}\n', '>?\n'),
-        'fm_num_samples': (int, ',{}\n', ',?\n'),
-        'fm_mod_type': (int, ';{}\n', ';?\n'),
-        'fm_cont': (bool, '/{}\n', '/?\n'),
-    }
+    'fm_frequency': (int, '<{}\n', '<?\n'),
+    'fm_deviation': (int, '>{}\n', '>?\n'),
+    'fm_num_samples': (int, ',{}\n', ',?\n'),
+    'fm_mod_type': (int, ';{}\n', ';?\n'),
+    'fm_cont': (bool, '/{}\n', '/?\n'),
+}
 
 trigger_modes = (
     'disabled',
@@ -105,7 +105,7 @@ class windfreak_wrapper(DeviceWrapper):
     @inlineCallbacks
     def connect(self, server, port):
         """Connect to a Windfreak Device."""
-        print('connecting to "%s" on port "%s"...' % (server.name, port),)
+        print('connecting to "%s" on port "%s"...' % (server.name, port), )
         self.server = server
         self.ctx = server.context()
         self.port = port

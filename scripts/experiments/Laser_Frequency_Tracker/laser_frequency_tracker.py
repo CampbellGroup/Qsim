@@ -25,7 +25,8 @@ class LaserFrequencyTracker(QsimExperiment):
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
-        self.cxnwlm = labrad.connect('10.97.112.2', name=socket.gethostname() + " Laser Monitor", password=os.environ['LABRADPASSWORD'])
+        self.cxnwlm = labrad.connect('10.97.112.2', name=socket.gethostname() + " Laser Monitor",
+                                     password=os.environ['LABRADPASSWORD'])
         # self.cxn369 = labrad.connect('10.97.112.4', name=socket.gethostname() + " Laser Monitor", password=os.environ['LABRADPASSWORD'])
         self.wlm = self.cxnwlm.multiplexerserver
         # self.wlm369 = self.cxn369.multiplexerserver
@@ -84,24 +85,25 @@ class LaserFrequencyTracker(QsimExperiment):
             # try to add the data to datavault in MHz
             try:
                 if self.p.LaserMonitor.laser == 'shelving lasers':
-                    self.dv.add(time.time()-self.inittime, 1e6*(freq_760_1-self.initfreq_760_1),
-                                1e6*(freq_760_2-self.initfreq_760_2), 1e6*(freq_822-self.initfreq_822), context=self.shelving_laser_context)
+                    self.dv.add(time.time() - self.inittime, 1e6 * (freq_760_1 - self.initfreq_760_1),
+                                1e6 * (freq_760_2 - self.initfreq_760_2), 1e6 * (freq_822 - self.initfreq_822),
+                                context=self.shelving_laser_context)
                 else:
-                    self.dv.add(time.time() - self.inittime, 1e6*(freq - self.initfreq))
+                    self.dv.add(time.time() - self.inittime, 1e6 * (freq - self.initfreq))
             except:
                 pass
 
-            progress = float(time.time() - self.inittime)/self.p.LaserMonitor.measure_time['s']
+            progress = float(time.time() - self.inittime) / self.p.LaserMonitor.measure_time['s']
             self.sc.script_set_progress(self.ident, progress)
 
     def setup_datavault(self, x_axis, y_axis):
         if self.p.LaserMonitor.laser == 'shelving lasers':
 
             self.shelving_laser_context = self.dv.context()
-            self.dv.cd(['', self.name+'_shelving_lasers'], True, context=self.shelving_laser_context)
+            self.dv.cd(['', self.name + '_shelving_lasers'], True, context=self.shelving_laser_context)
             self.dataset = self.dv.new(self.name + '_shelving_lasers', [(x_axis, 'num')],
-                                            [(y_axis, '760_1', 'num'), (y_axis, '760_2', 'num'), (y_axis, '822', 'num')], 
-                                            context=self.shelving_laser_context)
+                                       [(y_axis, '760_1', 'num'), (y_axis, '760_2', 'num'), (y_axis, '822', 'num')],
+                                       context=self.shelving_laser_context)
             for parameter in self.p:
                 self.dv.add_parameter(parameter, self.p[parameter], context=self.shelving_laser_context)
 
@@ -111,7 +113,6 @@ class LaserFrequencyTracker(QsimExperiment):
     def finalize(self, cxn, context):
         self.cxnwlm.disconnect()
         # self.cxn369.disconnect()
-
 
 
 if __name__ == '__main__':

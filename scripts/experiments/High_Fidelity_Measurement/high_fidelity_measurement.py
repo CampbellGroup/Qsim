@@ -3,7 +3,8 @@ from Qsim.scripts.pulse_sequences.shelving_bright_spam import ShelvingBrightSpam
 from Qsim.scripts.pulse_sequences.shelving_dark_spam import ShelvingDarkSpam as dark_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
-from Qsim.scripts.experiments.Microwave_Rabi_Flopping.microwave_rabi_flopping_clock import MicrowaveRabiFloppingClock as rabi_tweak_up
+from Qsim.scripts.experiments.Microwave_Rabi_Flopping.microwave_rabi_flopping_clock import \
+    MicrowaveRabiFloppingClock as rabi_tweak_up
 import numpy as np
 from scipy.optimize import curve_fit as fit
 from labrad.units import WithUnit as U
@@ -22,10 +23,8 @@ class HighFidelityMeasurement(QsimExperiment):
         ('HighFidelityMeasurement', 'sequence_iterations')
     ]
 
-
     exp_parameters.extend(bright_sequence.all_required_parameters())
     exp_parameters.extend(dark_sequence.all_required_parameters())
-
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -45,7 +44,8 @@ class HighFidelityMeasurement(QsimExperiment):
     def run(self, cxn, context):
         self.setup_high_fidelity_datavault()  # setup datavault folders for receiving HiFi data
 
-        self.init_dac_port_822_voltage = self.mp_server.get_output_voltage(self.dac_port_822) #  gets the init dac port voltage for the M2 lock
+        self.init_dac_port_822_voltage = self.mp_server.get_output_voltage(
+            self.dac_port_822)  # gets the init dac port voltage for the M2 lock
         print('Init DAC voltage is ' + str(self.init_dac_port_822_voltage) + ' mV')
 
         # set the line trigger state to the appropriate state
@@ -60,7 +60,6 @@ class HighFidelityMeasurement(QsimExperiment):
         self.set_fixed_params()  # force certain parameters to have fixed values
         self.reps = self.p.ShelvingStateDetection.repetitions
 
-
         i = 0
         n_exp = 0
         while True:
@@ -73,7 +72,6 @@ class HighFidelityMeasurement(QsimExperiment):
                 break
 
             detection_delay_bright, detection_delay_dark = self.get_detection_timetags_offset()
-
 
             self.program_pulser(bright_sequence)
             [counts_doppler_bright, counts_bright], ttBright = self.run_sequence_with_timetags(max_runs=250, num=2)
@@ -109,7 +107,8 @@ class HighFidelityMeasurement(QsimExperiment):
             ttD_det = np.array(ttD_det) - detection_delay_dark
             self.save_dark_data([counts_dark, counts_doppler_dark], [ttD_det, ttD_dop])
 
-            countsBright, countsDark, n_errors = self.delete_doppler_count_errors(counts_doppler_bright, counts_doppler_dark,
+            countsBright, countsDark, n_errors = self.delete_doppler_count_errors(counts_doppler_bright,
+                                                                                  counts_doppler_dark,
                                                                                   counts_bright, counts_dark)
 
             # this checks to make sure we didn't lose the ion, effectively, and breaks the loop before a zero division
@@ -151,8 +150,6 @@ class HighFidelityMeasurement(QsimExperiment):
         self.reload_all_parameters()
         self.p = self.parameters
 
-
-
     def run_interleaved_linescan(self):
 
         init_params = self.p
@@ -171,7 +168,6 @@ class HighFidelityMeasurement(QsimExperiment):
         self.reload_all_parameters()
         self.p = self.parameters
         print(self.p['Transitions.main_cooling_369'])
-
 
     def process_histogram(self, countsBright, countsDark):
         # process the count_bins and return the histogram with bins and photon counts/bin
@@ -210,8 +206,7 @@ class HighFidelityMeasurement(QsimExperiment):
         prob_dark = self.get_pop(counts_dark)
         prob_bright = self.get_pop(counts_bright)
         self.dv.add(num, prob_dark, prob_bright,
-                        prob_bright - prob_dark, context=self.prob_context)
-
+                    prob_bright - prob_dark, context=self.prob_context)
 
     def save_bright_data(self, counts, timetags):
         [counts_bright, counts_doppler_bright] = counts
@@ -268,33 +263,32 @@ class HighFidelityMeasurement(QsimExperiment):
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.prob_context)
 
-
         # datavault setup for the timetags for bright and dark detection counts in separate folders
         self.tt_bright_det_context = self.dv.context()
         self.dv.cd(['shelving_fidelity', 'shelving_det_timetags_bright'], True, context=self.tt_bright_det_context)
         self.tt_bright_det_dataset = self.dv.new('timetags', [('arb', 'arb')],
-                                             [('time', 'timetags', 'num')], context=self.tt_bright_det_context)
+                                                 [('time', 'timetags', 'num')], context=self.tt_bright_det_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_bright_det_context)
 
         self.tt_dark_det_context = self.dv.context()
         self.dv.cd(['shelving_fidelity', 'shelving_det_timetags_dark'], True, context=self.tt_dark_det_context)
         self.tt_dark_det_dataset = self.dv.new('timetags', [('arb', 'arb')],
-                                           [('time', 'timetags', 'num')], context=self.tt_dark_det_context)
+                                               [('time', 'timetags', 'num')], context=self.tt_dark_det_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_dark_det_context)
 
         self.tt_bright_dop_context = self.dv.context()
         self.dv.cd(['shelving_fidelity', 'shelving_dop_timetags_bright'], True, context=self.tt_bright_dop_context)
         self.tt_bright_dop_dataset = self.dv.new('timetags', [('arb', 'arb')],
-                                             [('time', 'timetags', 'num')], context=self.tt_bright_dop_context)
+                                                 [('time', 'timetags', 'num')], context=self.tt_bright_dop_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_bright_dop_context)
 
         self.tt_dark_dop_context = self.dv.context()
         self.dv.cd(['shelving_fidelity', 'shelving_dop_timetags_dark'], True, context=self.tt_dark_dop_context)
         self.tt_dark_dop_dataset = self.dv.new('timetags', [('arb', 'arb')],
-                                           [('time', 'timetags', 'num')], context=self.tt_dark_dop_context)
+                                               [('time', 'timetags', 'num')], context=self.tt_dark_dop_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.tt_dark_dop_context)
 
@@ -303,7 +297,8 @@ class HighFidelityMeasurement(QsimExperiment):
         self.hf_bright_context = self.dv.context()
         self.dv.cd(['shelving_fidelity', 'shelving_counts_bright'], True, context=self.hf_bright_context)
         self.hf_bright_dataset = self.dv.new('counts', [('run', 'arb')],
-                                             [('counts', 'detection_counts', 'num'), ('counts', 'doppler_counts', 'num')],
+                                             [('counts', 'detection_counts', 'num'),
+                                              ('counts', 'doppler_counts', 'num')],
                                              context=self.hf_bright_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.hf_bright_context)
@@ -319,7 +314,7 @@ class HighFidelityMeasurement(QsimExperiment):
         self.pi_time_context = self.dv.context()
         self.dv.cd(['shelving_fidelity', 'shelving_rabi_tracking'], True, context=self.pi_time_context)
         self.rabi_tracking_dataset = self.dv.new('rabi_tracking', [('time', 's')],
-                                                 [('pi_time','', 'us')], context=self.pi_time_context)
+                                                 [('pi_time', '', 'us')], context=self.pi_time_context)
 
     def get_detection_timetags_offset(self):
 
@@ -376,11 +371,9 @@ class HighFidelityMeasurement(QsimExperiment):
 
         return doppler_timetags, detection_timetags
 
-
     def finalize(self, cxn, context):
         # reset the line trigger and delay to false
         self.pulser.line_trigger_state(False)
-
 
 
 if __name__ == '__main__':

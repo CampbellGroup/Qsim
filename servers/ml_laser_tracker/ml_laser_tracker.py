@@ -39,7 +39,6 @@ class ml_laser_monitor(LabradServer):
         self.time = 0
         connected = self.connect()
 
-
     @inlineCallbacks
     def connect(self):
         """
@@ -49,8 +48,8 @@ class ml_laser_monitor(LabradServer):
 
         # connect to wavemeter and datavault computers
         self.cxn = yield connectAsync('10.97.112.1',
-                                       name=self.name,
-                                       password=self.password)
+                                      name=self.name,
+                                      password=self.password)
         self.cxn1 = yield connectAsync('10.97.112.4',
                                        name=self.name,
                                        password=self.password)
@@ -83,7 +82,6 @@ class ml_laser_monitor(LabradServer):
         # grab the freqs
         freq0 = yield self.server.get_wavelength()
 
-
         # calc detunings from desired 171 freqs in MHz, wavemeter gives THz
         drift0 = self.set_freq[0] - freq0
 
@@ -102,12 +100,14 @@ class ml_laser_monitor(LabradServer):
         yield self.dv.cd(['', self.name], True)
 
         # datasets for each laser
-        self.dataset = yield self.dv.new(self.name + ' ML', [( 't', 'num')], [('GHz', '', 'num')])
+        self.dataset = yield self.dv.new(self.name + ' ML', [('t', 'num')], [('GHz', '', 'num')])
 
     @inlineCallbacks
     def setup_grapher(self, tab):
         yield self.grapher.plot(self.dataset, tab, False)
 
+
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(ml_laser_monitor())

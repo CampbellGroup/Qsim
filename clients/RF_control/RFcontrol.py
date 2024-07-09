@@ -3,6 +3,7 @@ from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
 from PyQt5.QtWidgets import *
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,7 +52,7 @@ class RFcontrol(QWidget):
             widget.setPowerNoSignal(initpower['dBm'])
             widget.setFreqNoSignal(initfreq['MHz'])
             widget.spinPower.valueChanged.connect(self.powerChanged)
-            widget.spinFreq.valueChanged.connect(self.freqChanged) 
+            widget.spinFreq.valueChanged.connect(self.freqChanged)
             widget.buttonSwitch.toggled.connect(self.switchChanged)
             layout.addWidget(widget)
 
@@ -89,11 +90,14 @@ class RFcontrol(QWidget):
     def closeEvent(self, x):
         self.reactor.stop()
 
+
 if __name__ == "__main__":
     a = QApplication([])
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
+
     RFcontrolWidget = RFcontrol(reactor)
     RFcontrolWidget.show()
     reactor.run()

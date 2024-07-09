@@ -7,7 +7,6 @@ from .sub_sequences.bright_state_pumping import BrightStatePumping
 
 
 class TestSequence(PulseSequence):
-
     required_subsequences = [TestSubSequence, TurnOffAll, DopplerCooling, BrightStatePumping, OpticalPumping]
 
     required_parameters = [

@@ -12,7 +12,6 @@ import time
 class Electrode:
 
     def __init__(self, dac, octant, minval, maxval):
-
         self.dac = dac
         self.octant = octant
         self.minval = minval
@@ -21,7 +20,6 @@ class Electrode:
         self.setup_widget()
 
     def setup_widget(self):
-
         self.spinBox = QCustomSpinBox(self.name, (self.minval, self.maxval))
         self.init_voltage = 0.0
         self.spinBox.spinLevel.setValue(0.0)
@@ -78,7 +76,7 @@ class dacclient(QFrame):
             layout.addWidget(spinbox, 3 + j, i + 1, 1, 1)
             self.multipoles.append(spinbox)
 
-        layout.addWidget(self.electrodeind, 0, 1, 1,  4)
+        layout.addWidget(self.electrodeind, 0, 1, 1, 4)
 
         for key, channel in self.elec_dict.items():
             electrode = Electrode(channel.dac_channel_number, channel.octantNumber,
@@ -86,7 +84,8 @@ class dacclient(QFrame):
             self.electrodes[electrode.octant] = electrode
             subLayout.addWidget(electrode.spinBox)
             electrode.spinBox.spinLevel.valueChanged.connect(lambda value=electrode.spinBox.spinLevel.value(),
-                                                             electrode=electrode: self.update_dac(value, electrode))
+                                                                    electrode=electrode: self.update_dac(value,
+                                                                                                         electrode))
 
         self.change_multipole('dummy value')
         self.setLayout(layout)
@@ -120,8 +119,10 @@ class dacclient(QFrame):
 if __name__ == "__main__":
     a = QApplication([])
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
+
     dacWidget = dacclient(reactor)
     dacWidget.show()
     reactor.run()

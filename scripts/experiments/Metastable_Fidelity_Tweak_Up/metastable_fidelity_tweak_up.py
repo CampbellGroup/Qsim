@@ -1,7 +1,9 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.pulse_sequences.metastable_three_preparation import MetastableThreePreparation as metastable_bright_sequence  # this is where I define which state is bright
-from Qsim.scripts.pulse_sequences.metastable_four_preparation import MetastableFourPreparation as metastable_dark_sequence
+from Qsim.scripts.pulse_sequences.metastable_three_preparation import \
+    MetastableThreePreparation as metastable_bright_sequence  # this is where I define which state is bright
+from Qsim.scripts.pulse_sequences.metastable_four_preparation import \
+    MetastableFourPreparation as metastable_dark_sequence
 
 import numpy as np
 from labrad.units import WithUnit as U
@@ -13,7 +15,7 @@ class MetastableFidelityTweakUp(QsimExperiment):
     """
 
     name = 'Metastable Fidelity Tweak Up'
-    
+
     exp_parameters = []
 
     exp_parameters.append(('ShelvingStateDetection', 'repetitions'))
@@ -51,21 +53,26 @@ class MetastableFidelityTweakUp(QsimExperiment):
             # programs and runs the bright state sequence, then creates an array with exp number, detection
             # counts, and doppler counts to be saved to datavault
             self.program_pulser(metastable_bright_sequence)
-            [counts_doppler_bright, counts_herald_bright_1, counts_herald_bright_2,  counts_bright] = self.run_sequence(max_runs=250, num=4)
-            failed_four_heralding_bright = np.where(counts_herald_bright_1 >= self.p.ShelvingStateDetection.state_readout_threshold)
-            failed_three_heralding_bright = np.where(counts_herald_bright_2 >= self.p.ShelvingStateDetection.state_readout_threshold)
-            doppler_errors_bright = np.where(counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-            all_bright_errors = np.unique(np.concatenate((failed_three_heralding_bright[0], failed_four_heralding_bright[0], doppler_errors_bright[0])))
+            [counts_doppler_bright, counts_herald_bright_1, counts_herald_bright_2, counts_bright] = self.run_sequence(
+                max_runs=250, num=4)
+            failed_four_heralding_bright = np.where(
+                counts_herald_bright_1 >= self.p.ShelvingStateDetection.state_readout_threshold)
+            failed_three_heralding_bright = np.where(
+                counts_herald_bright_2 >= self.p.ShelvingStateDetection.state_readout_threshold)
+            doppler_errors_bright = np.where(
+                counts_doppler_bright <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+            all_bright_errors = np.unique(np.concatenate(
+                (failed_three_heralding_bright[0], failed_four_heralding_bright[0], doppler_errors_bright[0])))
             counts_bright_fixed = np.delete(counts_bright, all_bright_errors)
-
 
             self.program_pulser(metastable_dark_sequence)
             [counts_doppler_dark, counts_herald_dark, counts_dark] = self.run_sequence(max_runs=333, num=3)
-            failed_heralding_dark = np.where(counts_herald_dark >= self.p.ShelvingStateDetection.state_readout_threshold)
-            doppler_errors_dark = np.where(counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+            failed_heralding_dark = np.where(
+                counts_herald_dark >= self.p.ShelvingStateDetection.state_readout_threshold)
+            doppler_errors_dark = np.where(
+                counts_doppler_dark <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             all_dark_errors = np.unique(np.concatenate((failed_heralding_dark[0], doppler_errors_dark[0])))
             counts_dark_fixed = np.delete(counts_dark, all_dark_errors)
-           
 
             # this processes the counts and calculates the fidelity and plots it on the bottom panel
             self.plot_prob(i, counts_dark_fixed, counts_bright_fixed)
@@ -78,13 +85,11 @@ class MetastableFidelityTweakUp(QsimExperiment):
             self.plot_hist(hist_bright, folder_name='Metastable_Bright_Histogram')
             self.plot_hist(hist_dark, folder_name='Metastable_Dark_Histogram')
 
-
-
     def plot_prob(self, num, counts_dark, counts_bright):
         prob_dark = self.get_pop(counts_dark)
         prob_bright = self.get_pop(counts_bright)
         self.dv.add(num, prob_dark, prob_bright,
-            prob_bright - prob_dark, context=self.prob_context)
+                    prob_bright - prob_dark, context=self.prob_context)
 
     def setup_prob_datavault(self):
         self.prob_context = self.dv.context()
@@ -100,6 +105,7 @@ class MetastableFidelityTweakUp(QsimExperiment):
 
     def finalize(self, cxn, context):
         pass
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

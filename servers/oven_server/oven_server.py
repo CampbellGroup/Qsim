@@ -18,15 +18,12 @@ timeout = 20
 
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks, returnValue
-# from twisted.internet.task import LoopingCall
 import os
 import socket
 from labrad.units import WithUnit as U
-import labrad.errors
 
 
 class OvenServer(LabradServer):
-
     name = 'OvenServer'
 
     def initServer(self):
@@ -73,4 +70,5 @@ class OvenServer(LabradServer):
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(OvenServer())

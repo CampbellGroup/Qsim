@@ -6,7 +6,6 @@ from Qsim.scripts.pulse_sequences.sub_sequences.metastable_microwave_knill_seque
 
 
 class MetastableMicrowaveInterrogation(PulseSequence):
-
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
         ('Metastable_Microwave_Interrogation', 'detuning'),

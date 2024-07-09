@@ -16,7 +16,6 @@ timeout = 20
 ### END NODE INFO
 """
 
-
 '''
 Created on July 16, 2015
 
@@ -25,13 +24,9 @@ Created on July 16, 2015
 '''
 
 from labrad.server import LabradServer, setting
-from labrad.types import Error
-from twisted.internet import reactor
-from labrad import types as T
-from labrad.support import getNodeName
+
 
 class ArduinoDAC(LabradServer):
-
     name = 'DAC8718 Server'
 
     @setting(1, chan='i', value='i')
@@ -44,9 +39,11 @@ class ArduinoDAC(LabradServer):
         chan: int, DAC channel, valid from 0-15
         """
 
-        print chan
-        print value
+        print(chan)
+        print(value)
+
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(ArduinoDAC())

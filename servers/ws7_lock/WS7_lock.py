@@ -25,7 +25,6 @@ import socket
 
 
 class ind_WM_lock_Server(LabradServer):
-
     name = 'WS7 Lock Server'
 
     def initServer(self):
@@ -58,21 +57,21 @@ class ind_WM_lock_Server(LabradServer):
 
     @inlineCallbacks
     def loop(self):
-            freq = yield self.server.get_frequency(self.chan)
-            error = -1*(self.set - freq)
-            output = error*self.gain + self.prevoutput
-            if output >= self.rails[1]:
-                output = self.rails[1]
-            elif output <= self.rails[0]:
-                output = self.rails[0]
-            else:
-                pass
+        freq = yield self.server.get_frequency(self.chan)
+        error = -1 * (self.set - freq)
+        output = error * self.gain + self.prevoutput
+        if output >= self.rails[1]:
+            output = self.rails[1]
+        elif output <= self.rails[0]:
+            output = self.rails[0]
+        else:
+            pass
 
-            if (freq >= (freq - self.freq_span)) or (freq <=(freq + self.freq_span)):
-                output = self.prevoutput
-            self.prevoutput = output
-            yield self.dac.voltage(2, U(output, 'V'))
-            #self.server.set_dac_voltage(self.dac, output)
+        if (freq >= (freq - self.freq_span)) or (freq <= (freq + self.freq_span)):
+            output = self.prevoutput
+        self.prevoutput = output
+        yield self.dac.voltage(2, U(output, 'V'))
+        # self.server.set_dac_voltage(self.dac, output)
 
     @setting(13, state='b')
     def toggle(self, c, state):
@@ -86,8 +85,8 @@ class ind_WM_lock_Server(LabradServer):
 
     @setting(14, value='v')
     def offset(self, c, value):
-        #yield self.server.set_dac_voltage(self.dac, value)
-        print value
+        # yield self.server.set_dac_voltage(self.dac, value)
+        print(value)
         self.prevoutput = value
 
     @setting(15, gain='v')
@@ -101,4 +100,5 @@ class ind_WM_lock_Server(LabradServer):
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(ind_WM_lock_Server())

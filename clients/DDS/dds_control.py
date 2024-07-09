@@ -4,6 +4,7 @@ from common.lib.clients.connection import connection
 from PyQt5.QtWidgets import *
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 """
@@ -20,7 +21,7 @@ class DDSChannel(QCustomFreqPower):
         self.chan = chan
         self.cxn = cxn
         self.import_labrad()
-        
+
     def import_labrad(self):
         from labrad import types as T
         from labrad.types import Error
@@ -48,7 +49,7 @@ class DDSChannel(QCustomFreqPower):
             self.spinPower.valueChanged.connect(self.power_changed)
             self.spinFreq.valueChanged.connect(self.freq_changed)
             self.buttonSwitch.toggled.connect(self.switch_changed)
-    
+
     def set_param_no_signal(self, param, value):
         if param == 'amplitude':
             self.setPowerNoSignal(value)
@@ -56,7 +57,7 @@ class DDSChannel(QCustomFreqPower):
             self.setFreqNoSignal(value)
         elif param == 'state':
             self.setStateNoSignal(value)
-        
+
     @inlineCallbacks
     def power_changed(self, pwr):
         val = self.T.Value(pwr, 'dBm')
@@ -66,7 +67,7 @@ class DDSChannel(QCustomFreqPower):
             old_value = yield self.server.amplitude(self.chan, context=self.context)
             self.setPowerNoSignal(old_value)
             self.display_error(e.msg)
-            
+
     @inlineCallbacks
     def freq_changed(self, freq):
         val = self.T.Value(freq, 'MHz')
@@ -85,7 +86,7 @@ class DDSChannel(QCustomFreqPower):
             old_value = yield self.server.frequency(self.chan, context=self.context)
             self.setStateNoSignal(old_value)
             self.display_error(e.msg)
-    
+
     def display_error(self, text):
         # runs the message box in a non-blocking method
         message = QMessageBox(self)
@@ -99,9 +100,8 @@ class DDSChannel(QCustomFreqPower):
 
 
 class DDSControlWidget(QFrame):
-    
     SIGNALID = 319182
-    
+
     def __init__(self, reactor, cxn=None):
         super(DDSControlWidget, self).__init__()
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
@@ -110,7 +110,7 @@ class DDSControlWidget(QFrame):
         self.cxn = cxn
         self.initialized = False
         self.setup_dds()
-       
+
     @inlineCallbacks
     def setup_dds(self):
         if self.cxn is None:
@@ -127,7 +127,7 @@ class DDSControlWidget(QFrame):
             self.setDisabled(True)
         self.cxn.add_on_connect('Pulser', self.reinitialize)
         self.cxn.add_on_disconnect('Pulser', self.disable)
-     
+
     @inlineCallbacks
     def initialize(self):
         server = yield self.cxn.get_server('Pulser')
@@ -138,14 +138,14 @@ class DDSControlWidget(QFrame):
         yield sc.signal_on_running_script_finished(self.SIGNALID + 2, context=self.context)
 
         yield server.addListener(listener=self.follow_signal, source=None, ID=self.SIGNALID, context=self.context)
-        yield sc.addListener(listener=self.disable, source=None, ID=self.SIGNALID+1, context=self.context)
-        yield sc.addListener(listener=self.enable, source=None, ID=self.SIGNALID+2, context=self.context)
+        yield sc.addListener(listener=self.disable, source=None, ID=self.SIGNALID + 1, context=self.context)
+        yield sc.addListener(listener=self.enable, source=None, ID=self.SIGNALID + 2, context=self.context)
 
         self.display_channels, self.widgets_per_row = yield self.get_displayed_channels()
         self.widgets = {}.fromkeys(self.display_channels)
         self.do_layout()
         self.initialized = True
-    
+
     @inlineCallbacks
     def get_displayed_channels(self):
         """
@@ -161,7 +161,7 @@ class DDSControlWidget(QFrame):
             widgets_per_row = 1
         channels = [name for name in channels_to_display if name in all_channels]
         returnValue((channels, widgets_per_row))
-     
+
     @inlineCallbacks
     def registry_load_displayed(self, all_names, default_widgets_per_row):
         reg = yield self.cxn.get_server('Registry')
@@ -185,7 +185,7 @@ class DDSControlWidget(QFrame):
             else:
                 raise
         returnValue((displayed, widgets_per_row))
-     
+
     @inlineCallbacks
     def reinitialize(self):
         self.setDisabled(False)
@@ -202,7 +202,7 @@ class DDSControlWidget(QFrame):
             for widget in self.widgets.values():
                 if widget is not None:
                     yield widget.setup_widget(connect=False)
-    
+
     def do_layout(self):
         layout = QGridLayout()
         q_box = QGroupBox('Pulser DDS Control')
@@ -216,7 +216,7 @@ class DDSControlWidget(QFrame):
             sub_layout.addWidget(widget, item // self.widgets_per_row, item % self.widgets_per_row)
             item += 1
         self.setLayout(layout)
-        
+
     @inlineCallbacks
     def disable(self, _, __):
         self.setDisabled(True)
@@ -226,7 +226,7 @@ class DDSControlWidget(QFrame):
     def enable(self, _, __):
         self.setEnabled(True)
         yield None
-    
+
     def follow_signal(self, x, y):
         chan, param, val = y
         if chan in self.widgets.keys():
@@ -240,8 +240,10 @@ class DDSControlWidget(QFrame):
 if __name__ == "__main__":
     a = QApplication([])
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
+
     trap_drive_Widget = DDSControlWidget(reactor)
     trap_drive_Widget.show()
     reactor.run()

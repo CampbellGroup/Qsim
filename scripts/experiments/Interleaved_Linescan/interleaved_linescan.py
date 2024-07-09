@@ -58,11 +58,11 @@ FiberEOM
         return_detuning, return_counts = [], []
         for i, detuning in enumerate(self.detunings):
             if context == (0, 2):
-                should_break = self.update_progress(i/float(len(self.detunings)))
+                should_break = self.update_progress(i / float(len(self.detunings)))
                 if should_break:
                     return should_break
             # self.p.Transitions.main_cooling_369 divide by 2 for the double pass
-            freq = U(detuning, 'MHz')/2.0 + self.p.ddsDefaults.DP369_freq
+            freq = U(detuning, 'MHz') / 2.0 + self.p.ddsDefaults.DP369_freq
             track_detuning, track_counts = self.program_pulser(freq, detuning)
             return_detuning.append(track_detuning)
             return_counts.append(track_counts)

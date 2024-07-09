@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class OpticalPumping(PulseSequence):
-
     required_parameters = [
         ('OpticalPumping', 'duration'),
         ('OpticalPumping', 'power'),
@@ -45,7 +44,8 @@ class OpticalPumping(PulseSequence):
             self.add_dds('369DP',
                          self.start,
                          p.OpticalPumping.duration,
-                         p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning / 2.0 - U(5.0, 'MHz'),
+                         p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.OpticalPumping.detuning / 2.0 - U(
+                             5.0, 'MHz'),
                          p.OpticalPumping.power)
             self.add_dds('935SP',
                          self.start,

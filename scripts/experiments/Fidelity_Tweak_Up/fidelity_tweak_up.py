@@ -36,7 +36,6 @@ FiberEOM:
 usually used to perform the pumping operation
 """
 
-
     name = 'Fidelity Tweak Up'
 
     exp_parameters = []
@@ -73,7 +72,7 @@ usually used to perform the pumping operation
         else:
             pi_time = self.p.Pi_times.qubit_0
 
-        self.p['MicrowaveInterrogation.duration'] = reps*pi_time
+        self.p['MicrowaveInterrogation.duration'] = reps * pi_time
         self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
         self.p['Modes.state_detection_mode'] = 'Standard'
 

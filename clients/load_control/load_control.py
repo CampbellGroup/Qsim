@@ -5,6 +5,7 @@ from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
 from PyQt5.QtWidgets import *
 import logging
+
 logger = logging.getLogger(__name__)
 
 from pygame import mixer
@@ -132,8 +133,10 @@ class LoadControl(QFrame):
 if __name__ == "__main__":
     a = QApplication([])
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
+
     LoadControlWidget = LoadControl(reactor)
     LoadControlWidget.show()
     # noinspection PyUnresolvedReferences

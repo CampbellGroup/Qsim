@@ -8,5 +8,5 @@ class drift_tracker_config(object):
     {Grapher Tab: (Server, function, arguments)}
     '''
     info = {
-            'Drift Tracker': ('Multipole Server', 'get_multipoles', None)
-            }
+        'Drift Tracker': ('Multipole Server', 'get_multipoles', None)
+    }

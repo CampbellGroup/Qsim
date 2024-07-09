@@ -9,12 +9,11 @@ from .sub_sequences.deshelving import Deshelving
 
 
 class ShelvingFidelity(PulseSequence):
-
     required_subsequences = [Shelving, ShelvingDopplerCooling, ShelvingStateDetection, Deshelving,
                              TurnOffAll, BrightStatePumping, OpticalPumping]
 
     required_parameters = [
-                           ]
+    ]
 
     def sequence(self):
         self.add_sequence(TurnOffAll)

@@ -21,7 +21,7 @@ def compute_color(voltage, saturation=7.0):
     R = 255 if voltage > 0 else 0
     G = 0
     B = 255 if voltage < 0 else 0
-    A = min(int(255 * abs(voltage)/saturation_voltage), 255)
+    A = min(int(255 * abs(voltage) / saturation_voltage), 255)
 
     return QtGui.QColor(R, G, B, A)
 
@@ -65,11 +65,12 @@ class ElectrodeIndicator(QWidget):
 
         edge_padding = 25
 
-        trap_dimension = min(frame_height, frame_width) - rod_diameter - 2*edge_padding
+        trap_dimension = min(frame_height, frame_width) - rod_diameter - 2 * edge_padding
 
         ec_dimension = rod_diameter
 
-        centering_padding = (frame_width/2 - trap_dimension/2 - rod_diameter/2) if frame_width > frame_height else edge_padding
+        centering_padding = (
+                    frame_width / 2 - trap_dimension / 2 - rod_diameter / 2) if frame_width > frame_height else edge_padding
 
         trap_left = 0 + centering_padding
         trap_right = trap_left + trap_dimension
@@ -96,7 +97,7 @@ class ElectrodeIndicator(QWidget):
         qp.setBrush(self.ec1.color)
         path = QPainterPath()
         path.addRoundedRect(edge_padding,
-                            (frame_height-ec_dimension) / 2,
+                            (frame_height - ec_dimension) / 2,
                             centering_padding - 2 * edge_padding,
                             ec_dimension,
                             10, 10)

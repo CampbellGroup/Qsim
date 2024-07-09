@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class RecordTimeTags(PulseSequence):
-
     required_parameters = [('RecordTimetags', 'record_timetags_duration')]
 
     def sequence(self):

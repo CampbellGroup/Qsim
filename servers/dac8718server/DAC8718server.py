@@ -27,7 +27,7 @@ class DACDevice(DeviceWrapper):
     @inlineCallbacks
     def connect(self, server, port):
         """Connect to a evPump device."""
-        print 'connecting to "%s" on port "%s"...' % (server.name, port),
+        print('connecting to "%s" on port "%s"...' % (server.name, port),)
         self.server = server
         self.ctx = server.context()
         self.port = port
@@ -67,10 +67,10 @@ class DAC8718(DeviceServer):
 
     @inlineCallbacks
     def initServer(self):
-        print 'loading config info...',
+        print('loading config info...',)
         self.reg = self.client.registry()
         yield self.loadConfigInfo()
-        print self.serialLinks
+        print(self.serialLinks)
         yield DeviceServer.initServer(self)
 
     @inlineCallbacks
@@ -112,8 +112,8 @@ class DAC8718(DeviceServer):
 
         dev = self.selectDevice(c)
         chan = chan + 8
-        if value > 2**16 - 1:
-            value = 2**16 - 1
+        if value > 2 ** 16 - 1:
+            value = 2 ** 16 - 1
         elif value < 0:
             value = 0
 
@@ -121,7 +121,7 @@ class DAC8718(DeviceServer):
 
         if len(value) != 16:
             buff = 16 - len(value)
-            value = '0'*buff + value
+            value = '0' * buff + value
 
         value1 = value[0:8]
         value1 = int('0b' + value1, 2)
@@ -131,8 +131,10 @@ class DAC8718(DeviceServer):
         yield dev.write(chr(value1))
         yield dev.write(chr(value2))
 
+
 TIMEOUT = Value(1, 's')
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(DAC8718())

@@ -35,7 +35,7 @@ class DACRaster(QsimExperiment):
         self.Yvalues = self.get_scan_list(self.p.dacraster.voltage_scan_y, units=None)
         self.Zvalues = self.get_scan_list(self.p.dacraster.voltage_scan_z, units=None)
 
-        self.totalstep = (len(self.Xvalues))*(len(self.Yvalues))*(len(self.Zvalues))
+        self.totalstep = (len(self.Xvalues)) * (len(self.Yvalues)) * (len(self.Zvalues))
 
     def run(self, cxn, context):
 
@@ -45,7 +45,7 @@ class DACRaster(QsimExperiment):
                 self.changevoltage('Y', yvoltage)
                 for i, zvoltage in enumerate(self.Zvalues):
                     self.changevoltage('Z', zvoltage)
-                    should_break = self.update_progress(i/float(len(self.Zvalues)))
+                    should_break = self.update_progress(i / float(len(self.Zvalues)))
                     if should_break:
                         return should_break
                     time.sleep(self.parameters.dacraster.Pause_Time['s'])

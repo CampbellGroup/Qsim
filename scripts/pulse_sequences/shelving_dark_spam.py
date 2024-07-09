@@ -9,12 +9,11 @@ from .sub_sequences.turn_off_all import TurnOffAll
 
 
 class ShelvingDarkSpam(PulseSequence):
-
     required_subsequences = [Shelving, ShelvingDopplerCooling, ShelvingStateDetection, Deshelving,
                              OpticalPumping, MicrowaveInterrogation, TurnOffAll]
 
     required_parameters = [
-                           ]
+    ]
 
     def sequence(self):
         self.add_sequence(TurnOffAll)

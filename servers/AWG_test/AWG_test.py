@@ -45,7 +45,7 @@ class AWG_Server(LabradServer):
             self.inst.query("*IDN?")
         except:
             pass
-        #test
+        # test
         print(self.inst.query("*IDN?"))
 
     @setting(1, returns='s')
@@ -55,4 +55,5 @@ class AWG_Server(LabradServer):
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(AWG_Server())

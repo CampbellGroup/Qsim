@@ -4,11 +4,10 @@ from .sub_sequences.turn_off_all import TurnOffAll
 
 
 class SFDiscriminationSequence(PulseSequence):
-
     required_subsequences = [TurnOffAll, SFDiscriminationDetection]
 
     required_parameters = [
-        ]
+    ]
 
     def sequence(self):
         p = self.parameters

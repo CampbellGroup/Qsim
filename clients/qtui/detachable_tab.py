@@ -1,6 +1,7 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSignal, pyqtSlot
 
+
 ##
 # The DetachableTabWidget adds additional functionality to Qt's QTabWidget that allows it
 # to detach and re-attach tabs.
@@ -132,7 +133,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
         #
         #  @return            true if the event was recognized
         def event(self, event):
-
             # If the event type is QEvent.NonClientAreaMouseButtonDblClick then
             # close the dialog
             if event.type() == 176:
@@ -140,7 +140,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
                 self.close()
 
             return QtGui.QDialog.event(self, event)
-
 
         ##
         #  If the dialog is closed, emit the onCloseSignal and give the
@@ -188,7 +187,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
 
             QtGui.QTabBar.mousePressEvent(self, event)
 
-
         ##
         #  Determine if the current movement is a drag.  If it is, convert it into a QDrag.  If the
         #  drag ends inside the tab bar, emit an onMoveTabSignal.  If the drag ends outside the tab
@@ -198,14 +196,16 @@ class DetachableTabWidget(QtGui.QTabWidget):
         def mouseMoveEvent(self, event):
 
             # Determine if the current movement is detected as a drag
-            if not self.dragStartPos.isNull() and ((event.pos() - self.dragStartPos).manhattanLength() < QtGui.QApplication.startDragDistance()):
+            if not self.dragStartPos.isNull() and (
+                    (event.pos() - self.dragStartPos).manhattanLength() < QtGui.QApplication.startDragDistance()):
                 self.dragInitiated = True
 
             # If the current movement is a drag initiated by the left button
             if (((event.buttons() & QtCore.Qt.LeftButton)) and self.dragInitiated):
 
                 # Stop the move event
-                finishMoveEvent = QtGui.QMouseEvent(QtCore.QEvent.MouseMove, event.pos(), QtCore.Qt.NoButton, QtCore.Qt.NoButton, QtCore.Qt.NoModifier)
+                finishMoveEvent = QtGui.QMouseEvent(QtCore.QEvent.MouseMove, event.pos(), QtCore.Qt.NoButton,
+                                                    QtCore.Qt.NoButton, QtCore.Qt.NoModifier)
                 QtGui.QTabBar.mouseMoveEvent(self, finishMoveEvent)
 
                 # Convert the move event into a drag
@@ -241,7 +241,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
             else:
                 QtGui.QTabBar.mouseMoveEvent(self, event)
 
-
         ##
         #  Determine if the drag has entered a tab position from another tab position
         #
@@ -254,7 +253,6 @@ class DetachableTabWidget(QtGui.QTabWidget):
                 event.acceptProposedAction()
 
             QtGui.QTabBar.dragMoveEvent(self, event)
-
 
         ##
         #  Get the position of the end of the drag

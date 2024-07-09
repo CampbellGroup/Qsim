@@ -1,6 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.knill_sequence import Knill
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.MicrowaveSequenceStandard import MicrowaveSequenceStandard
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.MicrowaveSequenceStandard import \
+    MicrowaveSequenceStandard
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.bb1_sequence import BB1
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.spin_echo_sequence import SpinEcho
 from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.su_microwave_sequence import SuSequence
@@ -19,7 +20,6 @@ from Qsim.scripts.pulse_sequences.sub_sequences.pi_pulses.spin_echo_pi_pulse imp
 
 
 class MicrowaveInterrogation(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),
         ('MicrowaveInterrogation', 'detuning'),
@@ -80,4 +80,3 @@ class MicrowaveInterrogation(PulseSequence):
             self.add_sequence(KnillPiPulseClock)
             self.add_sequence(knill_pi_pulse_minus)
             self.add_sequence(knill_pi_pulse_plus)
-

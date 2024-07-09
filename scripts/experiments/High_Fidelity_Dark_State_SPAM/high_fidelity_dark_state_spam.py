@@ -8,7 +8,8 @@ from Qsim.scripts.pulse_sequences.shelving_dark_spam import ShelvingDarkSpam as 
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
 from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan_minus import MicrowaveLineScanMinus
 from Qsim.scripts.experiments.Microwave_Linescan.microwave_linescan_plus import MicrowaveLineScanPlus
-from Qsim.scripts.experiments.Microwave_Rabi_Flopping.microwave_rabi_flopping_clock import MicrowaveRabiFloppingClock as rabi_tweak_up
+from Qsim.scripts.experiments.Microwave_Rabi_Flopping.microwave_rabi_flopping_clock import \
+    MicrowaveRabiFloppingClock as rabi_tweak_up
 
 
 class HighFidelityDarkStateSpam(QsimExperiment):
@@ -44,7 +45,6 @@ class HighFidelityDarkStateSpam(QsimExperiment):
         self.init_dac_port_822_voltage = 0.0
         self.init_dac_port_hudson_voltage = 0.0
 
-
     def run(self, cxn, context):
 
         # set the line trigger state to the appropriate state
@@ -52,7 +52,7 @@ class HighFidelityDarkStateSpam(QsimExperiment):
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(self.p.MicrowaveInterrogation.delay_from_line_trigger)
 
-        #self.perform_initial_tweak_up()
+        # self.perform_initial_tweak_up()
         break_1, break_2 = self.perform_initial_tweak_up()
         self.set_fixed_params()  # force certain parameters to have fixed values
         self.setup_high_fidelity_datavault()  # setup datavault folders for receiving HiFi data
@@ -77,7 +77,8 @@ class HighFidelityDarkStateSpam(QsimExperiment):
 
             dac_voltage = self.mp_server.get_output_voltage(self.dac_port_822)
             dac_voltage_hudson = self.mp_server.get_output_voltage(self.dac_port_hudson)
-            if (np.abs(dac_voltage - self.init_dac_port_822_voltage) > 200.0) or (np.abs(dac_voltage_hudson - self.init_dac_port_hudson_voltage) > 200.0):
+            if (np.abs(dac_voltage - self.init_dac_port_822_voltage) > 200.0) or (
+                    np.abs(dac_voltage_hudson - self.init_dac_port_hudson_voltage) > 200.0):
                 print('M2 Etalon hopped on experiment ' + str(i) + ', killing experiment.')
                 break
 
@@ -102,7 +103,7 @@ class HighFidelityDarkStateSpam(QsimExperiment):
                 diff = np.mean(countsDopFixed) - self.counts_track_mean
                 if np.abs(diff) > 7.0:
                     self.cavity_voltage = self.cavity_voltage + np.sign(diff) * 0.005
-                    #if np.abs(diff)*0.005 < 0.02:
+                    # if np.abs(diff)*0.005 < 0.02:
                     self.pzt_server.set_voltage(self.cavity_chan, U(self.cavity_voltage, 'V'))
                     print('Updated cavity voltage to ' + str(self.cavity_voltage) + ' V')
                 else:
@@ -159,7 +160,8 @@ class HighFidelityDarkStateSpam(QsimExperiment):
         print(self.p['Transitions.main_cooling_369'])
 
     def perform_initial_tweak_up(self):
-        self.init_dac_port_822_voltage = self.mp_server.get_output_voltage(self.dac_port_822)  # gets the init dac port voltage for the M2 lock
+        self.init_dac_port_822_voltage = self.mp_server.get_output_voltage(
+            self.dac_port_822)  # gets the init dac port voltage for the M2 lock
         self.init_dac_port_hudson_voltage = self.mp_server.get_output_voltage(self.dac_port_hudson)
         self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
         self.run_interleaved_linescan()
@@ -234,7 +236,6 @@ class HighFidelityDarkStateSpam(QsimExperiment):
         self.rabi_tracking_dataset = self.dv.new('rabi_tracking', [('time', 's')],
                                                  [('pi_time', '', 'us')], context=self.pi_time_context)
 
-
     def correct_cavity_drift(self):
         center_before = self.run_interleaved_linescan()
         if (center_before == RuntimeError) or (center_before == TypeError):
@@ -260,7 +261,6 @@ class HighFidelityDarkStateSpam(QsimExperiment):
 
         print('Finished cavity tweak up, resuming experiment')
         return True, j
-
 
     def run_microwave_linescan(self, qubit='qubit_minus'):
 
@@ -300,7 +300,6 @@ class HighFidelityDarkStateSpam(QsimExperiment):
             self.reload_all_parameters()
             self.p = self.parameters
             self.p = self.parameters
-
 
     def finalize(self, cxn, context):
         # reset the line trigger and delay to false

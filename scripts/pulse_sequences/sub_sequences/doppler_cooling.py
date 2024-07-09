@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class DopplerCooling(PulseSequence):
-
     required_parameters = [
         ('DopplerCooling', 'cooling_power'),
         ('DopplerCooling', 'repump_power'),
@@ -20,7 +19,7 @@ class DopplerCooling(PulseSequence):
         ('ddsDefaults', 'repump_760_2_freq'),
         ('ddsDefaults', 'repump_760_2_power'),
         ('ddsDefaults', 'DP369_freq'),
-        ]
+    ]
 
     def sequence(self):
         p = self.parameters

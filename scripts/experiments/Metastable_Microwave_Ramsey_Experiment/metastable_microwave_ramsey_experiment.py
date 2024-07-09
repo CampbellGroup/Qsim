@@ -1,6 +1,8 @@
 import labrad
-from Qsim.scripts.pulse_sequences.microwave_point.metastable_microwave_ramsey_point import MetastableMicrowaveRamseyPoint as sequence
-from Qsim.scripts.pulse_sequences.microwave_point.heralded_metastable_microwave_ramsey_point import HeraldedMetastableMicrowaveRamseyPoint as heralded_sequence
+from Qsim.scripts.pulse_sequences.microwave_point.metastable_microwave_ramsey_point import \
+    MetastableMicrowaveRamseyPoint as sequence
+from Qsim.scripts.pulse_sequences.microwave_point.heralded_metastable_microwave_ramsey_point import \
+    HeraldedMetastableMicrowaveRamseyPoint as heralded_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
@@ -45,7 +47,7 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
             self.setup_grapher('Metastable Microwave Ramsey Experiment')
             self.dark_time = self.get_scan_list(self.p.MetastableMicrowaveRamsey.delay_time, 'ms')
             for i, dark_time in enumerate(self.dark_time):
-                should_break = self.update_progress(i/float(len(self.dark_time)))
+                should_break = self.update_progress(i / float(len(self.dark_time)))
                 if should_break:
                     break
                 self.p['EmptySequence.duration'] = U(dark_time, 'ms')
@@ -60,7 +62,8 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
                     self.program_pulser(heralded_sequence)
                     [doppler_counts, herald_counts, detection_counts] = self.run_sequence(max_runs=333, num=3)
                     failed_heralding = np.where(herald_counts >= self.p.ShelvingStateDetection.state_readout_threshold)
-                    doppler_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+                    doppler_errors = np.where(
+                        doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                     all_errors = np.unique(np.concatenate((failed_heralding[0], doppler_errors[0])))
                     counts = np.delete(detection_counts, all_errors)
                     self.heralded_number_experiments.append(len(counts))
@@ -78,7 +81,7 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
             self.p['EmptySequence.duration'] = self.p.MetastableMicrowaveRamsey.fixed_delay_time
             self.p['MetastableMicrowaveRamsey.detuning'] = U(0.0, 'kHz')
             for i, phase in enumerate(self.phase_list):
-                should_break = self.update_progress(i/float(len(self.phase_list)))
+                should_break = self.update_progress(i / float(len(self.phase_list)))
                 if should_break:
                     break
                 self.p['Metastable_Microwave_Interrogation.microwave_phase'] = U(phase, 'deg')
@@ -93,7 +96,8 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
                     self.program_pulser(heralded_sequence)
                     [doppler_counts, herald_counts, detection_counts] = self.run_sequence(max_runs=333, num=3)
                     failed_heralding = np.where(herald_counts >= self.p.ShelvingStateDetection.state_readout_threshold)
-                    doppler_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+                    doppler_errors = np.where(
+                        doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                     all_errors = np.unique(np.concatenate((failed_heralding[0], doppler_errors[0])))
                     counts = np.delete(detection_counts, all_errors)
                     self.heralded_number_experiments.append(len(counts))
@@ -102,9 +106,9 @@ class MetastableMicrowaveRamseyExperiment(QsimExperiment):
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
                 pop = self.get_pop(counts)
-                print phase, pop
+                print
+                phase, pop
                 self.dv.add(phase, pop)
-
 
     def finalize(self, cxn, context):
         pass

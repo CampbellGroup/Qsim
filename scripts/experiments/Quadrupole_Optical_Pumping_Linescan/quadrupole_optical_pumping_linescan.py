@@ -6,8 +6,6 @@ from labrad.units import WithUnit as U
 
 
 class QuadrupoleOpticalPumpingLinescan(QsimExperiment):
-
-
     name = 'QuadrupoleOpticalPumpingLinescan'
 
     exp_parameters = []
@@ -33,7 +31,7 @@ class QuadrupoleOpticalPumpingLinescan(QsimExperiment):
         self.setup_grapher('QuadrupoleOpticalPumpingLinescan')
         self.frequencies = self.get_scan_list(self.p.QuadrupoleOpticalPumpingLinescan.scan, 'MHz')
         for i, freq in enumerate(self.frequencies):
-            should_break = self.update_progress(i/float(len(self.frequencies)))
+            should_break = self.update_progress(i / float(len(self.frequencies)))
             if should_break:
                 break
             self.p['OpticalPumping.method'] = 'QuadrupoleOnly'

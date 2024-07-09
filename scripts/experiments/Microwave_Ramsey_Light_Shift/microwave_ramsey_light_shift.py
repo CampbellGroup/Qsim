@@ -89,10 +89,10 @@ FiberEOM:
         mode = self.p.Modes.state_detection_mode
 
         self.p['MicrowaveInterrogation.detuning'] = self.p.MicrowaveRamsey.detuning
-        self.init_line_center = None#########
+        self.init_line_center = None  #########
         if scan_parameter == "delay_time":
             self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
-            #self.init_line_center = self.run_interleaved_linescan()
+            # self.init_line_center = self.run_interleaved_linescan()
             print('Initial line center at ' + str(self.init_line_center))
             self.setup_datavault('time', 'probability')  # gives the x and y names to Data Vault
             self.setup_grapher('Microwave Ramsey Experiment')
@@ -120,9 +120,9 @@ FiberEOM:
                 self.dv.add(dark_time, pop_control, context=self.control_context)
                 if time.time() - last_scanned > 600:  # linescan if it has been more than 4 minutes
                     print("Correcting Cavity Drift")
-                    if self.init_line_center is None:#######
-                        self.init_line_center = self.run_interleaved_linescan()#######
-                        continue#######
+                    if self.init_line_center is None:  #######
+                        self.init_line_center = self.run_interleaved_linescan()  #######
+                        continue  #######
                     success = self.correct_cavity_drift()
                     last_scanned = time.time()  # update time
                     time.sleep(1)
@@ -158,8 +158,8 @@ FiberEOM:
         self.control_context = self.dv.context()
         self.dv.cd(['', self.name], True, context=self.control_context)
         self.dataset_control = self.dv.new(self.name + '_control', [(x_axis, 'num')],
-                                   [(y_axis, '', 'num')],
-                                   context=self.control_context)
+                                           [(y_axis, '', 'num')],
+                                           context=self.control_context)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.ls_context)
         return self.dataset

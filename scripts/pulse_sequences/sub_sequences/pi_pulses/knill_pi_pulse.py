@@ -15,7 +15,7 @@ class KnillPiPulseClock(PulseSequence):
         ('Transitions', 'qubit_0'),
         ('Pi_times', 'qubit_0'),
         ('ddsDefaults', 'qubit_dds_freq')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -167,7 +167,6 @@ class knill_pi_pulse_minus(PulseSequence):
     """
     This is a knill sequence with variable pulse area and detuning
     """
-
 
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),

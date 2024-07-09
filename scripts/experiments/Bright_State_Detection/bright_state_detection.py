@@ -5,6 +5,7 @@ from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import I
 import numpy as np
 from labrad.units import WithUnit as U
 
+
 class BrightStateDetection(QsimExperiment):
     """
     Perform preparation of the bright state for either shelving or standard detection,
@@ -73,7 +74,7 @@ class BrightStateDetection(QsimExperiment):
                 self.plot_hist(hist, folder_name='Bright_State_Detection')
 
             self.plot_prob(i, counts)
-            bright_only_counts = counts[np.where(counts>self.p.ShelvingStateDetection.state_readout_threshold)]
+            bright_only_counts = counts[np.where(counts > self.p.ShelvingStateDetection.state_readout_threshold)]
             if mode == 'Shelving':
                 if i == 1:
                     self.hist_mean = np.mean(bright_only_counts)
@@ -82,12 +83,12 @@ class BrightStateDetection(QsimExperiment):
                 elif i > 1:
                     diff = np.mean(bright_only_counts) - self.hist_mean
                     if np.abs(diff) > 6.0:
-                        self.cavity_voltage = self.cavity_voltage + np.sign(diff)*0.005
+                        self.cavity_voltage = self.cavity_voltage + np.sign(diff) * 0.005
                         self.pzt_server.set_voltage(self.cavity_chan, U(self.cavity_voltage, 'V'))
                         print('Updated cavity voltage to ' + str(self.cavity_voltage) + ' V')
                     else:
                         pass
-                    #if (np.mean(counts) < (self.hist_mean - self.hist_std_dev)) or (
+                    # if (np.mean(counts) < (self.hist_mean - self.hist_std_dev)) or (
                     #        np.mean(counts) > (self.hist_mean + self.hist_std_dev)):
                     #    success, iterations = self.correct_cavity_drift()
                     #    if success & iterations == 1:
@@ -106,8 +107,7 @@ class BrightStateDetection(QsimExperiment):
             self.reload_all_parameters()
             self.p = self.parameters
             if self.p != old_params:
-                    self.program_pulser(sequence)
-
+                self.program_pulser(sequence)
 
     def setup_prob_datavault(self):
         self.dv.cd(['', 'Bright_State_Probability'],
@@ -125,7 +125,8 @@ class BrightStateDetection(QsimExperiment):
         self.bright_state_counts = self.dv.context()
         self.dv.cd(['', 'Bright_State_Counts'], True, context=self.bright_state_counts)
         self.bright_state_counts_dataset = self.dv.new('bright_state_counts', [('run', 'arb')],
-                                                       [('counts', 'detection_counts', 'num'), ('counts', 'doppler_counts', 'num')],
+                                                       [('counts', 'detection_counts', 'num'),
+                                                        ('counts', 'doppler_counts', 'num')],
                                                        context=self.bright_state_counts)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter],

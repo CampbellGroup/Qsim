@@ -30,7 +30,7 @@ class processFFT():
         '''
         maxindex = spectrum.argmax()
         if (maxindex - ptsAround < 0) or (maxindex + 3) > spectrum.size:
-                raise Exception("FFT Peak found too close to boundary")
+            raise Exception("FFT Peak found too close to boundary")
         peakArea = np.sum(spectrum[maxindex - ptsAround: maxindex + ptsAround + 1])
         # average height of a point outside the peak
         background = (np.sum(spectrum) - peakArea) / (spectrum.size - (2 * ptsAround + 1))

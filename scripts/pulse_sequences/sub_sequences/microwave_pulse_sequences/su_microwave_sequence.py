@@ -2,6 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 from labrad.units import WithUnit as U
 import numpy as np
 
+
 class SuSequence(PulseSequence):
     """
     """
@@ -17,7 +18,7 @@ class SuSequence(PulseSequence):
         ('Transitions', 'qubit_plus'),
         ('Transitions', 'qubit_minus'),
         ('ddsDefaults', 'qubit_dds_freq')
-       ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -35,10 +36,8 @@ class SuSequence(PulseSequence):
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
         phi_0 = p.MicrowaveInterrogation.microwave_phase['deg']
         theta = 104.5
-        phis = np.array([-3 * theta, -theta, 0.0, theta, 3*theta]) % 360.0
+        phis = np.array([-3 * theta, -theta, 0.0, theta, 3 * theta]) % 360.0
         ttl_delay = p.MicrowaveInterrogation.ttl_switch_delay
-
-
 
         # pulse 1
         self.add_ttl('MicrowaveTTL',

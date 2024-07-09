@@ -9,15 +9,15 @@ class KnillPulseAreaCorrectingSequence(PulseSequence):
      """
 
     required_parameters = [
-                           ('MicrowaveInterrogation', 'duration'),
-                           ('MicrowaveInterrogation', 'detuning'),
-                           ('MicrowaveInterrogation', 'power'),
-                           ('Line_Selection', 'qubit'),
-                           ('Transitions', 'qubit_0'),
-                           ('Transitions', 'qubit_plus'),
-                           ('Transitions', 'qubit_minus'),
-                           ('ddsDefaults', 'qubit_dds_freq')
-                           ]
+        ('MicrowaveInterrogation', 'duration'),
+        ('MicrowaveInterrogation', 'detuning'),
+        ('MicrowaveInterrogation', 'power'),
+        ('Line_Selection', 'qubit'),
+        ('Transitions', 'qubit_0'),
+        ('Transitions', 'qubit_plus'),
+        ('Transitions', 'qubit_minus'),
+        ('ddsDefaults', 'qubit_dds_freq')
+    ]
 
     def sequence(self):
 

@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class Deshelving(PulseSequence):
-
     required_parameters = [
         ('Deshelving', 'duration'),
         ('Deshelving', 'power1'),
@@ -22,7 +21,7 @@ class Deshelving(PulseSequence):
         ('ddsDefaults', 'DP369_freq'),
         ('ddsDefaults', 'protection_beam_freq'),
         ('ddsDefaults', 'protection_beam_power')
-        ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -32,7 +31,7 @@ class Deshelving(PulseSequence):
                      p.Deshelving.duration,
                      p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.DopplerCooling.detuning / 2.0,
                      p.DopplerCooling.cooling_power)
-        #Not needed right now due to use of the fiber EOM
+        # Not needed right now due to use of the fiber EOM
         # self.addDDS('DopplerCoolingSP',
         #             self.start,
         #             p.Deshelving.duration,

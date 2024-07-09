@@ -1,8 +1,8 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
-class PauliMinusId(PulseSequence):
 
+class PauliMinusId(PulseSequence):
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),
         ('MicrowaveInterrogation', 'ttl_switch_delay'),

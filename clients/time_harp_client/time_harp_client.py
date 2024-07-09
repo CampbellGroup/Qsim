@@ -115,7 +115,8 @@ class TimeHarpClient(QtGui.QWidget):
         self.syncdisplay.setMinimumHeight(75)
         yield self.reg.cd(['', 'settings'])
 
-        print 'creating spin boxes...'
+        print
+        'creating spin boxes...'
         self.sync_level_spinbox = timeharp_spinbox(-800, 0, self.change_sync, init_settings[4], 'mV')
         self.sync_zero_spinbox = timeharp_spinbox(-40, 0, self.change_sync, init_settings[5], 'mV')
         self.count_level_spinbox = timeharp_spinbox(-800, 0.0, self.change_count, init_settings[1], 'mV')
@@ -125,7 +126,8 @@ class TimeHarpClient(QtGui.QWidget):
         self.sync_offset_spinbox = timeharp_spinbox(0.0, 100000.0, self.change_sync_offset, init_settings[8], 'ps')
         self.histo_iter_spinbox = timeharp_spinbox(0.0, 50000.0, self.change_histo_iterations, init_settings[10])
 
-        print 'creating dropdowns'
+        print
+        'creating dropdowns'
         self.binning_dropdown = QtGui.QComboBox()
         self.binning_dropdown.addItems(['1', '2', '4', '8', '16'])
         self.binning_dropdown.currentIndexChanged.connect(self.change_binning)
@@ -151,42 +153,43 @@ class TimeHarpClient(QtGui.QWidget):
         self.save_timetags_button = QtGui.QPushButton('Save TimeTags')
         self.save_timetags_button.clicked.connect(self.on_timetags_pressed)
 
-        print 'setting up widgets...'
+        print
+        'setting up widgets...'
 
-        layout.addWidget(self.title,                 0, 0, 1, 4)
-        layout.addWidget(self.mode_dropdown,         1, 0, 1, 1)
-        layout.addWidget(self.status,                1, 1, 1, 1)
-        layout.addWidget(self.errors,                1, 2, 1, 1)
-        layout.addWidget(self.warning,               1, 3, 1, 1)
-        layout.addWidget(qlabels[1],                 2, 0, 1, 2)
-        layout.addWidget(qlabels[0],                 2, 2, 1, 2)
-        layout.addWidget(self.countdisplay,          3, 0, 1, 2)
-        layout.addWidget(self.syncdisplay,           3, 2, 1, 2)
-        layout.addWidget(qlabels[2],                 4, 0, 1, 1)
-        layout.addWidget(qlabels[3],                 5, 0, 1, 1)
-        layout.addWidget(self.count_level_spinbox,   4, 1, 1, 1)
-        layout.addWidget(self.count_zero_spinbox,    5, 1, 1, 1)
-        layout.addWidget(qlabels[4],                 4, 2, 1, 1)
-        layout.addWidget(qlabels[5],                 5, 2, 1, 1)
-        layout.addWidget(qlabels[10],                6, 0, 1, 1)
-        layout.addWidget(self.count_offset_spinbox,  6, 1, 1, 1)
-        layout.addWidget(qlabels[9],                 6, 2, 1, 1)
-        layout.addWidget(self.sync_offset_spinbox,   6, 3, 1, 1)
-        layout.addWidget(self.sync_level_spinbox,    4, 3, 1, 1)
-        layout.addWidget(self.sync_zero_spinbox,     5, 3, 1, 1)
-        layout.addWidget(self.measure_time_spinbox,  9, 1, 1, 1)
-        layout.addWidget(qlabels[6],                 9, 0, 1, 1)
-        layout.addWidget(self.histo_iter_spinbox,   10, 1, 1, 1)
-        layout.addWidget(qlabels[13],               10, 0, 1, 1)
-        layout.addWidget(qlabels[14],               10, 2, 1, 1)
-        layout.addWidget(self.repump_dropdown,      10, 3, 1, 1)
-        layout.addWidget(self.binning_dropdown,      7, 1, 1, 1)
-        layout.addWidget(self.sync_divider_dropdown, 7, 3, 1, 1,)
-        layout.addWidget(qlabels[7],                 7, 0, 1, 1)
-        layout.addWidget(qlabels[8],                 7, 2, 1, 1)
-        layout.addWidget(qlabels[12],                9, 2, 1, 1)
+        layout.addWidget(self.title, 0, 0, 1, 4)
+        layout.addWidget(self.mode_dropdown, 1, 0, 1, 1)
+        layout.addWidget(self.status, 1, 1, 1, 1)
+        layout.addWidget(self.errors, 1, 2, 1, 1)
+        layout.addWidget(self.warning, 1, 3, 1, 1)
+        layout.addWidget(qlabels[1], 2, 0, 1, 2)
+        layout.addWidget(qlabels[0], 2, 2, 1, 2)
+        layout.addWidget(self.countdisplay, 3, 0, 1, 2)
+        layout.addWidget(self.syncdisplay, 3, 2, 1, 2)
+        layout.addWidget(qlabels[2], 4, 0, 1, 1)
+        layout.addWidget(qlabels[3], 5, 0, 1, 1)
+        layout.addWidget(self.count_level_spinbox, 4, 1, 1, 1)
+        layout.addWidget(self.count_zero_spinbox, 5, 1, 1, 1)
+        layout.addWidget(qlabels[4], 4, 2, 1, 1)
+        layout.addWidget(qlabels[5], 5, 2, 1, 1)
+        layout.addWidget(qlabels[10], 6, 0, 1, 1)
+        layout.addWidget(self.count_offset_spinbox, 6, 1, 1, 1)
+        layout.addWidget(qlabels[9], 6, 2, 1, 1)
+        layout.addWidget(self.sync_offset_spinbox, 6, 3, 1, 1)
+        layout.addWidget(self.sync_level_spinbox, 4, 3, 1, 1)
+        layout.addWidget(self.sync_zero_spinbox, 5, 3, 1, 1)
+        layout.addWidget(self.measure_time_spinbox, 9, 1, 1, 1)
+        layout.addWidget(qlabels[6], 9, 0, 1, 1)
+        layout.addWidget(self.histo_iter_spinbox, 10, 1, 1, 1)
+        layout.addWidget(qlabels[13], 10, 0, 1, 1)
+        layout.addWidget(qlabels[14], 10, 2, 1, 1)
+        layout.addWidget(self.repump_dropdown, 10, 3, 1, 1)
+        layout.addWidget(self.binning_dropdown, 7, 1, 1, 1)
+        layout.addWidget(self.sync_divider_dropdown, 7, 3, 1, 1, )
+        layout.addWidget(qlabels[7], 7, 0, 1, 1)
+        layout.addWidget(qlabels[8], 7, 2, 1, 1)
+        layout.addWidget(qlabels[12], 9, 2, 1, 1)
         layout.addWidget(self.histo_length_dropdown, 9, 3, 1, 1)
-        layout.addWidget(self.plot_button,           8, 0, 1, 4)
+        layout.addWidget(self.plot_button, 8, 0, 1, 4)
         layout.addWidget(self.save_timetags_button, 11, 0, 1, 4)
 
         self.setLayout(layout)
@@ -236,34 +239,36 @@ class TimeHarpClient(QtGui.QWidget):
     @inlineCallbacks
     def on_hist_pressed(self, value):
         self.setDisabled(True)
-        print 'disabled'
+        print
+        'disabled'
         init_935_power = yield self.pulser.amplitude('935SP')
         init_369DP_power = yield self.pulser.amplitude('369DP')
         yield self.pulser.amplitude('369DP', self.U(-46.0, 'dBm'))
         if self.repump_dropdown.currentIndex() == 1:
             yield self.pulser.amplitude('935SP', self.U(-46.0, 'dBm'))
         data_length_index = self.histo_length_dropdown.currentIndex()
-        data_length = 2**data_length_index * (1024)
+        data_length = 2 ** data_length_index * (1024)
         measure_time = self.measure_time_spinbox.value()
-        binning = 2**self.binning_dropdown.currentIndex()
+        binning = 2 ** self.binning_dropdown.currentIndex()
         bins = range(32768)
         yield self.data_vault.cd(['', 'TimeHarp_histograms'], True)
         total_hist = []
         yield self.server.start_measure(int(measure_time))
-        time.sleep(measure_time/1000.)
+        time.sleep(measure_time / 1000.)
         yield self.server.stop_measure()
         data = yield self.server.get_histogram(0, 1, data_length)
-        hist = np.column_stack((binning*25*np.array(bins)/1000., data))
+        hist = np.column_stack((binning * 25 * np.array(bins) / 1000., data))
         hist = hist.astype(float)
         total_hist.append(sum(hist[:, 1]))
 
-#       for hist in hist_array:
+        #       for hist in hist_array:
         self.dataset_hist = yield self.data_vault.new('Histogram', [('run', 'arb u')],
                                                       [('Counts', 'Counts', 'num')])
         bins = []
         bins = list(np.arange(0, len(hist), 1))
         to_save = np.column_stack((bins, hist))
-        print hist
+        print
+        hist
         yield self.data_vault.add(hist)
         yield self.grapher.plot(self.dataset_hist, 'TimeHarp', False)
         yield self.pulser.amplitude('935SP', init_935_power)
@@ -274,20 +279,23 @@ class TimeHarpClient(QtGui.QWidget):
     def on_timetags_pressed(self, value):
         measure_time = self.measure_time_spinbox.value()
         yield self.server.start_measure(int(measure_time))
-        #time.sleep(measure_time/1000)
+        # time.sleep(measure_time/1000)
         data = yield self.server.read_fifo(1000)
         yield self.server.stop_measure()
         length_left = data[1]
-        print length_left
+        print
+        length_left
         while (length_left == 1000):
-            print length_left
+            print
+            length_left
             data += yield self.server.read_fifo(1000)
-            print 'reading fifo'
+            print
+            'reading fifo'
         data = data[0]
         dtime_mask = 33553408
         timetags = []
         for datum in data:
-            timetag = ((dtime_mask & datum) >> 10)*25./1000.
+            timetag = ((dtime_mask & datum) >> 10) * 25. / 1000.
             timetags.append(timetag)
 
     @inlineCallbacks
@@ -320,7 +328,7 @@ class TimeHarpClient(QtGui.QWidget):
 
     @inlineCallbacks
     def change_sync_divider(self, index):
-        value = 2**int(index)
+        value = 2 ** int(index)
         error = yield self.server.set_sync_div(value)
         if error:
             self.errors.setText('Errors: ' + error[0])
@@ -365,8 +373,10 @@ class TimeHarpClient(QtGui.QWidget):
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
+
     qt4reactor.install()
     from twisted.internet import reactor
+
     TimeHarpWidget = TimeHarpClient(reactor)
     TimeHarpWidget.show()
     run = reactor.run()

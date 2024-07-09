@@ -12,7 +12,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class RandomizedBenchmarking(PulseSequence):
-
     required_subsequences = [DopplerCooling, StandardStateDetection,
                              ShelvingStateDetection, TurnOffAll,
                              ShelvingDopplerCooling, Shelving, Deshelving,

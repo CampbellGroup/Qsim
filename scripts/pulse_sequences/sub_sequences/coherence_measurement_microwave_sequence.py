@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class CoherenceMeasurementMicrowaveSequence(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),
         ('MicrowaveInterrogation', 'ttl_switch_delay'),
@@ -13,7 +12,7 @@ class CoherenceMeasurementMicrowaveSequence(PulseSequence):
         ('Pi_times', 'qubit_0'),
         ('CoherenceMeasurement', 'target_end_state'),
         ('CoherenceMeasurement', 'delay_times')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters

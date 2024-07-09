@@ -21,7 +21,6 @@ from drift_config import drift_tracker_config as hc
 
 
 class driftTracker(LabradServer):
-
     name = 'drift_tracker'
 
     def initServer(self):
@@ -37,7 +36,7 @@ class driftTracker(LabradServer):
         self.tracked_servers = []
         for key, value in self.tracked_items.iteritems():
             self.tracked_servers = value[0]
-            print self.tracked_servers
+            print(self.tracked_servers)
 
         self.fast_loop = LoopingCall(self.update_fast_loop)
         self.slow_loop = LoopingCall(self.update_slow_loop)
@@ -57,17 +56,17 @@ class driftTracker(LabradServer):
     @inlineCallbacks
     def followServerDisconnect(self, ctx, serverName):
         serverName = serverName[1]
-        print serverName
+        print(serverName)
         if serverName in self.tracked_servers:
-            print 'tracked server!'
+            print('tracked server!')
             yield None
 
     @inlineCallbacks
     def followServerConnect(self, ctx, serverName):
         serverName = serverName[1]
-        print serverName
+        print(serverName)
         if serverName in self.tracked_servers:
-            print 'tracked server online!'
+            print('tracked server online!')
             yield None
 
     @inlineCallbacks
@@ -92,10 +91,11 @@ class driftTracker(LabradServer):
 
     @inlineCallbacks
     def update_grapher(self, plot, data):
-        print plot, data
+        print(plot, data)
         yield None
 
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer((driftTracker()))

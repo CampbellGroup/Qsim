@@ -12,7 +12,6 @@ from .sub_sequences.coherence_measurement_microwave_sequence import CoherenceMea
 
 
 class CoherenceMeasurementPoint(PulseSequence):
-
     required_subsequences = [TurnOffAll, DopplerCooling,
                              ShelvingStateDetection,
                              Deshelving, StandardStateDetection,
@@ -20,8 +19,8 @@ class CoherenceMeasurementPoint(PulseSequence):
                              CoherenceMeasurementMicrowaveSequence, ShelvingDopplerCooling]
 
     required_parameters = [
-                          ('Modes', 'state_detection_mode')
-        ]
+        ('Modes', 'state_detection_mode')
+    ]
 
     def sequence(self):
         mode = self.parameters.Modes.state_detection_mode

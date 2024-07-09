@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class MetastableRamseyMicrowaveInterrogation(PulseSequence):
-
     required_parameters = [
         ('MetastableMicrowaveRamsey', 'detuning'),
         ('MetastableMicrowaveRamsey', 'cooling_lasers_during_microwaves'),
@@ -21,7 +20,7 @@ class MetastableRamseyMicrowaveInterrogation(PulseSequence):
         ('EmptySequence', 'duration'),
         ('Pi_times', 'metastable_qubit'),
         ('Transitions', 'main_cooling_369')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -29,7 +28,7 @@ class MetastableRamseyMicrowaveInterrogation(PulseSequence):
         center = p.Transitions.MetastableQubit
         pi_time = p.Pi_times.metastable_qubit
 
-        DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq + (p.MetastableMicrowaveRamsey.detuning + center)/8.0
+        DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq + (p.MetastableMicrowaveRamsey.detuning + center) / 8.0
 
         self.add_dds('3GHz_qubit',
                      self.start,
@@ -65,4 +64,3 @@ class MetastableRamseyMicrowaveInterrogation(PulseSequence):
                          p.ddsDefaults.doppler_cooling_power)
 
         self.end = self.start + pi_time + p.EmptySequence.duration
-

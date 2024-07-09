@@ -30,7 +30,7 @@ class TDCDevice(DeviceWrapper):
     @inlineCallbacks
     def connect(self, server, port):
         """Connect to a TDC device."""
-        print 'connecting to "%s" on port "%s"...' % (server.name, port),
+        print('connecting to "%s" on port "%s"...' % (server.name, port))
         self.server = server
         self.ctx = server.context()
         self.port = port
@@ -111,7 +111,7 @@ class ArduinoTDC(DeviceServer):
         reg = self.reg
         yield reg.cd(['', 'Servers', 'ArduinoTDC', 'Links'], True)
         dirs, keys = yield reg.dir()
-        print dirs
+        print(dirs)
         p = reg.packet()
         for k in keys:
             p.get(k, key=k)
@@ -127,7 +127,7 @@ class ArduinoTDC(DeviceServer):
                 continue
             server = self.client[serServer]
             ports = yield server.list_serial_ports()
-            print port
+            print(port)
             if port not in ports:
                 continue
             devName = '%s - %s' % (serServer, port)
@@ -140,13 +140,14 @@ class ArduinoTDC(DeviceServer):
         data = yield dev.read_all()
         returnValue(data)
 
-
     @setting(200, returns='v')
     def get_most_recent_data(self, c):
         dev = self.selectDevice(c)
         value = yield dev.most_recent
         returnValue(value)
 
+
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(ArduinoTDC())

@@ -47,31 +47,31 @@ Before running the scan, care should be taken to make sure that the laser powers
 
         self.setup_parameters()
         self.setup_datavault('Frequency (THz)', 'kcounts/sec')
-        self.low_rail = self.centerfrequency['THz'] - self.scan_range['THz']/2.0
-        self.high_rail = self.centerfrequency['THz'] + self.scan_range['THz']/2.0
+        self.low_rail = self.centerfrequency['THz'] - self.scan_range['THz'] / 2.0
+        self.high_rail = self.centerfrequency['THz'] + self.scan_range['THz'] / 2.0
         self.tempdata = []
 
         low_x = np.linspace(self.centerfrequency['THz'], self.low_rail, 100)
         high_x = np.linspace(self.centerfrequency['THz'], self.high_rail, 100)
         delay = self.wait_time['s']
         for i in range(100):
-            progress = i/200.0
+            progress = i / 200.0
             should_break = self.take_data(progress, delay)
             if should_break:
                 return
             self.wm.set_pid_course(self.dac_port, str(low_x[i]))
         self.wm.set_pid_course(self.dac_port, str(self.centerfrequency['THz']))
-        time.sleep(5*delay)
+        time.sleep(5 * delay)
 
         for i in range(100):
-            progress = (100 + i)/200.0
+            progress = (100 + i) / 200.0
             should_break = self.take_data(progress, delay)
             if should_break:
                 return
             self.wm.set_pid_course(self.dac_port, str(high_x[i]))
 
         self.wm.set_pid_course(self.dac_port, str(self.centerfrequency['THz']))
-        time.sleep(5*delay)
+        time.sleep(5 * delay)
 
         if len(self.tempdata) > 0:
             self.tempdata.sort()
@@ -135,10 +135,10 @@ Before running the scan, care should be taken to make sure that the laser powers
             self.dac_port = 3
 
         elif self.p.wavemeterscan.lasername == 'Hudson':
-           self.centerfrequency = self.p.Transitions.Hudson
-           self.scan_range = self.p.wavemeterscan.scan_range_Hudson
-           self.channel = 1
-           self.dac_port = 1
+            self.centerfrequency = self.p.Transitions.Hudson
+            self.scan_range = self.p.wavemeterscan.scan_range_Hudson
+            self.channel = 1
+            self.dac_port = 1
 
         self.wait_time = self.p.wavemeterscan.rail_wait_time
 

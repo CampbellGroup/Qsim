@@ -6,6 +6,7 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+
 class cameraswitch(QFrame):
 
     def __init__(self, reactor, cxn=None):
@@ -89,23 +90,26 @@ class cameraswitch(QFrame):
         yield self.cam.start_live_display()
         yield self.dv.cd(['', 'quick_images'])
         dataset = yield self.dv.new('quick_images', [('', 'num')],
-                                   [('', '', 'num')])
+                                    [('', '', 'num')])
         yield self.dv.save_image(image_data, [image_region[5], image_region[3]], 1, dataset[1])
         self.last_saved_label.setText('file: ' + dataset[1])
         try:
             yield self.grapher.plot_image(image_data, [image_region[5], image_region[3]], 'Images',
-                            str(dataset))
+                                          str(dataset))
         except:
             pass
 
     def closeEvent(self, x):
         self.reactor.stop()
 
+
 if __name__ == "__main__":
     a = QApplication([])
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
+
     cameraswitchWidget = cameraswitch(reactor)
     cameraswitchWidget.show()
     reactor.run()

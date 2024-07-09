@@ -93,7 +93,7 @@ FiberEOM:
         self.times = self.get_scan_list(self.p.RabiFlopping.scan, 'us')
 
         for i, duration in enumerate(self.times):
-            should_break = self.update_progress(i/float(len(self.times)))
+            should_break = self.update_progress(i / float(len(self.times)))
             if should_break:
                 self.pulser.line_trigger_state(False)
                 break
@@ -131,7 +131,7 @@ FiberEOM:
                     diff = np.mean(countsDopFixed) - self.counts_track_mean
                     if np.abs(diff) > 7.0:
                         self.cavity_voltage = self.cavity_voltage + np.sign(diff) * 0.005
-                        if np.sign(diff)*0.005 < 0.2:
+                        if np.sign(diff) * 0.005 < 0.2:
                             self.pzt_server.set_voltage(self.cavity_channel, U(self.cavity_voltage, 'V'))
                             print('Updated cavity voltage to ' + str(self.cavity_voltage) + ' V')
                     else:

@@ -58,7 +58,7 @@ FiberEOM
         self.times = self.get_scan_list(self.p.OpticalPumping.scan, 'us')
         for i, duration in enumerate(self.times):
 
-            should_break = self.update_progress(i/float(len(self.times)))
+            should_break = self.update_progress(i / float(len(self.times)))
             if should_break:
                 break
 
@@ -83,7 +83,8 @@ FiberEOM
                     self.p['Modes.state_detection_mode'] = 'Shelving'
                     self.program_pulser(sequence)
                     [doppler_counts, detection_counts] = self.run_sequence(num=2, max_runs=500)
-                    deshelving_errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+                    deshelving_errors = np.where(
+                        doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
                     detection_counts = np.delete(detection_counts, deshelving_errors)
                 elif self.p.Modes.state_detection_mode == 'Standard':
                     self.p['OpticalPumping.duration'] = U(0.0, 'us')

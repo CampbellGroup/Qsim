@@ -13,6 +13,7 @@ from labrad.units import WithUnit
 import time
 import numpy as np
 
+
 class IonPositionTracker(QsimExperiment):
     """
     Track the (x, y) position of the ion on the camera as a function of time.
@@ -50,7 +51,7 @@ class IonPositionTracker(QsimExperiment):
             yPos = np.argmax(np.sum(data, axis=1))
             elapsed = WithUnit(time.time() - init_time, 's')
             self.dv.add([elapsed['s'], xPos, yPos])
-            should_break = self.update_progress(elapsed['s']/self.p.images.measure_time['s'])
+            should_break = self.update_progress(elapsed['s'] / self.p.images.measure_time['s'])
             if should_break:
                 break
 
@@ -66,8 +67,8 @@ class IonPositionTracker(QsimExperiment):
         center_x = self.p.images.image_center_y['pix']
         height = self.p.images.image_width['pix']
         width = self.p.images.image_height['pix']  # switched due to transpose of camera data
-        self.x_pixel_range = [int(center_x - width/2), int(center_x + width/2)]  # rounds image size
-        self.y_pixel_range = [int(center_y - height/2), int(center_y + height/2)]
+        self.x_pixel_range = [int(center_x - width / 2), int(center_x + width / 2)]  # rounds image size
+        self.y_pixel_range = [int(center_y - height / 2), int(center_y + height / 2)]
         self.image_x_length = self.x_pixel_range[-1] - self.x_pixel_range[0] + 1
         self.image_y_length = self.y_pixel_range[-1] - self.y_pixel_range[0] + 1
         self.data_size = [self.image_x_length, self.image_y_length]

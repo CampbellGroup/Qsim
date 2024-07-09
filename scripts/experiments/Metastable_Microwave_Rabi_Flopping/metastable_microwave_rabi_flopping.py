@@ -1,6 +1,7 @@
 import labrad
 from Qsim.scripts.pulse_sequences.microwave_point.metastable_microwave_point import MetastableMicrowavePoint as sequence
-from Qsim.scripts.pulse_sequences.microwave_point.heralded_metastable_microwave_point import HeraldedMetastableMicrowavePoint as heralded_sequence
+from Qsim.scripts.pulse_sequences.microwave_point.heralded_metastable_microwave_point import \
+    HeraldedMetastableMicrowavePoint as heralded_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
@@ -44,14 +45,14 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
 
         self.times = self.get_scan_list(self.p.MetastableMicrowaveRabiFlopping.scan, 'us')
         for i, duration in enumerate(self.times):
-            should_break = self.update_progress(i/float(len(self.times)))
+            should_break = self.update_progress(i / float(len(self.times)))
             if should_break:
                 break
             self.p['Metastable_Microwave_Interrogation.duration'] = U(duration, 'us')
-#            self.program_pulser(sequence)
-#            [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
-#            errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-#            counts = np.delete(detection_counts, errors)
+            #            self.program_pulser(sequence)
+            #            [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
+            #            errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+            #            counts = np.delete(detection_counts, errors)
             if self.p.MetastableStateDetection.herald_state_prep == 'Off':
                 self.program_pulser(sequence)
                 [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
@@ -66,7 +67,8 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
                 # this will combine all errors into one array and delete repeats (error on both doppler and herald)
                 all_errors = np.unique(np.concatenate((failed_heralding[0], doppler_errors[0])))
                 counts = np.delete(detection_counts, all_errors)
-                print len(counts)
+                print
+                len(counts)
 
             hist = self.process_data(counts)
             self.plot_hist(hist)

@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class QuadrupoleInterrogation(PulseSequence):
-
     required_parameters = [
         ('QuadrupoleInterrogation', 'duration'),
         ('QuadrupoleInterrogation', 'detuning'),
@@ -15,7 +14,7 @@ class QuadrupoleInterrogation(PulseSequence):
         p = self.parameters
 
         center = p.Transitions.quadrupole
-        DDS_freq = p.ddsDefaults.DP1_411_freq + (p.QuadrupoleInterrogation.detuning + center)/2.0
+        DDS_freq = p.ddsDefaults.DP1_411_freq + (p.QuadrupoleInterrogation.detuning + center) / 2.0
 
         self.add_dds('411DP1',
                      self.start,

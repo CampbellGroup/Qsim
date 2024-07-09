@@ -55,19 +55,20 @@ class PMT_FFT(QsimExperiment):
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
             timetags = self.pulser.get_timetags()
-            should_break = self.update_progress(i/float(self.average))
+            should_break = self.update_progress(i / float(self.average))
             if should_break:
                 break
-            new_pwr =  self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time, U(10.0, 'ns'))
+            new_pwr = self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time, U(10.0, 'ns'))
             np.add(pwr, new_pwr, out=pwr, casting="unsafe")
-            #pwr += self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time, U(10.0, 'ns'))
+            # pwr += self.processor.getPowerSpectrum(self.freqs, timetags, self.record_time, U(10.0, 'ns'))
         pwr = pwr / float(self.average)
         data = np.array(np.vstack((self.freqs, pwr)).transpose(), dtype='float')
         self.dv.add(data)
 
     def set_scannable_parameters(self):
         detuning = self.p.DopplerCooling.detuning
-        self.freq = detuning / 2.0 + self.p.Transitions.main_cooling_369/2.0 + U(200.0, 'MHz')  # divide by 2 for the double pass
+        self.freq = detuning / 2.0 + self.p.Transitions.main_cooling_369 / 2.0 + U(200.0,
+                                                                                   'MHz')  # divide by 2 for the double pass
         self.record_time = self.p.FFT.record_time
         self.average = int(self.p.FFT.average)
         self.center_freq = self.p.FFT.center_frequency
@@ -75,10 +76,12 @@ class PMT_FFT(QsimExperiment):
         self.freq_offset = self.p.FFT.frequency_offset
         self.freqs = self.processor.computeFreqDomain(self.record_time['s'], self.freq_span['Hz'],
                                                       self.freq_offset['Hz'], self.center_freq['Hz'])
+
     def finalize(self, cxn, context):
 
         self.pulser.frequency('369DP', self.init_freq)
         self.pmt.set_mode(self.init_mode)
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

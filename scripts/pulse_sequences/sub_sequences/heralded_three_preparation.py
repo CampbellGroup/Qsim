@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class HeraldedThreePreparation(PulseSequence):
-
     required_parameters = [
         ('MetastableStateDetection', 'duration'),
         ('MetastableStateDetection', 'repump_power'),
@@ -29,7 +28,7 @@ class HeraldedThreePreparation(PulseSequence):
 
     def sequence(self):
         p = self.parameters
-        qubitFreq = p.ddsDefaults.metastable_qubit_dds_freq + p.Transitions.MetastableQubit/8.0
+        qubitFreq = p.ddsDefaults.metastable_qubit_dds_freq + p.Transitions.MetastableQubit / 8.0
 
         self.add_ttl('ReadoutCount',
                      self.start + p.Pi_times.metastable_qubit + p.HeraldedStatePreparation.deshelving_duration,

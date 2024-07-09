@@ -32,7 +32,7 @@ class DopplerCoolingLeakthroughTest(QsimExperiment):
         self.times = self.get_scan_list(self.p.EmptySequence.scan_empty_duration, 'us')
         for i, duration in enumerate(self.times):
 
-            should_break = self.update_progress(i/float(len(self.times)))
+            should_break = self.update_progress(i / float(len(self.times)))
             if should_break:
                 break
 

@@ -27,7 +27,7 @@ def compute_color(voltage):
     R = 255 if voltage > 0 else 0
     G = 0
     B = 255 if voltage < 0 else 0
-    A = min(int(255 * abs(voltage)/saturation_voltage), 255)
+    A = min(int(255 * abs(voltage) / saturation_voltage), 255)
 
     return QtGui.QColor(R, G, B, A)
 
@@ -64,7 +64,7 @@ class ElectrodeIndicator(QWidget):
     def draw_wedges(self, qp):
         frame_width = self.frameGeometry().width()
         frame_height = self.frameGeometry().height()
-        trap_diameter = .9 * min(frame_height, frame_width/2 )
+        trap_diameter = .9 * min(frame_height, frame_width / 2)
         center_top = QPoint(int(frame_width / 4), int(frame_height / 2))
         center_bottom = QPoint(int(3 * frame_width / 4), int(frame_height / 2))
 

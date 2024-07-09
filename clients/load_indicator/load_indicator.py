@@ -26,7 +26,6 @@ class indicator():
 
 
 class LoadIndicator(QWidget):
-
     indicators = {'369 Freq': [812.108, 812.112],
                   '399 Freq': [752.450, 752.453],
                   '935 Freq': [320.568, 320.572],
@@ -59,7 +58,7 @@ class LoadIndicator(QWidget):
 
         self.dac = self.cxn.dac_ad660_server
         self.arduino_ttl = self.cxn.arduinottl
-#        self.RFscope = self.cxn.ds1052e_scope_server
+        #        self.RFscope = self.cxn.ds1052e_scope_server
         self.kt = self.cxn.keithley_2230g_server
         self.kt.select_device(0)
         self.initialize_gui()
@@ -122,19 +121,22 @@ class LoadIndicator(QWidget):
         else:
             self.indwidgets['Oven On'].update_value(0.0)
 
-#        self.indwidgets['RF Power Foward'].update_value(float(forward))
-#        self.indwidgets['RF reflected'].update_value(float(reflected))
+    #        self.indwidgets['RF Power Foward'].update_value(float(forward))
+    #        self.indwidgets['RF reflected'].update_value(float(reflected))
 
     def closeEvent(self, x):
         self.cxn.disconnect()
         self.cxnwlm.disconnect()
         self.reactor.stop()
 
+
 if __name__ == "__main__":
     a = QApplication([])
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
+
     LoadWidget = LoadIndicator(reactor)
     LoadWidget.show()
     reactor.run()

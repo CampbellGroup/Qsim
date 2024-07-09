@@ -10,6 +10,7 @@ tested with Python33 and Pyside112  by vegaseat  29jul2013
 import time
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+
 # replace [] with sys.argv for command line option
 app = QApplication([])
 # ----- start your widget test code ----

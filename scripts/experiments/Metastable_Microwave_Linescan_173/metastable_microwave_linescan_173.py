@@ -43,7 +43,7 @@ class MetastableMicrowaveLineScan173(QsimExperiment):
         print(self.p['Metastable_Microwave_Interrogation.duration'])
 
         for i, detuning in enumerate(self.detunings):
-            should_break = self.update_progress(i/float(len(self.detunings)))
+            should_break = self.update_progress(i / float(len(self.detunings)))
             if should_break:
                 break
             self.p['Metastable_Microwave_Interrogation.detuning'] = U(detuning, 'kHz')

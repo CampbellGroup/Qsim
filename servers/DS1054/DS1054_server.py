@@ -25,7 +25,6 @@ dev_name = '/dev/usbtmc0'
 
 
 class DS1054_Server(LabradServer):
-
     name = 'DS1054 Scope Server'
 
     def initServer(self):
@@ -41,8 +40,8 @@ class DS1054_Server(LabradServer):
     def measureVPP(self, c, chan):
         self.write(':MEAS:ITEM VAVG,CHAN' + str(chan))
         self.write(':MEAS:ITEM? VAVG,CHAN' + str(chan))
-        #time.sleep(0.1)
-        #self.write(':MEAS:VPP? [CHAN' + str(chan) + ']')
+        # time.sleep(0.1)
+        # self.write(':MEAS:VPP? [CHAN' + str(chan) + ']')
         response = self.read(data_size=300)
         yield returnValue(response)
 
@@ -56,4 +55,5 @@ class DS1054_Server(LabradServer):
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(DS1054_Server())

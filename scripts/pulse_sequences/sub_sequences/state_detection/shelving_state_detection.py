@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class ShelvingStateDetection(PulseSequence):
-
     required_parameters = [
         ('ShelvingStateDetection', 'duration'),
         ('ShelvingStateDetection', 'repump_power'),
@@ -44,18 +43,17 @@ class ShelvingStateDetection(PulseSequence):
                      p.ddsDefaults.repump_976_freq,
                      p.ddsDefaults.repump_976_power)
 
-        #self.addTTL('WindfreakSynthHDTTL',
+        # self.addTTL('WindfreakSynthHDTTL',
         #            self.start,
         #            p.ShelvingStateDetection.duration)
-
 
         self.add_dds('369DP',
                      self.start,
                      p.ShelvingStateDetection.duration,
                      p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq + p.ShelvingStateDetection.detuning / 2.0,
                      p.ShelvingStateDetection.power)
-        #Commented out because we are using the fiber EOM right now, not the DC/SD/OP path
-        #self.addDDS('DopplerCoolingSP',
+        # Commented out because we are using the fiber EOM right now, not the DC/SD/OP path
+        # self.addDDS('DopplerCoolingSP',
         #            self.start,
         #            p.ShelvingStateDetection.duration,
         #            p.ddsDefaults.doppler_cooling_freq,

@@ -19,7 +19,7 @@ class Magnetometry(QsimExperiment):
     exp_parameters.append(MicrowaveLineScan.all_required_parameters())
 
     def sincsq(x, a, b, c, d):
-        return a*np.sinc(b*x - c)**2 + d
+        return a * np.sinc(b * x - c) ** 2 + d
 
     def initialize(self, cxn, context, ident):
         self.coil_names = {'Bx': 0, 'By': 1, 'Bz': 2}

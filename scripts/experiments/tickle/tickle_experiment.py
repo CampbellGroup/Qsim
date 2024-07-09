@@ -5,7 +5,6 @@ import time
 
 
 class ticklescan(QsimExperiment):
-
     name = 'Tickle Scan'
 
     exp_parameters = []

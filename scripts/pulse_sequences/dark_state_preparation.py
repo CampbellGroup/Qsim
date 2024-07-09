@@ -12,7 +12,6 @@ from .sub_sequences.deshelving import Deshelving
 
 
 class DarkStatePreparation(PulseSequence):
-
     required_subsequences = [TurnOffAll, DopplerCooling, StandardStateDetection,
                              ShelvingStateDetection, OpticalPumping, Shelving, ShelvingDopplerCooling,
                              Deshelving, BrightStatePumping, MicrowaveInterrogation]

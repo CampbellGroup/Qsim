@@ -2,6 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 from labrad.units import WithUnit as U
 import numpy as np
 
+
 class MicrowaveSequenceStandardRandomPhase(PulseSequence):
     # this is a general microwave square pulse sequence where the different qubit lines
     # can be selected
@@ -17,7 +18,7 @@ class MicrowaveSequenceStandardRandomPhase(PulseSequence):
         ('Transitions', 'qubit_plus'),
         ('Transitions', 'qubit_minus'),
         ('ddsDefaults', 'qubit_dds_freq')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -33,7 +34,7 @@ class MicrowaveSequenceStandardRandomPhase(PulseSequence):
             center = p.Transitions.qubit_minus
 
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (p.MicrowaveInterrogation.detuning + center)
-        phase = 360.0*np.random.rand()
+        phase = 360.0 * np.random.rand()
         pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
         self.add_ttl('MicrowaveTTL',
                      self.start + pulse_delay,

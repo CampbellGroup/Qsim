@@ -41,14 +41,14 @@ class MetastableMicrowaveLineScanSwept173(QsimExperiment):
         self.p['Modes.state_detection_mode'] = 'Shelving'
 
         for i, detuning in enumerate(self.detunings):
-            should_break = self.update_progress(i/float(len(self.detunings)))
+            should_break = self.update_progress(i / float(len(self.detunings)))
             if should_break:
                 break
             self.p['Metastable_Microwave_Interrogation.detuning'] = U(detuning, 'kHz')
             self.program_pulser(sequence)
             [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
             errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
-            counts = detection_counts #np.delete(detection_counts, errors)
+            counts = detection_counts  # np.delete(detection_counts, errors)
 
             hist = self.process_data(counts)
             self.plot_hist(hist)

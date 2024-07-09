@@ -36,7 +36,6 @@ class DarkStateDetection(QsimExperiment):
     exp_parameters.remove(('MicrowaveInterrogation', 'detuning'))
     exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
 
-
     def initialize(self, cxn, context, ident):
         self.ident = ident
         self.pulser = self.cxn.pulser
@@ -76,7 +75,7 @@ class DarkStateDetection(QsimExperiment):
                 self.dv.add(dark_dataset, context=self.dark_state_counts)
                 counts, total_doppler_errors = self.delete_doppler_count_errors(doppler_counts, counts)
 
-                print 'Deleted' + str(total_doppler_errors) + ' experiments due to Doppler errors'
+                print('Deleted' + str(total_doppler_errors) + ' experiments due to Doppler errors')
 
             # run and process data if detection mode is standard
             elif mode == 'Standard':
@@ -94,8 +93,8 @@ class DarkStateDetection(QsimExperiment):
                     self.hist_std_dev = np.sqrt(np.mean(doppler_counts))
                     print('mean doppler counts on first experiment is  = ' + str(self.hist_mean))
                 elif i > 1:
-                    if (np.mean(doppler_counts) < (self.hist_mean - 1.0*self.hist_std_dev)) or (
-                            np.mean(doppler_counts) > (self.hist_mean + 1.0*self.hist_std_dev)):
+                    if (np.mean(doppler_counts) < (self.hist_mean - 1.0 * self.hist_std_dev)) or (
+                            np.mean(doppler_counts) > (self.hist_mean + 1.0 * self.hist_std_dev)):
                         success = self.correct_cavity_drift()
                         if success:
                             self.hist_mean = np.mean(doppler_counts)
@@ -111,7 +110,6 @@ class DarkStateDetection(QsimExperiment):
             self.p = self.parameters
             if self.p != old_params:
                 self.program_pulser(sequence)
-
 
             # if the phase list is random we want to always reprogram the pulser so that
             # a new set of random phases is set for the next set of N experiments
@@ -144,7 +142,7 @@ class DarkStateDetection(QsimExperiment):
         prob = self.get_pop(counts)
         self.dv.add(num, prob, context=self.prob_ctx)
 
-    def delete_doppler_count_errors(self, counts_doppler_dark,  counts_dark):
+    def delete_doppler_count_errors(self, counts_doppler_dark, counts_dark):
         """
         takes in the photon counts from each experiment, and the doppler cooling counts for each experiment. Deletes
         the fidelity measurements where the doppler cooling counts were below a user specified threshold, and pads the

@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class ManifoldStateDetection(PulseSequence):
-
     required_parameters = [
         ('ManifoldDetection', 'duration'),
         ('ShelvingStateDetection', 'repump_power'),

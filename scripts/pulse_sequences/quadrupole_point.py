@@ -9,16 +9,14 @@ from .sub_sequences.deshelving import Deshelving
 
 
 class QuadrupolePoint(PulseSequence):
-
     required_subsequences = [TurnOffAll, DopplerCooling, QuadrupoleInterrogation,
                              Deshelving, OpticalPumping, MicrowaveInterrogation,
                              StandardStateDetection]
 
     required_parameters = [
-        ]
+    ]
 
     def sequence(self):
-
         self.add_sequence(TurnOffAll)
         self.add_sequence(DopplerCooling)
         self.add_sequence(OpticalPumping)

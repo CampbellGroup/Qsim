@@ -44,7 +44,7 @@ class MetastableQubitQND(QsimExperiment):
         self.number_exps = []
         self.times = self.get_scan_list(self.p.MetastableMicrowaveRabiFlopping.scan, 'us')
         for i, duration in enumerate(self.times):
-            should_break = self.update_progress(i/float(len(self.times)))
+            should_break = self.update_progress(i / float(len(self.times)))
             if should_break:
                 break
             self.p['MetastableMicrowaveInterrogation.duration'] = U(duration, 'us')

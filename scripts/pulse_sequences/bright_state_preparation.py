@@ -12,7 +12,6 @@ from .sub_sequences.microwave_interrogation.microwave_interrogation import Micro
 
 
 class BrightStatePreparation(PulseSequence):
-
     required_subsequences = [DopplerCooling, StandardStateDetection,
                              ShelvingStateDetection, TurnOffAll, BrightStatePumping,
                              ShelvingDopplerCooling, Shelving, Deshelving, OpticalPumping,

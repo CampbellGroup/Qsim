@@ -78,11 +78,14 @@ class cal_lock(QtGui.QWidget):
     def closeEvent(self, x):
         self.reactor.stop()
 
+
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
+
     qt4reactor.install()
     from twisted.internet import reactor
+
     cal_lock_Widget = cal_lock(reactor)
     cal_lock_Widget.show()
     reactor.run()

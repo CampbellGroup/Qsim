@@ -27,6 +27,7 @@ class Voltage:
     A representation of a voltage,
     with the capability to compile down to the hex representation that the DAC board needs
     """
+
     def __init__(self, channel, analog_voltage=None, digital_voltage=None):
         self.channel = channel
         self.digital_voltage = digital_voltage
@@ -55,7 +56,7 @@ class Voltage:
             - 2^16 is the maximum voltage
         """
         v_min, v_max = self.channel.board_voltage_range
-        zero_value = 2**(HC.PREC_BITS - 1)
+        zero_value = 2 ** (HC.PREC_BITS - 1)
         number_of_voltages = 2 ** HC.PREC_BITS
         return int(round(zero_value + analog_voltage * number_of_voltages / (v_max - v_min)))
 
@@ -200,4 +201,5 @@ class DACServer(LabradServer):
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(DACServer())

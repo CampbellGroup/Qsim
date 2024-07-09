@@ -40,7 +40,7 @@ class MicrowaveRabiFloppingClock(QsimExperiment):
         self.times = np.arange(0.1, 6.1 * self.pi_time, 3.2)
         probs, times = [], []
         for i, duration in enumerate(self.times):
-            should_break = self.update_progress(i/float(len(self.times)))
+            should_break = self.update_progress(i / float(len(self.times)))
             if should_break:
                 self.pulser.line_trigger_state(False)
                 break
@@ -71,10 +71,11 @@ class MicrowaveRabiFloppingClock(QsimExperiment):
         self.pi_time = self.pv.get_parameter('Pi_times', 'qubit_0')['us']
 
     def rabi(self, t, A, pi_time, phase, offset):
-        return A * np.sin(np.pi * t /(2.0 * pi_time) + phase)**2 + offset
+        return A * np.sin(np.pi * t / (2.0 * pi_time) + phase) ** 2 + offset
 
     def finalize(self, cxn, context):
         pass
+
 
 if __name__ == '__main__':
     cxn = labrad.connect()

@@ -77,7 +77,7 @@ FiberEOM:
         self.setup_grapher('Microwave Ramsey Experiment')
         self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, 'ms')
         for i, dark_time in enumerate(self.dark_time):
-            should_break = self.update_progress(i/float(len(self.dark_time)))
+            should_break = self.update_progress(i / float(len(self.dark_time)))
             if should_break:
                 break
             self.p['EmptySequence.duration'] = U(dark_time, 'ms')

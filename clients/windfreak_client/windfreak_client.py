@@ -3,6 +3,7 @@ from twisted.internet.defer import inlineCallbacks
 from Qsim.clients.windfreak_client.windfreak_gui import QCustomWindfreakGui
 import sys
 import logging
+
 logger = logging.getLogger(__name__)
 
 trigger_modes = (
@@ -70,12 +71,11 @@ class WindfreakClient(QWidget):
             init_sweep_freq_step = 0
             init_sweep_time_step = 0
             init_sweep_onoff = False
-            init_sweep_low_power =- 46.0
+            init_sweep_low_power = - 46.0
             init_sweep_high_power = -46.0
             init_sweep_single = False
             init_phase = -46.0
             connection_error = True
-
 
         self.gui.a.freq_input.spinLevel.setValue(float(init_freq))
         self.gui.a.power_input.spinLevel.setValue(float(init_power))
@@ -177,7 +177,6 @@ class WindfreakClient(QWidget):
             init_trigger_mode = 4
             init_reference_mode = 1
 
-
         self.gui.c.trigger_mode.setCurrentIndex(init_trigger_mode)
         self.gui.c.reference_mode.setCurrentIndex(init_reference_mode)
 
@@ -260,6 +259,7 @@ class WindfreakClient(QWidget):
 if __name__ == "__main__":
     a = QApplication(sys.argv)
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
 

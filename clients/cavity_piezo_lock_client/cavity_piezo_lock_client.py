@@ -2,6 +2,7 @@ from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from twisted.internet.defer import inlineCallbacks
 from PyQt4 import QtGui
 
+
 class cavity_piezo_lock_client(QtGui.QWidget):
 
     def __init__(self, reactor, parent=None):
@@ -27,12 +28,12 @@ class cavity_piezo_lock_client(QtGui.QWidget):
         initial_lock_status = False
         remote_button = QCustomSwitchChannel('Lock Status', ('On', 'Off'))
         remote_button.TTLswitch.setChecked(int(initial_lock_status))
-        remote_button.TTLswitch.toggled.connect(lambda state=remote_button.TTLswitch.isDown(): self.on_remote_toggled(state))
+        remote_button.TTLswitch.toggled.connect(
+            lambda state=remote_button.TTLswitch.isDown(): self.on_remote_toggled(state))
         layout.addWidget(remote_button, 0, 0)  # puts remote button at top left
         channel_info = piezo_config.info
 
         for key in channel_info:
-
             initial_channel_setting = yield self.server.get_output_state(channel_info[key][0])
             initial_voltage = yield self.server.get_voltage(channel_info[key][0])
             initial_voltage = float(initial_voltage)
@@ -40,7 +41,7 @@ class cavity_piezo_lock_client(QtGui.QWidget):
             chan_button = QCustomSwitchChannel(key, ('On', 'Off'))
             chan_button.TTLswitch.setChecked(int(initial_channel_setting))
             chan_button.TTLswitch.toggled.connect(lambda state=chan_button.TTLswitch.isDown(),
-                                                  chan=channel_info[key][0]: self.on_chan_toggled(chan, state))
+                                                         chan=channel_info[key][0]: self.on_chan_toggled(chan, state))
             voltage_spin_box = QtGui.QDoubleSpinBox()
             voltage_spin_box.setRange(0.0, 150.0)
             voltage_spin_box.setSingleStep(0.1)
@@ -48,10 +49,10 @@ class cavity_piezo_lock_client(QtGui.QWidget):
             voltage_spin_box.setValue(initial_voltage)
             voltage_spin_box.setKeyboardTracking(False)
             voltage_spin_box.valueChanged.connect(lambda volt=voltage_spin_box.value(),
-                                                  chan=channel_info[key][0]: self.voltage_changed(chan, volt))
+                                                         chan=channel_info[key][0]: self.voltage_changed(chan, volt))
             layout.addWidget(chan_button, channel_info[key][1][0], channel_info[key][1][1])
             #  puts voltage box below it's channel button
-            layout.addWidget(voltage_spin_box, channel_info[key][1][0]+1, channel_info[key][1][1])
+            layout.addWidget(voltage_spin_box, channel_info[key][1][0] + 1, channel_info[key][1][1])
         self.setLayout(layout)
 
     @inlineCallbacks
@@ -73,8 +74,10 @@ class cavity_piezo_lock_client(QtGui.QWidget):
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
+
     qt4reactor.install()
     from twisted.internet import reactor
+
     piezoWidget = Piezo_Client(reactor)
     piezoWidget.show()
     reactor.run()

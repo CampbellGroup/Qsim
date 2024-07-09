@@ -98,7 +98,7 @@ FiberEOM:
         self.p['MicrowaveInterrogation.duration'] = pi_time
         deltas, probs = [], []
         for i, detuning in enumerate(self.detunings):
-            should_break = self.update_progress(i/float(len(self.detunings)))
+            should_break = self.update_progress(i / float(len(self.detunings)))
             if should_break:
                 break
 
@@ -141,7 +141,8 @@ FiberEOM:
         This fits the sinc function created in an interleaved linescan,
         identical to the fit function in RealSimpleGrapher
         """
-        return scale*(omega**2/(omega**2 + (center - freq)**2)) * np.sin(np.sqrt(omega**2 + (center - freq)**2)*np.pi/(2*omega))**2 + offset
+        return scale * (omega ** 2 / (omega ** 2 + (center - freq) ** 2)) * np.sin(
+            np.sqrt(omega ** 2 + (center - freq) ** 2) * np.pi / (2 * omega)) ** 2 + offset
 
 
 if __name__ == '__main__':

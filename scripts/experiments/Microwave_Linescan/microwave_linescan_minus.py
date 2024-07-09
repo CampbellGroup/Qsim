@@ -5,9 +5,8 @@ from labrad.units import WithUnit as U
 import numpy as np
 from scipy.optimize import curve_fit as fit
 
+
 class MicrowaveLineScanMinus(QsimExperiment):
-
-
     name = 'Microwave Line Scan Minus'
 
     exp_parameters = []
@@ -34,7 +33,7 @@ class MicrowaveLineScanMinus(QsimExperiment):
 
         deltas, probs = [], []
         for i, detuning in enumerate(self.detunings):
-            should_break = self.update_progress(i/float(len(self.detunings)))
+            should_break = self.update_progress(i / float(len(self.detunings)))
             if should_break:
                 break
 
@@ -59,7 +58,6 @@ class MicrowaveLineScanMinus(QsimExperiment):
 
         return should_break
 
-
     def set_default_parameters(self):
         self.p['MicrowaveInterrogation.duration'] = self.p.Pi_times.qubit_minus
         self.p['OpticalPumping.method'] = 'Standard'
@@ -68,13 +66,13 @@ class MicrowaveLineScanMinus(QsimExperiment):
         self.pulser.line_trigger_state(False)
         pass
 
-
     def sinc_fit(self, freq, omega, center, offset, scale):
         """
         This fits the sinc function created in an interleaved linescan,
         identical to the fit function in RealSimpleGrapher
         """
-        return scale*(omega**2/(omega**2 + (center - freq)**2)) * np.sin(np.sqrt(omega**2 + (center - freq)**2)*np.pi/(2*omega))**2 + offset
+        return scale * (omega ** 2 / (omega ** 2 + (center - freq) ** 2)) * np.sin(
+            np.sqrt(omega ** 2 + (center - freq) ** 2) * np.pi / (2 * omega)) ** 2 + offset
 
 
 if __name__ == '__main__':

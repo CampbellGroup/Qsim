@@ -1,13 +1,14 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import \
+    MicrowaveInterrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.Hadamard import Hadamard
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.microwave_sequence_standard_random_phase import MicrowaveSequenceStandardRandomPhase
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_pulse_sequences.microwave_sequence_standard_random_phase import \
+    MicrowaveSequenceStandardRandomPhase
 from labrad.units import WithUnit as U
 
 
 class BrightStatePumping(PulseSequence):
-
     required_parameters = [
         ('BrightStatePumping', 'doppler_power'),
         ('BrightStatePumping', 'repump_power'),
@@ -25,7 +26,7 @@ class BrightStatePumping(PulseSequence):
         ('ddsDefaults', 'repump_976_freq'),
         ('ddsDefaults', 'repump_976_power'),
         ('Modes', 'bright_state_pumping')
-                           ]
+    ]
 
     required_subsequences = [OpticalPumping, MicrowaveInterrogation,
                              Hadamard, MicrowaveSequenceStandardRandomPhase]

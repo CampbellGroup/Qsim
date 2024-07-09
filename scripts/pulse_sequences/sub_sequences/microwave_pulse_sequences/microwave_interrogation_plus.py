@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class MicrowaveInterrogationPlus(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'duration'),
         ('MicrowaveInterrogation', 'detuning'),

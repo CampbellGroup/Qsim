@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class StandardStateDetection(PulseSequence):
-
     required_parameters = [
         ('StandardStateDetection', 'duration'),
         ('StandardStateDetection', 'CW_power'),

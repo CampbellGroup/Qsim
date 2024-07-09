@@ -12,11 +12,11 @@ from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_minus_X
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_Y import PauliY
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_minus_Y import PauliMinusY
 from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.pauli_Id import PauliId
-from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.single_sequence_rb_testing import SingleSequenceRbTesting
+from Qsim.scripts.pulse_sequences.sub_sequences.single_qubit_gates.single_sequence_rb_testing import \
+    SingleSequenceRbTesting
 
 
 class RandomizedBenchmarkingPulse(PulseSequence):
-
     required_parameters = [
         ('RandomizedBenchmarking', 'file_selection'),
         ('MicrowaveInterrogation', 'power'),
@@ -25,7 +25,7 @@ class RandomizedBenchmarkingPulse(PulseSequence):
         ('Transitions', 'qubit_0'),
         ('ddsDefaults', 'qubit_dds_freq'),
         ('Pi_times', 'qubit_0'),
-                           ]
+    ]
 
     required_subsequences = [
         CliffordX,

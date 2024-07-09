@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class MetastableRabiQND(PulseSequence):
-
     required_parameters = [
         ('MetastableMicrowaveInterrogation', 'duration'),
         ('MetastableMicrowaveInterrogation', 'detuning'),

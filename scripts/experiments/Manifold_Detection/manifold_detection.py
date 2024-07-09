@@ -7,7 +7,6 @@ import numpy as np
 
 
 class ManifoldDetection(QsimExperiment):
-
     name = 'Manifold Detection'
 
     exp_parameters = [
@@ -23,7 +22,7 @@ class ManifoldDetection(QsimExperiment):
         self.pzt_server = cxn.piezo_server
         self.cavity_chan = 1
         self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
-        self.cavity_rails = (self.cavity_voltage-1, self.cavity_voltage+1)
+        self.cavity_rails = (self.cavity_voltage - 1, self.cavity_voltage + 1)
 
     def run(self, cxn, context):
         ion_dead = False
@@ -70,7 +69,7 @@ class ManifoldDetection(QsimExperiment):
                             if not self.rescue_ion(5.0):
                                 ion_dead = True
                                 break
-                        should_break = self.update_progress((time.time()-init_time)/300.0)
+                        should_break = self.update_progress((time.time() - init_time) / 300.0)
                         if should_break: break
                         self.current_fluorescence, counts = self.get_average_counts()
                         print("   current fluorescence is {}".format(self.current_fluorescence))
@@ -86,23 +85,21 @@ class ManifoldDetection(QsimExperiment):
                     # move fluorescence back to middle of range
                     still_there = self.rescue_ion(5.0)
                     if should_break or not still_there: break
-                    #if not self.correct_cavity_drift(): break
+                    # if not self.correct_cavity_drift(): break
 
             if should_break or ion_dead: break
-
 
     def setup_datavault(self):
         self.dark_counts_context = self.dv.context()
         self.dv.cd(['', 'Manifold Detection Counts'], True, context=self.dark_counts_context)
         self.dark_counts_dataset = self.dv.new('counts', [('run', 'arb')],
-                                          [('counts', 'dark_counts', 'num')],
-                                          context=self.dark_counts_context)
+                                               [('counts', 'dark_counts', 'num')],
+                                               context=self.dark_counts_context)
         self.bright_counts_context = self.dv.context()
         self.dv.cd(['', 'Manifold Detection Counts'], True, context=self.bright_counts_context)
         self.bright_counts_dataset = self.dv.new('counts_bright', [('run', 'arb')],
-                                          [('counts', 'bright_counts', 'num')],
-                                          context=self.bright_counts_context)
-
+                                                 [('counts', 'bright_counts', 'num')],
+                                                 context=self.bright_counts_context)
 
     def get_average_counts(self, num=500):
         counts = self.pmt.get_next_counts('ON', num)
@@ -165,7 +162,7 @@ class ManifoldDetection(QsimExperiment):
         if state == 'Off':
             self.pulser.amplitude('411DP1', U(-46.0, 'dBm'))
         if state == 'On':
-            self.pulser.amplitude('411DP1', U(-20.0, 'dBm'))# self.p.ddsDefaults.DP1_411_power)
+            self.pulser.amplitude('411DP1', U(-20.0, 'dBm'))  # self.p.ddsDefaults.DP1_411_power)
 
     def finalize(self, cxn, context):
         self.toggle_repump_lasers('On')

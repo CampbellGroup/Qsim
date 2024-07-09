@@ -51,7 +51,7 @@ class MicrowaveSequenceStandard(PulseSequence):
             self.end = self.start + p.MicrowaveInterrogation.duration + pulse_delay
 
         elif p.MicrowaveInterrogation.microwave_source == 'DDSx32':
-            DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center)/32.0
+            DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center) / 32.0
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
             self.add_ttl('MicrowaveTTL',

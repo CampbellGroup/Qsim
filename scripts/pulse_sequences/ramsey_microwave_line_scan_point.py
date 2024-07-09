@@ -11,7 +11,6 @@ from .sub_sequences.deshelving import Deshelving
 
 
 class RamseyMicrowaveLineScanPoint(PulseSequence):
-
     required_subsequences = [TurnOffAll, DopplerCooling,
                              RamseyMicrowaveInterrogation,
                              StandardStateDetection, ShelvingStateDetection, Deshelving,
@@ -20,7 +19,7 @@ class RamseyMicrowaveLineScanPoint(PulseSequence):
     required_parameters = [
         ('Modes', 'state_detection_mode'),
         ('MicrowaveInterrogation', 'repetitions')
-        ]
+    ]
 
     def sequence(self):
         p = self.parameters

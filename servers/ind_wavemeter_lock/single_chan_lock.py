@@ -16,9 +16,6 @@ timeout = 20
 ### END NODE INFO
 """
 
-from twisted.internet.defer import returnValue
-import os
-import time
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks
 from twisted.internet.task import LoopingCall
@@ -27,7 +24,6 @@ import socket
 
 
 class ind_WM_lock_Server(LabradServer):
-
     name = 'Single WM Lock Server'
 
     def initServer(self):
@@ -46,9 +42,9 @@ class ind_WM_lock_Server(LabradServer):
 
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connection to arduinottl and
+        """
+        Creates an Asynchronous connection to arduinottl and
         connects incoming signals to relavent functions
-
         """
 
         from labrad.wrappers import connectAsync
@@ -60,23 +56,23 @@ class ind_WM_lock_Server(LabradServer):
 
     @inlineCallbacks
     def loop(self):
-            freq = yield self.server.get_frequency(self.chan)
-            error = -1*(self.set - freq)
-            output = error*self.gain + self.prevoutput
-            if output >= self.rails[1]:
-                output = self.rails[1]
-            elif output <= self.rails[0]:
-                output = self.rails[0]
-            else:
-                pass
-            self.prevoutput = output
-            self.server.set_dac_voltage(self.dac, output)
+        freq = yield self.server.get_frequency(self.chan)
+        error = -1 * (self.set - freq)
+        output = error * self.gain + self.prevoutput
+        if output >= self.rails[1]:
+            output = self.rails[1]
+        elif output <= self.rails[0]:
+            output = self.rails[0]
+        else:
+            pass
+        self.prevoutput = output
+        self.server.set_dac_voltage(self.dac, output)
 
     @setting(13, state='b')
     def toggle(self, c, state):
-        '''
+        """
         Sends switches cal vs switcher
-        '''
+        """
         if state:
             self.lc.start(self.timer)
         else:
@@ -98,4 +94,5 @@ class ind_WM_lock_Server(LabradServer):
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(ind_WM_lock_Server())

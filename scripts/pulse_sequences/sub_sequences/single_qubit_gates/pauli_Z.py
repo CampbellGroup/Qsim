@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class PauliZ(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),
         ('MicrowaveInterrogation', 'ttl_switch_delay'),

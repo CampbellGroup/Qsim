@@ -3,14 +3,13 @@ from labrad.units import WithUnit as U
 
 
 class SingleSequenceRbTesting(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'power'),
         ('MicrowaveInterrogation', 'ttl_switch_delay'),
         ('Transitions', 'qubit_0'),
         ('ddsDefaults', 'qubit_dds_freq'),
         ('Pi_times', 'qubit_0')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -19,9 +18,8 @@ class SingleSequenceRbTesting(PulseSequence):
         pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
         pi_time = p.Pi_times.qubit_0
 
-
         # Pauli Identity
-        #self.addTTL('MicrowaveTTL',
+        # self.addTTL('MicrowaveTTL',
         #            self.start + pulse_delay,
         #            pi_time)
         self.add_dds('Microwave_qubit',
@@ -42,7 +40,6 @@ class SingleSequenceRbTesting(PulseSequence):
                      p.MicrowaveInterrogation.power,
                      U(90.0, 'deg'))
 
-
         # Pauli minus y
         self.add_ttl('MicrowaveTTL',
                      self.start + pulse_delay + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay,
@@ -54,8 +51,7 @@ class SingleSequenceRbTesting(PulseSequence):
                      p.MicrowaveInterrogation.power,
                      U(270.0, 'deg'))
 
-
-        #Clifford y
+        # Clifford y
         self.add_ttl('MicrowaveTTL',
                      self.start + pulse_delay + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
                      pi_time / 2.0)
@@ -168,6 +164,3 @@ class SingleSequenceRbTesting(PulseSequence):
 
         self.end = self.start + (2 * pi_time) + (2 * (pi_time / 2.0)) + (pulse_delay * 4)
         '''
-
-
-

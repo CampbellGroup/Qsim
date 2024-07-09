@@ -12,17 +12,15 @@ from .sub_sequences.heralded_three_preparation import HeraldedThreePreparation
 
 
 class MetastableThreePreparation(PulseSequence):
-
     required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation,
                              MetastableStateDetection, OpticalPumping, Shelving,
                              ShelvingDopplerCooling, Deshelving, MicrowaveInterrogation,
                              HeraldedFourPreparation, HeraldedThreePreparation]
 
     required_parameters = [
-        ]
+    ]
 
     def sequence(self):
-
         self.add_sequence(TurnOffAll)
         self.add_sequence(ShelvingDopplerCooling)  # readout counts call 1
         self.add_sequence(OpticalPumping)

@@ -6,7 +6,6 @@ from Qsim.scripts.pulse_sequences.sf_discrimination_sequence import SFDiscrimina
 
 
 class SFDiscriminationExperiment(QsimExperiment):
-
     name = 'SF Discrimination Experiment'
 
     exp_parameters = [
@@ -39,7 +38,7 @@ class SFDiscriminationExperiment(QsimExperiment):
 
             self.program_pulser(sequence)
             [counts] = self.run_sequence(max_runs=1000, num=1)
-            if (np.mean(counts) < 0.9*previous_exp_mean) and i != 1:
+            if (np.mean(counts) < 0.9 * previous_exp_mean) and i != 1:
                 break
             previous_exp_mean = np.mean(counts)
             print('Mean counts on last experiment = ' + str(np.mean(counts)))
@@ -52,7 +51,7 @@ class SFDiscriminationExperiment(QsimExperiment):
                 diff = np.mean(counts) - self.counts_track_mean
                 if np.abs(diff) > 2.0:
                     self.cavity_voltage = self.cavity_voltage + np.sign(diff) * 0.005
-                    if np.sign(diff)*0.005 < 0.2:
+                    if np.sign(diff) * 0.005 < 0.2:
                         self.pzt_server.set_voltage(self.cavity_chan, U(self.cavity_voltage, 'V'))
                         print('Updated cavity voltage to ' + str(self.cavity_voltage) + ' V')
                 else:

@@ -3,6 +3,7 @@ import numpy as np
 import qutip as qt
 import random as random
 
+
 def generate_gate_sequence(sequence_length, gate_type):
     """Creates a Clifford or Pauli gate sequence given a length
     Returns: a list of strings which are random clifford or pauli gates
@@ -69,8 +70,6 @@ def find_last_gate(gate_sequence, initial_state):
                     ['y', 1, np.pi], ['y', -1, np.pi],
                     ['z', 1, np.pi], ['z', -1, np.pi],
                     ['i', 1, np.pi], ['i', -1, np.pi]]
-
-
 
     final_sequence = gate_sequence
     state = initial_state
@@ -305,11 +304,12 @@ def generate_and_save_sequences(lengths, number_of_gate_sequences, number_of_pau
                     final_gate_sequence, expected_final_state = find_last_gate(interleaved_gate_sequence, initial_state)
                     expected_final_state_real = np.array([np.real([expected_final_state[0][0][0]]),
                                                           np.real([expected_final_state[1][0][0]])])
-                    if np.abs(expected_final_state_real[0][0] - 1.0) <= 0.01:  # bottom of bloch sphere 'down' (I'll call it 0)
-                        #print('expected ~ 1: ', expected_final_state_real[0][0])
+                    if np.abs(expected_final_state_real[0][
+                                  0] - 1.0) <= 0.01:  # bottom of bloch sphere 'down' (I'll call it 0)
+                        # print('expected ~ 1: ', expected_final_state_real[0][0])
                         zero_or_one = 0
                     elif np.abs(expected_final_state_real[0][0]) <= 0.01:
-                        #print('expected ~ 0: ', expected_final_state_real[0][0])
+                        # print('expected ~ 0: ', expected_final_state_real[0][0])
                         zero_or_one = 1
                     else:
                         print('yo dude problem here')

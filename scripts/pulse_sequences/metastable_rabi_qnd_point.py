@@ -13,17 +13,15 @@ from .sub_sequences.deshelving import Deshelving
 
 
 class MetastableRabiQNDPoint(PulseSequence):
-
     required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation,
                              MetastableStateDetection, OpticalPumping, Shelving,
                              ShelvingDopplerCooling, Deshelving, MicrowaveInterrogation,
                              MetastableRabiQND, MetastableQNDDetection, HeraldedFourPreparation]
 
     required_parameters = [
-        ]
+    ]
 
     def sequence(self):
-
         self.add_sequence(TurnOffAll)
         self.add_sequence(ShelvingDopplerCooling)  # readout counts 1
         self.add_sequence(OpticalPumping)

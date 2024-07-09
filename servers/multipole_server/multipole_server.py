@@ -28,7 +28,6 @@ import numpy as np
 class Electrode:
 
     def __init__(self, dac, octant, minval, maxval):
-
         self.dac = dac
         self.octant = octant
         self.minval = minval
@@ -37,7 +36,6 @@ class Electrode:
 
 
 class Multipole_Server(LabradServer):
-
     name = 'Multipole Server'
 
     def initServer(self):
@@ -133,4 +131,5 @@ class Multipole_Server(LabradServer):
 
 if __name__ == "__main__":
     from labrad import util
+
     util.runServer(Multipole_Server())

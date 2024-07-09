@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
 from twisted.internet.defer import inlineCallbacks
 import logging
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(module)s:%(asctime)s [-] %(message)s')
 
@@ -184,6 +185,7 @@ if __name__ == "__main__":
     a = QApplication(sys.argv)
     clipboard = a.clipboard()
     import qt5reactor
+
     qt5reactor.install()
     from twisted.internet import reactor
 

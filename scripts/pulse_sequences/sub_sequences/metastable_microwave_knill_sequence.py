@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class MetastableMicrowaveKnillSequence(PulseSequence):
-
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
         ('Metastable_Microwave_Interrogation', 'detuning'),
@@ -48,4 +47,4 @@ class MetastableMicrowaveKnillSequence(PulseSequence):
                      DDS_freq,
                      p.ddsDefaults.metastable_qubit_dds_power,
                      U(30.0, 'deg'))
-        self.end = self.start + 5*p.MetastableMicrowaveInterrogation.duration
+        self.end = self.start + 5 * p.MetastableMicrowaveInterrogation.duration

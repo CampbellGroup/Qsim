@@ -1,6 +1,7 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from Qsim.scripts.pulse_sequences.sub_sequences.doppler_cooling import DopplerCooling
-from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
+from Qsim.scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import \
+    MicrowaveInterrogation
 from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
 from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import StandardStateDetection
 from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
@@ -11,7 +12,6 @@ from Qsim.scripts.pulse_sequences.sub_sequences.deshelving import Deshelving
 
 
 class MicrowavePoint(PulseSequence):
-
     required_subsequences = [TurnOffAll, DopplerCooling,
                              MicrowaveInterrogation,
                              StandardStateDetection, ShelvingStateDetection, Deshelving,
@@ -20,7 +20,7 @@ class MicrowavePoint(PulseSequence):
     required_parameters = [
         ('Modes', 'state_detection_mode'),
         ('MicrowaveInterrogation', 'repetitions')
-        ]
+    ]
 
     def sequence(self):
         p = self.parameters

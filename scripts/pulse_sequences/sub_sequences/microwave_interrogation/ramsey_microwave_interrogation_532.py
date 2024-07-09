@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class RamseyMicrowaveInterrogation_532(PulseSequence):
-
     required_parameters = [
         ('MicrowaveInterrogation', 'detuning'),
         ('MicrowaveInterrogation', 'power'),
@@ -26,7 +25,7 @@ class RamseyMicrowaveInterrogation_532(PulseSequence):
         ('Pi_times', 'qubit_plus'),
         ('LightShift', 'percent'),
         ('LightShift', 'power')
-                           ]
+    ]
 
     def sequence(self):
         p = self.parameters
@@ -62,7 +61,8 @@ class RamseyMicrowaveInterrogation_532(PulseSequence):
 
             # Turn on 532 for light shift measurements
             self.add_dds('532SP',
-                         self.start + pi_time / 2.0 + pulse_delay + (1.0-p.LightShift.percent) * p.EmptySequence.duration / 2.0,
+                         self.start + pi_time / 2.0 + pulse_delay + (
+                                     1.0 - p.LightShift.percent) * p.EmptySequence.duration / 2.0,
                          p.LightShift.percent * p.EmptySequence.duration,
                          p.ddsDefaults.SP_532_freq,
                          p.LightShift.power,
@@ -82,7 +82,7 @@ class RamseyMicrowaveInterrogation_532(PulseSequence):
             self.end = self.start + pi_time + p.EmptySequence.duration + pulse_delay
 
         elif p.MicrowaveInterrogation.microwave_source == 'DDSx32':
-            DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center)/32.0
+            DDS_freq = p.ddsDefaults.qubit_dds_x32_freq + (p.MicrowaveInterrogation.detuning + center) / 32.0
             pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
             self.add_ttl('MicrowaveTTL',

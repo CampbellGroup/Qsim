@@ -1,6 +1,7 @@
 import labrad
 from Qsim.scripts.pulse_sequences.microwave_point.metastable_microwave_point import MetastableMicrowavePoint as sequence
-from Qsim.scripts.pulse_sequences.microwave_point.heralded_metastable_microwave_point import HeraldedMetastableMicrowavePoint as heralded_sequence
+from Qsim.scripts.pulse_sequences.microwave_point.heralded_metastable_microwave_point import \
+    HeraldedMetastableMicrowavePoint as heralded_sequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
@@ -63,7 +64,7 @@ class MetastableMicrowaveLineScan(QsimExperiment):
         print(self.p['Metastable_Microwave_Interrogation.duration'])
 
         for i, detuning in enumerate(self.detunings):
-            should_break = self.update_progress(i/float(len(self.detunings)))
+            should_break = self.update_progress(i / float(len(self.detunings)))
             if should_break:
                 break
             self.p['Metastable_Microwave_Interrogation.detuning'] = U(detuning, 'kHz')
@@ -81,7 +82,8 @@ class MetastableMicrowaveLineScan(QsimExperiment):
                 # this will combine all errors into one array and delete repeats (error on both doppler and herald)
                 all_errors = np.unique(np.concatenate((failed_heralding[0], doppler_errors[0])))
                 counts = np.delete(detection_counts, all_errors)
-                print len(counts)
+                print
+                len(counts)
 
             hist = self.process_data(counts)
             self.plot_hist(hist)

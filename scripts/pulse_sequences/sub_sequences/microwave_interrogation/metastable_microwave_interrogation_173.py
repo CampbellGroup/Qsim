@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class MetastableMicrowaveInterrogation173(PulseSequence):
-
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
         ('Metastable_Microwave_Interrogation', 'detuning'),
@@ -20,7 +19,7 @@ class MetastableMicrowaveInterrogation173(PulseSequence):
         p = self.parameters
         center = p.Transitions.MetastableQubit173
         DDS_freq = p.ddsDefaults.metastable_qubit_173_dds_freq + (
-                    p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
+                p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
 
         self.add_dds('3GHz_qubit',
                      self.start,
@@ -37,7 +36,6 @@ class MetastableMicrowaveInterrogation173(PulseSequence):
 
 
 class SweptMetastableMicrowaveInterrogation173(PulseSequence):
-
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
         ('Metastable_Microwave_Interrogation', 'detuning'),
@@ -55,8 +53,10 @@ class SweptMetastableMicrowaveInterrogation173(PulseSequence):
         p = self.parameters
         center = p.Transitions.MetastableQubit173
         DDS_freq = p.ddsDefaults.metastable_qubit_173_dds_freq + (
-                    p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
-        ramp_rate = U(p.Metastable_Microwave_Interrogation.ramp_width['MHz'] / p.Metastable_Microwave_Interrogation.duration['ms'], 'MHz')
+                p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
+        ramp_rate = U(
+            p.Metastable_Microwave_Interrogation.ramp_width['MHz'] / p.Metastable_Microwave_Interrogation.duration[
+                'ms'], 'MHz')
 
         self.add_dds('3GHz_qubit',
                      self.start,

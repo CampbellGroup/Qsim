@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class DoublePass369(PulseSequence):
-
     required_parameters = [
         ('DoublePass369', 'duration'),
         ('DoublePass369', 'power'),

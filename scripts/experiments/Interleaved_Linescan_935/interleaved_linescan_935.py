@@ -6,7 +6,6 @@ import numpy as np
 
 
 class InterleavedLinescan935(QsimExperiment):
-
     name = 'Interleaved Linescan 935'
 
     exp_parameters = []
@@ -31,8 +30,8 @@ class InterleavedLinescan935(QsimExperiment):
 
         self.setup_parameters()
         self.setup_datavault('Frequency (THz)', 'kcounts/sec')
-        self.low_rail = self.centerfrequency['THz'] - self.scan_range['THz']/2.0
-        self.high_rail = self.centerfrequency['THz'] + self.scan_range['THz']/2.0
+        self.low_rail = self.centerfrequency['THz'] - self.scan_range['THz'] / 2.0
+        self.high_rail = self.centerfrequency['THz'] + self.scan_range['THz'] / 2.0
         self.tempdata = []
 
         low_x = np.linspace(self.centerfrequency['THz'], self.low_rail, 100)
@@ -42,7 +41,7 @@ class InterleavedLinescan935(QsimExperiment):
         self.pulser.amplitude(self.repump_AOM_chan, self.repump_power, context=self.context)
 
         for i in range(100):
-            progress = i/200.0
+            progress = i / 200.0
             self.take_data(progress, delay)
             self.wm.set_pid_course(self.probe_dac_port, str(low_x[i]))
             self.rescue_ion(self.rescue_time['s'])
@@ -54,9 +53,8 @@ class InterleavedLinescan935(QsimExperiment):
         time.sleep(10)
         self.pulser.amplitude(self.repump_AOM_chan, self.repump_power, context=self.context)
 
-
         for i in range(100):
-            progress = (100 + i)/200.0
+            progress = (100 + i) / 200.0
             self.take_data(progress, delay)
             self.wm.set_pid_course(self.probe_dac_port, str(high_x[i]))
             self.rescue_ion(self.rescue_time['s'])
@@ -64,7 +62,7 @@ class InterleavedLinescan935(QsimExperiment):
 
         self.wm.set_pid_course(self.probe_dac_port, str(self.centerfrequency['THz']))
         self.pulser.amplitude(self.repump_AOM_chan, U(-8.0, 'dBm'), context=self.context)
-        time.sleep(5*delay)
+        time.sleep(5 * delay)
 
         if len(self.tempdata) > 0:
             self.tempdata.sort()
@@ -79,7 +77,6 @@ class InterleavedLinescan935(QsimExperiment):
         time.sleep(delay)
         self.pulser.amplitude(self.repump_AOM_chan, self.repump_power, context=self.context)
         time.sleep(0.3)
-
 
     def take_data(self, progress, delay):
         init_time = time.time()

@@ -3,7 +3,6 @@ from labrad.units import WithUnit as U
 
 
 class MetastableStateDetection173(PulseSequence):
-
     required_parameters = [
         ('MetastableStateDetection', 'duration'),
         ('MetastableStateDetection', 'repump_power'),

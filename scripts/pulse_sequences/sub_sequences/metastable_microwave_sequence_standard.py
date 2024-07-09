@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class MetastableMicrowaveSequenceStandard(PulseSequence):
-
     required_parameters = [
         ('Metastable_Microwave_Interrogation', 'duration'),
         ('Metastable_Microwave_Interrogation', 'detuning'),
@@ -17,7 +16,8 @@ class MetastableMicrowaveSequenceStandard(PulseSequence):
     def sequence(self):
         p = self.parameters
         center = p.Transitions.MetastableQubit
-        DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq + (p.Metastable_Microwave_Interrogation.detuning + center)/8.0
+        DDS_freq = p.ddsDefaults.metastable_qubit_dds_freq + (
+                    p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
 
         self.add_dds('3GHz_qubit',
                      self.start,

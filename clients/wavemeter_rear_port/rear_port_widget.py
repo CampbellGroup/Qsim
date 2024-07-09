@@ -55,10 +55,10 @@ class rear_port_client(QtGui.QWidget):
         hint = '811.291490'
         dacPort = 'rear'
         self.widget = QCustomWavemeterChannel('369 Rear Port', wmChannel,
-                                         dacPort, hint, True, False)
+                                              dacPort, hint, True, False)
         from common.lib.clients.Multiplexer import RGBconverter as RGB
         RGB = RGB.RGBconverter()
-        color = int(2.998e8/(float(hint)*1e3))
+        color = int(2.998e8 / (float(hint) * 1e3))
         color = RGB.wav2RGB(color)
         color = tuple(color)
         self.continuous_switch = QCustomSwitchChannel('Continuous Measure')
@@ -114,8 +114,10 @@ class rear_port_client(QtGui.QWidget):
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
+
     qt4reactor.install()
     from twisted.internet import reactor
+
     rearPortWidget = rear_port_client(reactor)
     rearPortWidget.show()
     reactor.run()

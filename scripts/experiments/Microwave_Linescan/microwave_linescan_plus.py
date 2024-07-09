@@ -5,9 +5,8 @@ from labrad.units import WithUnit as U
 import numpy as np
 from scipy.optimize import curve_fit as fit
 
+
 class MicrowaveLineScanPlus(QsimExperiment):
-
-
     name = 'Microwave Line Scan Plus'
 
     exp_parameters = []
@@ -35,7 +34,7 @@ class MicrowaveLineScanPlus(QsimExperiment):
 
         deltas, probs = [], []
         for i, detuning in enumerate(self.detunings):
-            should_break = self.update_progress(i/float(len(self.detunings)))
+            should_break = self.update_progress(i / float(len(self.detunings)))
             if should_break:
                 break
 
@@ -53,7 +52,6 @@ class MicrowaveLineScanPlus(QsimExperiment):
             deltas.append(detuning + self.p.Transitions.qubit_plus['kHz'])
             probs.append(pop)
 
-
         param_guess = [20.0, deltas[np.argmax(probs)], np.min(probs), np.max(probs) - np.min(probs)]
         popt, pcov = fit(self.sinc_fit, deltas, probs, p0=param_guess)
         self.pv.set_parameter(('Transitions', 'qubit_plus', U(popt[1], 'kHz')))
@@ -69,13 +67,13 @@ class MicrowaveLineScanPlus(QsimExperiment):
         self.pulser.line_trigger_state(False)
         pass
 
-
     def sinc_fit(self, freq, omega, center, offset, scale):
         """
         This fits the sinc function created in an interleaved linescan,
         identical to the fit function in RealSimpleGrapher
         """
-        return scale*(omega**2/(omega**2 + (center - freq)**2)) * np.sin(np.sqrt(omega**2 + (center - freq)**2)*np.pi/(2*omega))**2 + offset
+        return scale * (omega ** 2 / (omega ** 2 + (center - freq) ** 2)) * np.sin(
+            np.sqrt(omega ** 2 + (center - freq) ** 2) * np.pi / (2 * omega)) ** 2 + offset
 
 
 if __name__ == '__main__':

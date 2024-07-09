@@ -9,7 +9,6 @@ from .sub_sequences.turn_off_all import TurnOffAll
 
 
 class ShelvingPoint(PulseSequence):
-
     required_subsequences = [TurnOffAll, ShelvingDopplerCooling, Shelving,
                              Deshelving, ShelvingStateDetection, EmptySequence, BrightStatePumping]
 

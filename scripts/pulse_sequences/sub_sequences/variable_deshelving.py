@@ -2,7 +2,6 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 
 
 class VariableDeshelving(PulseSequence):
-
     required_parameters = [
         ('VariableDeshelving', 'duration'),
         ('Deshelving', 'power1'),
