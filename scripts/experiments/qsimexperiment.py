@@ -102,7 +102,7 @@ class QsimExperiment(experiment):
 
     def program_pulser(self, pulse_sequence):
         pulse_sequence = pulse_sequence(self.p)
-        pulse_sequence.programSequence(self.pulser)
+        pulse_sequence.program_sequence(self.pulser)
 
     def run_sequence(self, max_runs=1000, num=1):
 

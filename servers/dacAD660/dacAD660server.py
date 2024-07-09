@@ -1,4 +1,4 @@
-'''
+"""
 ### BEGIN NODE INFO
 [info]
 name = DAC AD660 Server
@@ -12,17 +12,21 @@ timeout = 20
 message = 987654321
 timeout = 20
 ### END NODE INFO
-'''
+"""
 
-from labrad.server import LabradServer, setting, Signal, inlineCallbacks
-from api import api
-from config.dac_ad660_config import hardwareConfiguration as hc
+from labrad.server import LabradServer, setting, Signal
+from api import API
+from config.dac_ad660_config import HardwareConfiguration as HC
 
 SERVERNAME = 'DAC AD660 Server'
 SIGNALID = 270837
 
 
-class Voltage(object):
+class Voltage:
+    """
+    A representation of a voltage,
+    with the capability to compile down to the hex representation that the DAC board needs
+    """
     def __init__(self, channel, analog_voltage=None, digital_voltage=None):
         self.channel = channel
         self.digital_voltage = digital_voltage
@@ -34,33 +38,57 @@ class Voltage(object):
         """
         self.set_num = set_num
         if self.analog_voltage is not None:
-            (vMin, vMax) = self.channel.allowedVoltageRange
+            (vMin, vMax) = self.channel.allowed_voltage_range
             if self.analog_voltage < vMin:
                 self.analog_voltage = vMin
             if self.analog_voltage > vMax:
                 self.analog_voltage = vMax
-            self.digital_voltage = self.channel.computeDigitalVoltage(self.analog_voltage)
-        self.hex_rep = self.__getHexRep()
+            self.digital_voltage = self.compute_digital_voltage(self.analog_voltage)
+        self.hex_rep = self.__get_hex_rep()
 
-    def __getHexRep(self):
-        port = bin(self.channel.dacChannelNumber)[2:].zfill(5)
-        if hc.pulseTriggered:
-            setN = bin(self.set_num)[2:].zfill(10)
+    def compute_digital_voltage(self, analog_voltage):
+        """
+        Returns an integer representation of a given analog voltage.
+        If the DAC is 16-bit:
+            - 0    is the minimum voltage
+            - 2^15 is zero volts
+            - 2^16 is the maximum voltage
+        """
+        v_min, v_max = self.channel.board_voltage_range
+        zero_value = 2**(HC.PREC_BITS - 1)
+        number_of_voltages = 2 ** HC.PREC_BITS
+        return int(round(zero_value + analog_voltage * number_of_voltages / (v_max - v_min)))
+
+    def __get_hex_rep(self) -> bytearray:
+        """
+        returns a 4-byte bytearray.
+        - The first 16 bits correspond to the DAC voltage (an integer from 0 (-10V) to 2^16 (+10V)).
+        - The next 5 bits correspond to the port number (0 to 32)
+        - the next 10 bits correspond to the queue position (?) usually a low value
+        - plus one trailing 0 to pad it out into 4 bytes
+
+        Then these bytes are rearranged to be little-endian:
+        voltage bytes are reversed, and control bytes are reversed
+        """
+        port = bin(self.channel.dac_channel_number)[2:].zfill(5)
+        if HC.pulseTriggered:
+            set_n = bin(self.set_num)[2:].zfill(10)
         else:
-            setN = bin(1)[2:].zfill(10)
+            set_n = bin(1)[2:].zfill(10)
         voltage = bin(self.digital_voltage)[2:].zfill(16)
-        big = voltage + port + setN + '0'
-        rep = chr(int(big[8:16], 2)) + chr(int(big[:8], 2)) + chr(int(big[24:32], 2)) + chr(int(big[16:24], 2))
-        return rep
+        big = voltage + port + set_n + '0'
+        rep = [int(big[8:16], 2), int(big[:8], 2), int(big[24:32], 2), int(big[16:24], 2)]
+
+        return bytearray(rep)
 
 
 class Queue(object):
     def __init__(self):
         self.current_set = 1
-        self.set_dict = {i: [] for i in range(1, hc.maxCache + 1)}
+        self.set_dict = {i: [] for i in range(1, HC.maxCache + 1)}
 
     def advance(self):
-        self.current_set = (self.current_set % hc.maxCache) + 1
+        self.current_set = (self.current_set % HC.maxCache) + 1
 
     def reset(self):
         self.current_set = 1
@@ -76,7 +104,7 @@ class Queue(object):
 
     def clear(self):
         self.current_set = 1
-        self.set_dict = {i: [] for i in range(1, hc.maxCache + 1)}
+        self.set_dict = {i: [] for i in range(1, HC.maxCache + 1)}
 
 
 class DACServer(LabradServer):
@@ -87,92 +115,72 @@ class DACServer(LabradServer):
     name = SERVERNAME
     onNewUpdate = Signal(SIGNALID, 'signal: ports updated', 's')
     queue = Queue()
-    api = api()
+    api = API()
 
-    registry_path = ['', 'Servers', hc.EXPNAME + SERVERNAME]
-    dac_dict = hc.elec_dict
+    registry_path = ['', 'Servers', HC.EXPNAME + SERVERNAME]
+    dac_dict = HC.elec_dict
     current_voltages = {}
     listeners = set()
 
-    @inlineCallbacks
     def initServer(self):
         self.registry = self.client.registry
-        self.initializeBoard()
-        yield self.setCalibrations()
+        self.initialize_board()
+        # yield self.setCalibrations()
 
-    def initializeBoard(self):
-        connected = self.api.connectOKBoard()
+    def initialize_board(self):
+        connected = self.api.connect_ok_board()
         if not connected:
             raise Exception("FPGA Not Found")
 
-    @inlineCallbacks
-    def setCalibrations(self):
-        """ Go through the list of electrodes and try to detect calibrations """
-        yield self.registry.cd(self.registry_path + ['Calibrations'], True)
-        subs, keys = yield self.registry.dir()
-        for chan in self.dac_dict.values():
-            c = []  # list of calibration coefficients in form [c0, c1, ..., cn]
-            if str(chan.dacChannelNumber) in subs:
-                yield self.registry.cd(self.registry_path + ['Calibrations',
-                                                             str(chan.dacChannelNumber)])
-                dirs, coeffs = yield self.registry.dir()
-                for n in range(len(coeffs)):
-                    e = yield self.registry.get('c'+str(n))
-                    c.append(e)
-                chan.calibration = c
-            else:
-                (vMin, vMax) = chan.boardVoltageRange
-                prec = hc.PREC_BITS
-                chan.calibration = [2**(prec - 1), float(2**prec)/(vMax - vMin)]
-
     @setting(4, "Set Individual Digital Voltages", digital_voltages='*(si)')
-    def setIndividualDigitalVoltages(self, c, digital_voltages):
+    def set_individual_digital_voltages(self, c, digital_voltages):
         """
         Pass a list of tuples of the form:
         (portNum, newVolts)
         """
         for (port, dv) in digital_voltages:
             self.queue.insert(Voltage(self.dac_dict[port], digital_voltage=dv))
-        yield self.writeToFPGA(c)
+        yield self.write_to_fpga(c)
 
     @setting(5, "Set Individual Analog Voltages", analog_voltages='*(sv)')
-    def setIndividualAnalogVoltages(self, c, analog_voltages):
+    def set_individual_analog_voltages(self, c, analog_voltages):
         """
         Pass a list of tuples of the form:
         (portNum, newVolts)
         """
         for (port, av) in analog_voltages:
             self.queue.insert(Voltage(self.dac_dict[port], analog_voltage=av))
-        yield self.writeToFPGA(c)
+        yield self.write_to_fpga(c)
 
-    def writeToFPGA(self, c):
-        self.api.resetFIFODAC()
+    def write_to_fpga(self, c):
+        self.api.reset_fifo_dac()
         for i in range(len(self.queue.set_dict[self.queue.current_set])):
             v = self.queue.get()
-            self.api.setDACVoltage(v.hex_rep)
-            if v.channel.name in hc.elec_dict.keys():
+            self.api.set_dac_voltage(v.hex_rep)
+            # print("DAC voltage set in API")
+            if v.channel.name in HC.elec_dict.keys():
                 self.current_voltages[v.channel.name] = v.analog_voltage
         if c is not None:
-            self.notifyOtherListeners(c)
+            self.notify_other_listeners(c)
 
     @setting(9, "Get Analog Voltages", returns='*(sv)')
-    def getCurrentVoltages(self, c):
+    def get_current_voltages(self, c):
         """
         Return the current voltage
         """
-        return self.current_voltages.items()
+        return list(self.current_voltages.items())
 
-    @setting(14, "Get DAC  Channel Name", port_number='i', returns='s')
-    def getDACChannelName(self, c, port_number):
+    @setting(14, "Get DAC Channel Name", port_number='i', returns='s')
+    def get_dac_channel_name(self, c, port_number):
         """
-        Return the channel name for a given port port number.
+        Return the channel name for a given port number.
         """
         for key in self.dac_dict.keys():
-            if self.dac_dict[key].dacChannelNumber == port_number:
+            if self.dac_dict[key].dac_channel_number == port_number:
                 return key
 
     @setting(17, "get queue")
-    def getQueue(self, c):
+    def get_queue(self, c):
         return self.queue.current_set
 
     def initContext(self, c):
@@ -181,11 +189,11 @@ class DACServer(LabradServer):
     def expireContext(self, c):
         self.listeners.remove(c.ID)
 
-    def notifyOtherListeners(self, context):
+    def notify_other_listeners(self, context):
         notified = self.listeners.copy()
         try:
             notified.remove(context.ID)
-        except:
+        except Exception:
             pass
         self.onNewUpdate('Channels updated', notified)
 
