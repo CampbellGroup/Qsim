@@ -99,6 +99,7 @@ reference_modes = (
     'internal 10mhz'
 )
 
+
 class windfreak_wrapper(DeviceWrapper):
 
     @inlineCallbacks
@@ -167,7 +168,7 @@ class windfreak_wrapper(DeviceWrapper):
         """Write, then read. """
         p = self.packet()
         p.read()  # clear the read buffer
-        yield p.write(code).send()
+        yield p.write(code.encode()).send()
         p.read_line()
         ans = yield p.send()
         returnValue(ans.read_line)
@@ -245,7 +246,6 @@ class Windfreak_Server(DeviceServer):
             server = self.client[serServer]
             ports = yield server.list_serial_ports()
             if port not in ports:
-                print('{} not found in Serial Server ports'.format(port))
                 continue
             devName = '%s - %s' % (serServer, port)
             devs += [(devName, (server, port))]

@@ -332,7 +332,7 @@ class HighFidelityMeasurement(QsimExperiment):
             op_time = self.p.OpticalPumping.quadrupole_op_duration + self.p.OpticalPumping.extra_repump_time
             print('You have selected QuadrupoleOnly optical pumping, rethink your choices')
 
-        uW_method = self.p.MicrowaveInterrogation.pulse_sequence
+        uW_method = self.p.MicrowaveInterrogation.PulseSequence
         if uW_method == 'standard':
             uW_duration = self.p.MicrowaveInterrogation.duration + self.p.MicrowaveInterrogation.ttl_switch_delay
         elif uW_method == 'knill':

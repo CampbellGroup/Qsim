@@ -41,7 +41,7 @@ class QsimPulseExperiment(QsimExperiment):
     def program_pulser(self):
 
         pulse_sequence = sequence(self.p)
-        pulse_sequence.programSequence(self.pulser)
+        pulse_sequence.program_sequence(self.pulser)
         self.pulser.start_number(int(self.p.StateDetection.repetitions))
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()

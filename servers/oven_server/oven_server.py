@@ -22,6 +22,7 @@ from twisted.internet.defer import inlineCallbacks, returnValue
 import os
 import socket
 from labrad.units import WithUnit as U
+import labrad.errors
 
 
 class OvenServer(LabradServer):
@@ -31,19 +32,21 @@ class OvenServer(LabradServer):
     def initServer(self):
         self.password = os.environ['LABRADPASSWORD']
         self.name = socket.gethostname() + ' Oven Server'
-        self.max_current = U(3.00, 'A')
+        self.max_current = U(5.00, 'A')
         self.connect()
 
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connection to arduinottl and
+        """
+        Creates an Asynchronous connection to arduinottl and
         connects incoming signals to relevant functions
-
         """
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync(name='Oven_Server')
         self.server = self.cxn.keithley_2230g_server
+
         yield self.server.select_device(0)
+        # yield self.server.parallel("23")
         yield self.server.output(3, False)
         self.oven_state = False
 
