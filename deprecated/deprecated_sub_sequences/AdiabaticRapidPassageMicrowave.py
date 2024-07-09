@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class adiabatic_rapid_passage_microwave(pulse_sequence):
+class adiabatic_rapid_passage_microwave(PulseSequence):
 
     required_parameters = [
         ('MicrowaveInterogation', 'detuning'),
@@ -35,22 +35,22 @@ class adiabatic_rapid_passage_microwave(pulse_sequence):
         sweep_time = p.MicrowaveInterogation.ARP_sweep_time['ms']
         freq_sweep_rate = freq_range/sweep_time
 
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    U(1.0, 'us'),
-                    DDS_freq - U(freq_range, 'MHz') / 2.0,
-                    p.MicrowaveInterogation.power,
-                    U(0.0, 'deg'),
-                    U(0.0, 'MHz'),
-                    U(0.0, 'dB'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     U(1.0, 'us'),
+                     DDS_freq - U(freq_range, 'MHz') / 2.0,
+                     p.MicrowaveInterogation.power,
+                     U(0.0, 'deg'),
+                     U(0.0, 'MHz'),
+                     U(0.0, 'dB'))
 
-        self.addDDS('Microwave_qubit',
-                    self.start + U(1.0, 'us'),
-                    p.MicrowaveInterogation.ARP_sweep_time,
-                    DDS_freq + U(freq_range, 'MHz')/2.0,
-                    p.MicrowaveInterogation.power,
-                    U(0.0, 'deg'),
-                    U(freq_sweep_rate, 'MHz'),
-                    U(0.0, 'dB'))
+        self.add_dds('Microwave_qubit',
+                     self.start + U(1.0, 'us'),
+                     p.MicrowaveInterogation.ARP_sweep_time,
+                     DDS_freq + U(freq_range, 'MHz') / 2.0,
+                     p.MicrowaveInterogation.power,
+                     U(0.0, 'deg'),
+                     U(freq_sweep_rate, 'MHz'),
+                     U(0.0, 'dB'))
 
         self.end = self.start + p.MicrowaveInterogation.ARP_sweep_time + U(1.0, 'us')

@@ -1,8 +1,8 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from labrad.units import WithUnit as U
 
 
-class triangle_microwave_ramp(pulse_sequence):
+class triangle_microwave_ramp(PulseSequence):
 
     required_parameters = [
         ('MicrowaveInterogation', 'duration'),
@@ -36,23 +36,23 @@ class triangle_microwave_ramp(pulse_sequence):
         phase_ramp_down = DDS_freq['MHz']*p.MicrowaveInterogation.duration['us']/2.0
 
         # ramp up from off to the max power in half the allocated interrogation time
-        self.addDDS('Microwave_qubit',
-                    self.start,
-                    p.MicrowaveInterogation.duration/2.0,
-                    DDS_freq,
-                    U(-46.0, 'dBm'),
-                    U(0.0, 'rad'),
-                    U(0.0, 'MHz'),
-                    U(ramp_rate, 'dB'))
+        self.add_dds('Microwave_qubit',
+                     self.start,
+                     p.MicrowaveInterogation.duration / 2.0,
+                     DDS_freq,
+                     U(-46.0, 'dBm'),
+                     U(0.0, 'rad'),
+                     U(0.0, 'MHz'),
+                     U(ramp_rate, 'dB'))
 
         # ramp down from max power to off in half the allocated interrogation time
-        self.addDDS('Microwave_qubit',
-                    self.start + p.MicrowaveInterogation.duration/2.0,
-                    p.MicrowaveInterogation.duration/2.0,
-                    DDS_freq,
-                    p.MicrowaveInterogation.power,
-                    U(0.0, 'rad'),
-                    U(0.0, 'MHz'),
-                    U(-ramp_rate, 'dB'))
+        self.add_dds('Microwave_qubit',
+                     self.start + p.MicrowaveInterogation.duration / 2.0,
+                     p.MicrowaveInterogation.duration / 2.0,
+                     DDS_freq,
+                     p.MicrowaveInterogation.power,
+                     U(0.0, 'rad'),
+                     U(0.0, 'MHz'),
+                     U(-ramp_rate, 'dB'))
 
         self.end = self.start + p.MicrowaveInterogation.duration

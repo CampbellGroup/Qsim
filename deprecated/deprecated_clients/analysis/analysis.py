@@ -5,10 +5,10 @@ from common.lib.clients.connection import connection
 
 
 class CustomWebView(QtWebKit.QWebView):
-    '''
+    """
     This class must be seperate or javascript popup handling with createWindow
     doesnt work
-    '''
+    """
     def __init__(self, parent=None):
         QtWebKit.QWebView.__init__(self, parent)
 

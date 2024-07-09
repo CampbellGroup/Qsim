@@ -1,9 +1,9 @@
-from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import pulse_sequence
+from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from Qsim.scripts.pulse_sequences.microwave_point import microwave_point
 from labrad.units import WithUnit as U
 
 
-class AOM_fitting(pulse_sequence):
+class AOM_fitting(PulseSequence):
 
     required_parameters = [
 #                           ('AOMTiming', 'AOM'),
@@ -29,6 +29,6 @@ class AOM_fitting(pulse_sequence):
 #                    p.AOMTiming.frequency,
 #                    p.AOMTiming.power)
         init_start = self.start
-        self.addSequence(microwave_point)
-        self.addTTL('TimeResolvedCount', init_start, self.end - init_start)
+        self.add_sequence(microwave_point)
+        self.add_ttl('TimeResolvedCount', init_start, self.end - init_start)
 #        self.end = self.start + p.AOMTiming.duration + U(10.0, 'us')
