@@ -8,11 +8,15 @@ SIGNALID = 874193
 class pmtWidget(QtGui.QWidget):
     def __init__(self, reactor, parent=None):
         super(pmtWidget, self).__init__(parent)
+        print("superclass initialized")
         self.reactor = reactor
+        print("reactor set")
         basepath = os.path.dirname(__file__)
         path = os.path.join(basepath, "pmtfrontend.ui")
         uic.loadUi(path, self)
+        print("UI loaded")
         self.connect()
+        print("connected to labrad")
 
     @inlineCallbacks
     def connect(self):
@@ -45,7 +49,9 @@ class pmtWidget(QtGui.QWidget):
     @inlineCallbacks
     def onNewSet(self, _):
         newset = yield self.server.new_data_set()
+        print("dataset button clicked")
         self.lineEdit.setText(newset)
+        print("line edited")
 
     @inlineCallbacks
     def on_toggled(self, value):

@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 
 class Wedge:
@@ -29,7 +32,7 @@ def compute_color(voltage):
     return QtGui.QColor(R, G, B, A)
 
 
-class ElectrodeIndicator(QtGui.QWidget):
+class ElectrodeIndicator(QWidget):
 
     def __init__(self, limits):
 
@@ -61,9 +64,9 @@ class ElectrodeIndicator(QtGui.QWidget):
     def draw_wedges(self, qp):
         frame_width = self.frameGeometry().width()
         frame_height = self.frameGeometry().height()
-        trap_diameter = .9  * min(frame_height, frame_width/2 )
-        center_top = QtCore.QPoint(frame_width / 4, frame_height / 2)
-        center_bottom = QtCore.QPoint(3 * frame_width / 4, frame_height / 2)
+        trap_diameter = .9 * min(frame_height, frame_width/2 )
+        center_top = QPoint(int(frame_width / 4), int(frame_height / 2))
+        center_bottom = QPoint(int(3 * frame_width / 4), int(frame_height / 2))
 
         x_coord_top = frame_width / 4 - trap_diameter / 2
         y_coord_top = (frame_height - trap_diameter) / 2
@@ -73,12 +76,12 @@ class ElectrodeIndicator(QtGui.QWidget):
 
         signs = [(1, -2), (-2, -2), (-2, 1), (1, 1)]
 
-        pen = QtGui.QPen(QtCore.Qt.lightGray, 2, QtCore.Qt.SolidLine)
+        pen = QPen(Qt.lightGray, 2, Qt.PenStyle.SolidLine)
         qp.setPen(pen)
 
         for quad in self.quads[:4]:
             qp.setBrush(quad.top_color)
-            path = QtGui.QPainterPath(center_top)
+            path = QPainterPath(center_top)
             path.arcTo(x_coord_top, y_coord_top,
                        trap_diameter, trap_diameter,
                        quad.starting_angle, 90.0)
@@ -86,25 +89,25 @@ class ElectrodeIndicator(QtGui.QWidget):
             qp.drawPath(path)
 
             qp.setBrush(quad.bottom_color)
-            path = QtGui.QPainterPath(center_bottom)
+            path = QPainterPath(center_bottom)
             path.arcTo(x_coord_bottom, y_coord_bottom,
                        trap_diameter, trap_diameter,
                        quad.starting_angle, 90.0)
             path.lineTo(center_bottom)
             qp.drawPath(path)
 
-        pen = QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.SolidLine)
+        pen = QtGui.QPen(Qt.black, 1, Qt.PenStyle.SolidLine)
         qp.setPen(pen)
         for i in range(4):
-            qp.drawText(center_top + QtCore.QPoint(signs[i][0] * trap_diameter / 8,
-                                                   signs[i][1] * trap_diameter / 8),
+            qp.drawText(center_top + QtCore.QPoint(int(signs[i][0] * trap_diameter / 8),
+                                                   int(signs[i][1] * trap_diameter / 8)),
                         str(round(self.quads[i].top_voltage, 4)))
-            qp.drawText(center_bottom + QtCore.QPoint(signs[i][0] * trap_diameter / 8,
-                                                      signs[i][1] * trap_diameter / 8),
+            qp.drawText(center_bottom + QtCore.QPoint(int(signs[i][0] * trap_diameter / 8),
+                                                      int(signs[i][1] * trap_diameter / 8)),
                         str(round(self.quads[i].bottom_voltage, 4)))
 
     def draw_values(self, qp):
-        pen = QtGui.QPen(QtCore.Qt.red, 2, QtCore.Qt.SolidLine)
+        pen = QtGui.QPen(Qt.red, 2, Qt.PenStyle.SolidLine)
         qp.setPen(pen)
 
     def update_octant(self, octant, value):
@@ -120,7 +123,7 @@ class ElectrodeIndicator(QtGui.QWidget):
 
 
 if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     icon = ElectrodeIndicator([-5.0, 5.0])
     icon.show()
     app.exec_()

@@ -1,15 +1,17 @@
 from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
-from PyQt4 import QtGui
+from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
-
-class cameraswitch(QtGui.QFrame):
+class cameraswitch(QFrame):
 
     def __init__(self, reactor, cxn=None):
         super(cameraswitch, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Plain)
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
         self.reactor = reactor
         self.cxn = cxn
         self.connect()
@@ -17,7 +19,7 @@ class cameraswitch(QtGui.QFrame):
     @inlineCallbacks
     def connect(self):
         """Creates an Asynchronous connection to arduinottl and
-        connects incoming signals to relavent functions
+        connects incoming signals to relevant functions
 
         """
 
@@ -44,9 +46,9 @@ class cameraswitch(QtGui.QFrame):
 
     @inlineCallbacks
     def initializeGUI(self):
-        layout = QtGui.QGridLayout()
+        layout = QGridLayout()
         widget = QCustomSwitchChannel('Camera/PMT Toggle', ('PMT', 'Camera'))
-        widget.setFrameStyle(QtGui.QFrame.NoFrame)
+        widget.setFrameStyle(QFrame.NoFrame)
         # take_image_widget = QtGui.QPushButton('Save Image')
         # self.last_saved_label = QtGui.QLabel('file:')
         if 'cameraswitch' in self.settings:
@@ -65,9 +67,9 @@ class cameraswitch(QtGui.QFrame):
 
     @inlineCallbacks
     def toggle(self, state):
-        '''
+        """
         Sends TTL pulse to switch camera and PMT
-        '''
+        """
         if not state:
             self.pmt.set_mode('Normal')
         if state:
@@ -100,9 +102,9 @@ class cameraswitch(QtGui.QFrame):
         self.reactor.stop()
 
 if __name__ == "__main__":
-    a = QtGui.QApplication([])
-    import qt4reactor
-    qt4reactor.install()
+    a = QApplication([])
+    import qt5reactor
+    qt5reactor.install()
     from twisted.internet import reactor
     cameraswitchWidget = cameraswitch(reactor)
     cameraswitchWidget.show()

@@ -1,14 +1,16 @@
 from common.lib.clients.qtui.QCustomFreqPower import QCustomFreqPower
 from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
-from PyQt4 import QtGui
+from PyQt5.QtWidgets import *
+import logging
+logger = logging.getLogger(__name__)
 
 
-class RFcontrol(QtGui.QWidget):
+class RFcontrol(QWidget):
 
     def __init__(self, reactor, cxn=None):
         super(RFcontrol, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.reactor = reactor
         self.cxn = cxn
         from labrad import types as T
@@ -33,7 +35,7 @@ class RFcontrol(QtGui.QWidget):
 
     @inlineCallbacks
     def initializeGUI(self):
-        layout = QtGui.QGridLayout()
+        layout = QGridLayout()
         chans = yield self.server.get_dds_channels()
         if self.chan in chans:
             widget = QCustomFreqPower(title='Trap RF Control')
@@ -88,9 +90,9 @@ class RFcontrol(QtGui.QWidget):
         self.reactor.stop()
 
 if __name__ == "__main__":
-    a = QtGui.QApplication([])
-    import qt4reactor
-    qt4reactor.install()
+    a = QApplication([])
+    import qt5reactor
+    qt5reactor.install()
     from twisted.internet import reactor
     RFcontrolWidget = RFcontrol(reactor)
     RFcontrolWidget.show()

@@ -4,7 +4,9 @@ Created on Sep 21, 2016
 @author: Anthony Ransford
 '''
 
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 from twisted.internet.defer import inlineCallbacks
 from twisted.internet.task import LoopingCall
 import os
@@ -13,7 +15,7 @@ import os
 class indicator():
 
     def __init__(self, name, limits):
-        self.label = QtGui.QLabel(name)
+        self.label = QLabel(name)
         self.limits = limits
 
     def update_value(self, value):
@@ -23,7 +25,7 @@ class indicator():
             self.label.setStyleSheet('color: red')
 
 
-class LoadIndicator(QtGui.QWidget):
+class LoadIndicator(QWidget):
 
     indicators = {'369 Freq': [812.108, 812.112],
                   '399 Freq': [752.450, 752.453],
@@ -39,7 +41,7 @@ class LoadIndicator(QtGui.QWidget):
     @inlineCallbacks
     def connect(self):
 
-        self.timer = QtCore.QTimer()
+        self.timer = QTimer()
         self.timer.timeout.connect(self.main_loop)
         self.timer.start(1000)
 
@@ -63,13 +65,14 @@ class LoadIndicator(QtGui.QWidget):
         self.initialize_gui()
 
     def initialize_gui(self):
-        layout = QtGui.QGridLayout()
-        qbox = QtGui.QGroupBox('Load Indicator')
-        sublayout = QtGui.QGridLayout()
+        layout = QGridLayout()
+        qbox = QGroupBox('Load Indicator')
+        sublayout = QGridLayout()
         qbox.setLayout(sublayout)
         layout.addWidget(qbox, 0, 0)
         self.indwidgets = {}
-        font = QtGui.QFont("ComicS", 18, QtGui.QFont.Bold)
+
+        font = QFont("ComicS", 18, QFont.Bold)
 
         for i, item in enumerate(self.indicators):
             ind = indicator(item, self.indicators[item])
@@ -128,9 +131,9 @@ class LoadIndicator(QtGui.QWidget):
         self.reactor.stop()
 
 if __name__ == "__main__":
-    a = QtGui.QApplication([])
-    import qt4reactor
-    qt4reactor.install()
+    a = QApplication([])
+    import qt5reactor
+    qt5reactor.install()
     from twisted.internet import reactor
     LoadWidget = LoadIndicator(reactor)
     LoadWidget.show()

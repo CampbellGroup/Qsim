@@ -1,7 +1,10 @@
 from common.lib.clients.qtui.QCustomFreqPower import QCustomFreqPower
 from twisted.internet.defer import inlineCallbacks, returnValue
 from common.lib.clients.connection import connection
-from PyQt4 import QtGui
+from PyQt5.QtWidgets import *
+
+import logging
+logger = logging.getLogger(__name__)
 
 """
 The DDS Control GUI lets the user control the DDS channels of the Pulser
@@ -11,7 +14,7 @@ The DDS Control GUI lets the user control the DDS channels of the Pulser
 class DDSChannel(QCustomFreqPower):
     def __init__(self, chan, reactor, cxn, context, parent=None):
         super(DDSChannel, self).__init__('DDS: {}'.format(chan), True, parent)
-        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
         self.reactor = reactor
         self.context = context
         self.chan = chan
@@ -85,7 +88,7 @@ class DDSChannel(QCustomFreqPower):
     
     def display_error(self, text):
         # runs the message box in a non-blocking method
-        message = QtGui.QMessageBox(self)
+        message = QMessageBox(self)
         message.setText(text)
         message.open()
         message.show()
@@ -95,14 +98,14 @@ class DDSChannel(QCustomFreqPower):
         self.reactor.stop()
 
 
-class DDSControlWidget(QtGui.QFrame):
+class DDSControlWidget(QFrame):
     
     SIGNALID = 319182
     
     def __init__(self, reactor, cxn=None):
         super(DDSControlWidget, self).__init__()
-        self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Plain)
-        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
+        self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         self.reactor = reactor
         self.cxn = cxn
         self.initialized = False
@@ -119,8 +122,8 @@ class DDSControlWidget(QtGui.QFrame):
             self.Error = Error
             yield self.initialize()
         except Exception as e:
-            print(e)
-            print('DDS CONTROL: Pulser not available')
+            logger.error(e)
+            logger.error('Pulser not available')
             self.setDisabled(True)
         self.cxn.add_on_connect('Pulser', self.reinitialize)
         self.cxn.add_on_disconnect('Pulser', self.disable)
@@ -129,7 +132,7 @@ class DDSControlWidget(QtGui.QFrame):
     def initialize(self):
         server = yield self.cxn.get_server('Pulser')
         sc = yield self.cxn.get_server('ScriptScanner')
-
+        #
         yield server.signal__new_dds_parameter(self.SIGNALID, context=self.context)
         yield sc.signal_on_running_new_script(self.SIGNALID + 1, context=self.context)
         yield sc.signal_on_running_script_finished(self.SIGNALID + 2, context=self.context)
@@ -201,9 +204,9 @@ class DDSControlWidget(QtGui.QFrame):
                     yield widget.setup_widget(connect=False)
     
     def do_layout(self):
-        layout = QtGui.QGridLayout()
-        q_box = QtGui.QGroupBox('Pulser DDS Control')
-        sub_layout = QtGui.QGridLayout()
+        layout = QGridLayout()
+        q_box = QGroupBox('Pulser DDS Control')
+        sub_layout = QGridLayout()
         q_box.setLayout(sub_layout)
         layout.addWidget(q_box)
         item = 0
@@ -235,9 +238,9 @@ class DDSControlWidget(QtGui.QFrame):
 
 
 if __name__ == "__main__":
-    a = QtGui.QApplication([])
-    import qt4reactor
-    qt4reactor.install()
+    a = QApplication([])
+    import qt5reactor
+    qt5reactor.install()
     from twisted.internet import reactor
     trap_drive_Widget = DDSControlWidget(reactor)
     trap_drive_Widget.show()

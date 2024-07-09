@@ -3,18 +3,22 @@ from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from common.lib.clients.qtui.timer import QCustomTimer
 from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
-from PyQt4 import QtGui
+from PyQt5.QtWidgets import *
+import logging
+logger = logging.getLogger(__name__)
+
 from pygame import mixer
 
 SIGNALID = 112983
 
 
-class LoadControl(QtGui.QFrame):
+class LoadControl(QFrame):
 
     def __init__(self, reactor, cxn=None):
+        # noinspection PyArgumentList
         super(LoadControl, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.MinimumExpanding)
-        self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Plain)
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.MinimumExpanding)
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
         mixer.init()
         self.its_trap = mixer.Sound('/home/qsimexpcontrol/Music/trap.wav')
         self.vader = mixer.Sound('/home/qsimexpcontrol/Music/swvader01.wav')
@@ -47,7 +51,7 @@ class LoadControl(QtGui.QFrame):
         except ImportError:
             self.settings = []
         yield self.setup_listeners()
-        yield self.initializeGUI()
+        yield self.initialize_gui()
 
     @inlineCallbacks
     def setup_listeners(self):
@@ -55,15 +59,16 @@ class LoadControl(QtGui.QFrame):
         yield self.PMT.addListener(listener=self.on_new_counts,
                                    source=None, ID=SIGNALID)
 
+    # noinspection PyArgumentList
     @inlineCallbacks
-    def initializeGUI(self):
-        layout = QtGui.QGridLayout()
+    def initialize_gui(self):
+        layout = QGridLayout()
         self.shutter_widget = QCustomSwitchChannel('399/Oven',
                                                    ('Closed/Oven Off', 'Open/Oven On'))
-        self.shutter_widget.setFrameStyle(QtGui.QFrame.NoFrame)
+        self.shutter_widget.setFrameStyle(QFrame.NoFrame)
         self.shutter_widget.TTLswitch.toggled.connect(self.toggle)
         self.timer_widget = QCustomTimer('Loading Time', show_control=False)
-        self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 3.0))
+        self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 5.0))
 
         self.current_widget.setStepSize(0.01)
         self.current_widget.spinLevel.setDecimals(2)
@@ -87,8 +92,8 @@ class LoadControl(QtGui.QFrame):
 
     @inlineCallbacks
     def on_new_counts(self, signal, pmt_value):
-        pass
-        disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')  # this throws error on closeout since listner is yielding to server
+        # this throws error on closeout since listner is yielding to server
+        disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')
         switch_on = not self.shutter_widget.TTLswitch.isChecked()
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(True)
@@ -99,7 +104,7 @@ class LoadControl(QtGui.QFrame):
 
     @inlineCallbacks
     def toggle(self, value):
-        yield self.changeState(value)
+        yield self.change_state(value)
         if not value:
             self.timer_widget.reset()
             self.timer_widget.start()
@@ -115,7 +120,7 @@ class LoadControl(QtGui.QFrame):
             yield self.reg.set('oven', value)
 
     @inlineCallbacks
-    def changeState(self, state):
+    def change_state(self, state):
         if '399 trapshutter' in self.settings:
             yield self.reg.set('399 trapshutter', state)
         yield self.TTL.ttl_output(10, state)
@@ -125,10 +130,11 @@ class LoadControl(QtGui.QFrame):
 
 
 if __name__ == "__main__":
-    a = QtGui.QApplication([])
-    import qt4reactor
-    qt4reactor.install()
+    a = QApplication([])
+    import qt5reactor
+    qt5reactor.install()
     from twisted.internet import reactor
     LoadControlWidget = LoadControl(reactor)
     LoadControlWidget.show()
+    # noinspection PyUnresolvedReferences
     reactor.run()

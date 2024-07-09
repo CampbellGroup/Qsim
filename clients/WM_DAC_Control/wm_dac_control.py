@@ -1,16 +1,17 @@
 from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from twisted.internet.defer import inlineCallbacks
-from PyQt4 import QtGui
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import socket
 import os
 
 
-class wm_dac_control(QtGui.QWidget):
+class wm_dac_control(QWidget):
 
     def __init__(self, reactor):
         super(wm_dac_control, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.password = os.environ['LABRADPASSWORD']
         self.name = socket.gethostname() + ' Single WM Lock Server'
         self.connect()
@@ -30,7 +31,7 @@ class wm_dac_control(QtGui.QWidget):
         self.initializeGUI()
 
     def initializeGUI(self):
-        layout = QtGui.QGridLayout()
+        layout = QGridLayout()
 
         control = QCustomSpinBox("DC value ('V')", (-5.0, 5.0))
         control.setStepSize(0.0001)
@@ -47,9 +48,9 @@ class wm_dac_control(QtGui.QWidget):
         self.reactor.stop()
 
 if __name__ == "__main__":
-    a = QtGui.QApplication([])
-    import qt4reactor
-    qt4reactor.install()
+    a = QApplication([])
+    import qt5reactor
+    qt5reactor.install()
     from twisted.internet import reactor
     Widget = wm_dac_control(reactor)
     Widget.show()
