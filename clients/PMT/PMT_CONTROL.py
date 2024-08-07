@@ -48,7 +48,7 @@ class pmtWidget(QtGui.QWidget):
 
     @inlineCallbacks
     def onNewSet(self, _):
-        newset = yield self.server.new_data_set()
+        newset = yield self.server.make_new_data_set()
         print("dataset button clicked")
         self.lineEdit.setText(newset)
         print("line edited")

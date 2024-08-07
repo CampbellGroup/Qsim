@@ -40,25 +40,25 @@ class DG1022_Rigol_Server(LabradServer):
     @setting(12, channel='w', value='b')
     def set_output(self, c, channel, value):
         channel = self.parsechannel(channel)
-        if value == True:
+        if value:
             yield self.write("OUTP" + str(channel) + " ON")
-        elif value == False:
+        else:
             yield self.write("OUTP" + str(channel) + " OFF")
 
     @setting(13, channel='w', function='s', frequency='v[Hz]', amplitude='v[V]', offset='v[V]')
-    def applyWaveForm(self, c, function, frequency, amplitude, offset, channel=None):
+    def apply_waveform(self, c, function, frequency, amplitude, offset, channel=None):
         channel = self.parsechannel(channel)
         output = "APPL:" + self.lookup[function] + channel + ' ' + str(int(frequency['Hz'])) + ',' + str(
             amplitude['V']) + ',' + str(offset['V'])
         yield self.write(output)
 
     @setting(15, channel='w', function='s')
-    def WaveFunction(self, c, channel, function=None):
+    def wave_function(self, c, channel, function=None):
         """
         Changes wave form
         """
         channel = self.parsechannel(channel)
-        if function == None:
+        if function is None:
             output = "FUNC" + channel + "?"
             yield self.write(output)
             func = yield self.read()
@@ -68,12 +68,12 @@ class DG1022_Rigol_Server(LabradServer):
             yield self.write(output)
 
     @setting(16, channel='w', frequency='v[Hz]')
-    def Frequency(self, c, channel, frequency=None):
+    def frequency(self, c, channel, frequency=None):
         """
         Sets frequency
         """
         channel = self.parsechannel(channel)
-        if frequency == None:
+        if frequency is None:
             output = "FREQ" + channel + "?"
             yield self.write(output)
             freq = yield self.read()
@@ -83,12 +83,12 @@ class DG1022_Rigol_Server(LabradServer):
             yield self.write(output)
 
     @setting(17, channel='w', voltage='v[V]')
-    def setDC(self, c, channel, voltage=None):
+    def set_dc(self, c, channel, voltage=None):
         """
         sets DC output value
         """
         channel = self.parsechannel(channel)
-        if voltage == None:
+        if voltage is None:
             #            output = "VOLT:OFFS" + channel
             output = "APPL" + channel + "?"
             yield self.write(output)
@@ -103,9 +103,9 @@ class DG1022_Rigol_Server(LabradServer):
             yield self.write(output)
 
     @setting(18, channel='w', offset='v[V]')
-    def Offset(self, c, channel, offset=None):
+    def offset(self, c, channel, offset=None):
         channel = self.parsechannel(channel)
-        if offset == None:
+        if offset is None:
             output = "VOLT:OFFS" + channel + "?"
             yield self.write(output)
             offset = yield self.read()
@@ -115,12 +115,12 @@ class DG1022_Rigol_Server(LabradServer):
             yield self.write(output)
 
     @setting(19, channel='w', voltage='v[V]')
-    def Amplitude(self, c, channel, voltage=None):
-        '''
+    def amplitude(self, c, channel, voltage=None):
+        """
         sets amp
-        '''
+        """
         channel = self.parsechannel(channel)
-        if voltage == None:
+        if voltage is None:
             output = "VOLT" + channel + "?"
             yield self.write(output)
             volts = yield self.read()
@@ -130,47 +130,47 @@ class DG1022_Rigol_Server(LabradServer):
             yield self.write(output)
 
     @setting(20, source='s')
-    def AMSource(self, c, source):
-        '''
+    def am_source(self, c, source):
+        """
         Select internal or external modulation source, the default is INT
-        '''
+        """
         output = "AM:SOUR " + source
         yield self.write(output)
 
     @setting(21, function='s')
-    def AMFunction(self, c, function):
-        '''
+    def am_function(self, c, function):
+        """
         Select the internal modulating wave of AM
         In internal modulation mode, the modulating wave could be sine,
         square, ramp, negative ramp, triangle, noise or arbitrary wave, the
         default is sine.
-        '''
+        """
         output = "AM:INT:FUNC " + self.lookup[function]
         yield self.write(output)
 
     @setting(22, frequency='v[Hz]')
-    def AMFrequency(self, c, frequency):
-        '''
+    def am_frequency(self, c, frequency):
+        """
         Set the frequency of AM internal modulation in Hz
         Frequency range: 2mHz to 20kHz
-        '''
+        """
         output = "AM:INT:FREQ " + str(frequency['Hz'])
         yield self.write(output)
 
     @setting(23, depth='v')
-    def AMDepth(self, c, depth):
-        '''
+    def am_depth(self, c, depth):
+        """
         Set the depth of AM internal modulation in percent
         Depth range: 0% to 120%
-        '''
+        """
         output = "AM:DEPT " + str(depth)
         yield self.write(output)
 
     @setting(24, state='b')
-    def AMState(self, c, state):
-        '''
+    def am_state(self, c, state):
+        """
         Disable or enable AM function
-        '''
+        """
         if state:
             state = 'ON'
         else:
@@ -180,45 +180,45 @@ class DG1022_Rigol_Server(LabradServer):
         yield self.write(output)
 
     @setting(25, source='s')
-    def FMSource(self, c, source):
-        '''
+    def fm_source(self, c, source):
+        """
         Select internal or external modulation source, the default is INT
-        '''
+        """
         output = "FM:SOUR " + source
         yield self.write(output)
 
     @setting(26, function='s')
-    def FMFunction(self, c, function):
-        '''
+    def fm_function(self, c, function):
+        """
         In internal modulation mode, the modulating wave could be sine,
         square, ramp, negative ramp, triangle, noise or arbitrary wave, the
         default is sine
-        '''
+        """
         output = "FM:INT:FUNC " + self.lookup[function]
         yield self.write(output)
 
     @setting(27, frequency='v[Hz]')
-    def FMFrequency(self, c, frequency):
-        '''
+    def fm_frequency(self, c, frequency):
+        """
         Set the frequency of FM internal modulation in Hz
         Frequency range: 2mHz to 20kHz
-        '''
+        """
         output = "FM:INT:FREQ " + str(frequency['Hz'])
         yield self.write(output)
 
     @setting(28, deviation='v')
-    def FMDeviation(self, c, deviation):
-        '''
+    def fm_deviation(self, c, deviation):
+        """
         Set the frequency deviation of FM in Hz.
-        '''
+        """
         output = "FM:DEV " + str(deviation)
         yield self.write(output)
 
     @setting(29, state='b')
-    def FMState(self, c, state):
-        '''
+    def fm_state(self, c, state):
+        """
         Disable or enable FM function
-        '''
+        """
         if state:
             state = 'ON'
         else:
@@ -228,7 +228,7 @@ class DG1022_Rigol_Server(LabradServer):
         yield self.write(output)
 
     def write(self, data):
-        os.write(self.device, data)
+        os.write(self.device, data.encode())
 
     def read(self):
         data = os.read(self.device, 300)
