@@ -1,4 +1,5 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
+from Qsim.clients.qtui.electrode_widget import ElectrodeIndicator
 from twisted.internet.defer import inlineCallbacks
 from PyQt5.QtWidgets import *
 from config.dac_ad660_config import HardwareConfiguration as HC
@@ -48,17 +49,22 @@ class DACClient(QFrame):
         self.cxn = yield connectAsync(name="dac client")
         self.dacserver = self.cxn.dac_ad660_server
         self.init_voltages = yield self.dacserver.get_analog_voltages()
-        logger.debug(self.init_voltages)
+        # logger.info(f"init_voltages:{self.init_voltages}")
         self.initialize_gui()
 
     def initialize_gui(self):
-        layout = QGridLayout()
+        layout = QVBoxLayout()
+        self.electrode_indicator = ElectrodeIndicator()
+
+        # Make the grid of DAC input spinboxes
+        grid_layout = QGridLayout()
         self.electrodes = {}
         q_box = QGroupBox('DAC Channels')
 
         sublayout = QGridLayout()
         q_box.setLayout(sublayout)
-        layout.addWidget(q_box, 0, 0)
+        grid_layout.addWidget(q_box, 0, 0)
+
         # The length of columns.
         # So if length_of_column was 2, and I had 6 DACs, I'd have 3 columns
         length_of_column = 2
@@ -69,13 +75,15 @@ class DACClient(QFrame):
                                   channel.allowed_voltage_range[1],
                                   name=channel.name)
             self.electrodes[electrode.name] = electrode
-            # noinspection PyArgumentList
             sublayout.addWidget(electrode.spinBox, i % length_of_column, i // length_of_column)
-            # noinspection PyUnresolvedReferences
             # electrode.spinBox.spinLevel.setValue(self.init_voltages[channel.name])
             electrode.spinBox.spinLevel.valueChanged.connect(lambda value=electrode.spinBox.spinLevel.value(),
                                                                     elec=electrode: self.update_dac(value, elec))
+
+        layout.addWidget(self.electrode_indicator)
+        layout.addLayout(grid_layout)
         self.setLayout(layout)
+        self.maximumSize()
 
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
@@ -84,6 +92,7 @@ class DACClient(QFrame):
         else:
             dac = str(electrode.dac)
         yield self.dacserver.set_individual_analog_voltages([(dac, voltage)])
+        self.electrode_indicator.update_rod(dac, voltage)
 
     def closeEvent(self, event):
         pass
