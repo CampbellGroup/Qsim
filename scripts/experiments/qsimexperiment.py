@@ -1,10 +1,9 @@
-from common.lib.servers.script_scanner.scan_methods import experiment
+from common.lib.servers.script_scanner.experiment import experiment
 import numpy as np
-# import time
+from typing import Union
 
 
 class QsimExperiment(experiment):
-
     exp_parameters = list()
 
     @classmethod
@@ -190,13 +189,23 @@ class QsimExperiment(experiment):
             counts_parsed.append(counts[i::num])
         return counts_parsed, [tt]
 
-    def process_data(self, counts):
+    def process_data(self, counts: Union[list[int], np.array]) -> np.array:
+        """
+        takes in counts, and returns an array representing the histogram of the counts
+        :param counts: a list of photon counts for each experiment
+        :return: a two-column array. column 1 is bins, and column 2 is events
+        """
         bins = list(np.arange(0, np.max(counts) + 1, 1))
         events = [list(counts).count(i) for i in bins]
         hist = np.column_stack((bins, events))
         return hist
 
-    def get_pop(self, counts):
+    def get_pop(self, counts: list[int]) -> float:
+        """
+        Takes the list of counts, applies a threshold taken from Parameter vault, and converts it to a percentage
+        :param counts: a list of photon counts for each experiment
+        :return: the percentage of experiments above threshold
+        """
         self.state_detection_mode = self.p["Modes.state_detection_mode"]
         if self.state_detection_mode == 'Shelving':
             threshold = self.p["ShelvingStateDetection.state_readout_threshold"]
@@ -205,11 +214,18 @@ class QsimExperiment(experiment):
         elif self.state_detection_mode == 'StandardFiberEOM':
             threshold = self.p["StandardStateDetection.state_readout_threshold"]
         else:
-            return
-        prob = float(len(np.where(counts >= threshold)[0])) / float(len(counts))
+            raise Exception("unknown state detection threshold")
+        prob = float(len(np.where(counts >= threshold)[0]) / len(counts))
         return prob
 
     def plot_hist(self, hist, folder_name='Histograms', create_new=True):
+        """
+        Plots the given histogram to the plotter
+        :param hist: the histogram to be plotted, should be a two-column array. column 1 is bins, and column 2 is events
+        :param folder_name: the folder to store the data in
+        :param create_new: flag that determines whether to make a new histogram, or to add to the current one
+        :return:
+        """
         self.dv.cd(['', folder_name], True, context=self.hist_ctx)
         if create_new:
             self.dataset_hist = self.dv.new(folder_name, [('run', 'arb u')],
@@ -235,15 +251,15 @@ class QsimExperiment(experiment):
     #     self.timeharp.stop_measure()
     #     return timetags
 
-    def convert_timetags(self, data):
-        timetags = []
-        for i, stamp in enumerate(data):
-            timetag = (stamp >> 10) & 2 ** 15 - 1
-            timetag = (stamp >> 10) & (2 ** 15 - 1)
-            timetag = timetag * 25. / 1000.  # time in nanoseconds
-            if timetag != 0:
-                timetags.append(timetag)
-        return timetags
+    # def convert_timetags(self, data):
+    #     timetags = []
+    #     for i, stamp in enumerate(data):
+    #         timetag = (stamp >> 10) & 2 ** 15 - 1
+    #         timetag = (stamp >> 10) & (2 ** 15 - 1)
+    #         timetag = timetag * 25. / 1000.  # time in nanoseconds
+    #         if timetag != 0:
+    #             timetags.append(timetag)
+    #     return timetags
 
     def _finalize(self, cxn, context):
         self.pmt.set_mode(self.init_mode)
