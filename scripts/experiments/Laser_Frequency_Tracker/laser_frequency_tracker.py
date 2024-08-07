@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import time
 import socket
@@ -35,22 +33,22 @@ class LaserFrequencyTracker(QsimExperiment):
 
     def run(self, cxn, context):
         self.inittime = time.time()
-        if self.p.LaserMonitor.laser in ['369', '399']:
+        if self.p["LaserMonitor.laser"] in ['369', '399']:
             self.initfreq = self.wlm369.get_frequency(1)
             print(self.initfreq)
         else:
-            if self.p.LaserMonitor.laser == 'shelving lasers':
+            if self.p["LaserMonitor.laser"] == 'shelving lasers':
                 self.initfreq_760_1 = self.wlm.get_frequency(self.chan_dict['760_1'])
                 self.initfreq_760_2 = self.wlm.get_frequency(self.chan_dict['760_2'])
                 self.initfreq_822 = self.wlm.get_frequency(self.chan_dict['822'])
                 print(self.initfreq_760_1, self.initfreq_760_2, self.initfreq_822)
             else:
-                self.initfreq = self.wlm.get_frequency(self.chan_dict[str(self.p.LaserMonitor.laser)])
+                self.initfreq = self.wlm.get_frequency(self.chan_dict[str(self.p["LaserMonitor.laser"])])
                 print(self.initfreq)
 
         self.setup_datavault('Elapsed Time', 'Frequency Deviation')
         self.setup_grapher('Frequency Monitor')
-        while (time.time() - self.inittime) <= self.p.LaserMonitor.measure_time['s']:
+        while (time.time() - self.inittime) <= self.p["LaserMonitor.measure_time"]['s']:
             should_stop = self.pause_or_stop()
             if should_stop:
                 break
@@ -58,25 +56,25 @@ class LaserFrequencyTracker(QsimExperiment):
             freq_list = []
             init_averaging_time = time.time()
             # get the laser frequency from the correct wavemeter
-            if self.p.LaserMonitor.laser in ['369', '399']:
-                while (time.time() - init_averaging_time) < self.p.LaserMonitor.averaging_time['s']:
+            if self.p["LaserMonitor.laser"] in ['369', '399']:
+                while (time.time() - init_averaging_time) < self.p["LaserMonitor.averaging_time"]['s']:
                     freq_list.append(self.wlm369.get_frequency(1))
             else:
-                if self.p.LaserMonitor.laser == 'shelving lasers':
+                if self.p["LaserMonitor.laser"] == 'shelving lasers':
                     freq_list_760_1 = []
                     freq_list_760_2 = []
                     freq_list_822 = []
-                    while (time.time() - init_averaging_time) < self.p.LaserMonitor.averaging_time['s']:
+                    while (time.time() - init_averaging_time) < self.p["LaserMonitor.averaging_time"]['s']:
                         freq_list_760_1.append(self.wlm.get_frequency(self.chan_dict['760_1']))
                         freq_list_760_2.append(self.wlm.get_frequency(self.chan_dict['760_2']))
                         freq_list_822.append(self.wlm.get_frequency(self.chan_dict['822']))
 
                 else:
-                    while (time.time() - init_averaging_time) < self.p.LaserMonitor.averaging_time['s']:
-                        freq_list.append(self.wlm.get_frequency(self.chan_dict[str(self.p.LaserMonitor.laser)]))
+                    while (time.time() - init_averaging_time) < self.p["LaserMonitor.averaging_time"]['s']:
+                        freq_list.append(self.wlm.get_frequency(self.chan_dict[str(self.p["LaserMonitor.laser"])]))
 
             # find the average laser frequency over the measurement time
-            if self.p.LaserMonitor.laser == 'shelving lasers':
+            if self.p["LaserMonitor.laser"] == 'shelving lasers':
                 freq_760_1, freq_760_2, freq_822 = \
                     np.mean(freq_list_760_1), np.mean(freq_list_760_2), np.mean(freq_list_822)
             else:
@@ -84,7 +82,7 @@ class LaserFrequencyTracker(QsimExperiment):
 
             # try to add the data to datavault in MHz
             try:
-                if self.p.LaserMonitor.laser == 'shelving lasers':
+                if self.p["LaserMonitor.laser"] == 'shelving lasers':
                     self.dv.add(time.time() - self.inittime, 1e6 * (freq_760_1 - self.initfreq_760_1),
                                 1e6 * (freq_760_2 - self.initfreq_760_2), 1e6 * (freq_822 - self.initfreq_822),
                                 context=self.shelving_laser_context)
@@ -93,11 +91,11 @@ class LaserFrequencyTracker(QsimExperiment):
             except:
                 pass
 
-            progress = float(time.time() - self.inittime) / self.p.LaserMonitor.measure_time['s']
+            progress = float(time.time() - self.inittime) / self.p["LaserMonitor.measure_time"]['s']
             self.sc.script_set_progress(self.ident, progress)
 
     def setup_datavault(self, x_axis, y_axis):
-        if self.p.LaserMonitor.laser == 'shelving lasers':
+        if self.p["LaserMonitor.laser"] == 'shelving lasers':
 
             self.shelving_laser_context = self.dv.context()
             self.dv.cd(['', self.name + '_shelving_lasers'], True, context=self.shelving_laser_context)

@@ -24,42 +24,42 @@ class DipoleInterrogation(PulseSequence):
         p = self.parameters
         self.add_dds('369DP',
                      self.start,
-                     p.DipoleInterrogation.duration,
-                     p.DipoleInterrogation.frequency,
-                     p.DipoleInterrogation.power)
+                     p["DipoleInterrogation.duration"],
+                     p["DipoleInterrogation.frequency"],
+                     p["DipoleInterrogation.power"])
 
-        if p.DipoleInterrogation.interrogation_laser == 'DopplerCoolingSP':
+        if p["DipoleInterrogation.interrogation_laser"] == 'DopplerCoolingSP':
             self.add_dds('DopplerCoolingSP',
                          self.start,
-                         p.DipoleInterrogation.duration,
-                         p.ddsDefaults.doppler_cooling_freq,
-                         p.ddsDefaults.doppler_cooling_power)
+                         p["DipoleInterrogation.duration"],
+                         p["ddsDefaults.doppler_cooling_freq"],
+                         p["ddsDefaults.doppler_cooling_power"])
 
-        if p.DipoleInterrogation.interrogation_laser == 'StateDetectionSP':
+        if p["DipoleInterrogation.interrogation_laser"] == 'StateDetectionSP':
             self.add_dds('StateDetectionSP',
                          self.start,
-                         p.DipoleInterrogation.duration,
-                         p.ddsDefaults.state_detection_freq,
-                         p.ddsDefaults.state_detection_power)
+                         p["DipoleInterrogation.duration"],
+                         p["ddsDefaults.state_detection_freq"],
+                         p["ddsDefaults.state_detection_power"])
 
-        if p.DipoleInterrogation.interrogation_laser == 'OpticalPumpingSP':
+        if p["DipoleInterrogation.interrogation_laser"] == 'OpticalPumpingSP':
             self.add_dds('OpticalPumpingSP',
                          self.start,
-                         p.DipoleInterrogation.duration,
-                         p.ddsDefaults.optical_pumping_freq,
-                         p.ddsDefaults.optical_pumping_power)
+                         p["DipoleInterrogation.duration"],
+                         p["ddsDefaults.optical_pumping_freq"],
+                         p["ddsDefaults.optical_pumping_power"])
 
         self.add_dds('935SP',
                      self.start,
-                     p.DipoleInterrogation.duration,
-                     p.ddsDefaults.repump_935_freq,
-                     p.DipoleInterrogation.repump_power)
+                     p["DipoleInterrogation.duration"],
+                     p["ddsDefaults.repump_935_freq"],
+                     p["DipoleInterrogation.repump_power"])
 
         self.add_dds('976SP',
                      self.start,
-                     p.DipoleInterrogation.duration,
-                     p.ddsDefaults.repump_976_freq,
-                     p.ddsDefaults.repump_976_power)
+                     p["DipoleInterrogation.duration"],
+                     p["ddsDefaults.repump_976_freq"],
+                     p["ddsDefaults.repump_976_power"])
 
-        self.add_ttl('TimeResolvedCount', self.start, p.DipoleInterrogation.duration)
-        self.end = self.start + p.DipoleInterrogation.duration
+        self.add_ttl('TimeResolvedCount', self.start, p["DipoleInterrogation.duration"])
+        self.end = self.start + p["DipoleInterrogation.duration"]
