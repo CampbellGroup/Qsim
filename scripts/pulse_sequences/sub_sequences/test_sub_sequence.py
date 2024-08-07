@@ -13,17 +13,11 @@ class TestSubSequence(PulseSequence):
         self.add_ttl('ReadoutCount',
                      self.start,
                      duration)
-        self.add_ttl('WindfreakSynthHDTTL',
-                     self.start,
-                     duration)
-        self.add_ttl('TimeResolvedCount',
-                     self.start,
-                     duration)
         self.add_dds('760SP',
                      self.start,
                      duration,
                      U(160.0, "MHz"),
-                     U(-10.0, "dBm"))
+                     U(-40.0, "dBm"))
 
         self.end = self.start + duration
 

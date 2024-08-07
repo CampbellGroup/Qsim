@@ -1,8 +1,10 @@
 import labrad
 from Qsim.scripts.pulse_sequences.test_sequence import TestSequence
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-# from labrad.units import WithUnit as U
+from labrad.units import WithUnit as U
 import numpy as np
+from common.lib.servers.Pulser2.pulser_ok import Pulser
+from twisted.internet.defer import inlineCallbacks
 
 
 class TestPulseSequence(QsimExperiment):
@@ -21,13 +23,18 @@ class TestPulseSequence(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
-        self.pulser = cxn.pulser
+        self.pulser: Pulser = cxn.pulser
         self.context = context
 
     def run(self, cxn, context):
 
         i = 0
         self.program_pulser(TestSequence)
+
+        # self._program_pulser()
+        # self.pulser.program_sequence()
+        # self.pulser.start_number(100)
+
         while True:
             should_break = self.update_progress(np.random.rand())
             if should_break:
@@ -35,6 +42,18 @@ class TestPulseSequence(QsimExperiment):
             self.run_sequence()
             print(i)
             i += 1
+
+    @inlineCallbacks
+    def _program_pulser(self):
+        start = U(5.0, 'us')
+        duration = U(500.0, 'us')
+
+        yield self.pulser.new_sequence()
+        yield self.pulser.add_ttl_pulse("ReadoutCount", start, duration)
+        yield self.pulser.add_dds_pulses(
+            [('760SP', start, duration, U(160.0, "MHz"), U(-10.0, "dBm"),
+              U(0.0, "deg"), U(0.0, "MHz"), U(0.0, "dB"))]
+        )
 
 
 if __name__ == '__main__':
