@@ -75,6 +75,7 @@ class DACClient(QFrame):
                                   channel.allowed_voltage_range[1],
                                   name=channel.name)
             self.electrodes[electrode.name] = electrode
+            # noinspection PyArgumentList
             sublayout.addWidget(electrode.spinBox, i % length_of_column, i // length_of_column)
             # electrode.spinBox.spinLevel.setValue(self.init_voltages[channel.name])
             electrode.spinBox.spinLevel.valueChanged.connect(lambda value=electrode.spinBox.spinLevel.value(),
