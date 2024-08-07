@@ -39,7 +39,7 @@ class API:
     def connect_ok_board(self) -> bool:
         fp = ok.FrontPanel()
         module_count = fp.GetDeviceCount()
-        print("Found {} unused modules".format(module_count))
+        print("Found {} opalKelly modules".format(module_count))
         for i in range(module_count):
             serial = fp.GetDeviceListSerial(i)
             tmp = ok.FrontPanel()
@@ -55,7 +55,7 @@ class API:
     def program_ok_board(self) -> None:
         prog = self.xem.ConfigureFPGA(self.okDeviceFile)
         if prog != 0:
-            raise Exception("Not able to program FPGA. error code: {}".format(error_codes[prog]))
+            raise Exception("Not able to program FPGA. error code: {} {}".format(prog, error_codes[prog]))
         pll = ok.PLL22150()
         self.xem.GetEepromPLL22150Configuration(pll)
         pll.SetDiv1(pll.DivSrc_VCO, 4)
