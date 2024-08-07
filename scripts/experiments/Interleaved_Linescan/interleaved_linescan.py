@@ -54,7 +54,7 @@ FiberEOM
         self.pulser.line_trigger_state(False)
         self.setup_datavault('frequency', 'photons')  # gives the x and y names to Data Vault
         self.setup_grapher('Interleaved Linescan')
-        self.detunings = self.get_scan_list(self.p.InterleavedLinescan.line_scan, 'MHz')
+        self.detunings = self.get_scan_list(self.p['InterleavedLinescan.line_scan'], 'MHz')
         return_detuning, return_counts = [], []
         for i, detuning in enumerate(self.detunings):
             if context == (0, 2):
@@ -62,7 +62,7 @@ FiberEOM
                 if should_break:
                     return should_break
             # self.p.Transitions.main_cooling_369 divide by 2 for the double pass
-            freq = U(detuning, 'MHz') / 2.0 + self.p.ddsDefaults.DP369_freq
+            freq = U(detuning, 'MHz') / 2.0 + self.p["ddsDefaults.DP369_freq"]
             track_detuning, track_counts = self.program_pulser(freq, detuning)
             return_detuning.append(track_detuning)
             return_counts.append(track_counts)
@@ -78,7 +78,7 @@ FiberEOM
         self.p['DipoleInterrogation.frequency'] = freq
         pulse_sequence = sequence(self.p)
         pulse_sequence.program_sequence(self.pulser)
-        self.pulser.start_number(int(self.p.InterleavedLinescan.repititions))
+        self.pulser.start_number(int(self.p["InterleavedLinescan.repititions"]))
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()
         time_tags = self.pulser.get_timetags()

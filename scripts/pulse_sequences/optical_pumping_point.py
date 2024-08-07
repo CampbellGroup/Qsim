@@ -14,7 +14,7 @@ class OpticalPumpingPoint(PulseSequence):
                              Deshelving, Shelving]
 
     required_parameters = [
-        ('OpticalPumping', 'method'),
+        ('Modes', 'optical_pumping_mode'),
         ('Modes', 'state_detection_mode')
     ]
 
@@ -23,7 +23,7 @@ class OpticalPumpingPoint(PulseSequence):
 
         self.add_sequence(TurnOffAll)
 
-        mode = p.Modes.optical_pumping
+        mode = p["Modes.optical_pumping_mode"]
 
         if mode == 'Standard' or mode == 'StandardFiberEOM':
             self.add_sequence(DopplerCooling)
@@ -31,13 +31,13 @@ class OpticalPumpingPoint(PulseSequence):
             self.add_sequence(StandardStateDetection)
 
         elif mode == 'QuadrupoleOnly':
-            if p.Modes.state_detection_mode == 'Shelving':
+            if p["Modes.state_detection_mode"] == 'Shelving':
                 self.add_sequence(DopplerCooling)
                 self.add_sequence(OpticalPumping)
                 self.add_sequence(Shelving)
                 self.add_sequence(ShelvingStateDetection)
                 self.add_sequence(Deshelving)
-            if p.Modes.state_detection_mode == 'Standard':
+            if p["Modes.state_detection_mode"] == 'Standard':
                 self.add_sequence(DopplerCooling)
                 self.add_sequence(OpticalPumping)
                 self.add_sequence(StandardStateDetection)

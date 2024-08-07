@@ -45,7 +45,7 @@ class Magnetometry(QsimExperiment):
             self.ks.all_current(self.currents)
             dataset, should_break = self.linescan.run(cxn, context)  # run the line scan
             self.linescan.dv.add_parameter(self.coil_direction, current_step)
-            fitdata = dataset.getData(limit=None, start=0)  # get the data from the linescan
+            fitdata = dataset.get_data(limit=None, start=0)  # get the data from the linescan
             # fitdata = dv.get(limit=None, startOver=True)
             # may be that we need to navigate to the saved file in the datavault.
             xdata = [i[0] for i in fitdata]

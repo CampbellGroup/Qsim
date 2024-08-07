@@ -1,9 +1,11 @@
 from common.lib.servers.script_scanner.scan_methods import experiment
 import numpy as np
-import time
+# import time
 
 
 class QsimExperiment(experiment):
+
+    exp_parameters = list()
 
     @classmethod
     def all_required_parameters(cls):
@@ -24,34 +26,38 @@ class QsimExperiment(experiment):
         self.cxn = cxn
         self.pv = None
         self.sc = None
-        self.init_mode = self.cxn.NormalPMTFlow.getcurrentmode()
+        self.init_mode = self.cxn.NormalPMTFlow.get_current_mode()
         self.hist_ctx = self.cxn.data_vault.context()
         self.cxn.NormalPMTFlow.set_mode('Normal')
 
     def _connect(self):
+        """
+        connect the experiment and performs checks for the presence of the following servers:
+        DataVault, NormalPMTFlow, Pulser, and RealSimpleGrapher
+        """
         experiment._connect(self)
         try:
             self.dv = self.cxn.servers['Data Vault']
         except KeyError as error:
-            error_message = error + '\n' + "DataVault is not running"
+            error_message = str(error) + '\n' + "DataVault is not running"
             raise KeyError(error_message)
 
         try:
             self.pmt = self.cxn.servers['NormalPMTFlow']
         except KeyError as error:
-            error_message = error + '\n' + "NormalPMTFlow is not running"
+            error_message = str(error) + '\n' + "NormalPMTFlow is not running"
             raise KeyError(error_message)
 
         try:
             self.pulser = self.cxn.servers['pulser']
         except KeyError as error:
-            error_message = error + '\n' + "Pulser is not running"
+            error_message = str(error) + '\n' + "Pulser is not running"
             raise KeyError(error_message)
 
         try:
-            self.grapher = self.cxn.servers['grapher']
+            self.grapher = self.cxn.servers['real_simple_grapher']
         except KeyError as error:
-            error_message = error + '\n' + "Grapher is not running"
+            error_message = str(error) + '\n' + "Grapher is not running"
             raise KeyError(error_message)
 
         # try:
@@ -111,18 +117,18 @@ class QsimExperiment(experiment):
         tt = np.array([])
 
         # choose state detection method and number of repetitions
-        self.state_detection_mode = self.p.Modes.state_detection_mode
+        self.state_detection_mode = self.p["Modes.state_detection_mode"]
         if self.state_detection_mode == 'Shelving':
-            reps = self.p.ShelvingStateDetection.repetitions
+            reps = self.p["ShelvingStateDetection.repetitions"]
         elif self.state_detection_mode == 'Standard':
-            reps = self.p.StandardStateDetection.repetitions
+            reps = self.p["StandardStateDetection.repetitions"]
         elif self.state_detection_mode == 'StandardFiberEOM':
-            reps = self.p.StandardStateDetection.repetitions
+            reps = self.p["StandardStateDetection.repetitions"]
         else:
             return
 
         # program pulser for a given number of runs of the experiment, and collect readout counts
-        for i in range(int(reps) / max_runs):
+        for i in range(int(reps) // max_runs):
             self.pulser.start_number(max_runs)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
@@ -151,15 +157,15 @@ class QsimExperiment(experiment):
         tt = np.array([])
 
         # choose state detection method and number of repetitions
-        self.state_detection_mode = self.p.Modes.state_detection_mode
+        self.state_detection_mode = self.p["Modes.state_detection_mode"]
         if self.state_detection_mode == 'Shelving':
-            reps = self.p.ShelvingStateDetection.repetitions
+            reps = self.p["ShelvingStateDetection.repetitions"]
         elif self.state_detection_mode == 'Standard':
-            reps = self.p.StandardStateDetection.repetitions
+            reps = self.p["StandardStateDetection.repetitions"]
         else:
             return
 
-        for i in range(int(reps) / max_runs):
+        for i in range(int(reps) // max_runs):
             self.pulser.start_number(max_runs)
             self.pulser.wait_sequence_done()
             self.pulser.stop_sequence()
@@ -191,13 +197,13 @@ class QsimExperiment(experiment):
         return hist
 
     def get_pop(self, counts):
-        self.state_detection_mode = self.p.Modes.state_detection_mode
+        self.state_detection_mode = self.p["Modes.state_detection_mode"]
         if self.state_detection_mode == 'Shelving':
-            threshold = self.p.ShelvingStateDetection.state_readout_threshold
+            threshold = self.p["ShelvingStateDetection.state_readout_threshold"]
         elif self.state_detection_mode == 'Standard':
-            threshold = self.p.StandardStateDetection.state_readout_threshold
+            threshold = self.p["StandardStateDetection.state_readout_threshold"]
         elif self.state_detection_mode == 'StandardFiberEOM':
-            threshold = self.p.StandardStateDetection.state_readout_threshold
+            threshold = self.p["StandardStateDetection.state_readout_threshold"]
         else:
             return
         prob = float(len(np.where(counts >= threshold)[0])) / float(len(counts))
@@ -212,22 +218,22 @@ class QsimExperiment(experiment):
         if create_new:
             self.grapher.plot(self.dataset_hist, 'Histogram', False)
 
-    def get_timeharp_timetags(self, measure_time, buffer_size=131072):
-        self.timeharp.start_measure(measure_time)
-        time.sleep(measure_time / 1000.)
-        data = self.timeharp.read_fifo(buffer_size)
-        stamps = data[0]
-        data_length = data[1]
-        stamps = stamps[0:data_length]
-        timetags = self.convert_timetags(stamps)
-        while data_length > 0:
-            data = self.timeharp.read_fifo(buffer_size)
-            stamps = data[0]
-            data_length = data[1]
-            stamps = stamps[0:data_length]
-            timetags += self.convert_timetags(stamps)
-        self.timeharp.stop_measure()
-        return timetags
+    # def get_timeharp_timetags(self, measure_time, buffer_size=131072):
+    #     self.timeharp.start_measure(measure_time)
+    #     time.sleep(measure_time / 1000.)
+    #     data = self.timeharp.read_fifo(buffer_size)
+    #     stamps = data[0]
+    #     data_length = data[1]
+    #     stamps = stamps[0:data_length]
+    #     timetags = self.convert_timetags(stamps)
+    #     while data_length > 0:
+    #         data = self.timeharp.read_fifo(buffer_size)
+    #         stamps = data[0]
+    #         data_length = data[1]
+    #         stamps = stamps[0:data_length]
+    #         timetags += self.convert_timetags(stamps)
+    #     self.timeharp.stop_measure()
+    #     return timetags
 
     def convert_timetags(self, data):
         timetags = []

@@ -1,5 +1,6 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
+from labrad.units import WithUnit as U
 import time
 import numpy as np
 
@@ -38,6 +39,7 @@ Before running the scan, care should be taken to make sure that the laser powers
         print('initializing')
         self.ident = ident
         self.cxnwlm = labrad.connect('10.97.112.2', password='lab')
+        # self.badwm = self.cxn.multiplexerserver
         self.wm = self.cxnwlm.multiplexerserver
         # if self.p.wavemeterscan.lasername == 'Hudson':
         #    self.cxnhudwlm = labrad.connect('10.97.111.8', password='lab')
@@ -77,10 +79,10 @@ Before running the scan, care should be taken to make sure that the laser powers
             self.tempdata.sort()
             self.dv.add(self.tempdata)
             try:
-                if self.p.wavemeterscan.lasername in ['760', '760 (Repump)']:
+                if self.p["wavemeterscan.lasername"] in ['760', '760 (Repump)']:
                     self.setup_grapher('760_linescan')
                 else:
-                    self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
+                    self.setup_grapher(self.p["wavemeterscan.lasername"] + '_linescan')
             except KeyError:
                 pass
 
@@ -92,55 +94,55 @@ Before running the scan, care should be taken to make sure that the laser powers
                 self.tempdata.sort()
                 self.dv.add(self.tempdata)
                 try:
-                    self.setup_grapher(self.p.wavemeterscan.lasername + '_linescan')
+                    self.setup_grapher(self.p["wavemeterscan.lasername"] + '_linescan')
                 except KeyError:
                     pass
                 return True
 
             counts = self.pmt.get_next_counts('ON', 1, False)[0]
             currentfreq = self.currentfrequency()
-            if currentfreq and (counts > self.p.wavemeterscan.noise_floor):
+            if currentfreq and (counts > self.p["wavemeterscan.noise_floor"]):
                 self.tempdata.append([1e6 * currentfreq, counts])
 
     def setup_parameters(self):
 
-        if self.p.wavemeterscan.lasername == '935':
-            self.centerfrequency = self.p.Transitions.repump_935
-            self.scan_range = self.p.wavemeterscan.scan_range_935
+        if self.p["wavemeterscan.lasername"] == '935':
+            self.centerfrequency = self.p["Transitions.repump_935"]
+            self.scan_range = self.p["wavemeterscan.scan_range_935"]
             self.channel = 4
             self.dac_port = 7
 
-        if self.p.wavemeterscan.lasername == '976':
-            self.centerfrequency = self.p.Transitions.repump_976
-            self.scan_range = self.p.wavemeterscan.scan_range_976
+        if self.p["wavemeterscan.lasername"] == '976':
+            self.centerfrequency = self.p["Transitions.repump_976"]
+            self.scan_range = self.p["wavemeterscan.scan_range_976"]
             self.channel = 7
             self.dac_port = 4
 
-        elif self.p.wavemeterscan.lasername == '760':
-            self.centerfrequency = self.p.Transitions.repump_760
-            self.scan_range = self.p.wavemeterscan.scan_range_760
+        elif self.p["wavemeterscan.lasername"] == '760':
+            self.centerfrequency = self.p["Transitions.repump_760"]
+            self.scan_range = self.p["wavemeterscan.scan_range_760"]
             self.channel = 5
             self.dac_port = 5
 
-        elif self.p.wavemeterscan.lasername == '760 (Repump)':
-            self.centerfrequency = self.p.Transitions.repump_760_repump
-            self.scan_range = self.p.wavemeterscan.scan_range_760_repump
+        elif self.p["wavemeterscan.lasername"] == '760 (Repump)':
+            self.centerfrequency = self.p["Transitions.repump_760_repump"]
+            self.scan_range = self.p["wavemeterscan.scan_range_760_repump"]
             self.channel = 8
             self.dac_port = 6
 
-        elif self.p.wavemeterscan.lasername == '822':
-            self.centerfrequency = self.p.Transitions.shelving_411
-            self.scan_range = self.p.wavemeterscan.scan_range_411
+        elif self.p["wavemeterscan.lasername"] == '822':
+            self.centerfrequency = self.p["Transitions.shelving_411"]
+            self.scan_range = self.p["wavemeterscan.scan_range_411"]
             self.channel = 3
             self.dac_port = 3
 
-        elif self.p.wavemeterscan.lasername == 'Hudson':
-            self.centerfrequency = self.p.Transitions.Hudson
-            self.scan_range = self.p.wavemeterscan.scan_range_Hudson
+        elif self.p["wavemeterscan.lasername"] == 'Hudson':
+            self.centerfrequency = self.p["Transitions.Hudson"]
+            self.scan_range = self.p["wavemeterscan.scan_range_Hudson"]
             self.channel = 1
             self.dac_port = 1
 
-        self.wait_time = self.p.wavemeterscan.rail_wait_time
+        self.wait_time = self.p["wavemeterscan.rail_wait_time"]
 
     def currentfrequency(self):
         try:

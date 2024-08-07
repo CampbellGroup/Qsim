@@ -30,9 +30,9 @@ class ticklescan(QsimExperiment):
         self.setup_datavault('Frequency', 'kCounts/sec')
         self.setup_grapher('tickle_scan')
         self.set_scannable_parameters()
-        self.x_values = self.get_scan_list(self.p.ticklescan.frequency_scan, units='Hz')
+        self.x_values = self.get_scan_list(self.p["ticklescan.frequency_scan"], units='Hz')
         self.rg.set_output(self.chan, True)
-        self.rg.applywaveform(self.p.ticklescan.waveform, WithUnit(self.x_values[0], 'Hz'),
+        self.rg.apply_waveform(self.p["ticklescan.waveform"], WithUnit(self.x_values[0], 'Hz'),
                               self.amplitude, self.offset, self.chan)
         time.sleep(1)
 
@@ -52,14 +52,14 @@ class ticklescan(QsimExperiment):
         gets parameters, called in run so scan works
         """
 
-        self.amplitude = self.p.ticklescan.amplitude
-        self.offset = self.p.ticklescan.offset
-        self.average = int(self.p.ticklescan.average)
+        self.amplitude = self.p["ticklescan.amplitude"]
+        self.offset = self.p["ticklescan.offset"]
+        self.average = int(self.p["ticklescan.average"])
 
     def finalize(self, cxn, context):
         self.rg.set_output(self.chan, True)
-        self.rg.applywaveform("DC", WithUnit(0.0, "Hz"), WithUnit(0.0, "V"), self.offset, self.chan)
-
+        self.rg.apply_waveform("DC", WithUnit(0.0, "Hz"), WithUnit(0.0, "V"), self.offset, self.chan)
+        self.rg.set_output(self.chan, False) # turn off at end of scan
 
 if __name__ == '__main__':
     cxn = labrad.connect()

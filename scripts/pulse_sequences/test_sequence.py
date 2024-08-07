@@ -4,21 +4,20 @@ from .sub_sequences.turn_off_all import TurnOffAll
 from .sub_sequences.optical_pumping import OpticalPumping
 from .sub_sequences.doppler_cooling import DopplerCooling
 from .sub_sequences.bright_state_pumping import BrightStatePumping
+from .sub_sequences.dipole_interrogation import DipoleInterrogation
 
 
 class TestSequence(PulseSequence):
-    required_subsequences = [TestSubSequence, TurnOffAll, DopplerCooling, BrightStatePumping, OpticalPumping]
+    required_subsequences = [TestSubSequence,
+                             TurnOffAll,
+                             DopplerCooling,
+                             BrightStatePumping,
+                             OpticalPumping,
+                             ]
 
     required_parameters = [
     ]
 
     def sequence(self):
-        self.add_sequence(TurnOffAll)
-        self.add_sequence(DopplerCooling)
-        self.add_sequence(BrightStatePumping)
         self.add_sequence(TestSubSequence)
 
-        self.add_sequence(TurnOffAll)
-        self.add_sequence(DopplerCooling)
-        self.add_sequence(OpticalPumping)
-        self.add_sequence(TestSubSequence)

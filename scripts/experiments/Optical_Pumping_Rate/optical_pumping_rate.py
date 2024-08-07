@@ -55,38 +55,38 @@ FiberEOM
     def run(self, cxn, context):
         self.setup_datavault('time', 'probability')
         self.setup_grapher('OpticalPumpingRate')
-        self.times = self.get_scan_list(self.p.OpticalPumping.scan, 'us')
+        self.times = self.get_scan_list(self.p["OpticalPumping.scan"], 'us')
         for i, duration in enumerate(self.times):
 
             should_break = self.update_progress(i / float(len(self.times)))
             if should_break:
                 break
 
-            if self.p.OpticalPumping.method == 'Standard':
+            if self.p["OpticalPumping.method"] == 'Standard':
                 self.p['OpticalPumping.quadrupole_op_duration'] = U(0.0, 'us')
                 self.p['OpticalPumping.duration'] = U(duration, 'us')
                 self.p['Modes.state_detection_mode'] = 'Standard'
                 self.program_pulser(sequence)
                 [detection_counts] = self.run_sequence(num=1, max_runs=1000)
 
-            elif self.p.OpticalPumping.method == 'StandardFiberEOM':
+            elif self.p["OpticalPumping.method"] == 'StandardFiberEOM':
                 self.p['OpticalPumping.quadrupole_op_duration'] = U(0.0, 'us')
                 self.p['OpticalPumping.duration'] = U(duration, 'us')
                 self.p['Modes.state_detection_mode'] = 'StandardFiberEOM'
                 self.program_pulser(sequence)
                 [detection_counts] = self.run_sequence(num=1, max_runs=1000)
 
-            elif self.p.OpticalPumping.method == 'QuadrupoleOnly':
-                if self.p.Modes.state_detection_mode == 'Shelving':
+            elif self.p["OpticalPumping.method"] == 'QuadrupoleOnly':
+                if self.p["Modes.state_detection_mode"] == 'Shelving':
                     self.p['OpticalPumping.duration'] = U(0.0, 'us')
                     self.p['OpticalPumping.quadrupole_op_duration'] = U(duration, 'us')
                     self.p['Modes.state_detection_mode'] = 'Shelving'
                     self.program_pulser(sequence)
                     [doppler_counts, detection_counts] = self.run_sequence(num=2, max_runs=500)
                     deshelving_errors = np.where(
-                        doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
+                        doppler_counts <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"])
                     detection_counts = np.delete(detection_counts, deshelving_errors)
-                elif self.p.Modes.state_detection_mode == 'Standard':
+                elif self.p["Modes.state_detection_mode"] == 'Standard':
                     self.p['OpticalPumping.duration'] = U(0.0, 'us')
                     self.p['OpticalPumping.quadrupole_op_duration'] = U(duration, 'us')
                     self.p['Modes.state_detection_mode'] = 'Standard'
