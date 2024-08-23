@@ -17,6 +17,7 @@ timeout = 20
 from labrad.server import LabradServer, setting, Signal
 from api import API
 from config.dac_ad660_config import HardwareConfiguration as HC
+from twisted.internet.defer import inlineCallbacks
 
 SERVERNAME = 'DAC AD660 Server'
 SIGNALID = 270837
@@ -33,7 +34,7 @@ class Voltage:
         self.digital_voltage = digital_voltage
         self.analog_voltage = analog_voltage
 
-    def program(self, set_num):
+    def program(self, set_num) -> None:
         """
         Compute the hex code to program this voltage
         """
@@ -47,7 +48,7 @@ class Voltage:
             self.digital_voltage = self.compute_digital_voltage(self.analog_voltage)
         self.hex_rep = self.__get_hex_rep()
 
-    def compute_digital_voltage(self, analog_voltage):
+    def compute_digital_voltage(self, analog_voltage) -> int:
         """
         Returns an integer representation of a given analog voltage.
         If the DAC is 16-bit:
@@ -65,7 +66,7 @@ class Voltage:
         returns a 4-byte bytearray.
         - The first 16 bits correspond to the DAC voltage (an integer from 0 (-10V) to 2^16 (+10V)).
         - The next 5 bits correspond to the port number (0 to 32)
-        - the next 10 bits correspond to the queue position (?) usually a low value
+        - the next 10 bits correspond to the queue position, usually a low value
         - plus one trailing 0 to pad it out into 4 bytes
 
         Then these bytes are rearranged to be little-endian:
@@ -83,27 +84,27 @@ class Voltage:
         return bytearray(rep)
 
 
-class Queue(object):
+class Queue:
     def __init__(self):
         self.current_set = 1
         self.set_dict = {i: [] for i in range(1, HC.maxCache + 1)}
 
-    def advance(self):
+    def advance(self) -> None:
         self.current_set = (self.current_set % HC.maxCache) + 1
 
-    def reset(self):
+    def reset(self) -> None:
         self.current_set = 1
 
-    def insert(self, v):
+    def insert(self, v: Voltage) -> None:
         """ Always insert voltages to the current queue position, takes a voltage object """
         v.program(self.current_set)
         self.set_dict[self.current_set].append(v)
 
-    def get(self):
+    def get(self) -> Voltage:
         v = self.set_dict[self.current_set].pop(0)
         return v
 
-    def clear(self):
+    def clear(self) -> None:
         self.current_set = 1
         self.set_dict = {i: [] for i in range(1, HC.maxCache + 1)}
 
@@ -121,12 +122,21 @@ class DACServer(LabradServer):
     registry_path = ['', 'Servers', HC.EXPNAME + SERVERNAME]
     dac_dict = HC.elec_dict
     current_voltages = {}
+
     listeners = set()
 
     def initServer(self):
         self.registry = self.client.registry
         self.initialize_board()
-        # yield self.setCalibrations()
+        self.ctx = self.client.context()
+        self.load_voltages_from_registry(self.ctx)
+
+    @setting(1, "Load Voltages From Registry")
+    def load_voltages_from_registry(self, c):
+        yield self.registry.cd(self.registry_path, True)
+        volts_list = yield self.registry.get("voltages")
+        self.current_voltages = dict(volts_list)
+        yield self.set_individual_analog_voltages(c, list(self.current_voltages.items()))
 
     def initialize_board(self):
         connected = self.api.connect_ok_board()
@@ -148,6 +158,7 @@ class DACServer(LabradServer):
         """
         Pass a list of tuples of the form:
         (portNum, newVolts)
+        port number should be a two-digit string. i.e. '03' or '19'
         """
         for (port, av) in analog_voltages:
             self.queue.insert(Voltage(self.dac_dict[port], analog_voltage=av))
@@ -158,13 +169,12 @@ class DACServer(LabradServer):
         for i in range(len(self.queue.set_dict[self.queue.current_set])):
             v = self.queue.get()
             self.api.set_dac_voltage(v.hex_rep)
-            # print("DAC voltage set in API")
-            if v.channel.name in HC.elec_dict.keys():
-                self.current_voltages[v.channel.name] = v.analog_voltage
+            self.current_voltages[v.channel.port_name] = v.analog_voltage
         if c is not None:
+            self.save_voltages_to_registry(c)
             self.notify_other_listeners(c)
 
-    @setting(9, "Get Analog Voltages", returns='*(sv)')
+    @setting(9, "Get current Voltages", returns='*(sv)')
     def get_current_voltages(self, c):
         """
         Return the current voltage
@@ -183,6 +193,13 @@ class DACServer(LabradServer):
     @setting(17, "get queue")
     def get_queue(self, c):
         return self.queue.current_set
+
+    @setting(18)
+    def save_voltages_to_registry(self, c):
+        yield self.registry.set("voltages", list(self.current_voltages.items()))
+
+    def stopServer(self, error=None):
+        yield self.save_voltages_to_registry()
 
     def initContext(self, c):
         self.listeners.add(c.ID)
