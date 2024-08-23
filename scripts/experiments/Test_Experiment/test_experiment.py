@@ -7,13 +7,13 @@ from common.lib.servers.Pulser2.pulser_ok import Pulser
 from twisted.internet.defer import inlineCallbacks
 
 
-class TestPulseSequence(QsimExperiment):
+class TestExperiment(QsimExperiment):
     """
     Generic experiment (sublclassed from QsimExperiment) with its own sequence and sub-sequence that can be altered
     to test any particular sequence desired without affecting any other experiment
     """
 
-    name = 'Test Pulse Sequence'
+    name = 'Test Experiment'
 
     exp_parameters = []
     exp_parameters.append(('StandardStateDetection', 'repetitions'))
@@ -59,6 +59,6 @@ class TestPulseSequence(QsimExperiment):
 if __name__ == '__main__':
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
-    exprt = TestPulseSequence(cxn=cxn)
+    exprt = TestExperiment(cxn=cxn)
     ident = scanner.register_external_launch(exprt.name)
     exprt.execute(ident)
