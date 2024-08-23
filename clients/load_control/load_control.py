@@ -70,10 +70,15 @@ class LoadControl(QFrame):
         self.shutter_widget.TTLswitch.toggled.connect(self.toggle)
         self.timer_widget = QCustomTimer('Loading Time', show_control=False)
         self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 5.0))
+        self.max_time_widget = QCustomSpinBox("Max Time (m)", (0.0, 30.0))
 
         self.current_widget.setStepSize(0.01)
         self.current_widget.spinLevel.setDecimals(2)
         self.current_widget.spinLevel.valueChanged.connect(self.current_changed)
+
+        self.max_time_widget.spinLevel.setValue(10.0)
+        self.max_time_widget.setStepSize(0.1)
+        self.max_time_widget.spinLevel.setDecimals(1)
 
         if 'oven' in self.settings:
             value = yield self.reg.get('oven')
@@ -87,7 +92,8 @@ class LoadControl(QFrame):
             self.shutter_widget.TTLswitch.setChecked(False)
 
         layout.addWidget(self.shutter_widget, 0, 0, 2, 1)
-        layout.addWidget(self.current_widget, 1, 1, 1, 1)
+        layout.addWidget(self.current_widget, 0, 1, 1, 1)
+        layout.addWidget(self.max_time_widget, 1, 1, 1, 1)
         layout.addWidget(self.timer_widget, 2, 0, 1, 2)
         self.setLayout(layout)
 
@@ -99,7 +105,7 @@ class LoadControl(QFrame):
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(True)
             self.its_trap.play()
-        elif (self.timer_widget.time >= 600.0) and switch_on:
+        elif (self.timer_widget.time >= float(self.max_time_widget.spinLevel.value())*60.0) and switch_on:
             self.vader.play()
             self.shutter_widget.TTLswitch.setChecked(True)
 
