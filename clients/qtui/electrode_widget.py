@@ -52,8 +52,8 @@ class ElectrodeIndicator(QWidget):
                      Rod(dac="19", saturation_voltage=1.0),
                      Rod(dac="17", saturation_voltage=1.0),
                      Rod(dac="21", saturation_voltage=1.0),
-                     Rod(dac="08", shape="roundedRect", saturation_voltage=10.0),
-                     Rod(dac="10", shape="roundedRect", saturation_voltage=10.0), ]
+                     Rod(dac="08", shape="roundedRect", saturation_voltage=100.0),
+                     Rod(dac="10", shape="roundedRect", saturation_voltage=100.0), ]
 
         self.show()
 
