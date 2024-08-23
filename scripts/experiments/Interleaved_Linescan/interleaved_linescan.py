@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import labrad
-from Qsim.scripts.pulse_sequences.interleaved_point import InterleavedPoint as sequence
+import numpy as np
+
+from Qsim.scripts.pulse_sequences.interleaved_point import InterleavedPoint
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
-from scipy.optimize import curve_fit as fit
+from scipy.optimize import curve_fit
 
 
 class InterleavedLinescan(QsimExperiment):
     """
-Scan the 369 laser with the AOM double pass interleaved with Doppler cooling to reveal the lineshape. This experiment
-helps to diagnose problems with micromotion compensation and cooling laser intensity
+Scan the 369 laser with the AOM double pass interleaved with Doppler cooling to reveal the lineshape.
+This experiment helps to diagnose problems with micromotion compensation and cooling laser intensity
 
 Pulse sequence diagram:
 
@@ -40,7 +42,7 @@ FiberEOM
     exp_parameters.append(('DopplerCooling', 'detuning'))
     exp_parameters.append(('Transitions', 'main_cooling_369'))
 
-    exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.extend(InterleavedPoint.all_required_parameters())
     exp_parameters.remove(('DipoleInterrogation', 'frequency'))
 
     def initialize(self, cxn, context, ident):
@@ -61,7 +63,7 @@ FiberEOM
                 should_break = self.update_progress(i / float(len(self.detunings)))
                 if should_break:
                     return should_break
-            # self.p.Transitions.main_cooling_369 divide by 2 for the double pass
+            # self.p["Transitions.main_cooling_369"] divide by 2 for the double pass
             freq = U(detuning, 'MHz') / 2.0 + self.p["ddsDefaults.DP369_freq"]
             track_detuning, track_counts = self.program_pulser(freq, detuning)
             return_detuning.append(track_detuning)
@@ -70,13 +72,16 @@ FiberEOM
         # skip first couple points of data since they occasionally come in at random values
         # after performing a Shelving experiment, should not affect fit. Then set the parameter
         # in parametervault to the fitted center
-        popt, pcov = fit(self.lorentzian_fit, return_detuning[2:], return_counts[2:], p0=self.fit_guess)
-        self.pv.set_parameter(('Transitions', 'main_cooling_369', U(popt[0], 'MHz')))
+        try:
+            popt, pcov = curve_fit(self.lorentzian_fit, return_detuning[2:], return_counts[2:], p0=self.fit_guess)
+            self.pv.set_parameter(('Transitions', 'main_cooling_369', U(popt[0], 'MHz')))
+        except RuntimeError:
+            return np.zeros(4), np.zeros([4, 4])
         return popt, pcov
 
     def program_pulser(self, freq, detuning):
         self.p['DipoleInterrogation.frequency'] = freq
-        pulse_sequence = sequence(self.p)
+        pulse_sequence = InterleavedPoint(self.p)
         pulse_sequence.program_sequence(self.pulser)
         self.pulser.start_number(int(self.p["InterleavedLinescan.repititions"]))
         self.pulser.wait_sequence_done()
