@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from pygame import mixer
+from playsound import playsound
 
 SIGNALID = 112983
 
@@ -20,9 +20,12 @@ class LoadControl(QFrame):
         super(LoadControl, self).__init__()
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.MinimumExpanding)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
-        mixer.init()
-        self.its_trap = mixer.Sound('/home/qsimexpcontrol/Music/trap.wav')
-        self.vader = mixer.Sound('/home/qsimexpcontrol/Music/swvader01.wav')
+        try:
+            self.its_trap = '/home/qsimexpcontrol/Music/trap.wav'
+            self.vader = '/home/qsimexpcontrol/Music/swvader01.wav'
+            self.sounds_loaded = True
+        except FileNotFoundError:
+            self.sounds_loaded = False
         self.reactor = reactor
         self.kt = None
         self.bi_directional_state = False
@@ -104,10 +107,12 @@ class LoadControl(QFrame):
         switch_on = not self.shutter_widget.TTLswitch.isChecked()
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_widget.TTLswitch.setChecked(True)
-            self.its_trap.play()
+            if self.sounds_loaded:
+                playsound(self.its_trap)
         elif (self.timer_widget.time >= float(self.max_time_widget.spinLevel.value())*60.0) and switch_on:
-            self.vader.play()
             self.shutter_widget.TTLswitch.setChecked(True)
+            if self.sounds_loaded:
+                playsound(self.vader)
 
     @inlineCallbacks
     def toggle(self, value):
