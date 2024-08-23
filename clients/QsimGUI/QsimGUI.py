@@ -126,15 +126,15 @@ class QsimGUI(QMainWindow):
         from Qsim.clients.RF_control.RFcontrol import RFcontrol
         from common.lib.clients.PMT_Control.PMT_CONTROL import pmtWidget
         # from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
-        from common.lib.clients.switchclient.switchclient import switchclient
-        from Qsim.clients.dac_control.dac_client import DACClient
+        from common.lib.clients.switchclient.switchclient import SwitchClient
+        from clients.dac_control.dac_client import DACClient
         from Qsim.clients.load_control.load_control import LoadControl
         from common.lib.clients.piezo_client.Piezo_Client import Piezo_Client
         from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import keithleyclient
 
         from Qsim.clients.DDS.dds_control import DDSControlWidget
         from common.lib.clients.pulser_switch.pulser_switch_control import switchWidget
-        from Qsim.clients.windfreak_client.windfreak_client import WindfreakClient
+        # from Qsim.clients.windfreak_client.windfreak_client import WindfreakClient
 
         grid_layout = QGridLayout()
 
@@ -142,7 +142,7 @@ class QsimGUI(QMainWindow):
         # column one
         col_one_widget = QWidget()
         col_one = QVBoxLayout()
-        col_one.addWidget(switchclient(reactor, cxn))
+        col_one.addWidget(SwitchClient(reactor, cxn))
         # col_one.addWidget(cameraswitch(reactor, cxn))
         col_one.addWidget(pmtWidget(reactor, cxn))
         col_one.addStretch(1)
@@ -151,7 +151,7 @@ class QsimGUI(QMainWindow):
         col_one_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Minimum)
         grid_layout.addWidget(col_one_widget, 0, 0, 6, 1)
 
-        grid_layout.addWidget(WindfreakClient(reactor), 6, 0, 1, 3)
+        # grid_layout.addWidget(WindfreakClient(reactor), 6, 0, 1, 3)
 
         # column two
         grid_layout.addWidget(DACClient(reactor, cxn), 0, 1, 4, 2)

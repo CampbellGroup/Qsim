@@ -46,11 +46,11 @@ class DACRaster(QsimExperiment):
         self.linescan_context = self.dv.context()
         self.linescan.initialize(cxn, self.linescan_context, ident)
         self.DACs = self.cxn.dac_ad660_server  # connect to DAC server
-        self.elec_dict = HC.elec_dict
+        self.dac_channels = HC.dac_channels
         self.electrodes = {}
         self.setup_datavault()
 
-        for i, (key, channel) in enumerate(self.elec_dict.items()):
+        for i, channel in enumerate(self.dac_channels):
             electrode = Electrode(channel.dac_channel_number,
                                   channel.allowed_voltage_range[0],
                                   channel.allowed_voltage_range[1],

@@ -27,11 +27,14 @@ import numpy as np
 
 class Electrode:
 
-    def __init__(self, dac, minval, maxval):
+    def __init__(self, dac, minval, maxval, name=None):
         self.dac = dac
         self.minval = minval
         self.maxval = maxval
-        self.name = str('DAC: ' + str(dac))
+        if name:
+            self.name = name
+        else:
+            self.name = str('DAC: ' + str(dac))
 
 
 class MultipoleServer(LabradServer):
@@ -64,10 +67,10 @@ class MultipoleServer(LabradServer):
         yield self.reg.cd(['', 'settings'], True)
         self.multipoles = yield self.reg.get('Multipoles')
 
-        self.electrodes = {}
-        for i, (chan_name, channel) in enumerate(self.hc.elec_dict.items()):
+        self.electrodes = []
+        for i, channel in enumerate(self.hc.dac_channels):
             electrode = Electrode(channel.dac_channel_number, minval=-10.0, maxval=10.0)
-            self.electrodes[i] = electrode
+            self.electrodes.append(electrode)
             # self.update_dac(0.0, channel)
 
         self.lc.start(5.0)  # start registry saving looping call
@@ -111,12 +114,9 @@ class MultipoleServer(LabradServer):
 
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
-        if len(str(electrode.dac)) == 1:
-            dac = '0' + str(electrode.dac)
-        else:
-            dac = str(electrode.dac)
         if not self.server:
             returnValue('Server not Connected')
+        dac = electrode.dac
         yield self.server.set_individual_analog_voltages([(dac, voltage)])
 
     @inlineCallbacks

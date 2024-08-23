@@ -19,7 +19,7 @@ timeout = 20
 from twisted.internet.defer import returnValue
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks
-from config.dac_ad660_config_oblate import hardwareConfiguration as hc
+from config.deprecated.dac_ad660_config_oblate import hardwareConfiguration as hc
 from twisted.internet.task import LoopingCall
 import socket
 import numpy as np

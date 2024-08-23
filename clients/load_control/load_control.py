@@ -121,16 +121,18 @@ class LoadControl(QFrame):
             self.timer_widget.reset()
 
     @inlineCallbacks
-    def current_changed(self, value):
+    def current_changed(self, value: float):
+        """:param value: The current in amps"""
         yield self.oven.oven_current(self.U(value, 'A'))
         if 'oven' in self.settings:
             yield self.reg.set('oven', value)
 
     @inlineCallbacks
-    def change_state(self, state):
+    def change_state(self, state: bool) -> None:
+        """:param state: a bool representing whether the state is toggled on or off"""
         if '399 trapshutter' in self.settings:
             yield self.reg.set('399 trapshutter', state)
-        yield self.TTL.ttl_output(10, state)
+        yield self.TTL.ttl_output(10, not state)
 
     def closeEvent(self, x):
         self.reactor.stop()

@@ -1,11 +1,8 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
-from Qsim.clients.qtui.wedge_electrode_widget import ElectrodeIndicator
+from clients._deprecated.dac_control_oblate.wedge_electrode_widget import ElectrodeIndicator
 from twisted.internet.defer import inlineCallbacks
 from PyQt5.QtWidgets import *
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from config.dac_ad660_config_oblate import hardwareConfiguration as hc
+from config.deprecated.dac_ad660_config_oblate import hardwareConfiguration as hc
 import time
 
 
@@ -42,7 +39,6 @@ class dacclient(QFrame):
     def connect(self):
 
         from labrad.wrappers import connectAsync
-        from labrad.units import WithUnit as U
         self.elec_dict = hc.elec_dict
         self.cxn = yield connectAsync(name="dac client")
         self.server = self.cxn.multipole_server

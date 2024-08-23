@@ -48,12 +48,12 @@ class ElectrodeIndicator(QWidget):
         self.setMinimumSize(self.min_width, self.min_height)
         self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
 
-        self.rods = [Rod(dac="02", saturation_voltage=1.0),
-                     Rod(dac="19", saturation_voltage=1.0),
-                     Rod(dac="17", saturation_voltage=1.0),
-                     Rod(dac="21", saturation_voltage=1.0),
-                     Rod(dac="08", shape="roundedRect", saturation_voltage=100.0),
-                     Rod(dac="10", shape="roundedRect", saturation_voltage=100.0), ]
+        self.rods = [Rod(dac=2, saturation_voltage=1.0),
+                     Rod(dac=19, saturation_voltage=1.0),
+                     Rod(dac=17, saturation_voltage=1.0),
+                     Rod(dac=21, saturation_voltage=1.0),
+                     Rod(dac=8, shape="roundedRect", saturation_voltage=100.0),
+                     Rod(dac=10, shape="roundedRect", saturation_voltage=100.0), ]
 
         self.show()
 
@@ -126,6 +126,6 @@ class ElectrodeIndicator(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    icon = ElectrodeIndicator()
-    icon.show()
+    indicator = ElectrodeIndicator()
+    indicator.show()
     app.exec_()

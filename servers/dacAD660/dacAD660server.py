@@ -5,9 +5,11 @@ name = DAC AD660 Server
 version = 1.0
 description =
 instancename = DAC AD660 Server
+
 [startup]
 cmdline = %PYTHON% %FILE%
 timeout = 20
+
 [shutdown]
 message = 987654321
 timeout = 20
@@ -17,7 +19,6 @@ timeout = 20
 from labrad.server import LabradServer, setting, Signal
 from api import API
 from config.dac_ad660_config import HardwareConfiguration as HC
-from twisted.internet.defer import inlineCallbacks
 
 SERVERNAME = 'DAC AD660 Server'
 SIGNALID = 270837
@@ -40,11 +41,11 @@ class Voltage:
         """
         self.set_num = set_num
         if self.analog_voltage is not None:
-            (vMin, vMax) = self.channel.allowed_voltage_range
-            if self.analog_voltage < vMin:
-                self.analog_voltage = vMin
-            if self.analog_voltage > vMax:
-                self.analog_voltage = vMax
+            (v_min, v_max) = self.channel.allowed_voltage_range
+            if self.analog_voltage < v_min:
+                self.analog_voltage = v_min
+            if self.analog_voltage > v_max:
+                self.analog_voltage = v_max
             self.digital_voltage = self.compute_digital_voltage(self.analog_voltage)
         self.hex_rep = self.__get_hex_rep()
 
@@ -120,7 +121,7 @@ class DACServer(LabradServer):
     api = API()
 
     registry_path = ['', 'Servers', HC.EXPNAME + SERVERNAME]
-    dac_dict = HC.elec_dict
+    dac_channels = HC.dac_channels
     current_voltages = {}
 
     listeners = set()
@@ -130,6 +131,9 @@ class DACServer(LabradServer):
         self.initialize_board()
         self.ctx = self.client.context()
         self.load_voltages_from_registry(self.ctx)
+
+    def get_channel_from_portnum(self, num):
+        return {chan.dac_channel_number: chan for chan in self.dac_channels}[num]
 
     @setting(1, "Load Voltages From Registry")
     def load_voltages_from_registry(self, c):
@@ -143,38 +147,41 @@ class DACServer(LabradServer):
         if not connected:
             raise Exception("FPGA Not Found")
 
-    @setting(4, "Set Individual Digital Voltages", digital_voltages='*(si)')
+    @setting(4, "Set Individual Digital Voltages", digital_voltages='*(wi)')
     def set_individual_digital_voltages(self, c, digital_voltages):
         """
         Pass a list of tuples of the form:
         (portNum, newVolts)
         """
         for (port, dv) in digital_voltages:
-            self.queue.insert(Voltage(self.dac_dict[port], digital_voltage=dv))
+            self.queue.insert(Voltage(self.get_channel_from_portnum(port), digital_voltage=dv))
         yield self.write_to_fpga(c)
 
-    @setting(5, "Set Individual Analog Voltages", analog_voltages='*(sv)')
+    @setting(5, "Set Individual Analog Voltages", analog_voltages='*(wv)')
     def set_individual_analog_voltages(self, c, analog_voltages):
         """
         Pass a list of tuples of the form:
         (portNum, newVolts)
-        port number should be a two-digit string. i.e. '03' or '19'
+        port number should be an integer
         """
         for (port, av) in analog_voltages:
-            self.queue.insert(Voltage(self.dac_dict[port], analog_voltage=av))
+            self.queue.insert(Voltage(self.get_channel_from_portnum(port), analog_voltage=av))
         yield self.write_to_fpga(c)
 
     def write_to_fpga(self, c):
         self.api.reset_fifo_dac()
         for i in range(len(self.queue.set_dict[self.queue.current_set])):
             v = self.queue.get()
+            print(v)
             self.api.set_dac_voltage(v.hex_rep)
-            self.current_voltages[v.channel.port_name] = v.analog_voltage
+            print(v.hex_rep)
+            self.current_voltages[v.channel.dac_channel_number] = v.analog_voltage
+            print(self.current_voltages)
         if c is not None:
             self.save_voltages_to_registry(c)
             self.notify_other_listeners(c)
 
-    @setting(9, "Get current Voltages", returns='*(sv)')
+    @setting(9, "Get current Voltages", returns='*(wv)')
     def get_current_voltages(self, c):
         """
         Return the current voltage
@@ -186,9 +193,9 @@ class DACServer(LabradServer):
         """
         Return the channel name for a given port number.
         """
-        for key in self.dac_dict.keys():
-            if self.dac_dict[key].dac_channel_number == port_number:
-                return key
+        for channel in self.dac_channels:
+            if channel.dac_channel_number == port_number:
+                return channel.name
 
     @setting(17, "get queue")
     def get_queue(self, c):

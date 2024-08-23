@@ -1,5 +1,5 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
-from Qsim.clients.qtui.electrode_widget import ElectrodeIndicator
+from clients.dac_control.electrode_widget import ElectrodeIndicator
 from twisted.internet.defer import inlineCallbacks
 from PyQt5.QtWidgets import *
 from config.dac_ad660_config import HardwareConfiguration as HC
@@ -46,10 +46,12 @@ class DACClient(QFrame):
     def connect(self):
 
         from labrad.wrappers import connectAsync
-        self.elec_dict = HC.elec_dict
+        self.dac_channels = HC.dac_channels
+
         self.cxn = yield connectAsync(name="dac client")
         self.multipole_server = self.cxn.multipole_server
         self.dacserver = self.cxn.dac_ad660_server
+
         self.init_voltages = yield self.dacserver.get_current_voltages()
         self.init_voltages = dict(self.init_voltages)
         self.init_multipoles = yield self.multipole_server.get_multipoles()
@@ -72,7 +74,7 @@ class DACClient(QFrame):
         dac_box.setLayout(dac_layout)
 
         length_of_column = 2
-        for i, (key, channel) in enumerate(self.elec_dict.items()):
+        for i, channel in enumerate(self.dac_channels):
             electrode = Electrode(channel.dac_channel_number,
                                   channel.allowed_voltage_range[0],
                                   channel.allowed_voltage_range[1],
@@ -80,7 +82,7 @@ class DACClient(QFrame):
             self.electrodes[electrode.name] = electrode
             # noinspection PyArgumentList
             dac_layout.addWidget(electrode.spinBox, i % length_of_column, i // length_of_column)
-            electrode.spinBox.spinLevel.setValue(self.init_voltages[channel.port_name])
+            electrode.spinBox.spinLevel.setValue(self.init_voltages[channel.dac_channel_number])
             electrode.spinBox.spinLevel.valueChanged.connect(lambda value=electrode.spinBox.spinLevel.value(),
                                                                     elec=electrode: self.update_dac(value, elec))
 
@@ -115,10 +117,7 @@ class DACClient(QFrame):
 
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
-        if len(str(electrode.dac)) == 1:
-            dac = '0' + str(electrode.dac)
-        else:
-            dac = str(electrode.dac)
+        dac = electrode.dac
         yield self.dacserver.set_individual_analog_voltages([(dac, voltage)])
         self.electrode_indicator.update_rod(dac, voltage)
 
