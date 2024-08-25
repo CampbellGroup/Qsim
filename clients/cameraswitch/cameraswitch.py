@@ -2,15 +2,12 @@ from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
 from PyQt5.QtWidgets import *
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
 
 
-class cameraswitch(QFrame):
+class CameraSwitch(QFrame):
 
     def __init__(self, reactor, cxn=None):
-        super(cameraswitch, self).__init__()
+        super(CameraSwitch, self).__init__()
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
         self.reactor = reactor
@@ -110,6 +107,6 @@ if __name__ == "__main__":
     qt5reactor.install()
     from twisted.internet import reactor
 
-    cameraswitchWidget = cameraswitch(reactor)
+    cameraswitchWidget = CameraSwitch(reactor)
     cameraswitchWidget.show()
     reactor.run()

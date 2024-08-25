@@ -35,28 +35,28 @@ class DDSChannel(QCustomFreqPower):
         self.server = yield self.cxn.get_server('Pulser')
         min_power, max_power = yield self.server.get_dds_amplitude_range(self.chan, context=self.context)
         min_freq, max_freq = yield self.server.get_dds_frequency_range(self.chan, context=self.context)
-        self.setPowerRange((min_power, max_power))
-        self.setFreqRange((min_freq, max_freq))
+        self.set_power_range((min_power, max_power))
+        self.set_freq_range((min_freq, max_freq))
         # get initial values
         init_power = yield self.server.amplitude(self.chan, context=self.context)
         init_freq = yield self.server.frequency(self.chan, context=self.context)
         init_state = yield self.server.output(self.chan, context=self.context)
-        self.setStateNoSignal(init_state)
-        self.setPowerNoSignal(init_power['dBm'])
-        self.setFreqNoSignal(init_freq['MHz'])
+        self.set_state_no_signal(init_state)
+        self.set_power_no_signal(init_power['dBm'])
+        self.set_freq_no_signal(init_freq['MHz'])
         # connect functions
         if connect:
-            self.spinPower.valueChanged.connect(self.power_changed)
-            self.spinFreq.valueChanged.connect(self.freq_changed)
-            self.buttonSwitch.toggled.connect(self.switch_changed)
+            self.power_spinbox.valueChanged.connect(self.power_changed)
+            self.freq_spinbox.valueChanged.connect(self.freq_changed)
+            self.switch_button.toggled.connect(self.switch_changed)
 
     def set_param_no_signal(self, param, value):
         if param == 'amplitude':
-            self.setPowerNoSignal(value)
+            self.set_power_no_signal(value)
         elif param == 'frequency':
-            self.setFreqNoSignal(value)
+            self.set_freq_no_signal(value)
         elif param == 'state':
-            self.setStateNoSignal(value)
+            self.set_state_no_signal(value)
 
     @inlineCallbacks
     def power_changed(self, pwr):
@@ -65,7 +65,7 @@ class DDSChannel(QCustomFreqPower):
             yield self.server.amplitude(self.chan, val, context=self.context)
         except self.Error as e:
             old_value = yield self.server.amplitude(self.chan, context=self.context)
-            self.setPowerNoSignal(old_value)
+            self.set_power_no_signal(old_value)
             self.display_error(e.msg)
 
     @inlineCallbacks
@@ -75,7 +75,7 @@ class DDSChannel(QCustomFreqPower):
             yield self.server.frequency(self.chan, val, context=self.context)
         except self.Error as e:
             old_value = yield self.server.frequency(self.chan, context=self.context)
-            self.setFreqNoSignal(old_value)
+            self.set_freq_no_signal(old_value)
             self.display_error(e.msg)
 
     @inlineCallbacks
@@ -84,7 +84,7 @@ class DDSChannel(QCustomFreqPower):
             yield self.server.output(self.chan, pressed, context=self.context)
         except self.Error as e:
             old_value = yield self.server.frequency(self.chan, context=self.context)
-            self.setStateNoSignal(old_value)
+            self.set_state_no_signal(old_value)
             self.display_error(e.msg)
 
     def display_error(self, text):
@@ -132,7 +132,7 @@ class DDSControlWidget(QFrame):
     def initialize(self):
         server = yield self.cxn.get_server('Pulser')
         sc = yield self.cxn.get_server('ScriptScanner')
-        #
+
         yield server.signal__new_dds_parameter(self.SIGNALID, context=self.context)
         yield sc.signal_on_running_new_script(self.SIGNALID + 1, context=self.context)
         yield sc.signal_on_running_script_finished(self.SIGNALID + 2, context=self.context)

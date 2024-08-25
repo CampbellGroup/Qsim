@@ -1,6 +1,8 @@
+from common.lib.clients.Pulser2_DDS.DDS_CONTROL import DDSChannel
 from common.lib.clients.qtui.QCustomFreqPower import QCustomFreqPower
 from twisted.internet.defer import inlineCallbacks
 from common.lib.clients.connection import connection
+
 from PyQt5.QtWidgets import *
 import logging
 
@@ -14,78 +16,84 @@ class RFcontrol(QWidget):
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.reactor = reactor
         self.cxn = cxn
-        from labrad import types as T
-        from labrad.types import Error
-        self.Error = Error
-        self.T = T
+        import labrad.types
+        self.types = labrad.types
         self.chan = 'RF_Drive'
         self.connect()
 
     @inlineCallbacks
     def connect(self):
-        """Creates an Asynchronous connection to Pulser and
+        """
+        Creates an Asynchronous connection to Pulser and
         connects incoming signals to relavent functions
-
         """
 
         if self.cxn is None:
             self.cxn = connection(name="RF Control")
             yield self.cxn.connect()
         self.server = yield self.cxn.get_server('Pulser')
-        self.initializeGUI()
+        self.initialize_gui()
 
     @inlineCallbacks
-    def initializeGUI(self):
+    def initialize_gui(self):
         layout = QGridLayout()
         chans = yield self.server.get_dds_channels()
         if self.chan in chans:
-            widget = QCustomFreqPower(title='Trap RF Control')
-            MinPower, MaxPower = yield self.server.get_dds_amplitude_range(self.chan)
-            MinFreq, MaxFreq = yield self.server.get_dds_frequency_range(self.chan)
-            widget.setPowerRange((MinPower, MaxPower))
-            widget.setFreqRange((MinFreq, MaxFreq))
+            self.freq_power_widget = QCustomFreqPower(title='Trap RF Control')
+            min_power, max_power = yield self.server.get_dds_amplitude_range(self.chan)
+            min_freq, max_freq = yield self.server.get_dds_frequency_range(self.chan)
+            self.freq_power_widget.set_power_range((min_power, max_power))
+            self.freq_power_widget.set_freq_range((min_freq, max_freq))
             initpower = yield self.server.amplitude(self.chan)
             initfreq = yield self.server.frequency(self.chan)
             initstate = yield self.server.output(self.chan)
-            widget.spinFreq.setSingleStep(0.001)
-            widget.setStateNoSignal(initstate)
-            widget.setPowerNoSignal(initpower['dBm'])
-            widget.setFreqNoSignal(initfreq['MHz'])
-            widget.spinPower.valueChanged.connect(self.powerChanged)
-            widget.spinFreq.valueChanged.connect(self.freqChanged)
-            widget.buttonSwitch.toggled.connect(self.switchChanged)
-            layout.addWidget(widget)
+            self.freq_power_widget.freq_spinbox.setSingleStep(0.001)
+            self.freq_power_widget.set_state_no_signal(initstate)
+            self.freq_power_widget.set_power_no_signal(initpower['dBm'])
+            self.freq_power_widget.set_freq_no_signal(initfreq['MHz'])
+            self.freq_power_widget.power_spinbox.valueChanged.connect(self.power_changed)
+            self.freq_power_widget.freq_spinbox.valueChanged.connect(self.freq_changed)
+            self.freq_power_widget.switch_button.toggled.connect(self.switch_changed)
+            layout.addWidget(self.freq_power_widget)
 
         self.setLayout(layout)
 
     @inlineCallbacks
-    def powerChanged(self, pwr):
-        val = self.T.Value(pwr, 'dBm')
+    def power_changed(self, pwr):
+        val = self.types.Value(pwr, 'dBm')
         try:
             yield self.server.amplitude(self.chan, val)
-        except self.Error as e:
+        except self.types.Error as e:
             old_value = yield self.server.amplitude(self.chan)
-            self.setPowerNoSignal(old_value)
-            self.displayError(e.msg)
+            self.freq_power_widget.set_power_no_signal(old_value)
+            self.display_error(e.msg)
 
     @inlineCallbacks
-    def freqChanged(self, freq):
-        val = self.T.Value(freq, 'MHz')
+    def freq_changed(self, freq):
+        val = self.types.Value(freq, 'MHz')
         try:
             yield self.server.frequency(self.chan, val)
-        except self.Error as e:
+        except self.types.Error as e:
             old_value = yield self.server.frequency(self.chan)
-            self.setFreqNoSignal(old_value)
-            self.displayError(e.msg)
+            self.freq_power_widget.set_freq_no_signal(old_value)
+            self.display_error(e.msg)
 
     @inlineCallbacks
-    def switchChanged(self, pressed):
+    def switch_changed(self, pressed):
         try:
             yield self.server.output(self.chan, pressed)
-        except self.Error as e:
+        except self.types.Error as e:
             old_value = yield self.server.frequency(self.chan)
-            self.setStateNoSignal(old_value)
-            self.displayError(e.msg)
+            self.freq_power_widget.set_state_no_signal(old_value)
+            self.display_error(e.msg)
+
+    def display_error(self, text):
+        # runs the message box in a non-blocking method
+        message = QMessageBox(self)
+        message.setText(text)
+        message.open()
+        message.show()
+        message.raise_()
 
     def closeEvent(self, x):
         self.reactor.stop()
