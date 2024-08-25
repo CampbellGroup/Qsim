@@ -8,7 +8,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from playsound import playsound
+try:
+    TRAP_SOUND = '/home/qsimexpcontrol/Music/trap.wav'
+    FAIL_SOUND = '/home/qsimexpcontrol/Music/swvader01.wav'
+    from playsound import playsound
+    SOUND_LOADED = True
+except (ImportError, FileNotFoundError):
+    logger.error("Sounds not loaded")
+    SOUND_LOADED = False
 
 SIGNALID = 112983
 
@@ -17,15 +24,10 @@ class LoadControl(QFrame):
 
     def __init__(self, reactor, cxn=None):
         # noinspection PyArgumentList
+
         super(LoadControl, self).__init__()
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.MinimumExpanding)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
-        try:
-            self.its_trap = '/home/qsimexpcontrol/Music/trap.wav'
-            self.vader = '/home/qsimexpcontrol/Music/swvader01.wav'
-            self.sounds_loaded = True
-        except FileNotFoundError:
-            self.sounds_loaded = False
         self.reactor = reactor
         self.kt = None
         self.bi_directional_state = False
@@ -67,10 +69,10 @@ class LoadControl(QFrame):
     @inlineCallbacks
     def initialize_gui(self):
         layout = QGridLayout()
-        self.shutter_widget = QCustomSwitchChannel('399/Oven',
-                                                   ('Closed/Oven Off', 'Open/Oven On'))
-        self.shutter_widget.setFrameStyle(QFrame.NoFrame)
-        self.shutter_widget.TTLswitch.toggled.connect(self.toggle)
+        self.shutter_oven_button = QCustomSwitchChannel('399/Oven',
+                                                        ('Closed/Oven Off', 'Open/Oven On'))
+        self.shutter_oven_button.setFrameStyle(QFrame.NoFrame)
+        self.shutter_oven_button.TTLswitch.toggled.connect(self.toggle)
         self.timer_widget = QCustomTimer('Loading Time', show_control=False)
         self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 5.0))
         self.max_time_widget = QCustomSpinBox("Max Time (m)", (0.0, 30.0))
@@ -90,12 +92,12 @@ class LoadControl(QFrame):
         if '399 trapshutter' in self.settings:
             value = yield self.reg.get('399 trapshutter')
             value = bool(value)
-            self.shutter_widget.TTLswitch.setChecked(value)
+            self.shutter_oven_button.TTLswitch.setChecked(value)
         else:
-            self.shutter_widget.TTLswitch.setChecked(False)
+            self.shutter_oven_button.TTLswitch.setChecked(False)
 
-        layout.addWidget(self.shutter_widget, 0, 0, 2, 1)
-        layout.addWidget(self.current_widget, 0, 1, 1, 1)
+        layout.addWidget(self.shutter_oven_button, 0, 0, 1, 2)
+        layout.addWidget(self.current_widget, 1, 0, 1, 1)
         layout.addWidget(self.max_time_widget, 1, 1, 1, 1)
         layout.addWidget(self.timer_widget, 2, 0, 1, 2)
         self.setLayout(layout)
@@ -104,15 +106,15 @@ class LoadControl(QFrame):
     def on_new_counts(self, signal, pmt_value):
         # this throws error on closeout since listner is yielding to server
         disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')
-        switch_on = not self.shutter_widget.TTLswitch.isChecked()
+        switch_on = not self.shutter_oven_button.TTLswitch.isChecked()
         if (pmt_value >= disc_value) and switch_on:
-            self.shutter_widget.TTLswitch.setChecked(True)
-            if self.sounds_loaded:
-                playsound(self.its_trap)
+            self.shutter_oven_button.TTLswitch.setChecked(True)
+            if SOUND_LOADED:
+                playsound(TRAP_SOUND)
         elif (self.timer_widget.time >= float(self.max_time_widget.spinLevel.value())*60.0) and switch_on:
-            self.shutter_widget.TTLswitch.setChecked(True)
-            if self.sounds_loaded:
-                playsound(self.vader)
+            self.shutter_oven_button.TTLswitch.setChecked(True)
+            if SOUND_LOADED:
+                playsound(FAIL_SOUND)
 
     @inlineCallbacks
     def toggle(self, value):
