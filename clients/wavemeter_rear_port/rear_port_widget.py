@@ -63,7 +63,7 @@ class rear_port_client(QtGui.QWidget):
         color = tuple(color)
         self.continuous_switch = QCustomSwitchChannel('Continuous Measure')
         self.continuous_switch.TTLswitch.toggled.connect(self.toggle)
-        self.widget.spinFreq.setValue(float(hint))
+        self.widget.freq_spinbox.setValue(float(hint))
         self.widget.current_frequency.setStyleSheet('color: rgb' + str(color))
         subLayout.addWidget(self.widget, 0, 0, 1, 3)
         subLayout.addWidget(self.continuous_switch, 1, 0, 1, 1)
@@ -75,7 +75,7 @@ class rear_port_client(QtGui.QWidget):
     def update_value(self):
 
         self.reactor.callLater(1, self.update_value)
-        if not self.widget.measSwitch.isChecked():
+        if not self.widget.measure_button.isChecked():
             self.widget.current_frequency.setText('Not Measured')
             return
 
