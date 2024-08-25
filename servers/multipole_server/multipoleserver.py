@@ -19,6 +19,7 @@ timeout = 20
 from twisted.internet.defer import returnValue
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks
+from config.dac_ad660_config import MultipoleConfiguration as MC
 from config.dac_ad660_config import HardwareConfiguration as HC
 from twisted.internet.task import LoopingCall
 import socket
@@ -43,9 +44,7 @@ class MultipoleServer(LabradServer):
     def initServer(self):
         self.name = socket.gethostname() + ' Multipole Server'
 
-        self.hc = HC
-        self.M = self.hc.M
-        print(self.M)
+        self.M = MC.M
         self.lc = LoopingCall(self.loop)
         self.connect()
 
@@ -68,7 +67,7 @@ class MultipoleServer(LabradServer):
         self.multipoles = yield self.reg.get('Multipoles')
 
         self.electrodes = []
-        for i, channel in enumerate(self.hc.dac_channels):
+        for i, channel in enumerate(HC.dac_channels):
             electrode = Electrode(channel.dac_channel_number, minval=-10.0, maxval=10.0)
             self.electrodes.append(electrode)
             # self.update_dac(0.0, channel)

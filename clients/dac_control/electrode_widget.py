@@ -6,11 +6,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+from config.dac_ad660_config import HardwareConfiguration as HC
+
 
 class Rod:
 
-    def __init__(self, dac, voltage=0.0, shape="circle", saturation_voltage=7.0):
-        self.dac = dac
+    def __init__(self, channel, voltage=0.0, shape="circle", saturation_voltage=7.0):
+        self.channel = channel
         self.voltage = voltage
         self.shape = shape
         self._position = None
@@ -39,6 +41,7 @@ class ElectrodeIndicator(QWidget):
     def __init__(self):
 
         super(ElectrodeIndicator, self).__init__()
+        self.dac_channels = HC.dac_channels
         self.init_ui()
 
     def init_ui(self):
@@ -48,12 +51,12 @@ class ElectrodeIndicator(QWidget):
         self.setMinimumSize(self.min_width, self.min_height)
         self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
 
-        self.rods = [Rod(dac=2, saturation_voltage=1.0),
-                     Rod(dac=19, saturation_voltage=1.0),
-                     Rod(dac=17, saturation_voltage=1.0),
-                     Rod(dac=21, saturation_voltage=1.0),
-                     Rod(dac=8, shape="roundedRect", saturation_voltage=100.0),
-                     Rod(dac=10, shape="roundedRect", saturation_voltage=100.0), ]
+        self.rods = [Rod(channel=HC.dac_by_name("RF Rod 1"), saturation_voltage=1.0),
+                     Rod(channel=HC.dac_by_name("DC Rod 2"), saturation_voltage=1.0),
+                     Rod(channel=HC.dac_by_name("DC Rod 1"), saturation_voltage=1.0),
+                     Rod(channel=HC.dac_by_name("RF Rod 2"), saturation_voltage=1.0),
+                     Rod(channel=HC.dac_by_name("End Cap 1"), shape="roundedRect", saturation_voltage=100.0),
+                     Rod(channel=HC.dac_by_name("End Cap 2"), shape="roundedRect", saturation_voltage=100.0), ]
 
         self.show()
 
@@ -119,7 +122,7 @@ class ElectrodeIndicator(QWidget):
 
     def update_rod(self, dac_num, value):
         for rod in self.rods:
-            if rod.dac == dac_num:
+            if rod.channel.dac_channel_number == dac_num:
                 rod.voltage = value
         self.repaint()
 

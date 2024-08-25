@@ -29,8 +29,8 @@ class API:
 
     def __init__(self):
         self.xem = None
-        self.okDeviceID = HardwareConfiguration.okDeviceID
-        self.okDeviceFile = HardwareConfiguration.okDeviceFile
+        self.okDeviceID = HardwareConfiguration.ok_device_id
+        self.okDeviceFile = HardwareConfiguration.ok_device_file
 
     def check_connection(self):
         if self.xem is None:

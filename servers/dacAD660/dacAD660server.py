@@ -57,9 +57,9 @@ class Voltage:
             - 2^15 is zero volts
             - 2^16 is the maximum voltage
         """
-        v_min, v_max = self.channel.board_voltage_range
-        zero_value = 2 ** (HC.PREC_BITS - 1)
-        number_of_voltages = 2 ** HC.PREC_BITS
+        v_min, v_max = HC.board_voltage_range
+        zero_value = 2 ** (HC.prec_bits - 1)
+        number_of_voltages = 2 ** HC.prec_bits
         return int(round(zero_value + analog_voltage * number_of_voltages / (v_max - v_min)))
 
     def __get_hex_rep(self) -> bytearray:
@@ -74,7 +74,7 @@ class Voltage:
         voltage bytes are reversed, and control bytes are reversed
         """
         port = bin(self.channel.dac_channel_number)[2:].zfill(5)
-        if HC.pulseTriggered:
+        if HC.pulse_triggered:
             set_n = bin(self.set_num)[2:].zfill(10)
         else:
             set_n = bin(1)[2:].zfill(10)
@@ -88,10 +88,10 @@ class Voltage:
 class Queue:
     def __init__(self):
         self.current_set = 1
-        self.set_dict = {i: [] for i in range(1, HC.maxCache + 1)}
+        self.set_dict = {i: [] for i in range(1, HC.max_cache + 1)}
 
     def advance(self) -> None:
-        self.current_set = (self.current_set % HC.maxCache) + 1
+        self.current_set = (self.current_set % HC.max_cache) + 1
 
     def reset(self) -> None:
         self.current_set = 1
@@ -107,7 +107,7 @@ class Queue:
 
     def clear(self) -> None:
         self.current_set = 1
-        self.set_dict = {i: [] for i in range(1, HC.maxCache + 1)}
+        self.set_dict = {i: [] for i in range(1, HC.max_cache + 1)}
 
 
 class DACServer(LabradServer):
@@ -120,7 +120,7 @@ class DACServer(LabradServer):
     queue = Queue()
     api = API()
 
-    registry_path = ['', 'Servers', HC.EXPNAME + SERVERNAME]
+    registry_path = ['', 'Servers', HC.experiment_name + SERVERNAME]
     dac_channels = HC.dac_channels
     current_voltages = {}
 
@@ -172,11 +172,8 @@ class DACServer(LabradServer):
         self.api.reset_fifo_dac()
         for i in range(len(self.queue.set_dict[self.queue.current_set])):
             v = self.queue.get()
-            print(v)
             self.api.set_dac_voltage(v.hex_rep)
-            print(v.hex_rep)
             self.current_voltages[v.channel.dac_channel_number] = v.analog_voltage
-            print(self.current_voltages)
         if c is not None:
             self.save_voltages_to_registry(c)
             self.notify_other_listeners(c)
