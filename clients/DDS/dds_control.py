@@ -1,6 +1,6 @@
 from common.lib.clients.qtui.QCustomFreqPower import QCustomFreqPower
 from twisted.internet.defer import inlineCallbacks, returnValue
-from common.lib.clients.connection import connection
+from common.lib.clients.connection import Connection
 from PyQt5.QtWidgets import *
 
 import logging
@@ -9,6 +9,9 @@ logger = logging.getLogger(__name__)
 
 """
 The DDS Control GUI lets the user control the DDS channels of the Pulser
+
+This version differs from the version in common in that it connects to ScriptScanner. 
+This allows the widget to disable itself while an experiment is running to protect the pulser from crashing
 """
 
 
@@ -114,7 +117,7 @@ class DDSControlWidget(QFrame):
     @inlineCallbacks
     def setup_dds(self):
         if self.cxn is None:
-            self.cxn = connection(name='DDS Client')
+            self.cxn = Connection(name='DDS Client')
             yield self.cxn.connect()
         self.context = yield self.cxn.context()
         try:

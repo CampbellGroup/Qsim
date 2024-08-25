@@ -1,5 +1,5 @@
 from twisted.internet.defer import inlineCallbacks
-from common.lib.clients.connection import connection
+from common.lib.clients.connection import Connection
 from PyQt4 import QtGui, QtCore
 import numpy as np
 import time
@@ -39,7 +39,7 @@ class TimeHarpClient(QtGui.QWidget):
         """Creates an Asynchronous connection to timeharpserver
         """
         if self.cxn is None:
-            self.cxn = connection(name='Time Harp Client')
+            self.cxn = Connection(name='Time Harp Client')
             yield self.cxn.connect()
         self.server = yield self.cxn.get_server('timeharpserver')
         self.data_vault = yield self.cxn.get_server('data_vault')

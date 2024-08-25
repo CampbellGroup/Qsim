@@ -2,7 +2,7 @@ from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
 from common.lib.clients.qtui.timer import QCustomTimer
 from twisted.internet.defer import inlineCallbacks
-from common.lib.clients.connection import connection
+from common.lib.clients.connection import Connection
 from PyQt5.QtWidgets import *
 import logging
 
@@ -43,7 +43,7 @@ class LoadControl(QFrame):
         from labrad.units import WithUnit as U
         self.U = U
         if self.cxn is None:
-            self.cxn = yield connection(name="Load Control")
+            self.cxn = yield Connection(name="Load Control")
             yield self.cxn.connect()
         self.PMT = yield self.cxn.get_server('normalpmtflow')
         self.pv = yield self.cxn.get_server('parametervault')

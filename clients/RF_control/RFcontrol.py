@@ -1,7 +1,6 @@
-from common.lib.clients.Pulser2_DDS.DDS_CONTROL import DDSChannel
 from common.lib.clients.qtui.QCustomFreqPower import QCustomFreqPower
 from twisted.internet.defer import inlineCallbacks
-from common.lib.clients.connection import connection
+from common.lib.clients.connection import Connection
 
 from PyQt5.QtWidgets import *
 import logging
@@ -29,7 +28,7 @@ class RFcontrol(QWidget):
         """
 
         if self.cxn is None:
-            self.cxn = connection(name="RF Control")
+            self.cxn = Connection(name="RF Control")
             yield self.cxn.connect()
         self.server = yield self.cxn.get_server('Pulser')
         self.initialize_gui()

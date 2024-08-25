@@ -1,6 +1,6 @@
 from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from twisted.internet.defer import inlineCallbacks
-from common.lib.clients.connection import connection
+from common.lib.clients.connection import Connection
 from PyQt5.QtWidgets import *
 
 
@@ -22,7 +22,7 @@ class CameraSwitch(QFrame):
         """
 
         if self.cxn is None:
-            self.cxn = connection(name="Camera Switch")
+            self.cxn = Connection(name="Camera Switch")
             yield self.cxn.connect()
         self.server = yield self.cxn.get_server('arduinottl')
         self.pmt = yield self.cxn.get_server('normalpmtflow')
