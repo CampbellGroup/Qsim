@@ -1,6 +1,6 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 from scripts.pulse_sequences.sub_sequences.doppler_cooling import DopplerCooling
-from deprecated.deprecated_sub_sequences.Raman411Interogation import raman_411_interogation
+from scripts.pulse_sequences.sub_sequences._deprecated.Raman411Interogation import raman_411_interogation
 from scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
 from scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import StandardStateDetection
 from scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import microwave_interogation

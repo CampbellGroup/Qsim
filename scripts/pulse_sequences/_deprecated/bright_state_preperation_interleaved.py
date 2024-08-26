@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 from scripts.pulse_sequences.sub_sequences.doppler_cooling import DopplerCooling
 from scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detection import StandardStateDetection
 from scripts.pulse_sequences.sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
-from deprecated.deprecated_sub_sequences.MLStateDetection import ml_state_detection
+from scripts.pulse_sequences.sub_sequences._deprecated.MLStateDetection import ml_state_detection
 from scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
 from scripts.pulse_sequences.sub_sequences.bright_state_pumping import BrightStatePumping
 from scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
