@@ -8,10 +8,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class RFcontrol(QWidget):
+class RFControl(QWidget):
 
     def __init__(self, reactor, cxn=None):
-        super(RFcontrol, self).__init__()
+        super(RFControl, self).__init__()
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.reactor = reactor
         self.cxn = cxn
@@ -105,6 +105,6 @@ if __name__ == "__main__":
     qt5reactor.install()
     from twisted.internet import reactor
 
-    RFcontrolWidget = RFcontrol(reactor)
+    RFcontrolWidget = RFControl(reactor)
     RFcontrolWidget.show()
     reactor.run()
