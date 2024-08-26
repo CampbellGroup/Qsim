@@ -22,26 +22,32 @@ class single_channel_wm(QtGui.QWidget):
         connects incoming signals to relavent functions
         """
         from labrad.wrappers import connectAsync
-        self.password = os.environ['LABRADPASSWORD']
-        self.cxn = yield connectAsync('10.97.112.4', name=socket.gethostname() + ' Single Channel Lock',
-                                      password=self.password)
+
+        self.password = os.environ["LABRADPASSWORD"]
+        self.cxn = yield connectAsync(
+            "10.97.112.4",
+            name=socket.gethostname() + " Single Channel Lock",
+            password=self.password,
+        )
         self.server = yield self.cxn.multiplexerserver
         yield self.server.signal__frequency_changed(SIGNALID1)
-        yield self.server.addListener(listener=self.updateFrequency, source=None, ID=SIGNALID1)
+        yield self.server.addListener(
+            listener=self.updateFrequency, source=None, ID=SIGNALID1
+        )
 
         self.initializeGUI()
 
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
-        qBox = QtGui.QGroupBox('WS7')
+        qBox = QtGui.QGroupBox("WS7")
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0), returnValue
         self.centralwidget = QtGui.QWidget(self)
-        self.wavelength = QtGui.QLabel('freq')
-        self.wavelength.setFont(QtGui.QFont('MS Shell Dlg 2', pointSize=70))
+        self.wavelength = QtGui.QLabel("freq")
+        self.wavelength.setFont(QtGui.QFont("MS Shell Dlg 2", pointSize=70))
         self.wavelength.setAlignment(QtCore.Qt.AlignCenter)
-        self.wavelength.setStyleSheet('color: blue')
+        self.wavelength.setStyleSheet("color: blue")
         subLayout.addWidget(self.wavelength, 1, 0)
 
         self.setLayout(layout)

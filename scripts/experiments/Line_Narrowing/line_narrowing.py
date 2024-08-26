@@ -1,6 +1,8 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import (
+    InterleavedLinescan,
+)
 import numpy as np
 
 
@@ -10,17 +12,17 @@ class LineNarrowing(QsimExperiment):
     field multipoles specified by the user. Helpful for micromotion compensation
     """
 
-    name = 'Line Narrowing'
+    name = "Line Narrowing"
 
     exp_parameters = []
-    exp_parameters.append(('Line_Narrowing', 'voltage_scan_x'))
-    exp_parameters.append(('Line_Narrowing', 'voltage_scan_y'))
-    exp_parameters.append(('Line_Narrowing', 'voltage_scan_z'))
-    exp_parameters.append(('Line_Narrowing', 'direction'))
+    exp_parameters.append(("Line_Narrowing", "voltage_scan_x"))
+    exp_parameters.append(("Line_Narrowing", "voltage_scan_y"))
+    exp_parameters.append(("Line_Narrowing", "voltage_scan_z"))
+    exp_parameters.append(("Line_Narrowing", "direction"))
     exp_parameters.extend(InterleavedLinescan.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
-        self.multipole_names = {'Ex': 2, 'Ey': 0, 'Ez': 1}
+        self.multipole_names = {"Ex": 2, "Ey": 0, "Ez": 1}
         self.ident = ident
         self.linescan = self.make_experiment(InterleavedLinescan)
         self.linescan.initialize(cxn, context, ident)
@@ -33,12 +35,18 @@ class LineNarrowing(QsimExperiment):
         """
 
         self.setup_parameters()
-        if self.multipole_direction == 'Ex':
-            x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan_x, units=None)
-        elif self.multipole_direction == 'Ey':
-            x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan_y, units=None)
-        elif self.multipole_direction == 'Ez':
-            x_values = self.get_scan_list(self.p.Line_Narrowing.voltage_scan_z, units=None)
+        if self.multipole_direction == "Ex":
+            x_values = self.get_scan_list(
+                self.p.Line_Narrowing.voltage_scan_x, units=None
+            )
+        elif self.multipole_direction == "Ey":
+            x_values = self.get_scan_list(
+                self.p.Line_Narrowing.voltage_scan_y, units=None
+            )
+        elif self.multipole_direction == "Ez":
+            x_values = self.get_scan_list(
+                self.p.Line_Narrowing.voltage_scan_z, units=None
+            )
 
         for i, step in enumerate(x_values):
             self.multipoles[self.multipole_index] = step
@@ -59,7 +67,7 @@ class LineNarrowing(QsimExperiment):
         self.mps.set_multipoles(self.init_multipoles)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = LineNarrowing(cxn=cxn)

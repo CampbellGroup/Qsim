@@ -8,10 +8,12 @@ from twisted.internet.defer import inlineCallbacks
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(module)s:%(asctime)s [-] %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(levelname)s:%(module)s:%(asctime)s [-] %(message)s"
+)
 
-sys.path.append('/home/qsimexpcontrol/LabRAD/')
-sys.path.append('/home/qsimexpcontrol/LabRAD/Qsim')
+sys.path.append("/home/qsimexpcontrol/LabRAD/")
+sys.path.append("/home/qsimexpcontrol/LabRAD/Qsim")
 os.environ["LABRADPASSWORD"] = "lab"
 
 
@@ -26,7 +28,8 @@ class QsimGUI(QMainWindow):
     @inlineCallbacks
     def connect_labrad(self):
         from common.lib.clients.connection import Connection
-        cxn = Connection(name='Qsim GUI Client')
+
+        cxn = Connection(name="Qsim GUI Client")
         yield cxn.connect()
         self.create_layout(cxn)
 
@@ -40,22 +43,14 @@ class QsimGUI(QMainWindow):
         script_scanner = self.make_script_scanner_widget(reactor, cxn)
         wavemeter = self.make_wavemeter_widget(reactor, cxn)
         control = self.make_control_widget(reactor, cxn)
-        # Pulser = self.makePulserWidget(reactor, cxn)
-        # Config = self.makeConfigWidget(reactor, cxn)
-        # Keithley = self.makeKeithleyWidget(reactor, cxn)
         ev_pump = self.make_ev_pump_widget(reactor, cxn)
-        # WF = self.makeWindfreakWidget(reactor, cxn)
 
         # add tabs
         self.tabWidget = QTabWidget()
-        self.tabWidget.addTab(wavemeter, '&Wavemeter')
-        self.tabWidget.addTab(script_scanner, '&Script Scanner')
-        self.tabWidget.addTab(control, '&Control')
-        # self.tabWidget.addTab(Pulser, '&Pulser')
-        # self.tabWidget.addTab(Config, '&Config')
-        # self.tabWidget.addTab(Keithley, '&Keithleys')
-        # self.tabWidget.addTab(PiezoBox, '&Piezo Box')
-        self.tabWidget.addTab(ev_pump, '&EV Pump')
+        self.tabWidget.addTab(wavemeter, "&Wavemeter")
+        self.tabWidget.addTab(script_scanner, "&Script Scanner")
+        self.tabWidget.addTab(control, "&Control")
+        self.tabWidget.addTab(ev_pump, "&EV Pump")
         # self.tabWidget.addTab(WF, '&Windfreak')
 
         self.tabWidget.setMovable(True)
@@ -64,7 +59,7 @@ class QsimGUI(QMainWindow):
         layout.addWidget(self.tabWidget)
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
-        self.setWindowTitle('Qsim GUI')
+        self.setWindowTitle("Qsim GUI")
 
     ###############################################################
     # Here we will connect to individual clients and add sub-tabs #
@@ -73,6 +68,7 @@ class QsimGUI(QMainWindow):
     def make_pulser_widget(self, reactor, cxn):
         from Qsim.clients.DDS.dds_control import DDSControlWidget
         from common.lib.clients.pulser_switch.pulser_switch_control import SwitchWidget
+
         puls_widget = QWidget()
         grid_layout = QGridLayout()
 
@@ -86,6 +82,7 @@ class QsimGUI(QMainWindow):
     def make_piezo_widget(self, reactor, cxn):
         qwidget = QWidget()
         from common.lib.clients.piezo_client.PiezoClient import PiezoClient
+
         grid_layout = QGridLayout()
         pz_client = PiezoClient(reactor)
         grid_layout.addWidget(pz_client)
@@ -94,6 +91,7 @@ class QsimGUI(QMainWindow):
 
     def make_ev_pump_widget(self, reactor, cxn):
         from common.lib.clients.evPump.evPumpClient import eVPumpClient
+
         ev_widget = QWidget()
         layout = QHBoxLayout()
         layout.addStretch()
@@ -103,13 +101,17 @@ class QsimGUI(QMainWindow):
         return ev_widget
 
     def make_script_scanner_widget(self, reactor, cxn):
-        from common.lib.clients.script_scanner_gui.script_scanner_gui import ScriptScannerGui
+        from common.lib.clients.script_scanner_gui.script_scanner_gui import (
+            ScriptScannerGui,
+        )
+
         scriptscanner = ScriptScannerGui(reactor, cxn=cxn)
         return scriptscanner
 
     def make_wavemeter_widget(self, reactor, cxn):
         # widget = QWidget()
         from common.lib.clients.Multiplexer.multiplexerclient import WavemeterClient
+
         # from Qsim.clients.single_wavemeter_channel.single_channel_wm import single_channel_wm
         # gridLayout = QGridLayout()
         wavemeter = WavemeterClient(reactor, cxn)
@@ -125,15 +127,19 @@ class QsimGUI(QMainWindow):
         widget = QWidget()
         from Qsim.clients.RF_control.RFcontrol import RFControl
         from common.lib.clients.PMT_Control.pmt_control import PMTWidget
+
         # from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import SwitchClient
         from clients.dac_control.dac_client import DACClient
         from Qsim.clients.load_control.load_control import LoadControl
         from common.lib.clients.piezo_client.PiezoClient import PiezoClient
-        from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import KeithleyClient
+        from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import (
+            KeithleyClient,
+        )
 
-        from Qsim.clients.DDS.dds_control import DDSControlWidget
+        from Qsim.clients.DDS.dds_control import ScriptResponsiveDDSControlWidget
         from common.lib.clients.pulser_switch.pulser_switch_control import SwitchWidget
+
         # from Qsim.clients.windfreak_client.windfreak_client import WindfreakClient
 
         grid_layout = QGridLayout()
@@ -161,7 +167,7 @@ class QsimGUI(QMainWindow):
 
         col_three_widget = QWidget()
         col_three = QVBoxLayout()
-        col_three.addWidget(DDSControlWidget(reactor, cxn))
+        col_three.addWidget(ScriptResponsiveDDSControlWidget(reactor, cxn))
         col_three.addWidget(SwitchWidget(reactor))
         col_three.addWidget(KeithleyClient(reactor, cxn))
         col_three.addStretch(1)
@@ -190,7 +196,7 @@ if __name__ == "__main__":
     from twisted.internet import reactor
 
     gui = QsimGUI(reactor, clipboard)
-    gui.setWindowIcon(QtGui.QIcon('/home/qsimexpcontrol/Pictures/icons/6ions.jpg'))
-    gui.setWindowTitle('Qsim GUI')
+    gui.setWindowIcon(QtGui.QIcon("/home/qsimexpcontrol/Pictures/icons/6ions.jpg"))
+    gui.setWindowTitle("Qsim GUI")
     gui.show()
     reactor.run()

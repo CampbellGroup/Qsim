@@ -24,18 +24,19 @@ class cal_lock(QtGui.QWidget):
         """
 
         from labrad.wrappers import connectAsync
+
         self.cxn = yield connectAsync()
         self.server = self.cxn.single_wm_lock_server
         self.initializeGUI()
 
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
-        lockwidget = QCustomSwitchChannel('Lock Cal', ('Locked', 'Unlocked'))
+        lockwidget = QCustomSwitchChannel("Lock Cal", ("Locked", "Unlocked"))
         lockwidget.TTLswitch.toggled.connect(self.toggle)
 
-        offsetwidget = QCustomSpinBox('DC offset', (-1.0, 1.0))
-        setpointwidget = QCustomSpinBox('Set Point', (811.0, 812.0))
-        gainwidget = QCustomSpinBox('Gain', (0.1, 10000.0))
+        offsetwidget = QCustomSpinBox("DC offset", (-1.0, 1.0))
+        setpointwidget = QCustomSpinBox("Set Point", (811.0, 812.0))
+        gainwidget = QCustomSpinBox("Gain", (0.1, 10000.0))
 
         offsetwidget.setStepSize(0.001)
         setpointwidget.setStepSize(0.000001)

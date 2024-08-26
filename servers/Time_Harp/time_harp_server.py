@@ -32,20 +32,20 @@ class TimeHarpServer(LabradServer):
     Time harp fast time tagging server.
     """
 
-    name = 'TimeHarpServer'
+    name = "TimeHarpServer"
 
-    syncratechanged = Signal(UPDATESYNC, 'signal__sync_rate_changed', 'v')
-    countratechanged = Signal(UPDATECOUNT, 'signal__count_rate_changed', 'v')
+    syncratechanged = Signal(UPDATESYNC, "signal__sync_rate_changed", "v")
+    countratechanged = Signal(UPDATECOUNT, "signal__count_rate_changed", "v")
 
     def initServer(self):
         # load timeharp dll file
         self.U = U
-        dll_path = 'C:\Windows\System32\TH260Lib.DLL'
+        dll_path = "C:\Windows\System32\TH260Lib.DLL"
         self.device_index = ctypes.c_int(0)
         self.thdll = ctypes.windll.LoadLibrary(dll_path)
-        print('Opening TH260...')
+        print("Opening TH260...")
         self.open_device()
-        print('Initializing TH260...')
+        print("Initializing TH260...")
         self.initialize(0)
         self.timeInterval = 0.2
         self.loop = LoopingCall(self.main_loop)
@@ -134,9 +134,7 @@ class TimeHarpServer(LabradServer):
 
     @setting(6, "get_hardware_info")
     def get_hardware_info(self, c):
-        """
-
-        """
+        """ """
         func = self.thdll.TH260_GetHardwareInfo
         func.restype = ctypes.c_int
         model = ctypes.create_string_buffer(16)
@@ -151,9 +149,7 @@ class TimeHarpServer(LabradServer):
 
     @setting(7, "get_serial_number")
     def get_serial_number(self, c):
-        """
-
-        """
+        """ """
         func = self.thdll.TH260_GetSerialNumber
         func.restype = ctypes.c_int
         serial = ctypes.create_string_buffer(8)
@@ -181,7 +177,7 @@ class TimeHarpServer(LabradServer):
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(9, "get_base_resolution", returns='vi')
+    @setting(9, "get_base_resolution", returns="vi")
     def get_base_resolution(self, c):
         """
         returns base resolution in ps
@@ -192,7 +188,9 @@ class TimeHarpServer(LabradServer):
         func.restype = ctypes.c_int
         resolution = ctypes.c_float()
         bin_steps = ctypes.c_int()
-        error = yield func(self.device_index, ctypes.byref(resolution), ctypes.byref(bin_steps))
+        error = yield func(
+            self.device_index, ctypes.byref(resolution), ctypes.byref(bin_steps)
+        )
         if error == 0:
             returnValue((resolution.value, bin_steps.value))
         if error != 0:
@@ -217,7 +215,7 @@ class TimeHarpServer(LabradServer):
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(11, "set_timing_mode", mode='w')
+    @setting(11, "set_timing_mode", mode="w")
     def set_timing_mode(self, c, mode):
         """
         mode: 0 = Hires (25ps), 1 = Lowres (2.5 ns, a.k.a. “Long range”)
@@ -228,12 +226,12 @@ class TimeHarpServer(LabradServer):
         mode = ctypes.c_int(mode)
         error = yield func(self.device_index, mode)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         if error != 0:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(12, "set_sync_div", division='w')
+    @setting(12, "set_sync_div", division="w")
     def set_sync_div(self, c, division):
         """
         Note: The sync divider must be used to keep the effective sync rate at values < 40 MHz.
@@ -247,12 +245,12 @@ class TimeHarpServer(LabradServer):
         div = ctypes.c_int(division)
         error = yield func(self.device_index, div)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(13, "set_sync_discriminator", level='i', zero_crossing='i')
+    @setting(13, "set_sync_discriminator", level="i", zero_crossing="i")
     def set_sync_discriminator(self, c, level, zero_crossing):
         """
         level:  CFD discriminator level in millivolts
@@ -268,12 +266,12 @@ class TimeHarpServer(LabradServer):
         crossing = ctypes.c_int(zero_crossing)
         error = yield func(self.device_index, level, crossing)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(14, "set_sync_edge_trigger", level='i', edge='i')
+    @setting(14, "set_sync_edge_trigger", level="i", edge="i")
     def set_sync_edge_trigger(self, c, level, edge):
         """
         level: Trigger level in millivolts
@@ -289,12 +287,12 @@ class TimeHarpServer(LabradServer):
         edge = ctypes.c_int(edge)
         error = yield func(self.device_index, level, edge)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(15, "set_sync_channel_offset", offset='w')
+    @setting(15, "set_sync_channel_offset", offset="w")
     def set_sync_channel_offset(self, c, offset):
         """
         value: sync timing offset in ps
@@ -306,12 +304,12 @@ class TimeHarpServer(LabradServer):
         offset = ctypes.c_int(offset)
         error = yield func(self.device_index, offset)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(16, "set_input_cfd", channel='w', level='i', zerox='i')
+    @setting(16, "set_input_cfd", channel="w", level="i", zerox="i")
     def set_input_cfd(self, c, channel, level, zerox):
         """
         level:  CFD discriminator level in millivolts
@@ -328,12 +326,12 @@ class TimeHarpServer(LabradServer):
         zerox = ctypes.c_int(zerox)
         error = yield func(self.device_index, channel, level, zerox)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(18, channel='w', value='i')
+    @setting(18, channel="w", value="i")
     def set_input_channel_offset(self, c, channel, value):
         """
         channel: input channel index 0..1
@@ -351,28 +349,26 @@ class TimeHarpServer(LabradServer):
         value = ctypes.c_int(value)
         error = yield func(self.device_index, channel, value)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(19, channel='w', enable='w')
+    @setting(19, channel="w", enable="w")
     def set_input_channel_enable(self, c, channel, enable):
-        """
-
-        """
+        """ """
         func = self.thdll.TH260_SetInputChannelEnable
         func.restype = ctypes.c_int
         channel = ctypes.c_int(channel)
         enable = ctypes.c_int(enable)
         error = yield func(self.device_index, channel, enable)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(20, channel='w', tdcode='w')
+    @setting(20, channel="w", tdcode="w")
     def set_input_dead_time(self, c, channel, tdcode):
         """
         The maximum channel index must correspond to nchannels-1 as obtained through TH260_GetNumOfInputChannels().
@@ -389,12 +385,12 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, channel, tdcode)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(21, stop_ovfl='w', stopcount='w')
+    @setting(21, stop_ovfl="w", stopcount="w")
     def set_stop_overflow(self, c, stop_ovfl, stopcount):
         """
         stop_ovfl: 0 = do not stop 1 = do stop overflow
@@ -407,12 +403,12 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, stop_ovfl, stopcount)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(22, binning='w')
+    @setting(22, binning="w")
     def set_binning(self, c, binning):
         """
         binning: measuremtent binning code minimum = 0, maximum = MAXBINSTEPS - 1
@@ -422,12 +418,12 @@ class TimeHarpServer(LabradServer):
         binning = ctypes.c_int(binning)
         error = yield func(self.device_index, binning)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(23, offset='w')
+    @setting(23, offset="w")
     def set_offset(self, c, offset):
         """
         offset: histogram time offset in ns
@@ -437,15 +433,15 @@ class TimeHarpServer(LabradServer):
         offset = ctypes.c_int(offset)
         error = yield func(self.device_index, offset)
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(24, lencode='w', returns='w')
+    @setting(24, lencode="w", returns="w")
     def set_histo_len(self, c, lencode):
         """
-        lencode: histogram lencode, minimum = 0 
+        lencode: histogram lencode, minimum = 0
         returns: current length (time bin count) of histograms calculated as 1024*(2^lencode)
         """
         func = self.thdll.TH260_SetHistoLen
@@ -470,12 +466,12 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(26, period='w')
+    @setting(26, period="w")
     def set_trigger_output(self, c, period):
         """
         period: tigger period in units of 100ns (0=off)
@@ -487,12 +483,12 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, period)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(27, measurecontrol='w', startedge='w', stopedge='w')
+    @setting(27, measurecontrol="w", startedge="w", stopedge="w")
     def set_measure_control(self, c, measurecontrol, startedge, stopedge):
         """
         measurecontrol: measurement control code
@@ -515,12 +511,12 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, measurecontrol, startedge, stopedge)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(28, tacq='w')
+    @setting(28, tacq="w")
     def start_measure(self, c, tacq):
         """
         tacq: acquisition time in milliseconds
@@ -534,7 +530,7 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, tacq)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
@@ -550,7 +546,7 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
@@ -572,7 +568,7 @@ class TimeHarpServer(LabradServer):
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(31, channel='w', clear='w', histolen='w')
+    @setting(31, channel="w", clear="w", histolen="w")
     def get_histogram(self, c, channel, clear, histolen):
         """
         returns np array of histogram
@@ -632,7 +628,7 @@ class TimeHarpServer(LabradServer):
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(34, channel='w')
+    @setting(34, channel="w")
     def get_count_rate(self, c, channel):
         """
         returns: current count rate of this input channel
@@ -664,7 +660,7 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, ctypes.byref(flags))
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
@@ -682,7 +678,7 @@ class TimeHarpServer(LabradServer):
         elapsed = ctypes.c_float()
         error = yield func(self.device_index, ctypes.byref(elapsed))
         if error == 0:
-            returnValue(self.U(elapsed.value, 'ms'))
+            returnValue(self.U(elapsed.value, "ms"))
         else:
             error_string = self.get_errors(error)
             print(error_string)
@@ -759,7 +755,7 @@ class TimeHarpServer(LabradServer):
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(41, count='w')
+    @setting(41, count="w")
     def read_fifo(self, c, count):
         """
         returns: (array of count, number of TTR record recieved)
@@ -774,15 +770,19 @@ class TimeHarpServer(LabradServer):
         buffer_array = (ctypes.c_uint * count)()
         count = ctypes.c_int(count)
         nactual = ctypes.c_int()
-        error = yield func(self.device_index, buffer_array.ctypes.data_as(ctypes.POINTER(ctypes.c_uint)), count,
-                           ctypes.byref(nactual))
+        error = yield func(
+            self.device_index,
+            buffer_array.ctypes.data_as(ctypes.POINTER(ctypes.c_uint)),
+            count,
+            ctypes.byref(nactual),
+        )
         if error == 0:
             returnValue((np.array(buffer_array), nactual.value))
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(42, me='*w')
+    @setting(42, me="*w")
     def set_marker_edges(self, c, me):
         """
         me: [me0, me1, me2, me3] active edge of marker signal, 0 = falling, 1 = rising
@@ -793,12 +793,12 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, *me)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(43, en='*w')
+    @setting(43, en="*w")
     def set_marker_enable(self, c, en):
         """
         en = [en0, en1, en2, en3] desired enable state of marker signal, 0 = disabled 1 = enabled
@@ -809,12 +809,12 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, *en)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)
 
-    @setting(44, holdofftime='w')
+    @setting(44, holdofftime="w")
     def set_marker_hold_off_time(self, c, holdofftime):
         """
         holdofftime: desired holdoff time for marker signals in ns
@@ -830,7 +830,7 @@ class TimeHarpServer(LabradServer):
         error = yield func(self.device_index, holdofftime)
 
         if error == 0:
-            returnValue('Success!')
+            returnValue("Success!")
         else:
             error_string = self.get_errors(error)
             print(error_string)

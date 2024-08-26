@@ -35,14 +35,14 @@ class Electrode:
         if name:
             self.name = name
         else:
-            self.name = str('DAC: ' + str(dac))
+            self.name = str("DAC: " + str(dac))
 
 
 class MultipoleServer(LabradServer):
-    name = 'Multipole Server'
+    name = "Multipole Server"
 
     def initServer(self):
-        self.name = socket.gethostname() + ' Multipole Server'
+        self.name = socket.gethostname() + " Multipole Server"
 
         self.M = MC.M
         self.lc = LoopingCall(self.loop)
@@ -56,15 +56,16 @@ class MultipoleServer(LabradServer):
         """
 
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync(name='Multipole Server')
+
+        self.cxn = yield connectAsync(name="Multipole Server")
         try:
             self.server = self.cxn.dac_ad660_server
         except:
             self.server = None
         self.reg = self.cxn.registry
 
-        yield self.reg.cd(['', 'settings'], True)
-        self.multipoles = yield self.reg.get('Multipoles')
+        yield self.reg.cd(["", "settings"], True)
+        self.multipoles = yield self.reg.get("Multipoles")
 
         self.electrodes = []
         for i, channel in enumerate(HC.dac_channels):
@@ -76,23 +77,27 @@ class MultipoleServer(LabradServer):
 
     @inlineCallbacks
     def setup_listeners(self):
-        yield self.client.manager.subscribe_to_named_message('Server Connect', 9898689, True)
-        yield self.client.manager.subscribe_to_named_message('Server Disconnect', 9398989, True)
+        yield self.client.manager.subscribe_to_named_message(
+            "Server Connect", 9898689, True
+        )
+        yield self.client.manager.subscribe_to_named_message(
+            "Server Disconnect", 9398989, True
+        )
 
     @inlineCallbacks
     def follow_server_connect(self, cntx, server_name):
         server_name = server_name[1]
-        if server_name == 'dac8718':
+        if server_name == "dac8718":
             yield self.client.refresh()
             yield self.connect()
 
     @inlineCallbacks
     def follow_server_disconnect(self, cntx, server_name):
         server_name = server_name[1]
-        if server_name == 'dac8718':
+        if server_name == "dac8718":
             self.server = None
 
-    @setting(16, mvector='*v', returns='*v')
+    @setting(16, mvector="*v", returns="*v")
     def set_multipoles(self, c, mvector):
         mvector = np.array(mvector)
         evector = self.M.dot(mvector)
@@ -104,9 +109,9 @@ class MultipoleServer(LabradServer):
 
     @setting(17)
     def save_multipoles_to_registry(self, c):
-        yield self.reg.set('Multipoles', self.multipoles)
+        yield self.reg.set("Multipoles", self.multipoles)
 
-    @setting(18, returns='*v')
+    @setting(18, returns="*v")
     def get_multipoles(self, c):
         yield None
         returnValue(self.multipoles)
@@ -114,13 +119,13 @@ class MultipoleServer(LabradServer):
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
         if not self.server:
-            returnValue('Server not Connected')
+            returnValue("Server not Connected")
         dac = electrode.dac
         yield self.server.set_individual_analog_voltages([(dac, voltage)])
 
     @inlineCallbacks
     def loop(self):
-        yield self.reg.set('Multipoles', self.multipoles)
+        yield self.reg.set("Multipoles", self.multipoles)
 
 
 if __name__ == "__main__":

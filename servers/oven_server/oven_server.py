@@ -24,12 +24,12 @@ from labrad.units import WithUnit as U
 
 
 class OvenServer(LabradServer):
-    name = 'OvenServer'
+    name = "OvenServer"
 
     def initServer(self):
-        self.password = os.environ['LABRADPASSWORD']
-        self.name = socket.gethostname() + ' Oven Server'
-        self.max_current = U(5.00, 'A')
+        self.password = os.environ["LABRADPASSWORD"]
+        self.name = socket.gethostname() + " Oven Server"
+        self.max_current = U(5.00, "A")
         self.connect()
 
     @inlineCallbacks
@@ -39,7 +39,8 @@ class OvenServer(LabradServer):
         connects incoming signals to relevant functions
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync(name='Oven_Server')
+
+        self.cxn = yield connectAsync(name="Oven_Server")
         self.server = self.cxn.keithley_2230g_server
 
         yield self.server.select_device(0)
@@ -47,18 +48,18 @@ class OvenServer(LabradServer):
         yield self.server.output(3, False)
         self.oven_state = False
 
-    @setting(16, value='v[A]')
+    @setting(16, value="v[A]")
     def oven_current(self, c, value):
         if value <= self.max_current:
             yield self.server.current(3, value)
         else:
-            returnValue('Current above max allowed')
+            returnValue("Current above max allowed")
 
-    @setting(17, output='b')
+    @setting(17, output="b")
     def oven_output(self, c, output):
         yield self.server.output(3, output)
 
-    @setting(18, returns='b')
+    @setting(18, returns="b")
     def get_output(self, c):
         output = yield self.server.output(3)
         returnValue(output)

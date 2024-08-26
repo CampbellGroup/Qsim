@@ -12,8 +12,8 @@ class wm_dac_control(QWidget):
     def __init__(self, reactor):
         super(wm_dac_control, self).__init__()
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        self.password = os.environ['LABRADPASSWORD']
-        self.name = socket.gethostname() + ' Single WM Lock Server'
+        self.password = os.environ["LABRADPASSWORD"]
+        self.name = socket.gethostname() + " Single WM Lock Server"
         self.connect()
 
     @inlineCallbacks
@@ -24,9 +24,10 @@ class wm_dac_control(QWidget):
         """
 
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('10.97.112.2',
-                                      name=self.name,
-                                      password=self.password)
+
+        self.cxn = yield connectAsync(
+            "10.97.112.2", name=self.name, password=self.password
+        )
         self.server = self.cxn.multiplexerserver
         self.initializeGUI()
 

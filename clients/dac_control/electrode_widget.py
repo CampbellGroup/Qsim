@@ -51,12 +51,22 @@ class ElectrodeIndicator(QWidget):
         self.setMinimumSize(self.min_width, self.min_height)
         self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
 
-        self.rods = [Rod(channel=HC.dac_by_name("RF Rod 1"), saturation_voltage=1.0),
-                     Rod(channel=HC.dac_by_name("DC Rod 2"), saturation_voltage=1.0),
-                     Rod(channel=HC.dac_by_name("DC Rod 1"), saturation_voltage=1.0),
-                     Rod(channel=HC.dac_by_name("RF Rod 2"), saturation_voltage=1.0),
-                     Rod(channel=HC.dac_by_name("End Cap 1"), shape="roundedRect", saturation_voltage=100.0),
-                     Rod(channel=HC.dac_by_name("End Cap 2"), shape="roundedRect", saturation_voltage=100.0), ]
+        self.rods = [
+            Rod(channel=HC.dac_by_name("RF Rod 1"), saturation_voltage=1.0),
+            Rod(channel=HC.dac_by_name("DC Rod 2"), saturation_voltage=1.0),
+            Rod(channel=HC.dac_by_name("DC Rod 1"), saturation_voltage=1.0),
+            Rod(channel=HC.dac_by_name("RF Rod 2"), saturation_voltage=1.0),
+            Rod(
+                channel=HC.dac_by_name("End Cap 1"),
+                shape="roundedRect",
+                saturation_voltage=100.0,
+            ),
+            Rod(
+                channel=HC.dac_by_name("End Cap 2"),
+                shape="roundedRect",
+                saturation_voltage=100.0,
+            ),
+        ]
 
         self.show()
 
@@ -72,9 +82,14 @@ class ElectrodeIndicator(QWidget):
         self.edge_padding = 25
         self.ec_dimension = self.rod_diameter
 
-        trap_dimension = min(self.height(), self.width()) - self.rod_diameter - 2 * self.edge_padding
-        centering_padding = (self.width() / 2 - trap_dimension / 2 - self.rod_diameter / 2) \
-            if self.width() > self.height() else self.edge_padding
+        trap_dimension = (
+            min(self.height(), self.width()) - self.rod_diameter - 2 * self.edge_padding
+        )
+        centering_padding = (
+            (self.width() / 2 - trap_dimension / 2 - self.rod_diameter / 2)
+            if self.width() > self.height()
+            else self.edge_padding
+        )
 
         trap_left = 0 + centering_padding
         trap_right = trap_left + trap_dimension
@@ -87,10 +102,18 @@ class ElectrodeIndicator(QWidget):
             (trap_right, trap_top, self.rod_diameter, self.rod_diameter),
             (trap_left, trap_bottom, self.rod_diameter, self.rod_diameter),
             (trap_right, trap_bottom, self.rod_diameter, self.rod_diameter),
-            (self.edge_padding, (self.height() - self.ec_dimension) / 2,
-             centering_padding - 2 * self.edge_padding, self.ec_dimension,),
-            (self.width() - centering_padding + self.edge_padding, (self.height() - self.ec_dimension) / 2,
-             centering_padding - 2 * self.edge_padding, self.ec_dimension,)
+            (
+                self.edge_padding,
+                (self.height() - self.ec_dimension) / 2,
+                centering_padding - 2 * self.edge_padding,
+                self.ec_dimension,
+            ),
+            (
+                self.width() - centering_padding + self.edge_padding,
+                (self.height() - self.ec_dimension) / 2,
+                centering_padding - 2 * self.edge_padding,
+                self.ec_dimension,
+            ),
         ]
 
         for i in range(len(self.rods)):
@@ -112,9 +135,9 @@ class ElectrodeIndicator(QWidget):
         pen = QPen(Qt.black, 1, Qt.PenStyle.SolidLine)
         qp.setPen(pen)
         for rod in self.rods:
-            qp.drawText(QRectF(*rod.position),
-                        Qt.AlignCenter,
-                        str(round(rod.voltage, 4)))
+            qp.drawText(
+                QRectF(*rod.position), Qt.AlignCenter, str(round(rod.voltage, 4))
+            )
 
     def draw_values(self, qp):
         pen = QPen(Qt.red, 2, Qt.PenStyle.SolidLine)

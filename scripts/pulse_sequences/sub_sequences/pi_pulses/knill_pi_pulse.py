@@ -9,12 +9,12 @@ class KnillPiPulseClock(PulseSequence):
     """
 
     required_parameters = [
-        ('MicrowaveInterrogation', 'power'),
-        ('MicrowaveInterrogation', 'ttl_switch_delay'),
-        ('Line_Selection', 'qubit'),
-        ('Transitions', 'qubit_0'),
-        ('Pi_times', 'qubit_0'),
-        ('ddsDefaults', 'qubit_dds_freq')
+        ("MicrowaveInterrogation", "power"),
+        ("MicrowaveInterrogation", "ttl_switch_delay"),
+        ("Line_Selection", "qubit"),
+        ("Transitions", "qubit_0"),
+        ("Pi_times", "qubit_0"),
+        ("ddsDefaults", "qubit_dds_freq"),
     ]
 
     def sequence(self):
@@ -26,59 +26,65 @@ class KnillPiPulseClock(PulseSequence):
         ttl_delay = p.MicrowaveInterrogation.ttl_switch_delay
 
         # pulse 1
-        self.add_ttl('MicrowaveTTL',
-                     self.start + ttl_delay,
-                     pi_time_0)
-        self.add_dds('Microwave_qubit',
-                     self.start,
-                     pi_time_0 + ttl_delay,
-                     DDS_0,
-                     p.MicrowaveInterrogation.power,
-                     U(30.0, 'deg'))
+        self.add_ttl("MicrowaveTTL", self.start + ttl_delay, pi_time_0)
+        self.add_dds(
+            "Microwave_qubit",
+            self.start,
+            pi_time_0 + ttl_delay,
+            DDS_0,
+            p.MicrowaveInterrogation.power,
+            U(30.0, "deg"),
+        )
 
         # pulse 2
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 2 * ttl_delay + pi_time_0,
-                     pi_time_0)
-        self.add_dds('Microwave_qubit',
-                     self.start + pi_time_0 + ttl_delay,
-                     pi_time_0 + ttl_delay,
-                     DDS_0,
-                     p.MicrowaveInterrogation.power,
-                     U(0.0, 'deg'))
+        self.add_ttl("MicrowaveTTL", self.start + 2 * ttl_delay + pi_time_0, pi_time_0)
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + pi_time_0 + ttl_delay,
+            pi_time_0 + ttl_delay,
+            DDS_0,
+            p.MicrowaveInterrogation.power,
+            U(0.0, "deg"),
+        )
 
         # pulse 3
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 3 * ttl_delay + 2 * pi_time_0,
-                     pi_time_0)
-        self.add_dds('Microwave_qubit',
-                     self.start + 2 * ttl_delay + 2 * pi_time_0,
-                     pi_time_0 + ttl_delay,
-                     DDS_0,
-                     p.MicrowaveInterrogation.power,
-                     U(90.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL", self.start + 3 * ttl_delay + 2 * pi_time_0, pi_time_0
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 2 * ttl_delay + 2 * pi_time_0,
+            pi_time_0 + ttl_delay,
+            DDS_0,
+            p.MicrowaveInterrogation.power,
+            U(90.0, "deg"),
+        )
 
         # pulse 4
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 4 * ttl_delay + 3 * pi_time_0,
-                     pi_time_0)
-        self.add_dds('Microwave_qubit',
-                     self.start + 3 * ttl_delay + 3 * pi_time_0,
-                     pi_time_0 + ttl_delay,
-                     DDS_0,
-                     p.MicrowaveInterrogation.power,
-                     U(0.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL", self.start + 4 * ttl_delay + 3 * pi_time_0, pi_time_0
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 3 * ttl_delay + 3 * pi_time_0,
+            pi_time_0 + ttl_delay,
+            DDS_0,
+            p.MicrowaveInterrogation.power,
+            U(0.0, "deg"),
+        )
 
         # pulse 5
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 5 * ttl_delay + 4 * pi_time_0,
-                     pi_time_0)
-        self.add_dds('Microwave_qubit',
-                     self.start + 4 * ttl_delay + 4 * pi_time_0,
-                     pi_time_0 + ttl_delay,
-                     DDS_0,
-                     p.MicrowaveInterrogation.power,
-                     U(30.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL", self.start + 5 * ttl_delay + 4 * pi_time_0, pi_time_0
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 4 * ttl_delay + 4 * pi_time_0,
+            pi_time_0 + ttl_delay,
+            DDS_0,
+            p.MicrowaveInterrogation.power,
+            U(30.0, "deg"),
+        )
 
         self.end = self.start + 5 * pi_time_0 + 5 * ttl_delay
 
@@ -89,11 +95,11 @@ class knill_pi_pulse_plus(PulseSequence):
     """
 
     required_parameters = [
-        ('MicrowaveInterrogation', 'power'),
-        ('MicrowaveInterrogation', 'ttl_switch_delay'),
-        ('Transitions', 'qubit_plus'),
-        ('Pi_times', 'qubit_plus'),
-        ('ddsDefaults', 'qubit_dds_freq')
+        ("MicrowaveInterrogation", "power"),
+        ("MicrowaveInterrogation", "ttl_switch_delay"),
+        ("Transitions", "qubit_plus"),
+        ("Pi_times", "qubit_plus"),
+        ("ddsDefaults", "qubit_dds_freq"),
     ]
 
     def sequence(self):
@@ -106,59 +112,67 @@ class knill_pi_pulse_plus(PulseSequence):
         print(p.Transitions.qubit_plus)
 
         # pulse 1
-        self.add_ttl('MicrowaveTTL',
-                     self.start + ttl_delay,
-                     pi_time_plus)
-        self.add_dds('Microwave_qubit',
-                     self.start,
-                     pi_time_plus + ttl_delay,
-                     DDS_plus,
-                     p.MicrowaveInterrogation.power,
-                     U(30.0, 'deg'))
+        self.add_ttl("MicrowaveTTL", self.start + ttl_delay, pi_time_plus)
+        self.add_dds(
+            "Microwave_qubit",
+            self.start,
+            pi_time_plus + ttl_delay,
+            DDS_plus,
+            p.MicrowaveInterrogation.power,
+            U(30.0, "deg"),
+        )
 
         # pulse 2400.000000
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 2 * ttl_delay + pi_time_plus,
-                     pi_time_plus)
-        self.add_dds('Microwave_qubit',
-                     self.start + pi_time_plus + ttl_delay,
-                     pi_time_plus + ttl_delay,
-                     DDS_plus,
-                     p.MicrowaveInterrogation.power,
-                     U(0.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL", self.start + 2 * ttl_delay + pi_time_plus, pi_time_plus
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + pi_time_plus + ttl_delay,
+            pi_time_plus + ttl_delay,
+            DDS_plus,
+            p.MicrowaveInterrogation.power,
+            U(0.0, "deg"),
+        )
 
         # pulse 3
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 3 * ttl_delay + 2 * pi_time_plus,
-                     pi_time_plus)
-        self.add_dds('Microwave_qubit',
-                     self.start + 2 * ttl_delay + 2 * pi_time_plus,
-                     pi_time_plus + ttl_delay,
-                     DDS_plus,
-                     p.MicrowaveInterrogation.power,
-                     U(90.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL", self.start + 3 * ttl_delay + 2 * pi_time_plus, pi_time_plus
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 2 * ttl_delay + 2 * pi_time_plus,
+            pi_time_plus + ttl_delay,
+            DDS_plus,
+            p.MicrowaveInterrogation.power,
+            U(90.0, "deg"),
+        )
 
         # pulse 4
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 4 * ttl_delay + 3 * pi_time_plus,
-                     pi_time_plus)
-        self.add_dds('Microwave_qubit',
-                     self.start + 3 * ttl_delay + 3 * pi_time_plus,
-                     pi_time_plus + ttl_delay,
-                     DDS_plus,
-                     p.MicrowaveInterrogation.power,
-                     U(0.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL", self.start + 4 * ttl_delay + 3 * pi_time_plus, pi_time_plus
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 3 * ttl_delay + 3 * pi_time_plus,
+            pi_time_plus + ttl_delay,
+            DDS_plus,
+            p.MicrowaveInterrogation.power,
+            U(0.0, "deg"),
+        )
 
         # pulse 5
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 5 * ttl_delay + 4 * pi_time_plus,
-                     pi_time_plus)
-        self.add_dds('Microwave_qubit',
-                     self.start + 4 * ttl_delay + 4 * pi_time_plus,
-                     pi_time_plus + ttl_delay,
-                     DDS_plus,
-                     p.MicrowaveInterrogation.power,
-                     U(30.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL", self.start + 5 * ttl_delay + 4 * pi_time_plus, pi_time_plus
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 4 * ttl_delay + 4 * pi_time_plus,
+            pi_time_plus + ttl_delay,
+            DDS_plus,
+            p.MicrowaveInterrogation.power,
+            U(30.0, "deg"),
+        )
 
         self.end = self.start + 5 * pi_time_plus + 5 * ttl_delay
 
@@ -169,11 +183,11 @@ class knill_pi_pulse_minus(PulseSequence):
     """
 
     required_parameters = [
-        ('MicrowaveInterrogation', 'power'),
-        ('MicrowaveInterrogation', 'ttl_switch_delay'),
-        ('Transitions', 'qubit_minus'),
-        ('Pi_times', 'qubit_minus'),
-        ('ddsDefaults', 'qubit_dds_freq')
+        ("MicrowaveInterrogation", "power"),
+        ("MicrowaveInterrogation", "ttl_switch_delay"),
+        ("Transitions", "qubit_minus"),
+        ("Pi_times", "qubit_minus"),
+        ("ddsDefaults", "qubit_dds_freq"),
     ]
 
     def sequence(self):
@@ -186,58 +200,72 @@ class knill_pi_pulse_minus(PulseSequence):
         print(p.Transitions.qubit_minus)
 
         # pulse 1
-        self.add_ttl('MicrowaveTTL',
-                     self.start + ttl_delay,
-                     pi_time_minus)
-        self.add_dds('Microwave_qubit',
-                     self.start,
-                     pi_time_minus + ttl_delay,
-                     DDS_minus,
-                     p.MicrowaveInterrogation.power,
-                     U(30.0, 'deg'))
+        self.add_ttl("MicrowaveTTL", self.start + ttl_delay, pi_time_minus)
+        self.add_dds(
+            "Microwave_qubit",
+            self.start,
+            pi_time_minus + ttl_delay,
+            DDS_minus,
+            p.MicrowaveInterrogation.power,
+            U(30.0, "deg"),
+        )
 
         # pulse 2
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 2 * ttl_delay + pi_time_minus,
-                     pi_time_minus)
-        self.add_dds('Microwave_qubit',
-                     self.start + pi_time_minus + ttl_delay,
-                     pi_time_minus + ttl_delay,
-                     DDS_minus,
-                     p.MicrowaveInterrogation.power,
-                     U(0.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL", self.start + 2 * ttl_delay + pi_time_minus, pi_time_minus
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + pi_time_minus + ttl_delay,
+            pi_time_minus + ttl_delay,
+            DDS_minus,
+            p.MicrowaveInterrogation.power,
+            U(0.0, "deg"),
+        )
 
         # pulse 3
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 3 * ttl_delay + 2 * pi_time_minus,
-                     pi_time_minus)
-        self.add_dds('Microwave_qubit',
-                     self.start + 2 * ttl_delay + 2 * pi_time_minus,
-                     pi_time_minus + ttl_delay,
-                     DDS_minus,
-                     p.MicrowaveInterrogation.power,
-                     U(90.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL",
+            self.start + 3 * ttl_delay + 2 * pi_time_minus,
+            pi_time_minus,
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 2 * ttl_delay + 2 * pi_time_minus,
+            pi_time_minus + ttl_delay,
+            DDS_minus,
+            p.MicrowaveInterrogation.power,
+            U(90.0, "deg"),
+        )
 
         # pulse 4
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 4 * ttl_delay + 3 * pi_time_minus,
-                     pi_time_minus)
-        self.add_dds('Microwave_qubit',
-                     self.start + 3 * ttl_delay + 3 * pi_time_minus,
-                     pi_time_minus + ttl_delay,
-                     DDS_minus,
-                     p.MicrowaveInterrogation.power,
-                     U(0.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL",
+            self.start + 4 * ttl_delay + 3 * pi_time_minus,
+            pi_time_minus,
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 3 * ttl_delay + 3 * pi_time_minus,
+            pi_time_minus + ttl_delay,
+            DDS_minus,
+            p.MicrowaveInterrogation.power,
+            U(0.0, "deg"),
+        )
 
         # pulse 5
-        self.add_ttl('MicrowaveTTL',
-                     self.start + 5 * ttl_delay + 4 * pi_time_minus,
-                     pi_time_minus)
-        self.add_dds('Microwave_qubit',
-                     self.start + 4 * ttl_delay + 4 * pi_time_minus,
-                     pi_time_minus + ttl_delay,
-                     DDS_minus,
-                     p.MicrowaveInterrogation.power,
-                     U(30.0, 'deg'))
+        self.add_ttl(
+            "MicrowaveTTL",
+            self.start + 5 * ttl_delay + 4 * pi_time_minus,
+            pi_time_minus,
+        )
+        self.add_dds(
+            "Microwave_qubit",
+            self.start + 4 * ttl_delay + 4 * pi_time_minus,
+            pi_time_minus + ttl_delay,
+            DDS_minus,
+            p.MicrowaveInterrogation.power,
+            U(30.0, "deg"),
+        )
 
         self.end = self.start + 5 * pi_time_minus + 5 * ttl_delay

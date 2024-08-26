@@ -20,7 +20,7 @@ from labrad.server import LabradServer, setting, Signal
 from api import API
 from config.dac_ad660_config import HardwareConfiguration as HC
 
-SERVERNAME = 'DAC AD660 Server'
+SERVERNAME = "DAC AD660 Server"
 SIGNALID = 270837
 
 
@@ -59,8 +59,10 @@ class Voltage:
         """
         v_min, v_max = HC.board_voltage_range
         zero_value = 2 ** (HC.prec_bits - 1)
-        number_of_voltages = 2 ** HC.prec_bits
-        return int(round(zero_value + analog_voltage * number_of_voltages / (v_max - v_min)))
+        number_of_voltages = 2**HC.prec_bits
+        return int(
+            round(zero_value + analog_voltage * number_of_voltages / (v_max - v_min))
+        )
 
     def __get_hex_rep(self) -> bytearray:
         """
@@ -79,8 +81,13 @@ class Voltage:
         else:
             set_n = bin(1)[2:].zfill(10)
         voltage = bin(self.digital_voltage)[2:].zfill(16)
-        big = voltage + port + set_n + '0'
-        rep = [int(big[8:16], 2), int(big[:8], 2), int(big[24:32], 2), int(big[16:24], 2)]
+        big = voltage + port + set_n + "0"
+        rep = [
+            int(big[8:16], 2),
+            int(big[:8], 2),
+            int(big[24:32], 2),
+            int(big[16:24], 2),
+        ]
 
         return bytearray(rep)
 
@@ -97,7 +104,7 @@ class Queue:
         self.current_set = 1
 
     def insert(self, v: Voltage) -> None:
-        """ Always insert voltages to the current queue position, takes a voltage object """
+        """Always insert voltages to the current queue position, takes a voltage object"""
         v.program(self.current_set)
         self.set_dict[self.current_set].append(v)
 
@@ -115,12 +122,13 @@ class DACServer(LabradServer):
     DAC Server
     Used for controlling DC trap electrodes
     """
+
     name = SERVERNAME
-    onNewUpdate = Signal(SIGNALID, 'signal: ports updated', 's')
+    onNewUpdate = Signal(SIGNALID, "signal: ports updated", "s")
     queue = Queue()
     api = API()
 
-    registry_path = ['', 'Servers', HC.experiment_name + SERVERNAME]
+    registry_path = ["", "Servers", HC.experiment_name + SERVERNAME]
     dac_channels = HC.dac_channels
     current_voltages = {}
 
@@ -140,32 +148,38 @@ class DACServer(LabradServer):
         yield self.registry.cd(self.registry_path, True)
         volts_list = yield self.registry.get("voltages")
         self.current_voltages = dict(volts_list)
-        yield self.set_individual_analog_voltages(c, list(self.current_voltages.items()))
+        yield self.set_individual_analog_voltages(
+            c, list(self.current_voltages.items())
+        )
 
     def initialize_board(self):
         connected = self.api.connect_ok_board()
         if not connected:
             raise Exception("FPGA Not Found")
 
-    @setting(4, "Set Individual Digital Voltages", digital_voltages='*(wi)')
+    @setting(4, "Set Individual Digital Voltages", digital_voltages="*(wi)")
     def set_individual_digital_voltages(self, c, digital_voltages):
         """
         Pass a list of tuples of the form:
         (portNum, newVolts)
         """
-        for (port, dv) in digital_voltages:
-            self.queue.insert(Voltage(self.get_channel_from_portnum(port), digital_voltage=dv))
+        for port, dv in digital_voltages:
+            self.queue.insert(
+                Voltage(self.get_channel_from_portnum(port), digital_voltage=dv)
+            )
         yield self.write_to_fpga(c)
 
-    @setting(5, "Set Individual Analog Voltages", analog_voltages='*(wv)')
+    @setting(5, "Set Individual Analog Voltages", analog_voltages="*(wv)")
     def set_individual_analog_voltages(self, c, analog_voltages):
         """
         Pass a list of tuples of the form:
         (portNum, newVolts)
         port number should be an integer
         """
-        for (port, av) in analog_voltages:
-            self.queue.insert(Voltage(self.get_channel_from_portnum(port), analog_voltage=av))
+        for port, av in analog_voltages:
+            self.queue.insert(
+                Voltage(self.get_channel_from_portnum(port), analog_voltage=av)
+            )
         yield self.write_to_fpga(c)
 
     def write_to_fpga(self, c):
@@ -178,14 +192,14 @@ class DACServer(LabradServer):
             self.save_voltages_to_registry(c)
             self.notify_other_listeners(c)
 
-    @setting(9, "Get current Voltages", returns='*(wv)')
+    @setting(9, "Get current Voltages", returns="*(wv)")
     def get_current_voltages(self, c):
         """
         Return the current voltage
         """
         return list(self.current_voltages.items())
 
-    @setting(14, "Get DAC Channel Name", port_number='i', returns='s')
+    @setting(14, "Get DAC Channel Name", port_number="i", returns="s")
     def get_dac_channel_name(self, c, port_number):
         """
         Return the channel name for a given port number.
@@ -217,7 +231,7 @@ class DACServer(LabradServer):
             notified.remove(context.ID)
         except Exception:
             pass
-        self.onNewUpdate('Channels updated', notified)
+        self.onNewUpdate("Channels updated", notified)
 
 
 if __name__ == "__main__":

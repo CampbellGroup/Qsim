@@ -22,6 +22,7 @@ class pmtWidget(QtGui.QWidget):
     def connect(self):
         from labrad.wrappers import connectAsync
         from labrad import types as T
+
         self.T = T
         cxn = yield connectAsync()
         try:
@@ -29,10 +30,10 @@ class pmtWidget(QtGui.QWidget):
             self.server = yield cxn.arduino_counter
         except AttributeError:
             self.server = None
-            print('Not Connected: Arduino ServerTypeError: unsupported operand ty')
+            print("Not Connected: Arduino ServerTypeError: unsupported operand ty")
         yield self.setupListeners()
         # connect functions
-        self.pushButton.setText('Off')
+        self.pushButton.setText("Off")
         self.pushButton.toggled.connect(self.on_toggled)
         self.newSet.clicked.connect(self.onNewSet)
         self.doubleSpinBox.valueChanged.connect(self.onNewDuration)
@@ -41,7 +42,9 @@ class pmtWidget(QtGui.QWidget):
     @inlineCallbacks
     def setupListeners(self):
         yield self.server.signal__new_count(SIGNALID)
-        yield self.server.addListener(listener=self.followSignal, source=None, ID=SIGNALID)
+        yield self.server.addListener(
+            listener=self.followSignal, source=None, ID=SIGNALID
+        )
 
     def followSignal(self, signal, value):
         self.lcdNumber.display(value)
@@ -56,14 +59,14 @@ class pmtWidget(QtGui.QWidget):
     @inlineCallbacks
     def on_toggled(self, value):
         if value:
-            self.pushButton.setText('I')
+            self.pushButton.setText("I")
         else:
-            self.pushButton.setText('O')
+            self.pushButton.setText("O")
         yield self.server.toggle_counting(value)
 
     @inlineCallbacks
     def onNewDuration(self, value):
-        yield self.server.set_update_time(self.T.Value(value, 's'))
+        yield self.server.set_update_time(self.T.Value(value, "s"))
 
     def closeEvent(self, x):
         self.reactor.stop()

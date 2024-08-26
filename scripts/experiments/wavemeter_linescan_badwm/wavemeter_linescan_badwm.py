@@ -7,32 +7,33 @@ import numpy as np
 
 class WavemeterLinescanBadWM(QsimExperiment):
     """
-Logs the PMT counts as a function of the frequency on the bad wavemeter. Doesn't do any kind of scanning,
-just do that manually as the experiment runs (for now, this may be implemented later)
+    Logs the PMT counts as a function of the frequency on the bad wavemeter. Doesn't do any kind of scanning,
+    just do that manually as the experiment runs (for now, this may be implemented later)
 
-A line center of 752.25220 THz is also curently hardcoded. This can be changed in the code of course
-"""
-    name = 'Wavemeter Linescan BadWM'
+    A line center of 752.25220 THz is also curently hardcoded. This can be changed in the code of course
+    """
+
+    name = "Wavemeter Linescan BadWM"
 
     exp_parameters = []
 
-    exp_parameters.append(('Transitions', 'repump_935'))
-    exp_parameters.append(('Transitions', 'repump_760'))
-    exp_parameters.append(('Transitions', 'shelving_411'))
-    exp_parameters.append(('Transitions', 'Hudson'))
-    exp_parameters.append(('Transitions', 'repump_760_repump'))
-    exp_parameters.append(('Transitions', 'repump_976'))
+    exp_parameters.append(("Transitions", "repump_935"))
+    exp_parameters.append(("Transitions", "repump_760"))
+    exp_parameters.append(("Transitions", "shelving_411"))
+    exp_parameters.append(("Transitions", "Hudson"))
+    exp_parameters.append(("Transitions", "repump_760_repump"))
+    exp_parameters.append(("Transitions", "repump_976"))
 
-    exp_parameters.append(('wavemeterscan', 'scan_range_935'))
-    exp_parameters.append(('wavemeterscan', 'scan_range_411'))
-    exp_parameters.append(('wavemeterscan', 'scan_range_760'))
-    exp_parameters.append(('wavemeterscan', 'scan_range_760_repump'))
-    exp_parameters.append(('wavemeterscan', 'scan_range_976'))
-    exp_parameters.append(('wavemeterscan', 'scan_range_Hudson'))
+    exp_parameters.append(("wavemeterscan", "scan_range_935"))
+    exp_parameters.append(("wavemeterscan", "scan_range_411"))
+    exp_parameters.append(("wavemeterscan", "scan_range_760"))
+    exp_parameters.append(("wavemeterscan", "scan_range_760_repump"))
+    exp_parameters.append(("wavemeterscan", "scan_range_976"))
+    exp_parameters.append(("wavemeterscan", "scan_range_Hudson"))
 
-    exp_parameters.append(('wavemeterscan', 'lasername'))
-    exp_parameters.append(('wavemeterscan', 'noise_floor'))
-    exp_parameters.append(('wavemeterscan', 'rail_wait_time'))
+    exp_parameters.append(("wavemeterscan", "lasername"))
+    exp_parameters.append(("wavemeterscan", "noise_floor"))
+    exp_parameters.append(("wavemeterscan", "rail_wait_time"))
 
     def initialize(self, cxn, context, ident):
 
@@ -45,9 +46,9 @@ A line center of 752.25220 THz is also curently hardcoded. This can be changed i
     def run(self, cxn, context):
 
         self.setup_parameters()
-        self.setup_datavault('Frequency (THz)', 'kcounts/sec')
+        self.setup_datavault("Frequency (THz)", "kcounts/sec")
         self.tempdata = []
-        delay = self.wait_time['s']
+        delay = self.wait_time["s"]
 
         for i in range(100):
             progress = i / 100.0
@@ -76,20 +77,20 @@ A line center of 752.25220 THz is also curently hardcoded. This can be changed i
                     pass
                 return True
 
-            counts = self.pmt.get_next_counts('ON', 1, False)[0]
+            counts = self.pmt.get_next_counts("ON", 1, False)[0]
             currentfreq = self.currentfrequency()
             if currentfreq:
                 self.tempdata.append([1e6 * currentfreq, counts])
 
     def setup_parameters(self):
         self.wait_time = self.p["wavemeterscan.rail_wait_time"]
-        self.centerfrequency = U(812.12787, 'THz')
-        self.grapher_tab = '976_linescan'
+        self.centerfrequency = U(812.12787, "THz")
+        self.grapher_tab = "976_linescan"
 
     def currentfrequency(self):
         try:
             absfreq = float(self.wm.get_frequency(0))
-            currentfreq = absfreq - self.centerfrequency['THz']
+            currentfreq = absfreq - self.centerfrequency["THz"]
             # if (currentfreq <= -0.01) or (currentfreq >= 0.01):
             #     currentfreq = None
             return currentfreq
@@ -97,7 +98,7 @@ A line center of 752.25220 THz is also curently hardcoded. This can be changed i
             return None
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = WavemeterLinescanBadWM(cxn=cxn)

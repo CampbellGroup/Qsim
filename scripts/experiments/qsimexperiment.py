@@ -10,8 +10,14 @@ class QsimExperiment(experiment):
     def all_required_parameters(cls):
         return cls.exp_parameters
 
-    def __init__(self, name=None, required_parameters=None, cxn=None,
-                 min_progress=0.0, max_progress=100.0, ):
+    def __init__(
+        self,
+        name=None,
+        required_parameters=None,
+        cxn=None,
+        min_progress=0.0,
+        max_progress=100.0,
+    ):
 
         required_parameters = self.all_required_parameters()
         super(experiment, self).__init__(name, required_parameters)
@@ -27,7 +33,7 @@ class QsimExperiment(experiment):
         self.sc = None
         self.init_mode = self.cxn.NormalPMTFlow.get_current_mode()
         self.hist_ctx = self.cxn.data_vault.context()
-        self.cxn.NormalPMTFlow.set_mode('Normal')
+        self.cxn.NormalPMTFlow.set_mode("Normal")
 
     def _connect(self):
         """
@@ -36,27 +42,27 @@ class QsimExperiment(experiment):
         """
         experiment._connect(self)
         try:
-            self.dv = self.cxn.servers['Data Vault']
+            self.dv = self.cxn.servers["Data Vault"]
         except KeyError as error:
-            error_message = str(error) + '\n' + "DataVault is not running"
+            error_message = str(error) + "\n" + "DataVault is not running"
             raise KeyError(error_message)
 
         try:
-            self.pmt = self.cxn.servers['NormalPMTFlow']
+            self.pmt = self.cxn.servers["NormalPMTFlow"]
         except KeyError as error:
-            error_message = str(error) + '\n' + "NormalPMTFlow is not running"
+            error_message = str(error) + "\n" + "NormalPMTFlow is not running"
             raise KeyError(error_message)
 
         try:
-            self.pulser = self.cxn.servers['pulser']
+            self.pulser = self.cxn.servers["pulser"]
         except KeyError as error:
-            error_message = str(error) + '\n' + "Pulser is not running"
+            error_message = str(error) + "\n" + "Pulser is not running"
             raise KeyError(error_message)
 
         try:
-            self.grapher = self.cxn.servers['real_simple_grapher']
+            self.grapher = self.cxn.servers["real_simple_grapher"]
         except KeyError as error:
-            error_message = str(error) + '\n' + "Grapher is not running"
+            error_message = str(error) + "\n" + "Grapher is not running"
             raise KeyError(error_message)
 
         # try:
@@ -69,16 +75,15 @@ class QsimExperiment(experiment):
         """
         Adds parameters to datavault and parameter vault
         """
-        self.dv.cd(['', self.name], True)
-        self.dataset = self.dv.new(self.name, [(x_axis, 'num')],
-                                   [(y_axis, '', 'num')])
+        self.dv.cd(["", self.name], True)
+        self.dataset = self.dv.new(self.name, [(x_axis, "num")], [(y_axis, "", "num")])
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter])
         return self.dataset
 
     def setup_grapher(self, tab):
         if self.grapher is None:
-            print('grapher not running')
+            print("grapher not running")
         self.grapher.plot(self.dataset, tab, False)
 
     def update_progress(self, progress):
@@ -117,11 +122,11 @@ class QsimExperiment(experiment):
 
         # choose state detection method and number of repetitions
         self.state_detection_mode = self.p["Modes.state_detection_mode"]
-        if self.state_detection_mode == 'Shelving':
+        if self.state_detection_mode == "Shelving":
             reps = self.p["ShelvingStateDetection.repetitions"]
-        elif self.state_detection_mode == 'Standard':
+        elif self.state_detection_mode == "Standard":
             reps = self.p["StandardStateDetection.repetitions"]
-        elif self.state_detection_mode == 'StandardFiberEOM':
+        elif self.state_detection_mode == "StandardFiberEOM":
             reps = self.p["StandardStateDetection.repetitions"]
         else:
             return
@@ -157,9 +162,9 @@ class QsimExperiment(experiment):
 
         # choose state detection method and number of repetitions
         self.state_detection_mode = self.p["Modes.state_detection_mode"]
-        if self.state_detection_mode == 'Shelving':
+        if self.state_detection_mode == "Shelving":
             reps = self.p["ShelvingStateDetection.repetitions"]
-        elif self.state_detection_mode == 'Standard':
+        elif self.state_detection_mode == "Standard":
             reps = self.p["StandardStateDetection.repetitions"]
         else:
             return
@@ -207,18 +212,18 @@ class QsimExperiment(experiment):
         :return: the percentage of experiments above threshold
         """
         self.state_detection_mode = self.p["Modes.state_detection_mode"]
-        if self.state_detection_mode == 'Shelving':
+        if self.state_detection_mode == "Shelving":
             threshold = self.p["ShelvingStateDetection.state_readout_threshold"]
-        elif self.state_detection_mode == 'Standard':
+        elif self.state_detection_mode == "Standard":
             threshold = self.p["StandardStateDetection.state_readout_threshold"]
-        elif self.state_detection_mode == 'StandardFiberEOM':
+        elif self.state_detection_mode == "StandardFiberEOM":
             threshold = self.p["StandardStateDetection.state_readout_threshold"]
         else:
             raise Exception("unknown state detection threshold")
         prob = float(len(np.where(counts >= threshold)[0]) / len(counts))
         return prob
 
-    def plot_hist(self, hist, folder_name='Histograms', create_new=True):
+    def plot_hist(self, hist, folder_name="Histograms", create_new=True):
         """
         Plots the given histogram to the plotter
         :param hist: the histogram to be plotted, should be a two-column array. column 1 is bins, and column 2 is events
@@ -226,13 +231,17 @@ class QsimExperiment(experiment):
         :param create_new: flag that determines whether to make a new histogram, or to add to the current one
         :return:
         """
-        self.dv.cd(['', folder_name], True, context=self.hist_ctx)
+        self.dv.cd(["", folder_name], True, context=self.hist_ctx)
         if create_new:
-            self.dataset_hist = self.dv.new(folder_name, [('run', 'arb u')],
-                                            [('Counts', 'Counts', 'num')], context=self.hist_ctx)
+            self.dataset_hist = self.dv.new(
+                folder_name,
+                [("run", "arb u")],
+                [("Counts", "Counts", "num")],
+                context=self.hist_ctx,
+            )
         self.dv.add(hist, context=self.hist_ctx)
         if create_new:
-            self.grapher.plot(self.dataset_hist, 'Histogram', False)
+            self.grapher.plot(self.dataset_hist, "Histogram", False)
 
     # def get_timeharp_timetags(self, measure_time, buffer_size=131072):
     #     self.timeharp.start_measure(measure_time)

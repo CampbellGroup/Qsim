@@ -23,6 +23,7 @@ class DACClient(QFrame):
     def connect(self):
 
         from labrad.wrappers import connectAsync
+
         self.dac_channels = HC.dac_channels
 
         self.cxn = yield connectAsync(name="dac client")
@@ -42,28 +43,35 @@ class DACClient(QFrame):
 
         # Make the grid of DAC input spinboxes
 
-        dac_box = QGroupBox('DAC Channels')
+        dac_box = QGroupBox("DAC Channels")
         dac_layout = QGridLayout()
         dac_box.setLayout(dac_layout)
 
         self.electrode_spinboxes = []
         length_of_column = 2
         for i, channel in enumerate(self.dac_channels):
-            spinbox = QCustomSpinBox(channel.name,
-                                     (channel.allowed_voltage_range[0], channel.allowed_voltage_range[1]))
+            spinbox = QCustomSpinBox(
+                channel.name,
+                (channel.allowed_voltage_range[0], channel.allowed_voltage_range[1]),
+            )
             spinbox.spinLevel.setValue(0.0)
             spinbox.setStepSize(0.0001)
             spinbox.spinLevel.setDecimals(4)
             spinbox.spinLevel.setValue(self.init_voltages[channel.dac_channel_number])
-            spinbox.spinLevel.valueChanged.connect(lambda val=spinbox.spinLevel.value(),
-                                                          chan=channel: self.update_dac(val, chan))
+            spinbox.spinLevel.valueChanged.connect(
+                lambda val=spinbox.spinLevel.value(), chan=channel: self.update_dac(
+                    val, chan
+                )
+            )
             if channel.displayed:
-                dac_layout.addWidget(spinbox, i % length_of_column, i // length_of_column)
+                dac_layout.addWidget(
+                    spinbox, i % length_of_column, i // length_of_column
+                )
             self.electrode_spinboxes.append(spinbox)
 
         # Build the grid of multipole input spinboxes
 
-        multipole_box = QGroupBox('Multipoles')
+        multipole_box = QGroupBox("Multipoles")
         multipole_layout = QGridLayout()
         multipole_box.setLayout(multipole_layout)
 
@@ -76,7 +84,9 @@ class DACClient(QFrame):
             spinbox.spinLevel.setValue(self.init_multipoles[i])
             spinbox.spinLevel.valueChanged.connect(self.change_multipole)
             if multipole.displayed:
-                multipole_layout.addWidget(spinbox, i % length_of_column, i // length_of_column)
+                multipole_layout.addWidget(
+                    spinbox, i % length_of_column, i // length_of_column
+                )
             self.multipole_spinboxes.append(spinbox)
 
         self.electrode_indicator = ElectrodeIndicator()
@@ -107,7 +117,9 @@ class DACClient(QFrame):
                 electrode = self.electrode_spinboxes[i]
                 dac_channel = self.dac_channels[i]
                 electrode.spinLevel.setValue(voltage)
-                self.electrode_indicator.update_rod(dac_channel.dac_channel_number, voltage)
+                self.electrode_indicator.update_rod(
+                    dac_channel.dac_channel_number, voltage
+                )
 
     def closeEvent(self, event):
         pass

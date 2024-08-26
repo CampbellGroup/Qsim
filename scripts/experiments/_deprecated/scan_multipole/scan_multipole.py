@@ -5,19 +5,28 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 
 class scan_multipole(QsimExperiment):
 
-    name = 'Scan Multipole'
+    name = "Scan Multipole"
 
     exp_parameters = []
-    exp_parameters.append(('scan_multipole', 'Multipole'))
-    exp_parameters.append(('scan_multipole', 'Range'))
-    exp_parameters.append(('scan_multipole', 'pause_time'))
+    exp_parameters.append(("scan_multipole", "Multipole"))
+    exp_parameters.append(("scan_multipole", "Range"))
+    exp_parameters.append(("scan_multipole", "pause_time"))
 
     def initialize(self, cxn, context, ident):
 
         self.ident = ident
         self.mps = cxn.multipole_server
         self.init_multipoles = list(self.mps.get_multipoles())
-        self.index_dict = {'Ex': 0, 'Ey': 1, 'Ez': 2, 'M1':3,'M2': 4, 'M3': 5, 'M4': 6, 'M5':7}
+        self.index_dict = {
+            "Ex": 0,
+            "Ey": 1,
+            "Ez": 2,
+            "M1": 3,
+            "M2": 4,
+            "M3": 5,
+            "M4": 6,
+            "M5": 7,
+        }
 
     def run(self, cxn, context):
 
@@ -27,17 +36,18 @@ class scan_multipole(QsimExperiment):
 
         for i, x_point in enumerate(self.x_values):
             self.multipoles[self.multipole_index] = x_point
-            should_break = self.update_progress(i/float(len(self.x_values)))
+            should_break = self.update_progress(i / float(len(self.x_values)))
             if should_break:
                 break
 
             self.mps.set_multipoles(self.multipoles)
-            time.sleep(self.p.scan_multipole.pause_time['s'])
+            time.sleep(self.p.scan_multipole.pause_time["s"])
 
     def finalize(self, cxn, context):
         pass
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = scan_multipole(cxn=cxn)

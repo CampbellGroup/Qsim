@@ -6,19 +6,19 @@ import numpy as np
 
 class DDS_Line_Narrowing(QsimExperiment):
 
-    name = 'DDS Line_Narrowing'
+    name = "DDS Line_Narrowing"
 
     exp_parameters = []
-    exp_parameters.append(('DDS_Line_Narrowing', 'voltage_scan'))
-    exp_parameters.append(('DDS_Line_Narrowing', 'direction'))
+    exp_parameters.append(("DDS_Line_Narrowing", "voltage_scan"))
+    exp_parameters.append(("DDS_Line_Narrowing", "direction"))
 
-    exp_parameters.append(('DDS_line_scan', 'DDS_Frequencies'))
-    exp_parameters.append(('DDS_line_scan', 'Collection_Time'))
-    exp_parameters.append(('DDS_line_scan', 'Center_Frequency'))
+    exp_parameters.append(("DDS_line_scan", "DDS_Frequencies"))
+    exp_parameters.append(("DDS_line_scan", "Collection_Time"))
+    exp_parameters.append(("DDS_line_scan", "Center_Frequency"))
 
     def initialize(self, cxn, context, ident):
 
-        self.multipole_names = {'Ex': 0, 'Ey': 1, 'Ez': 2}
+        self.multipole_names = {"Ex": 0, "Ey": 1, "Ez": 2}
         self.ident = ident
         self.DDSlinescan = self.make_experiment(DDS_LineScan)
         self.DDSlinescan.initialize(cxn, context, ident)
@@ -26,17 +26,18 @@ class DDS_Line_Narrowing(QsimExperiment):
         self.init_multipoles = cxn.multipole_server.get_multipoles()
 
     def run(self, cxn, context):
-
-        '''
+        """
         Main loop
-        '''
+        """
 
         self.setup_parameters()
-        x_values = self.get_scan_list(self.p.DDS_Line_Narrowing.voltage_scan, units=None)
+        x_values = self.get_scan_list(
+            self.p.DDS_Line_Narrowing.voltage_scan, units=None
+        )
 
         for i, step in enumerate(x_values):
 
-            should_break = self.update_progress(i/float(len(x_values)))
+            should_break = self.update_progress(i / float(len(x_values)))
             if should_break:
                 break
 
@@ -56,7 +57,7 @@ class DDS_Line_Narrowing(QsimExperiment):
         self.mps.set_multipoles(self.init_multipoles)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = DDS_Line_Narrowing(cxn=cxn)

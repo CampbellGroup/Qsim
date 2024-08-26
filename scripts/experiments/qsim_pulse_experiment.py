@@ -1,5 +1,7 @@
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.pulse_sequences.bright_state_preperation import bright_state_preperation as sequence
+from Qsim.scripts.pulse_sequences.bright_state_preperation import (
+    bright_state_preperation as sequence,
+)
 
 
 class QsimPulseExperiment(QsimExperiment):
@@ -14,7 +16,7 @@ class QsimPulseExperiment(QsimExperiment):
         self.ident = ident
         self.pmt = self.cxn.normalpmtflow
         self.init_mode = self.pmt.getcurrentmode()
-        self.pmt.set_mode('Normal')
+        self.pmt.set_mode("Normal")
         self.pulser = self.cxn.pulser
         self.rsg = self.cxn.grapher
         self.prob_ctx = self.dv.context()
@@ -50,33 +52,51 @@ class QsimPulseExperiment(QsimExperiment):
         return counts
 
     def setup_hist_datavault(self):
-        self.dv.cd(['', 'pulse_runner', sequence.__name__ + 'hist'], True, context=self.hist_ctx)
-        self.dataset_hist = self.dv.new(sequence.__name__, [('run', 'arb u')],
-                                        [('Counts', 'Counts', 'num')], context=self.hist_ctx)
+        self.dv.cd(
+            ["", "pulse_runner", sequence.__name__ + "hist"],
+            True,
+            context=self.hist_ctx,
+        )
+        self.dataset_hist = self.dv.new(
+            sequence.__name__,
+            [("run", "arb u")],
+            [("Counts", "Counts", "num")],
+            context=self.hist_ctx,
+        )
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.hist_ctx)
 
     def setup_prob_datavault(self):
-        self.dv.cd(['', 'pulse_runner', sequence.__name__ + 'prob'], True, context=self.prob_ctx)
-        self.dataset_prob = self.dv.new(sequence.__name__, [('run', 'arb u')],
-                                        [('Counts', 'Counts', 'num')], context=self.prob_ctx)
-        self.rsg.plot(self.dataset_prob, 'Fidelity', False)
+        self.dv.cd(
+            ["", "pulse_runner", sequence.__name__ + "prob"],
+            True,
+            context=self.prob_ctx,
+        )
+        self.dataset_prob = self.dv.new(
+            sequence.__name__,
+            [("run", "arb u")],
+            [("Counts", "Counts", "num")],
+            context=self.prob_ctx,
+        )
+        self.rsg.plot(self.dataset_prob, "Fidelity", False)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.prob_ctx)
 
     def process_data(self, counts):
         data = np.column_stack((np.arange(self.p.StateDetection.repetitions), counts))
-        y = np.histogram(data[:, 1], int(np.max([data[:, 1].max() - data[:, 1].min(), 1])))
+        y = np.histogram(
+            data[:, 1], int(np.max([data[:, 1].max() - data[:, 1].min(), 1]))
+        )
         counts = y[0]
         bins = y[1][:-1]
         if bins[0] < 0:
-            bins = bins + .5
+            bins = bins + 0.5
         hist = np.column_stack((bins, counts))
         return hist
 
     def plot_hist(self, hist):
         self.dv.add(hist, context=self.hist_ctx)
-        self.rsg.plot(self.dataset_hist, 'Histogram', False)
+        self.rsg.plot(self.dataset_hist, "Histogram", False)
 
     def plot_prob(self, num, counts):
         self.thresholdVal = self.p.StateDetection.state_readout_threshold

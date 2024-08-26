@@ -64,8 +64,10 @@ def closeDevices():
 def tryfunc(retcode, funcName):
     if retcode < 0:
         th260lib.TH260_GetErrorString(errorString, ct.c_int(retcode))
-        print("TH260_%s error %d (%s). Aborted." % (funcName, retcode, \
-                                                    errorString.value.decode("utf-8")))
+        print(
+            "TH260_%s error %d (%s). Aborted."
+            % (funcName, retcode, errorString.value.decode("utf-8"))
+        )
         closeDevices()
 
 
@@ -93,7 +95,7 @@ for i in range(0, MAXDEVNUM):
 
 # In this demo we will use the first TimeHarp device we find, i.e. dev[0].
 # You can also use multiple devices in parallel.
-# You can also check for specific serial numbers, so that you always know 
+# You can also check for specific serial numbers, so that you always know
 # which physical device you are talking to.
 
 if len(dev) < 1:
@@ -109,13 +111,20 @@ outputfile.write("SyncDivider       : %d\n" % syncDivider)
 print("\nInitializing the device...")
 
 # Histo mode with internal clock
-tryfunc(th260lib.TH260_Initialize(ct.c_int(dev[0]), ct.c_int(MODE_HIST)), \
-        "Initialize")
+tryfunc(th260lib.TH260_Initialize(ct.c_int(dev[0]), ct.c_int(MODE_HIST)), "Initialize")
 
-tryfunc(th260lib.TH260_GetHardwareInfo(dev[0], hwModel, hwPartno, hwVersion), \
-        "GetHardwareInfo")
-print("Found Model %s Part no %s Version %s" % (hwModel.value.decode("utf-8"), \
-                                                hwPartno.value.decode("utf-8"), hwVersion.value.decode("utf-8")))
+tryfunc(
+    th260lib.TH260_GetHardwareInfo(dev[0], hwModel, hwPartno, hwVersion),
+    "GetHardwareInfo",
+)
+print(
+    "Found Model %s Part no %s Version %s"
+    % (
+        hwModel.value.decode("utf-8"),
+        hwPartno.value.decode("utf-8"),
+        hwVersion.value.decode("utf-8"),
+    )
+)
 
 if hwModel.value.decode("utf-8") == "TimeHarp 260 P":
     outputfile.write("SyncCFDZeroCross  : %d\n" % syncCFDZeroCross)
@@ -131,63 +140,78 @@ else:
     print("Unknown hardware model %s. Aborted." % hwModel.value.decode("utf-8"))
     closeDevices()
 
-tryfunc(th260lib.TH260_GetNumOfInputChannels(ct.c_int(dev[0]), byref(numChannels)), \
-        "GetNumOfInputChannels")
+tryfunc(
+    th260lib.TH260_GetNumOfInputChannels(ct.c_int(dev[0]), byref(numChannels)),
+    "GetNumOfInputChannels",
+)
 print("Device has %i input channels." % numChannels.value)
 
-tryfunc(th260lib.TH260_SetSyncDiv(ct.c_int(dev[0]), ct.c_int(syncDivider)), \
-        "SetSyncDiv")
+tryfunc(
+    th260lib.TH260_SetSyncDiv(ct.c_int(dev[0]), ct.c_int(syncDivider)), "SetSyncDiv"
+)
 
 if hwModel.value.decode("utf-8") == "TimeHarp 260 P":
     tryfunc(
-        th260lib.TH260_SetSyncCFD(ct.c_int(dev[0]), ct.c_int(syncCFDLevel), \
-                                  ct.c_int(syncCFDZeroCross)), \
-        "SetSyncCFD"
+        th260lib.TH260_SetSyncCFD(
+            ct.c_int(dev[0]), ct.c_int(syncCFDLevel), ct.c_int(syncCFDZeroCross)
+        ),
+        "SetSyncCFD",
     )
     # we use the same input settings for all channels, you can change this
     for i in range(0, numChannels.value):
         tryfunc(
-            th260lib.TH260_SetInputCFD(ct.c_int(dev[0]), ct.c_int(i), \
-                                       ct.c_int(inputCFDLevel), \
-                                       ct.c_int(inputCFDZeroCross)), \
-            "SetInputCFD"
+            th260lib.TH260_SetInputCFD(
+                ct.c_int(dev[0]),
+                ct.c_int(i),
+                ct.c_int(inputCFDLevel),
+                ct.c_int(inputCFDZeroCross),
+            ),
+            "SetInputCFD",
         )
 
 if hwModel.value.decode("utf-8") == "TimeHarp 260 N":
     tryfunc(
-        th260lib.TH260_SetSyncEdgeTrg(ct.c_int(dev[0]), ct.c_int(syncTriggerLevel), \
-                                      ct.c_int(syncTriggerEdge)), \
-        "SetSyncEdgeTrg"
+        th260lib.TH260_SetSyncEdgeTrg(
+            ct.c_int(dev[0]), ct.c_int(syncTriggerLevel), ct.c_int(syncTriggerEdge)
+        ),
+        "SetSyncEdgeTrg",
     )
     # we use the same input settings for all channels, you can change this
     for i in range(0, numChannels.value):
         tryfunc(
-            th260lib.TH260_SetInputEdgeTrg(ct.c_int(dev[0]), ct.c_int(i), \
-                                           ct.c_int(inputTriggerLevel), \
-                                           ct.c_int(inputTriggerEdge)), \
-            "SetInputEdgeTrg"
+            th260lib.TH260_SetInputEdgeTrg(
+                ct.c_int(dev[0]),
+                ct.c_int(i),
+                ct.c_int(inputTriggerLevel),
+                ct.c_int(inputTriggerEdge),
+            ),
+            "SetInputEdgeTrg",
         )
 
-tryfunc(th260lib.TH260_SetSyncChannelOffset(ct.c_int(dev[0]), ct.c_int(0)), \
-        "SetSyncChannelOffset")
+tryfunc(
+    th260lib.TH260_SetSyncChannelOffset(ct.c_int(dev[0]), ct.c_int(0)),
+    "SetSyncChannelOffset",
+)
 
 for i in range(0, numChannels.value):
     tryfunc(
-        th260lib.TH260_SetInputChannelOffset(ct.c_int(dev[0]), ct.c_int(i), \
-                                             ct.c_int(0)), \
-        "SetInputChannelOffset"
+        th260lib.TH260_SetInputChannelOffset(
+            ct.c_int(dev[0]), ct.c_int(i), ct.c_int(0)
+        ),
+        "SetInputChannelOffset",
     )
 
 tryfunc(
-    th260lib.TH260_SetHistoLen(ct.c_int(dev[0]), ct.c_int(MAXLENCODE), byref(histLen)), \
-    "SetHistoLen"
+    th260lib.TH260_SetHistoLen(ct.c_int(dev[0]), ct.c_int(MAXLENCODE), byref(histLen)),
+    "SetHistoLen",
 )
 print("Histogram length is %d" % histLen.value)
 
 tryfunc(th260lib.TH260_SetBinning(ct.c_int(dev[0]), ct.c_int(binning)), "SetBinning")
 tryfunc(th260lib.TH260_SetOffset(ct.c_int(dev[0]), ct.c_int(offset)), "SetOffset")
-tryfunc(th260lib.TH260_GetResolution(ct.c_int(dev[0]), byref(resolution)), \
-        "GetResolution")
+tryfunc(
+    th260lib.TH260_GetResolution(ct.c_int(dev[0]), byref(resolution)), "GetResolution"
+)
 print("Resolution is %1.1lfps" % resolution.value)
 
 # Note: after Init or SetSyncDiv allow 150 ms for valid  count rate readings
@@ -198,8 +222,10 @@ tryfunc(th260lib.TH260_GetSyncRate(ct.c_int(dev[0]), byref(syncRate)), "GetSyncR
 print("\nSyncrate=%1d/s" % syncRate.value)
 
 for i in range(0, numChannels.value):
-    tryfunc(th260lib.TH260_GetCountRate(ct.c_int(dev[0]), ct.c_int(i), byref(countRate)), \
-            "GetCountRate")
+    tryfunc(
+        th260lib.TH260_GetCountRate(ct.c_int(dev[0]), ct.c_int(i), byref(countRate)),
+        "GetCountRate",
+    )
     print("Countrate[%1d]=%1d/s" % (i, countRate.value))
 
 # after getting the count rates you can check for warnings
@@ -208,8 +234,10 @@ if warnings.value != 0:
     th260lib.TH260_GetWarningsText(ct.c_int(dev[0]), warningstext, warnings)
     print("\n\n%s" % warningstext.value.decode("utf-8"))
 
-tryfunc(th260lib.TH260_SetStopOverflow(ct.c_int(dev[0]), ct.c_int(0), ct.c_int(10000)), \
-        "SetStopOverflow")  # for example only
+tryfunc(
+    th260lib.TH260_SetStopOverflow(ct.c_int(dev[0]), ct.c_int(0), ct.c_int(10000)),
+    "SetStopOverflow",
+)  # for example only
 
 while cmd != "q":
     tryfunc(th260lib.TH260_ClearHistMem(ct.c_int(dev[0])), "ClearHistMem")
@@ -217,15 +245,17 @@ while cmd != "q":
     print("press RETURN to start measurement")
     input()
 
-    tryfunc(th260lib.TH260_GetSyncRate(ct.c_int(dev[0]), byref(syncRate)), \
-            "GetSyncRate")
+    tryfunc(
+        th260lib.TH260_GetSyncRate(ct.c_int(dev[0]), byref(syncRate)), "GetSyncRate"
+    )
     print("Syncrate=%1d/s" % syncRate.value)
 
     for i in range(0, numChannels.value):
         tryfunc(
-            th260lib.TH260_GetCountRate(ct.c_int(dev[0]), ct.c_int(i), \
-                                        byref(countRate)), \
-            "GetCountRate"
+            th260lib.TH260_GetCountRate(
+                ct.c_int(dev[0]), ct.c_int(i), byref(countRate)
+            ),
+            "GetCountRate",
         )
         print("Countrate[%1d]=%1d/s" % (i, countRate.value))
 
@@ -236,16 +266,18 @@ while cmd != "q":
 
     ctcstatus = ct.c_int(0)
     while ctcstatus.value == 0:
-        tryfunc(th260lib.TH260_CTCStatus(ct.c_int(dev[0]), byref(ctcstatus)), \
-                "CTCStatus")
+        tryfunc(
+            th260lib.TH260_CTCStatus(ct.c_int(dev[0]), byref(ctcstatus)), "CTCStatus"
+        )
 
     tryfunc(th260lib.TH260_StopMeas(ct.c_int(dev[0])), "StopMeas")
 
     for i in range(0, numChannels.value):
         tryfunc(
-            th260lib.TH260_GetHistogram(ct.c_int(dev[0]), byref(counts[i]), \
-                                        ct.c_int(i), ct.c_int(0)), \
-            "GetHistogram"
+            th260lib.TH260_GetHistogram(
+                ct.c_int(dev[0]), byref(counts[i]), ct.c_int(i), ct.c_int(0)
+            ),
+            "GetHistogram",
         )
         integralCount = 0
         for j in range(0, histLen.value):

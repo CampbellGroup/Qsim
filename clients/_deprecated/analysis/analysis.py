@@ -9,6 +9,7 @@ class CustomWebView(QtWebKit.QWebView):
     This class must be seperate or javascript popup handling with createWindow
     doesnt work
     """
+
     def __init__(self, parent=None):
         QtWebKit.QWebView.__init__(self, parent)
 
@@ -45,10 +46,15 @@ class analysis(QtGui.QWidget):
         widget = QtGui.QWidget()
         gridLayout = QtGui.QGridLayout()
         self.notebook = CustomWebView()
-        self.notebook.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled, True)
-        self.notebook.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanOpenWindows, True)
-        self.notebook.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanAccessClipboard,
-                                              True)
+        self.notebook.settings().setAttribute(
+            QtWebKit.QWebSettings.JavascriptEnabled, True
+        )
+        self.notebook.settings().setAttribute(
+            QtWebKit.QWebSettings.JavascriptCanOpenWindows, True
+        )
+        self.notebook.settings().setAttribute(
+            QtWebKit.QWebSettings.JavascriptCanAccessClipboard, True
+        )
         self.notebook.load(QtCore.QUrl("http://localhost:8888/tree"))
         gridLayout.addWidget(self.notebook, 0, 0)
         widget.setLayout(gridLayout)
@@ -57,11 +63,14 @@ class analysis(QtGui.QWidget):
     def closeEvent(self, x):
         self.reactor.stop()
 
+
 if __name__ == "__main__":
     a = QtGui.QApplication([])
     import qt4reactor
+
     qt4reactor.install()
     from twisted.internet import reactor
+
     analysisWidget = analysis(reactor)
     analysisWidget.show()
     reactor.run()  # @UndefinedVariable

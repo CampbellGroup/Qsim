@@ -10,19 +10,29 @@ def generate_gate_sequence(sequence_length, gate_type):
     Takes: sequence_length: (int) how long you want the sequence to be
            gate_type: (str) 'pauli' or 'clifford' depending on which gates to pull from
     """
-    paulis = [['x', 1, np.pi], ['x', -1, np.pi],
-              ['y', 1, np.pi], ['y', -1, np.pi],
-              ['z', 1, np.pi], ['z', -1, np.pi],
-              ['i', 1, np.pi], ['i', -1, np.pi]]
+    paulis = [
+        ["x", 1, np.pi],
+        ["x", -1, np.pi],
+        ["y", 1, np.pi],
+        ["y", -1, np.pi],
+        ["z", 1, np.pi],
+        ["z", -1, np.pi],
+        ["i", 1, np.pi],
+        ["i", -1, np.pi],
+    ]
 
-    cliffords = [['x', 1, np.pi / 2.], ['x', -1, np.pi / 2.],
-                 ['y', 1, np.pi / 2.], ['y', -1, np.pi / 2.]]
+    cliffords = [
+        ["x", 1, np.pi / 2.0],
+        ["x", -1, np.pi / 2.0],
+        ["y", 1, np.pi / 2.0],
+        ["y", -1, np.pi / 2.0],
+    ]
 
     gate_sequence = []
     for i in range(sequence_length):
-        if gate_type == 'clifford':
+        if gate_type == "clifford":
             gate_sequence.append(random.choice(cliffords))
-        elif gate_type == 'pauli':
+        elif gate_type == "pauli":
             gate_sequence.append(random.choice(paulis))
 
     return gate_sequence
@@ -38,19 +48,19 @@ def make_gate(gate_information):
     gate_sign = gate_information[1]
     pulse_area = gate_information[2]
 
-    if gate_type == 'x':
+    if gate_type == "x":
         matrix = qt.sigmax()
-    elif gate_type == 'y':
+    elif gate_type == "y":
         matrix = qt.sigmay()
-    elif gate_type == 'z':
+    elif gate_type == "z":
         matrix = qt.sigmaz()
-    elif gate_type == 'i':
+    elif gate_type == "i":
         matrix = qt.qeye(2)
     else:
         matrix = qt.qeye(2)
-        print('Gate type not of typical format, using identity.')
+        print("Gate type not of typical format, using identity.")
 
-    operator = gate_sign * 1.j * matrix * pulse_area / 2.
+    operator = gate_sign * 1.0j * matrix * pulse_area / 2.0
     return operator.expm()
 
 
@@ -62,14 +72,22 @@ def find_last_gate(gate_sequence, initial_state):
     Takes: A list of gates
            The initial state
     """
-    final_cliffords = {'z': [qt.sigmaz(), [['z', 1, np.pi / 2], ['z', -1, np.pi / 2]]],
-                       'x': [qt.sigmax(), [['y', 1, np.pi / 2], ['y', -1, np.pi / 2]]],
-                       'y': [qt.sigmay(), [['x', 1, np.pi / 2], ['x', -1, np.pi / 2]]]}
+    final_cliffords = {
+        "z": [qt.sigmaz(), [["z", 1, np.pi / 2], ["z", -1, np.pi / 2]]],
+        "x": [qt.sigmax(), [["y", 1, np.pi / 2], ["y", -1, np.pi / 2]]],
+        "y": [qt.sigmay(), [["x", 1, np.pi / 2], ["x", -1, np.pi / 2]]],
+    }
 
-    final_paulis = [['x', 1, np.pi], ['x', -1, np.pi],
-                    ['y', 1, np.pi], ['y', -1, np.pi],
-                    ['z', 1, np.pi], ['z', -1, np.pi],
-                    ['i', 1, np.pi], ['i', -1, np.pi]]
+    final_paulis = [
+        ["x", 1, np.pi],
+        ["x", -1, np.pi],
+        ["y", 1, np.pi],
+        ["y", -1, np.pi],
+        ["z", 1, np.pi],
+        ["z", -1, np.pi],
+        ["i", 1, np.pi],
+        ["i", -1, np.pi],
+    ]
 
     final_sequence = gate_sequence
     state = initial_state
@@ -77,43 +95,55 @@ def find_last_gate(gate_sequence, initial_state):
         state = make_gate(gate) * state
 
     for sigma in final_cliffords:
-        if final_cliffords[sigma][0] * state == state or final_cliffords[sigma][0] * state == -1 * state:
+        if (
+            final_cliffords[sigma][0] * state == state
+            or final_cliffords[sigma][0] * state == -1 * state
+        ):
             final_clifford = random.choice(final_cliffords[sigma][1])
             final_sequence.append(final_clifford)
             state = make_gate(final_clifford) * state
-            state = qt.Qobj([[state[0][0][0] * state[0][0][0].conj()], [state[1][0][0] * state[1][0][0].conj()]])
+            state = qt.Qobj(
+                [
+                    [state[0][0][0] * state[0][0][0].conj()],
+                    [state[1][0][0] * state[1][0][0].conj()],
+                ]
+            )
             break
 
     last_pauli = random.choice(final_paulis)
 
-    if last_pauli[0] == 'x' or 'y':
-        if final_clifford[0] == 'z':
+    if last_pauli[0] == "x" or "y":
+        if final_clifford[0] == "z":
             if final_clifford[1] == 1:
-                if last_pauli[0] == 'x' and last_pauli[1] == 1:
-                    last_pauli[0] = 'y'
-                elif last_pauli[0] == 'y' and last_pauli[1] == 1:
-                    last_pauli[0] = 'x'
+                if last_pauli[0] == "x" and last_pauli[1] == 1:
+                    last_pauli[0] = "y"
+                elif last_pauli[0] == "y" and last_pauli[1] == 1:
+                    last_pauli[0] = "x"
                     last_pauli[1] = -1
-                elif last_pauli[0] == 'x' and last_pauli[1] == -1:
-                    last_pauli[0] = 'y'
-                elif last_pauli[0] == 'y' and last_pauli[1] == -1:
-                    last_pauli[0] = 'x'
+                elif last_pauli[0] == "x" and last_pauli[1] == -1:
+                    last_pauli[0] = "y"
+                elif last_pauli[0] == "y" and last_pauli[1] == -1:
+                    last_pauli[0] = "x"
                     last_pauli[1] = 1
             elif final_clifford[1] == -1:
-                if last_pauli[0] == 'x' and last_pauli[1] == 1:
-                    last_pauli[0] = 'y'
+                if last_pauli[0] == "x" and last_pauli[1] == 1:
+                    last_pauli[0] = "y"
                     last_pauli[1] = -1
-                elif last_pauli[0] == 'y' and last_pauli[1] == 1:
-                    last_pauli[0] = 'x'
-                elif last_pauli[0] == 'x' and last_pauli[1] == -1:
-                    last_pauli[0] = 'y'
+                elif last_pauli[0] == "y" and last_pauli[1] == 1:
+                    last_pauli[0] = "x"
+                elif last_pauli[0] == "x" and last_pauli[1] == -1:
+                    last_pauli[0] = "y"
                     last_pauli[1] = 1
-                elif last_pauli[0] == 'y' and last_pauli[1] == -1:
-                    last_pauli[0] = 'x'
+                elif last_pauli[0] == "y" and last_pauli[1] == -1:
+                    last_pauli[0] = "x"
 
     state = make_gate(last_pauli) * state
     expected_final_state = qt.Qobj(
-        [[state[0][0][0] * state[0][0][0].conj()], [state[1][0][0] * state[1][0][0].conj()]])
+        [
+            [state[0][0][0] * state[0][0][0].conj()],
+            [state[1][0][0] * state[1][0][0].conj()],
+        ]
+    )
     final_sequence.append(last_pauli)
 
     return final_sequence, expected_final_state
@@ -126,11 +156,25 @@ def generate_microwave_rotation_matrix(omega, delta, t, phi):
            phi: the relative phase of the pulse
     Returns: a numpy array (2x2) which is the rotation matrix for the microwave pulse
     """
-    omega_R = np.sqrt(omega ** 2. + delta ** 2.)
-    rotation_matrix = np.array([[np.cos(omega_R * t / 2.) + (1.j * delta / omega_R) * np.sin(omega_R * t / 2.),
-                                 (-1.j * omega / omega_R) * np.sin(omega_R * t / 2.) * np.exp(-1.j * phi)],
-                                [(-1.j * omega / omega_R) * np.sin(omega_R * t / 2.) * np.exp(1.j * phi),
-                                 np.cos(omega_R * t / 2.) - (1j * delta / omega_R) * np.sin(omega_R * t / 2.)]])
+    omega_R = np.sqrt(omega**2.0 + delta**2.0)
+    rotation_matrix = np.array(
+        [
+            [
+                np.cos(omega_R * t / 2.0)
+                + (1.0j * delta / omega_R) * np.sin(omega_R * t / 2.0),
+                (-1.0j * omega / omega_R)
+                * np.sin(omega_R * t / 2.0)
+                * np.exp(-1.0j * phi),
+            ],
+            [
+                (-1.0j * omega / omega_R)
+                * np.sin(omega_R * t / 2.0)
+                * np.exp(1.0j * phi),
+                np.cos(omega_R * t / 2.0)
+                - (1j * delta / omega_R) * np.sin(omega_R * t / 2.0),
+            ],
+        ]
+    )
     return rotation_matrix
 
 
@@ -140,10 +184,9 @@ def generate_free_qubit_evolution(delta, t):
            t: (float): time to evolve
     Returns: qubit_evolution_matrix: (np array) 2x2 numpy array which will evolve the qubit state
     """
-    qubit_evolution_matrix = np.array([[np.exp(1j * delta * t / 2),
-                                        0],
-                                       [0,
-                                        np.exp(-1j * delta * t / 2)]])
+    qubit_evolution_matrix = np.array(
+        [[np.exp(1j * delta * t / 2), 0], [0, np.exp(-1j * delta * t / 2)]]
+    )
     return qubit_evolution_matrix
 
 
@@ -169,7 +212,7 @@ def insert_delay_gate_sequence(gate_sequence, delay_time, omega):
            omega: Rabi time in order to calculate pulse area (2pi needed)
     """
     final_gate_sequence = []
-    delay_gate = ['i', 1, delay_time * omega]
+    delay_gate = ["i", 1, delay_time * omega]
     for i in range(len(gate_sequence) - 1):
         final_gate_sequence.append(gate_sequence[i])
         final_gate_sequence.append(delay_gate)
@@ -188,9 +231,9 @@ def changing_pauli_frame_sequence(gate_sequence):
     sign = 1
     useable_sequence = []
     for gate in gate_sequence:
-        if gate[0] == 'z':
+        if gate[0] == "z":
             sign *= -1
-            new_gate = ['i', 1, gate[2]]
+            new_gate = ["i", 1, gate[2]]
             useable_sequence.append(new_gate)
         else:
             new_gate = [gate[0], gate[1] * sign, gate[2]]
@@ -209,7 +252,12 @@ def rbm_model_experiment(initial_state, expected_final_state, final_gate_sequenc
     state = initial_state
     for gate in final_gate_sequence:
         state = make_gate(gate) * state
-    final_state = qt.Qobj([[state[0][0][0] * state[0][0][0].conj()], [state[1][0][0] * state[1][0][0].conj()]])
+    final_state = qt.Qobj(
+        [
+            [state[0][0][0] * state[0][0][0].conj()],
+            [state[1][0][0] * state[1][0][0].conj()],
+        ]
+    )
 
     match = 0
     miss = 0
@@ -218,7 +266,7 @@ def rbm_model_experiment(initial_state, expected_final_state, final_gate_sequenc
         # print('All good in the hood!')
     else:
         miss += 1
-        print('DANGER DANGER')
+        print("DANGER DANGER")
     return final_state
 
 
@@ -237,8 +285,9 @@ def rbm_real_experiment(initial_state, gate_sequence, omega, delta):
             rotation = generate_free_qubit_evolution(delta, gate[2] * np.pi / omega)
             state = np.dot(rotation, state)
         elif gate[0] == True:
-            rotation = generate_microwave_rotation_matrix(rabi_freq, delta, gate[2] * np.pi / omega,
-                                                          np.radians(gate[1]))
+            rotation = generate_microwave_rotation_matrix(
+                rabi_freq, delta, gate[2] * np.pi / omega, np.radians(gate[1])
+            )
             state = np.dot(rotation, state)
     return state
 
@@ -250,36 +299,38 @@ def gate_to_experiment_params(gate_sequence):
     """
     experiment_sequence = []
     for gate in gate_sequence:
-        if gate[0] == 'x':
+        if gate[0] == "x":
             if gate[1] == 1:
-                phi = 0.
+                phi = 0.0
             elif gate[1] == -1:
-                phi = 180.
+                phi = 180.0
             microwaves_on = True
-        elif gate[0] == 'y':
+        elif gate[0] == "y":
             if gate[1] == 1:
-                phi = 90.
+                phi = 90.0
             elif gate[1] == -1:
-                phi = 270.
+                phi = 270.0
             microwaves_on = True
         else:
             microwaves_on = False
-            phi = 0.
+            phi = 0.0
         if gate[2] == np.pi:
-            pulse_area = 1.
-        elif gate[2] == np.pi / 2.:
-            pulse_area = 1 / 2.
+            pulse_area = 1.0
+        elif gate[2] == np.pi / 2.0:
+            pulse_area = 1 / 2.0
 
         experiment_sequence.append([microwaves_on, phi, pulse_area])
 
     return experiment_sequence
 
 
-def generate_and_save_sequences(lengths, number_of_gate_sequences, number_of_pauli_randomizations, path):
+def generate_and_save_sequences(
+    lengths, number_of_gate_sequences, number_of_pauli_randomizations, path
+):
     # If it can't find the directory, make it and make the first directory for the sequences
     # for actually running this, you're only going to call this file if you need to generate sequences.
 
-    '''
+    """
     if not os.path.isdir('RBM_Pulse_Sequences'):
         os.makedirs('RBM_Pulse_Sequences/Sequence_Set_1')
         path = 'RBM_Pulse_Sequences/Sequence_Set_1'
@@ -289,38 +340,71 @@ def generate_and_save_sequences(lengths, number_of_gate_sequences, number_of_pau
             sets.append(int(i.split('_')[2]))
         os.makedirs('RBM_Pulse_Sequences/Sequence_Set_' + str(max(sets) + 1))
         path = 'RBM_Pulse_Sequences/Sequence_Set_' + str(max(sets) + 1)
-    '''
+    """
     os.makedirs(path)
     initial_state = qt.Qobj([[1], [0]])
-    with open(path + '/Sequence_Final_States.csv', 'w') as states_file:
+    with open(path + "/Sequence_Final_States.csv", "w") as states_file:
         for i in range(number_of_gate_sequences):
-            clifford_sequence = generate_gate_sequence(max(lengths) - 1, 'clifford')
+            clifford_sequence = generate_gate_sequence(max(lengths) - 1, "clifford")
             for j in lengths:
-                trunc_clifford_sequence = clifford_sequence[:j - 1]
+                trunc_clifford_sequence = clifford_sequence[: j - 1]
                 for k in range(number_of_pauli_randomizations):
-                    pauli_randomizer_sequence = generate_gate_sequence(len(trunc_clifford_sequence) + 1, 'pauli')
-                    interleaved_gate_sequence = generate_interleaved_gate_sequence(trunc_clifford_sequence,
-                                                                                   pauli_randomizer_sequence)
-                    final_gate_sequence, expected_final_state = find_last_gate(interleaved_gate_sequence, initial_state)
-                    expected_final_state_real = np.array([np.real([expected_final_state[0][0][0]]),
-                                                          np.real([expected_final_state[1][0][0]])])
-                    if np.abs(expected_final_state_real[0][
-                                  0] - 1.0) <= 0.01:  # bottom of bloch sphere 'down' (I'll call it 0)
+                    pauli_randomizer_sequence = generate_gate_sequence(
+                        len(trunc_clifford_sequence) + 1, "pauli"
+                    )
+                    interleaved_gate_sequence = generate_interleaved_gate_sequence(
+                        trunc_clifford_sequence, pauli_randomizer_sequence
+                    )
+                    final_gate_sequence, expected_final_state = find_last_gate(
+                        interleaved_gate_sequence, initial_state
+                    )
+                    expected_final_state_real = np.array(
+                        [
+                            np.real([expected_final_state[0][0][0]]),
+                            np.real([expected_final_state[1][0][0]]),
+                        ]
+                    )
+                    if (
+                        np.abs(expected_final_state_real[0][0] - 1.0) <= 0.01
+                    ):  # bottom of bloch sphere 'down' (I'll call it 0)
                         # print('expected ~ 1: ', expected_final_state_real[0][0])
                         zero_or_one = 0
                     elif np.abs(expected_final_state_real[0][0]) <= 0.01:
                         # print('expected ~ 0: ', expected_final_state_real[0][0])
                         zero_or_one = 1
                     else:
-                        print('yo dude problem here')
-                    states_file.write(str(j) + '_' + str(i + 1) + '_' + str(k + 1) + ',' + str(zero_or_one) + '\n')
-                    alternating_pauli_sequence = changing_pauli_frame_sequence(final_gate_sequence)
-                    experiment_sequence = gate_to_experiment_params(alternating_pauli_sequence)
-                    with open(path + '/Sequence_' + str(j) + '_' + str(i + 1) + '_' + str(k + 1) + '.csv', 'w') as file:
+                        print("yo dude problem here")
+                    states_file.write(
+                        str(j)
+                        + "_"
+                        + str(i + 1)
+                        + "_"
+                        + str(k + 1)
+                        + ","
+                        + str(zero_or_one)
+                        + "\n"
+                    )
+                    alternating_pauli_sequence = changing_pauli_frame_sequence(
+                        final_gate_sequence
+                    )
+                    experiment_sequence = gate_to_experiment_params(
+                        alternating_pauli_sequence
+                    )
+                    with open(
+                        path
+                        + "/Sequence_"
+                        + str(j)
+                        + "_"
+                        + str(i + 1)
+                        + "_"
+                        + str(k + 1)
+                        + ".csv",
+                        "w",
+                    ) as file:
                         for p in experiment_sequence:
                             if p[0] == False:
-                                file.write(str(p[1]) + ',' + str(p[2]) + ',0\n')
+                                file.write(str(p[1]) + "," + str(p[2]) + ",0\n")
                             else:
-                                file.write(str(p[1]) + ',' + str(p[2]) + ',1\n')
+                                file.write(str(p[1]) + "," + str(p[2]) + ",1\n")
                     file.close()
     states_file.close()

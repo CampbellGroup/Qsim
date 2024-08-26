@@ -10,7 +10,15 @@ from sub_sequences.DopplerCooling import doppler_cooling
 
 class ML_bright_state_preparation(PulseSequence):
 
-    required_subsequences = [doppler_cooling, shelving, shelving_doppler_cooling, ml_state_detection, turn_off_all, bright_state_pumping, deshelving]
+    required_subsequences = [
+        doppler_cooling,
+        shelving,
+        shelving_doppler_cooling,
+        ml_state_detection,
+        turn_off_all,
+        bright_state_pumping,
+        deshelving,
+    ]
     required_parameters = []
 
     def sequence(self):
@@ -29,4 +37,4 @@ class ML_bright_state_preparation(PulseSequence):
 
         self.add_sequence(turn_off_all)
         self.add_sequence(deshelving)
-        #self.addSequence(shelving_state_detection)
+        # self.addSequence(shelving_state_detection)

@@ -24,11 +24,11 @@ import socket
 
 
 class ind_WM_lock_Server(LabradServer):
-    name = 'Single WM Lock Server'
+    name = "Single WM Lock Server"
 
     def initServer(self):
-        self.password = os.environ['LABRADPASSWORD']
-        self.name = socket.gethostname() + ' Single WM Lock Server'
+        self.password = os.environ["LABRADPASSWORD"]
+        self.name = socket.gethostname() + " Single WM Lock Server"
         self.set = 811.291420
         self.volt = 0.0
         self.timer = 0.1
@@ -48,9 +48,10 @@ class ind_WM_lock_Server(LabradServer):
         """
 
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('10.97.112.2',
-                                      name=self.name,
-                                      password=self.password)
+
+        self.cxn = yield connectAsync(
+            "10.97.112.2", name=self.name, password=self.password
+        )
         self.server = self.cxn.multiplexerserver
         self.switchmode = yield self.server.get_switcher_mode()
 
@@ -68,7 +69,7 @@ class ind_WM_lock_Server(LabradServer):
         self.prevoutput = output
         self.server.set_dac_voltage(self.dac, output)
 
-    @setting(13, state='b')
+    @setting(13, state="b")
     def toggle(self, c, state):
         """
         Sends switches cal vs switcher
@@ -78,16 +79,16 @@ class ind_WM_lock_Server(LabradServer):
         else:
             self.lc.stop()
 
-    @setting(14, value='v')
+    @setting(14, value="v")
     def offset(self, c, value):
         yield self.server.set_dac_voltage(3, value)
         self.prevoutput = value
 
-    @setting(15, gain='v')
+    @setting(15, gain="v")
     def set_gain(self, c, gain):
         self.gain = gain
 
-    @setting(16, setpoint='v')
+    @setting(16, setpoint="v")
     def set_point(self, c, setpoint):
         self.set = setpoint
 

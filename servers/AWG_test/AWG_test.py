@@ -27,20 +27,19 @@ class AWG_Server(LabradServer):
     Basic Server
     """
 
-    name = 'AWG Server'
+    name = "AWG Server"
 
     def initServer(self):
         # self.password = os.environ['LABRADPASSWORD']
         print("I'm here")
-        self.name = 'AWG Server'
+        self.name = "AWG Server"
         self.connect_to_AWG()
 
     @inlineCallbacks
     def connect_to_AWG(self):
-        """
-        """
+        """ """
         rm = pyvisa.ResourceManager()
-        self.inst = yield rm.open_resource('TCPIP::10.97.112.68::INSTR')
+        self.inst = yield rm.open_resource("TCPIP::10.97.112.68::INSTR")
         try:
             self.inst.query("*IDN?")
         except:
@@ -48,7 +47,7 @@ class AWG_Server(LabradServer):
         # test
         print(self.inst.query("*IDN?"))
 
-    @setting(1, returns='s')
+    @setting(1, returns="s")
     def test(self):
         print(self.inst.query("*IDN?"))
 

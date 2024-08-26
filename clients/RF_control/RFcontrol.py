@@ -16,8 +16,9 @@ class RFControl(QWidget):
         self.reactor = reactor
         self.cxn = cxn
         import labrad.types
+
         self.types = labrad.types
-        self.chan = 'RF_Drive'
+        self.chan = "RF_Drive"
         self.connect()
 
     @inlineCallbacks
@@ -30,7 +31,7 @@ class RFControl(QWidget):
         if self.cxn is None:
             self.cxn = Connection(name="RF Control")
             yield self.cxn.connect()
-        self.server = yield self.cxn.get_server('Pulser')
+        self.server = yield self.cxn.get_server("Pulser")
         self.initialize_gui()
 
     @inlineCallbacks
@@ -38,7 +39,7 @@ class RFControl(QWidget):
         layout = QGridLayout()
         chans = yield self.server.get_dds_channels()
         if self.chan in chans:
-            self.freq_power_widget = QCustomFreqPower(title='Trap RF Control')
+            self.freq_power_widget = QCustomFreqPower(title="Trap RF Control")
             min_power, max_power = yield self.server.get_dds_amplitude_range(self.chan)
             min_freq, max_freq = yield self.server.get_dds_frequency_range(self.chan)
             self.freq_power_widget.set_power_range((min_power, max_power))
@@ -48,9 +49,11 @@ class RFControl(QWidget):
             initstate = yield self.server.output(self.chan)
             self.freq_power_widget.freq_spinbox.setSingleStep(0.001)
             self.freq_power_widget.set_state_no_signal(initstate)
-            self.freq_power_widget.set_power_no_signal(initpower['dBm'])
-            self.freq_power_widget.set_freq_no_signal(initfreq['MHz'])
-            self.freq_power_widget.power_spinbox.valueChanged.connect(self.power_changed)
+            self.freq_power_widget.set_power_no_signal(initpower["dBm"])
+            self.freq_power_widget.set_freq_no_signal(initfreq["MHz"])
+            self.freq_power_widget.power_spinbox.valueChanged.connect(
+                self.power_changed
+            )
             self.freq_power_widget.freq_spinbox.valueChanged.connect(self.freq_changed)
             self.freq_power_widget.switch_button.toggled.connect(self.switch_changed)
             layout.addWidget(self.freq_power_widget)
@@ -59,7 +62,7 @@ class RFControl(QWidget):
 
     @inlineCallbacks
     def power_changed(self, pwr):
-        val = self.types.Value(pwr, 'dBm')
+        val = self.types.Value(pwr, "dBm")
         try:
             yield self.server.amplitude(self.chan, val)
         except self.types.Error as e:
@@ -69,7 +72,7 @@ class RFControl(QWidget):
 
     @inlineCallbacks
     def freq_changed(self, freq):
-        val = self.types.Value(freq, 'MHz')
+        val = self.types.Value(freq, "MHz")
         try:
             yield self.server.frequency(self.chan, val)
         except self.types.Error as e:

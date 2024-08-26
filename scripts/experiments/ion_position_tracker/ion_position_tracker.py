@@ -20,15 +20,16 @@ class IonPositionTracker(QsimExperiment):
     Really useful if there are systematic DC voltage drifts in the experiment
     that need tracking
     """
-    name = 'ion_position_tracker'
+
+    name = "ion_position_tracker"
 
     exp_parameters = []
 
-    exp_parameters.append(('images', 'image_center_x'))
-    exp_parameters.append(('images', 'image_center_y'))
-    exp_parameters.append(('images', 'image_width'))
-    exp_parameters.append(('images', 'image_height'))
-    exp_parameters.append(('images', 'measure_time'))
+    exp_parameters.append(("images", "image_center_x"))
+    exp_parameters.append(("images", "image_center_y"))
+    exp_parameters.append(("images", "image_width"))
+    exp_parameters.append(("images", "image_height"))
+    exp_parameters.append(("images", "measure_time"))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -37,21 +38,29 @@ class IonPositionTracker(QsimExperiment):
         self.grapher = cxn.grapher
 
     def run(self, cxn, context):
-        elapsed = WithUnit(0.0, 's')
-        self.dv.cd(['', 'Ion Location Tracker'], True)
-        self.dataset = self.dv.new('ion position', [('Time', 's')],
-                                   [('X Location', 'X Location', 'um'), ('Y Location', 'Y Location', 'um')])
-        self.grapher.plot(self.dataset, 'Drift Tracker', False)
+        elapsed = WithUnit(0.0, "s")
+        self.dv.cd(["", "Ion Location Tracker"], True)
+        self.dataset = self.dv.new(
+            "ion position",
+            [("Time", "s")],
+            [("X Location", "X Location", "um"), ("Y Location", "Y Location", "um")],
+        )
+        self.grapher.plot(self.dataset, "Drift Tracker", False)
         self.set_scannable_parameters()
         self.set_exp_settings()
         init_time = time.time()
         while elapsed <= self.p.images.measure_time:
-            data = np.reshape(self.cam.get_most_recent_image(), (self.image_y_length, self.image_x_length))
+            data = np.reshape(
+                self.cam.get_most_recent_image(),
+                (self.image_y_length, self.image_x_length),
+            )
             xPos = np.argmax(np.sum(data, axis=0))
             yPos = np.argmax(np.sum(data, axis=1))
-            elapsed = WithUnit(time.time() - init_time, 's')
-            self.dv.add([elapsed['s'], xPos, yPos])
-            should_break = self.update_progress(elapsed['s'] / self.p.images.measure_time['s'])
+            elapsed = WithUnit(time.time() - init_time, "s")
+            self.dv.add([elapsed["s"], xPos, yPos])
+            should_break = self.update_progress(
+                elapsed["s"] / self.p.images.measure_time["s"]
+            )
             if should_break:
                 break
 
@@ -59,15 +68,28 @@ class IonPositionTracker(QsimExperiment):
 
         self.cam.abort_acquisition()
         self.cam.set_image_region(
-            [1, 1, self.y_pixel_range[0], self.y_pixel_range[1], self.x_pixel_range[0], self.x_pixel_range[1]])
+            [
+                1,
+                1,
+                self.y_pixel_range[0],
+                self.y_pixel_range[1],
+                self.x_pixel_range[0],
+                self.x_pixel_range[1],
+            ]
+        )
         self.cam.start_live_display()
 
     def set_scannable_parameters(self):
-        center_y = self.p.images.image_center_x['pix']  # switched for same reason
-        center_x = self.p.images.image_center_y['pix']
-        height = self.p.images.image_width['pix']
-        width = self.p.images.image_height['pix']  # switched due to transpose of camera data
-        self.x_pixel_range = [int(center_x - width / 2), int(center_x + width / 2)]  # rounds image size
+        center_y = self.p.images.image_center_x["pix"]  # switched for same reason
+        center_x = self.p.images.image_center_y["pix"]
+        height = self.p.images.image_width["pix"]
+        width = self.p.images.image_height[
+            "pix"
+        ]  # switched due to transpose of camera data
+        self.x_pixel_range = [
+            int(center_x - width / 2),
+            int(center_x + width / 2),
+        ]  # rounds image size
         self.y_pixel_range = [int(center_y - height / 2), int(center_y + height / 2)]
         self.image_x_length = self.x_pixel_range[-1] - self.x_pixel_range[0] + 1
         self.image_y_length = self.y_pixel_range[-1] - self.y_pixel_range[0] + 1
@@ -81,7 +103,7 @@ class IonPositionTracker(QsimExperiment):
         self.cam.start_live_display()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = IonPositionTracker(cxn=cxn)

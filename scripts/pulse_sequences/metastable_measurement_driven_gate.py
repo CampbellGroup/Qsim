@@ -1,14 +1,20 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
 
 from .sub_sequences.turn_off_all import TurnOffAll
-from .sub_sequences.state_detection.metastable_state_detection import MetastableStateDetection
+from .sub_sequences.state_detection.metastable_state_detection import (
+    MetastableStateDetection,
+)
 from .sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
-from .sub_sequences.state_detection.shelving_state_detection import ShelvingStateDetection
+from .sub_sequences.state_detection.shelving_state_detection import (
+    ShelvingStateDetection,
+)
 from .sub_sequences.optical_pumping import OpticalPumping
 from .sub_sequences.shelving import Shelving
 from .sub_sequences.deshelving import Deshelving
 from .sub_sequences.heralded_four_preparation import HeraldedFourPreparation
-from .sub_sequences.metastable_measurement_driven_gate_delta_theta import MetastableMeasurementDrivenGateDeltaTheta
+from .sub_sequences.metastable_measurement_driven_gate_delta_theta import (
+    MetastableMeasurementDrivenGateDeltaTheta,
+)
 
 
 class MetastableMeasurementDrivenGate(PulseSequence):
@@ -21,14 +27,14 @@ class MetastableMeasurementDrivenGate(PulseSequence):
         Deshelving,
         HeraldedFourPreparation,
         MetastableMeasurementDrivenGateDeltaTheta,
-        ShelvingStateDetection
+        ShelvingStateDetection,
     ]
 
     required_parameters = [
-        ('MetastableMeasurementDrivenGate', 'total_num_sub_pulses'),
-        ('MetastableMeasurementDrivenGate', 'current_pulse_index'),
-        ('Pi_times', 'metastable_qubit'),
-        ('Metastable_Microwave_Interrogation', 'duration')
+        ("MetastableMeasurementDrivenGate", "total_num_sub_pulses"),
+        ("MetastableMeasurementDrivenGate", "current_pulse_index"),
+        ("Pi_times", "metastable_qubit"),
+        ("Metastable_Microwave_Interrogation", "duration"),
     ]
 
     def sequence(self):

@@ -1,7 +1,6 @@
 from common.lib.clients.qtui.multiplexerchannel import QCustomWavemeterChannel
 from common.lib.clients.qtui.multiplexerPID import QCustomPID
-from common.lib.clients.qtui.q_custom_text_changing_button import \
-    TextChangingButton
+from common.lib.clients.qtui.q_custom_text_changing_button import TextChangingButton
 from twisted.internet.defer import inlineCallbacks, returnValue
 from common.lib.clients.qtui.switch import QCustomSwitchChannel
 from PyQt4 import QtGui
@@ -14,15 +13,15 @@ class rear_port_client(QtGui.QWidget):
 
     def __init__(self, reactor, parent=None):
         """initializels the GUI creates the reactor
-            and empty dictionary for channel widgets to
-            be stored for iteration. also grabs chan info
-            from multiplexer_config
+        and empty dictionary for channel widgets to
+        be stored for iteration. also grabs chan info
+        from multiplexer_config
         """
         super(rear_port_client, self).__init__()
-        self.password = os.environ['LABRADPASSWORD']
+        self.password = os.environ["LABRADPASSWORD"]
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor
-        self.name = socket.gethostname() + ' Rear Port Client'
+        self.name = socket.gethostname() + " Rear Port Client"
         self.continuous = False
         self.connect()
 
@@ -34,9 +33,10 @@ class rear_port_client(QtGui.QWidget):
         """
 
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('10.97.112.2',
-                                      name=self.name,
-                                      password=self.password)
+
+        self.cxn = yield connectAsync(
+            "10.97.112.2", name=self.name, password=self.password
+        )
         self.server = yield self.cxn.multiplexerserver
 
         self.initializeGUI()
@@ -44,31 +44,34 @@ class rear_port_client(QtGui.QWidget):
     def initializeGUI(self):
 
         layout = QtGui.QGridLayout()
-        self.setWindowTitle('Wavemeter Rear Port')
+        self.setWindowTitle("Wavemeter Rear Port")
 
-        qBox = QtGui.QGroupBox('Rear Port')
+        qBox = QtGui.QGroupBox("Rear Port")
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0)
 
         wmChannel = 9
-        hint = '811.291490'
-        dacPort = 'rear'
-        self.widget = QCustomWavemeterChannel('369 Rear Port', wmChannel,
-                                              dacPort, hint, True, False)
+        hint = "811.291490"
+        dacPort = "rear"
+        self.widget = QCustomWavemeterChannel(
+            "369 Rear Port", wmChannel, dacPort, hint, True, False
+        )
         from common.lib.clients.Multiplexer import RGBconverter as RGB
+
         RGB = RGB.RGBconverter()
         color = int(2.998e8 / (float(hint) * 1e3))
         color = RGB.wav2RGB(color)
         color = tuple(color)
-        self.continuous_switch = QCustomSwitchChannel('Continuous Measure')
+        self.continuous_switch = QCustomSwitchChannel("Continuous Measure")
         self.continuous_switch.TTLswitch.toggled.connect(self.toggle)
         self.widget.freq_spinbox.setValue(float(hint))
-        self.widget.current_frequency.setStyleSheet('color: rgb' + str(color))
+        self.widget.current_frequency.setStyleSheet("color: rgb" + str(color))
         subLayout.addWidget(self.widget, 0, 0, 1, 3)
         subLayout.addWidget(self.continuous_switch, 1, 0, 1, 1)
         self.setLayout(layout)
         from twisted.internet.reactor import callLater
+
         self.update_value()
 
     @inlineCallbacks
@@ -76,7 +79,7 @@ class rear_port_client(QtGui.QWidget):
 
         self.reactor.callLater(1, self.update_value)
         if not self.widget.measure_button.isChecked():
-            self.widget.current_frequency.setText('Not Measured')
+            self.widget.current_frequency.setText("Not Measured")
             return
 
         if self.continuous:
@@ -100,9 +103,9 @@ class rear_port_client(QtGui.QWidget):
 
     def set_freq(self, freq):
         if freq == -3.0:
-            self.widget.current_frequency.setText('Under Exposed')
+            self.widget.current_frequency.setText("Under Exposed")
         elif freq == -4.0:
-            self.widget.current_frequency.setText('Over Exposed')
+            self.widget.current_frequency.setText("Over Exposed")
         else:
             self.widget.current_frequency.setText(str(freq)[0:10])
 

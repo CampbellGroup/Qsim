@@ -15,6 +15,7 @@ message = 987654321
 timeout = 1000
 ### END NODE INFO
 """
+
 from twisted.internet.defer import returnValue
 import os
 import time
@@ -28,11 +29,12 @@ class multipole_monitor(LabradServer):
     """
     Server to monitor multipole voltages
     """
-    name = 'Multipole Monitor'
+
+    name = "Multipole Monitor"
 
     def initServer(self):
-        self.password = os.environ['LABRADPASSWORD']
-        self.name = 'Multipole Monitor'
+        self.password = os.environ["LABRADPASSWORD"]
+        self.name = "Multipole Monitor"
         self.rate = 60  # seconds between multipole readings
         self.time = 0
         connected = self.connect()
@@ -46,9 +48,9 @@ class multipole_monitor(LabradServer):
 
         # connect to multipole server and datavault computers
 
-        self.cxn = yield connectAsync('10.97.112.4',
-                                      name=self.name,
-                                      password=self.password)
+        self.cxn = yield connectAsync(
+            "10.97.112.4", name=self.name, password=self.password
+        )
         # connect to servers
         self.server = yield self.cxn.multipole_server()
 
@@ -57,12 +59,12 @@ class multipole_monitor(LabradServer):
         self.lc.start(self.rate)
 
         try:
-            self.dv = yield self.cxn.servers['Data Vault']
+            self.dv = yield self.cxn.servers["Data Vault"]
         except KeyError as error:
-            error_msg = str(error) + '  ' + 'DataVault is not running'
+            error_msg = str(error) + "  " + "DataVault is not running"
             raise KeyError(error_msg)
 
-        self.path = yield self.setup_datavault('Time', 'Multipole Values [V]')
+        self.path = yield self.setup_datavault("Time", "Multipole Values [V]")
 
     @inlineCallbacks
     def loops(self):
@@ -78,10 +80,19 @@ class multipole_monitor(LabradServer):
         """
         adds parameters to datavault and parameter vault, define contexts for each laser
         """
-        yield self.dv.cd(['', self.name], True)
-        self.dataset = yield self.dv.new(self.name, [('t', 'num')], [('Ex', '', 'num')], [('Ey', '', 'num')],
-                                         [('Ez', '', 'num')], [('M1', '', 'num')], [('M2', '', 'num')],
-                                         [('M3', '', 'num')], [('M4', '', 'num')], [('M5', '', 'num')])
+        yield self.dv.cd(["", self.name], True)
+        self.dataset = yield self.dv.new(
+            self.name,
+            [("t", "num")],
+            [("Ex", "", "num")],
+            [("Ey", "", "num")],
+            [("Ez", "", "num")],
+            [("M1", "", "num")],
+            [("M2", "", "num")],
+            [("M3", "", "num")],
+            [("M4", "", "num")],
+            [("M5", "", "num")],
+        )
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ from drift_config import drift_tracker_config as hc
 
 
 class driftTracker(LabradServer):
-    name = 'drift_tracker'
+    name = "drift_tracker"
 
     def initServer(self):
         self.tracked_servers = {}
@@ -31,7 +31,8 @@ class driftTracker(LabradServer):
     @inlineCallbacks
     def connect(self):
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync(name='Drift Tracker')
+
+        self.cxn = yield connectAsync(name="Drift Tracker")
         yield self.setupListeners()
         self.tracked_servers = []
         for key, value in self.tracked_items.iteritems():
@@ -44,21 +45,25 @@ class driftTracker(LabradServer):
 
     @inlineCallbacks
     def setupListeners(self):
-        yield self.client.manager.subscribe_to_named_message('Server Connect', 9291932, True)
-        yield self.client.manager.subscribe_to_named_message('Server Disconnect', 9292932, True)
-        yield self.client.manager.addListener(listener=self.followServerConnect,
-                                              source=None,
-                                              ID=9291932)
-        yield self.client.manager.addListener(listener=self.followServerDisconnect,
-                                              source=None,
-                                              ID=9292932)
+        yield self.client.manager.subscribe_to_named_message(
+            "Server Connect", 9291932, True
+        )
+        yield self.client.manager.subscribe_to_named_message(
+            "Server Disconnect", 9292932, True
+        )
+        yield self.client.manager.addListener(
+            listener=self.followServerConnect, source=None, ID=9291932
+        )
+        yield self.client.manager.addListener(
+            listener=self.followServerDisconnect, source=None, ID=9292932
+        )
 
     @inlineCallbacks
     def followServerDisconnect(self, ctx, serverName):
         serverName = serverName[1]
         print(serverName)
         if serverName in self.tracked_servers:
-            print('tracked server!')
+            print("tracked server!")
             yield None
 
     @inlineCallbacks
@@ -66,7 +71,7 @@ class driftTracker(LabradServer):
         serverName = serverName[1]
         print(serverName)
         if serverName in self.tracked_servers:
-            print('tracked server online!')
+            print("tracked server online!")
             yield None
 
     @inlineCallbacks
@@ -78,7 +83,7 @@ class driftTracker(LabradServer):
 
         for key, value in self.tracked_items.iteritems():
             server_name = value[0]
-            server_name = server_name.replace(' ', '_').lower()
+            server_name = server_name.replace(" ", "_").lower()
             method_name = value[1]
             arg = value[2]
             server = getattr(self.cxn, server_name)

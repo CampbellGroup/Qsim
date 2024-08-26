@@ -25,16 +25,16 @@ import socket
 
 
 class ind_WM_lock_Server(LabradServer):
-    name = 'WS7 Lock Server'
+    name = "WS7 Lock Server"
 
     def initServer(self):
-        self.password = os.environ['LABRADPASSWORD']
-        self.name = socket.gethostname() + ' Single WM Lock Server'
+        self.password = os.environ["LABRADPASSWORD"]
+        self.name = socket.gethostname() + " Single WM Lock Server"
         self.set = 752.451900
         self.freq_span = 0.001
         self.volt = 0.0
         self.timer = 1.0
-        self.rails = [0, .4]
+        self.rails = [0, 0.4]
         self.gain = -0.1
         self.prevoutput = 0.0
         self.dac = 3
@@ -49,7 +49,8 @@ class ind_WM_lock_Server(LabradServer):
 
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync(name='WS7 lock Server')
+
+        self.cxn = yield connectAsync(name="WS7 lock Server")
         self.server = self.cxn.multiplexerserver
         self.dac = self.cxn.keithley_2230g_server
         yield self.dac.select_device(0)
@@ -70,30 +71,30 @@ class ind_WM_lock_Server(LabradServer):
         if (freq >= (freq - self.freq_span)) or (freq <= (freq + self.freq_span)):
             output = self.prevoutput
         self.prevoutput = output
-        yield self.dac.voltage(2, U(output, 'V'))
+        yield self.dac.voltage(2, U(output, "V"))
         # self.server.set_dac_voltage(self.dac, output)
 
-    @setting(13, state='b')
+    @setting(13, state="b")
     def toggle(self, c, state):
-        '''
+        """
         Sends switches cal vs switcher
-        '''
+        """
         if state:
             self.lc.start(self.timer)
         else:
             self.lc.stop()
 
-    @setting(14, value='v')
+    @setting(14, value="v")
     def offset(self, c, value):
         # yield self.server.set_dac_voltage(self.dac, value)
         print(value)
         self.prevoutput = value
 
-    @setting(15, gain='v')
+    @setting(15, gain="v")
     def set_gain(self, c, gain):
         self.gain = gain
 
-    @setting(16, setpoint='v')
+    @setting(16, setpoint="v")
     def set_point(self, c, setpoint):
         self.set = setpoint
 

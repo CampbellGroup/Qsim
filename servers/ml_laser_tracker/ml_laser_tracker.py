@@ -15,6 +15,7 @@ message = 987654321
 timeout = 1000
 ### END NODE INFO
 """
+
 from twisted.internet.defer import returnValue
 import os
 import time
@@ -28,11 +29,12 @@ class ml_laser_monitor(LabradServer):
     """
     Server to monitor frequencies for ML lasers, and display drift over time
     """
-    name = 'ML Monitor'
+
+    name = "ML Monitor"
 
     def initServer(self):
-        self.password = os.environ['LABRADPASSWORD']
-        self.name = 'ML Monitor'
+        self.password = os.environ["LABRADPASSWORD"]
+        self.name = "ML Monitor"
         self.chan = [0]  # wavemeter channels to monitor [ 935, 638, 369/399]
         self.set_freq = [405645.000]  # desired frequencies of lasers
         self.rate = 2  # seconds between wavemeter readings
@@ -47,12 +49,12 @@ class ml_laser_monitor(LabradServer):
         from labrad.wrappers import connectAsync
 
         # connect to wavemeter and datavault computers
-        self.cxn = yield connectAsync('10.97.112.1',
-                                      name=self.name,
-                                      password=self.password)
-        self.cxn1 = yield connectAsync('10.97.112.4',
-                                       name=self.name,
-                                       password=self.password)
+        self.cxn = yield connectAsync(
+            "10.97.112.1", name=self.name, password=self.password
+        )
+        self.cxn1 = yield connectAsync(
+            "10.97.112.4", name=self.name, password=self.password
+        )
         # connect to servers
         self.server = yield self.cxn1.bristol_521
 
@@ -61,20 +63,20 @@ class ml_laser_monitor(LabradServer):
         self.lc.start(self.rate)
 
         try:
-            self.dv = yield self.cxn.servers['Data Vault']
+            self.dv = yield self.cxn.servers["Data Vault"]
         except KeyError as error:
-            error_msg = str(error) + '  ' + 'DataVault is not running'
+            error_msg = str(error) + "  " + "DataVault is not running"
             raise KeyError(error_msg)
 
         try:
-            self.grapher = self.cxn1.servers['grapher']
+            self.grapher = self.cxn1.servers["grapher"]
         except:
             self.grapher = None
 
-        self.path = yield self.setup_datavault('Time', 'ML Monitor')
+        self.path = yield self.setup_datavault("Time", "ML Monitor")
 
         # setup the graphers for each drift monitor plot
-        yield self.setup_grapher('ML Monitor')
+        yield self.setup_grapher("ML Monitor")
 
     @inlineCallbacks
     def loops(self):
@@ -97,10 +99,12 @@ class ml_laser_monitor(LabradServer):
         adds parameters to datavault and parameter vault, define contexts for each laser
         """
 
-        yield self.dv.cd(['', self.name], True)
+        yield self.dv.cd(["", self.name], True)
 
         # datasets for each laser
-        self.dataset = yield self.dv.new(self.name + ' ML', [('t', 'num')], [('GHz', '', 'num')])
+        self.dataset = yield self.dv.new(
+            self.name + " ML", [("t", "num")], [("GHz", "", "num")]
+        )
 
     @inlineCallbacks
     def setup_grapher(self, tab):

@@ -20,7 +20,7 @@ error_codes = {
     -15: "ok_UnsupportedFeature",
     -16: "ok_FIFOUnderflow",
     -17: "ok_FIFOOverflow",
-    -18: "ok_DataAlignmentError"
+    -18: "ok_DataAlignmentError",
 }
 
 
@@ -47,7 +47,7 @@ class API:
             iden = tmp.GetDeviceID()
             if iden == self.okDeviceID:
                 self.xem = tmp
-                print('Connected to {}'.format(iden))
+                print("Connected to {}".format(iden))
                 self.program_ok_board()
                 return True
         return False
@@ -55,7 +55,11 @@ class API:
     def program_ok_board(self) -> None:
         prog = self.xem.ConfigureFPGA(self.okDeviceFile)
         if prog != 0:
-            raise Exception("Not able to program FPGA. error code: {} {}".format(prog, error_codes[prog]))
+            raise Exception(
+                "Not able to program FPGA. error code: {} {}".format(
+                    prog, error_codes[prog]
+                )
+            )
         pll = ok.PLL22150()
         self.xem.GetEepromPLL22150Configuration(pll)
         pll.SetDiv1(pll.DivSrc_VCO, 4)

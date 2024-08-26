@@ -10,8 +10,8 @@ class cal_toggle_switch(QtGui.QWidget):
         super(cal_toggle_switch, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.reactor = reactor
-        self.password = os.environ['LABRADPASSWORD']
-        self.name = socket.gethostname() + ' Rear Port Switcher'
+        self.password = os.environ["LABRADPASSWORD"]
+        self.name = socket.gethostname() + " Rear Port Switcher"
         self.connect()
 
     @inlineCallbacks
@@ -22,9 +22,10 @@ class cal_toggle_switch(QtGui.QWidget):
         """
 
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('10.97.112.2',
-                                      name=self.name,
-                                      password=self.password)
+
+        self.cxn = yield connectAsync(
+            "10.97.112.2", name=self.name, password=self.password
+        )
         self.server = self.cxn.multiplexerserver
         self.switchmode = yield self.server.get_switcher_mode()
         if not self.switchmode:
@@ -34,7 +35,7 @@ class cal_toggle_switch(QtGui.QWidget):
 
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
-        widget = QCustomSwitchChannel('Cal. Toggle', ('Cal', 'Switch Mode'))
+        widget = QCustomSwitchChannel("Cal. Toggle", ("Cal", "Switch Mode"))
         if not self.switchmode:
             widget.TTLswitch.setChecked(True)
 
@@ -44,9 +45,9 @@ class cal_toggle_switch(QtGui.QWidget):
 
     @inlineCallbacks
     def toggle(self, state):
-        '''
+        """
         Sends switches cal vs switcher
-        '''
+        """
         if state:
             yield self.server.set_switcher_mode(False)
             yield self.server.set_active_channel(9)

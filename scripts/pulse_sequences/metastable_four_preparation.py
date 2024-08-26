@@ -1,8 +1,14 @@
 from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSequence
-from .sub_sequences.microwave_interrogation.microwave_interrogation import MicrowaveInterrogation
-from .sub_sequences.microwave_interrogation.metastable_microwave_interrogation import MetastableMicrowaveInterrogation
+from .sub_sequences.microwave_interrogation.microwave_interrogation import (
+    MicrowaveInterrogation,
+)
+from .sub_sequences.microwave_interrogation.metastable_microwave_interrogation import (
+    MetastableMicrowaveInterrogation,
+)
 from .sub_sequences.turn_off_all import TurnOffAll
-from .sub_sequences.state_detection.metastable_state_detection import MetastableStateDetection
+from .sub_sequences.state_detection.metastable_state_detection import (
+    MetastableStateDetection,
+)
 from .sub_sequences.shelving_doppler_cooling import ShelvingDopplerCooling
 from .sub_sequences.optical_pumping import OpticalPumping
 from .sub_sequences.shelving import Shelving
@@ -11,13 +17,19 @@ from .sub_sequences.heralded_four_preparation import HeraldedFourPreparation
 
 
 class MetastableFourPreparation(PulseSequence):
-    required_subsequences = [TurnOffAll, MetastableMicrowaveInterrogation,
-                             MetastableStateDetection, OpticalPumping, Shelving,
-                             ShelvingDopplerCooling, Deshelving, MicrowaveInterrogation,
-                             HeraldedFourPreparation]
-
-    required_parameters = [
+    required_subsequences = [
+        TurnOffAll,
+        MetastableMicrowaveInterrogation,
+        MetastableStateDetection,
+        OpticalPumping,
+        Shelving,
+        ShelvingDopplerCooling,
+        Deshelving,
+        MicrowaveInterrogation,
+        HeraldedFourPreparation,
     ]
+
+    required_parameters = []
 
     def sequence(self):
         self.add_sequence(TurnOffAll)

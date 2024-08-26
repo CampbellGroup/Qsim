@@ -13,11 +13,11 @@ class TestExperiment(QsimExperiment):
     to test any particular sequence desired without affecting any other experiment
     """
 
-    name = 'Test Experiment'
+    name = "Test Experiment"
 
     exp_parameters = []
-    exp_parameters.append(('StandardStateDetection', 'repetitions'))
-    exp_parameters.append(('Modes', 'state_detection_mode'))
+    exp_parameters.append(("StandardStateDetection", "repetitions"))
+    exp_parameters.append(("Modes", "state_detection_mode"))
 
     exp_parameters.extend(TestSequence.all_required_parameters())
 
@@ -45,18 +45,28 @@ class TestExperiment(QsimExperiment):
 
     @inlineCallbacks
     def _program_pulser(self):
-        start = U(5.0, 'us')
-        duration = U(500.0, 'us')
+        start = U(5.0, "us")
+        duration = U(500.0, "us")
 
         yield self.pulser.new_sequence()
         yield self.pulser.add_ttl_pulse("ReadoutCount", start, duration)
         yield self.pulser.add_dds_pulses(
-            [('760SP', start, duration, U(160.0, "MHz"), U(-10.0, "dBm"),
-              U(0.0, "deg"), U(0.0, "MHz"), U(0.0, "dB"))]
+            [
+                (
+                    "760SP",
+                    start,
+                    duration,
+                    U(160.0, "MHz"),
+                    U(-10.0, "dBm"),
+                    U(0.0, "deg"),
+                    U(0.0, "MHz"),
+                    U(0.0, "dB"),
+                )
+            ]
         )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = TestExperiment(cxn=cxn)

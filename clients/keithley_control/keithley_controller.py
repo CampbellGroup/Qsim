@@ -21,6 +21,7 @@ class KeithleyClient(QtGui.QWidget):
         """Creates an Asynchronous connection"""
         from labrad.wrappers import connectAsync
         from labrad.units import WithUnit as U
+
         self.U = U
         self.cxn = yield connectAsync(name="keithley client")
         self.server = self.cxn.keithley_2230g_server
@@ -30,27 +31,33 @@ class KeithleyClient(QtGui.QWidget):
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
 
-        self.setWindowTitle('keithley Control')
+        self.setWindowTitle("keithley Control")
 
-        qBox = QtGui.QGroupBox('Keithley 2230G')
+        qBox = QtGui.QGroupBox("Keithley 2230G")
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0)
 
-        self.volt1widget = QCustomSpinBox('Amplitude (Vpp)', (0, 30))
-        self.volt2widget = QCustomSpinBox('Amplitude (Vpp)', (0, 30))
+        self.volt1widget = QCustomSpinBox("Amplitude (Vpp)", (0, 30))
+        self.volt2widget = QCustomSpinBox("Amplitude (Vpp)", (0, 30))
 
         self.volt1widget.spinLevel.valueChanged.connect(
-            lambda value=self.volt1widget.spinLevel.value(), chan=1: self.voltchanged(chan, value))
+            lambda value=self.volt1widget.spinLevel.value(), chan=1: self.voltchanged(
+                chan, value
+            )
+        )
         self.volt2widget.spinLevel.valueChanged.connect(
-            lambda value=self.volt2widget.spinLevel.value(), chan=2: self.voltchanged(chan, value))
+            lambda value=self.volt2widget.spinLevel.value(), chan=2: self.voltchanged(
+                chan, value
+            )
+        )
         subLayout.addWidget(self.volt1widget, 1, 1)
         subLayout.addWidget(self.volt2widget, 1, 3)
         self.setLayout(layout)
 
     @inlineCallbacks
     def voltchanged(self, chan, value):
-        value = self.U(value, 'V')
+        value = self.U(value, "V")
         yield self.server.voltage(chan, value)
 
     def closeEvent(self, x):

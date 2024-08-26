@@ -1,28 +1,31 @@
 import labrad
-from Qsim.scripts.pulse_sequences.interleaved_modelocked_interrogation import interleaved_modelocked_interrogation as sequence
+from Qsim.scripts.pulse_sequences.interleaved_modelocked_interrogation import (
+    interleaved_modelocked_interrogation as sequence,
+)
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 
 
 class TimeHarp_Interleaved(QsimExperiment):
-    """
-    """
+    """ """
 
-    name = 'TimeHarp Interleaved'
+    name = "TimeHarp Interleaved"
 
     exp_parameters = []
-    exp_parameters.append(('TimeHarp_Interleaved', 'cooling_time'))
-    exp_parameters.append(('TimeHarp_Interleaved', 'interogation_time'))
-    exp_parameters.append(('TimeHarp_Interleaved', 'iterations'))
+    exp_parameters.append(("TimeHarp_Interleaved", "cooling_time"))
+    exp_parameters.append(("TimeHarp_Interleaved", "interogation_time"))
+    exp_parameters.append(("TimeHarp_Interleaved", "iterations"))
     exp_parameters.extend(sequence.all_required_parameters())
-    exp_parameters.remove(('DopplerCooling', 'duration'))
-    exp_parameters.remove(('ML_interogation', 'duration'))
+    exp_parameters.remove(("DopplerCooling", "duration"))
+    exp_parameters.remove(("ML_interogation", "duration"))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
 
     def run(self, cxn, context):
-        self.p['DopplerCooling.duration'] = self.p.TimeHarp_Interleaved.cooling_time
-        self.p['ML_interogation.duration'] = self.p.TimeHarp_Interleaved.interogation_time
+        self.p["DopplerCooling.duration"] = self.p.TimeHarp_Interleaved.cooling_time
+        self.p["ML_interogation.duration"] = (
+            self.p.TimeHarp_Interleaved.interogation_time
+        )
         self.program_pulser()
 
     def program_pulser(self):
@@ -36,7 +39,7 @@ class TimeHarp_Interleaved(QsimExperiment):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = TimeHarp_Interleaved(cxn=cxn)

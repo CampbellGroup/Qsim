@@ -10,7 +10,15 @@ from sub_sequences.ShelvingDopplerCooling import shelving_doppler_cooling
 
 class ML_dark_state_preparation(PulseSequence):
 
-    required_subsequences = [shelving, turn_off_all, shelving_doppler_cooling, doppler_cooling, ml_state_detection, optical_pumping, deshelving]
+    required_subsequences = [
+        shelving,
+        turn_off_all,
+        shelving_doppler_cooling,
+        doppler_cooling,
+        ml_state_detection,
+        optical_pumping,
+        deshelving,
+    ]
 
     required_parameters = []
 

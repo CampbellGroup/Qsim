@@ -1,5 +1,7 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
-from clients._deprecated.dac_control_oblate.wedge_electrode_widget import ElectrodeIndicator
+from clients._deprecated.dac_control_oblate.wedge_electrode_widget import (
+    ElectrodeIndicator,
+)
 from twisted.internet.defer import inlineCallbacks
 from PyQt5.QtWidgets import *
 from config.deprecated.dac_ad660_config_oblate import hardwareConfiguration as hc
@@ -13,7 +15,7 @@ class Electrode:
         self.octant = octant
         self.minval = minval
         self.maxval = maxval
-        self.name = str('DAC: ' + str(dac))
+        self.name = str("DAC: " + str(dac))
         self.setup_widget()
 
     def setup_widget(self):
@@ -39,6 +41,7 @@ class dacclient(QFrame):
     def connect(self):
 
         from labrad.wrappers import connectAsync
+
         self.elec_dict = hc.elec_dict
         self.cxn = yield connectAsync(name="dac client")
         self.server = self.cxn.multipole_server
@@ -49,14 +52,14 @@ class dacclient(QFrame):
     def initialize_GUI(self):
         layout = QGridLayout()
         self.electrodes = {}
-        qBox = QGroupBox('DAC Channels')
+        qBox = QGroupBox("DAC Channels")
 
         subLayout = QGridLayout()
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0)
 
         self.electrodeind = ElectrodeIndicator([-12, 12])
-        multipole_names = ['Ey', 'Ez', 'Ex', 'M1', 'M2', 'M3', 'M4', 'M5']
+        multipole_names = ["Ey", "Ez", "Ex", "M1", "M2", "M3", "M4", "M5"]
         self.multipoles = []
         j = 0
         for i, multipole in enumerate(multipole_names):
@@ -75,15 +78,21 @@ class dacclient(QFrame):
         layout.addWidget(self.electrodeind, 0, 1, 1, 4)
 
         for key, channel in self.elec_dict.items():
-            electrode = Electrode(channel.dac_channel_number, channel.octantNumber,
-                                  channel.allowed_voltage_range[0], channel.allowed_voltage_range[1])
+            electrode = Electrode(
+                channel.dac_channel_number,
+                channel.octantNumber,
+                channel.allowed_voltage_range[0],
+                channel.allowed_voltage_range[1],
+            )
             self.electrodes[electrode.octant] = electrode
             subLayout.addWidget(electrode.spinBox)
-            electrode.spinBox.spinLevel.valueChanged.connect(lambda value=electrode.spinBox.spinLevel.value(),
-                                                                    electrode=electrode: self.update_dac(value,
-                                                                                                         electrode))
+            electrode.spinBox.spinLevel.valueChanged.connect(
+                lambda value=electrode.spinBox.spinLevel.value(), electrode=electrode: self.update_dac(
+                    value, electrode
+                )
+            )
 
-        self.change_multipole('dummy value')
+        self.change_multipole("dummy value")
         self.setLayout(layout)
 
     @inlineCallbacks
@@ -102,7 +111,7 @@ class dacclient(QFrame):
     def update_dac(self, voltage, electrode):
 
         if len(str(electrode.dac)) == 1:
-            dac = '0' + str(electrode.dac)
+            dac = "0" + str(electrode.dac)
         else:
             dac = str(electrode.dac)
         yield self.dacserver.set_individual_analog_voltages([(dac, voltage)])

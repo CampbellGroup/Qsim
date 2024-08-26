@@ -8,16 +8,15 @@ from .sub_sequences.dipole_interrogation import DipoleInterrogation
 
 
 class TestSequence(PulseSequence):
-    required_subsequences = [TestSubSequence,
-                             TurnOffAll,
-                             DopplerCooling,
-                             BrightStatePumping,
-                             OpticalPumping,
-                             ]
-
-    required_parameters = [
+    required_subsequences = [
+        TestSubSequence,
+        TurnOffAll,
+        DopplerCooling,
+        BrightStatePumping,
+        OpticalPumping,
     ]
+
+    required_parameters = []
 
     def sequence(self):
         self.add_sequence(TestSubSequence)
-

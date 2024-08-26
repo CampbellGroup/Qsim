@@ -16,6 +16,7 @@ timeout = 100
 ### END
 
 """
+
 import os
 import time
 from labrad.server import LabradServer
@@ -28,11 +29,12 @@ class freq_drift_monitor(LabradServer):
     """
     Server to monitor frequencies for multiple lasers, and display drift over time
     """
-    name = 'Frequency Monitor'
+
+    name = "Frequency Monitor"
 
     def initServer(self):
-        self.password = os.environ['LABRADPASSWORD']
-        self.name = socket.gethostname() + ' Frequency Monitor'
+        self.password = os.environ["LABRADPASSWORD"]
+        self.name = socket.gethostname() + " Frequency Monitor"
         self.chan = [8]  # wavemeter channels to monitor
         self.set_freq = [0.0]  # desired frequencies
         self.rate = 6  # seconds between wavemeter readings
@@ -47,28 +49,31 @@ class freq_drift_monitor(LabradServer):
         Creates asynchronous connection
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('10.97.112.2', name=self.name, password=self.password)
-        print('before')
+
+        self.cxn = yield connectAsync(
+            "10.97.112.2", name=self.name, password=self.password
+        )
+        print("before")
         self.server = self.cxn.multiplexerserver
 
         try:
-            self.dv = self.cxn.servers['Data Vault']
+            self.dv = self.cxn.servers["Data Vault"]
         except KeyError as error:
-            error_msg = str(error) + '\n' + 'DataVault is not running'
+            error_msg = str(error) + "\n" + "DataVault is not running"
             raise KeyError(error_msg)
 
         try:
-            self.grapher = self.cxn.servers['grapher']
+            self.grapher = self.cxn.servers["grapher"]
         except:
             self.grapher = None
 
-        self.path = yield self.setup_datavault('Time', 'Frequency Monitor')
-        yield self.setup_grapher('Frequency Monitor')
+        self.path = yield self.setup_datavault("Time", "Frequency Monitor")
+        yield self.setup_grapher("Frequency Monitor")
 
     @inlineCallbacks
     def loop(self):
         freq0 = yield self.server.get_frequency(self.chan[0])
-        print('after')
+        print("after")
         drift0 = self.set_freq[0] - freq0
         self.time = self.time + self.rate
 
@@ -78,13 +83,14 @@ class freq_drift_monitor(LabradServer):
 
     @inlineCallbacks
     def setup_datavault(self, x_axis, y_axis):
-
         """
         adds parameters to datavault and parameter vault
         """
 
-        self.dv.cd(['', self.name], True)
-        self.dataset = yield self.dv.new(self.name, [(x_axis, 'num')], [(y_axis, '', 'num')])
+        self.dv.cd(["", self.name], True)
+        self.dataset = yield self.dv.new(
+            self.name, [(x_axis, "num")], [(y_axis, "", "num")]
+        )
 
     @inlineCallbacks
     def setup_grapher(self, tab):

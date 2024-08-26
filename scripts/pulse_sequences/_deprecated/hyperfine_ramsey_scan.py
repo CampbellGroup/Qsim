@@ -11,11 +11,21 @@ from sub_sequences.MicrowaveInterrogationMinus import microwave_interogation_min
 
 class hyperfine_ramsey_scan(PulseSequence):
 
-    required_subsequences = [doppler_cooling, standard_state_detection,
-                             turn_off_all, bright_state_pumping, optical_pumping, ML_interogation,
-                             microwave_interogation, microwave_interogation_minus]
+    required_subsequences = [
+        doppler_cooling,
+        standard_state_detection,
+        turn_off_all,
+        bright_state_pumping,
+        optical_pumping,
+        ML_interogation,
+        microwave_interogation,
+        microwave_interogation_minus,
+    ]
 
-    required_parameters = [('ML_decoherence', 'additional_pi_pulse'), ('Line_Selection','qubit')]
+    required_parameters = [
+        ("ML_decoherence", "additional_pi_pulse"),
+        ("Line_Selection", "qubit"),
+    ]
 
     def sequence(self):
         pi_pulse = self.parameters.ML_decoherence.additional_pi_pulse

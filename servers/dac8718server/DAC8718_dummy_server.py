@@ -16,20 +16,20 @@ timeout = 20
 ### END NODE INFO
 """
 
-'''
+"""
 Created on July 16, 2015
 
 @author: anthonyransford
 
-'''
+"""
 
 from labrad.server import LabradServer, setting
 
 
 class ArduinoDAC(LabradServer):
-    name = 'DAC8718 Server'
+    name = "DAC8718 Server"
 
-    @setting(1, chan='i', value='i')
+    @setting(1, chan="i", value="i")
     def DACOutput(self, c, chan, value):
         """
         Output voltage value (in bits from 0 to 2^16) on chan.

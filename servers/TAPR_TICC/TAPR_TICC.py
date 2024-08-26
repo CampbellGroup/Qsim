@@ -22,7 +22,7 @@ from labrad.server import setting
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.internet.task import LoopingCall
 
-TIMEOUT = Value(1.0, 's')
+TIMEOUT = Value(1.0, "s")
 
 
 class TDCDevice(DeviceWrapper):
@@ -60,7 +60,7 @@ class TDCDevice(DeviceWrapper):
 
     @inlineCallbacks
     def query(self, code):
-        """ Write, then read. """
+        """Write, then read."""
         p = self.packet()
         p.write_line(code)
         p.read_line()
@@ -69,7 +69,7 @@ class TDCDevice(DeviceWrapper):
 
     @inlineCallbacks
     def read_line(self):
-        """ Read. """
+        """Read."""
         p = self.packet()
         p.read_line()
         ans = yield p.send()
@@ -77,7 +77,7 @@ class TDCDevice(DeviceWrapper):
 
     @inlineCallbacks
     def read_all(self):
-        """ Read. """
+        """Read."""
         p = self.packet()
         p.read()
         ans = yield p.send()
@@ -95,8 +95,8 @@ class TDCDevice(DeviceWrapper):
 
 
 class ArduinoTDC(DeviceServer):
-    name = 'ArduinoTDC'
-    deviceName = 'ArduinoTDC'
+    name = "ArduinoTDC"
+    deviceName = "ArduinoTDC"
     deviceWrapper = TDCDevice
 
     @inlineCallbacks
@@ -109,7 +109,7 @@ class ArduinoTDC(DeviceServer):
     def loadConfigInfo(self):
         """Load configuration information from the registry."""
         reg = self.reg
-        yield reg.cd(['', 'Servers', 'ArduinoTDC', 'Links'], True)
+        yield reg.cd(["", "Servers", "ArduinoTDC", "Links"], True)
         dirs, keys = yield reg.dir()
         print(dirs)
         p = reg.packet()
@@ -130,7 +130,7 @@ class ArduinoTDC(DeviceServer):
             print(port)
             if port not in ports:
                 continue
-            devName = '%s - %s' % (serServer, port)
+            devName = "%s - %s" % (serServer, port)
             devs += [(devName, (server, port))]
         returnValue(devs)
 
@@ -140,7 +140,7 @@ class ArduinoTDC(DeviceServer):
         data = yield dev.read_all()
         returnValue(data)
 
-    @setting(200, returns='v')
+    @setting(200, returns="v")
     def get_most_recent_data(self, c):
         dev = self.selectDevice(c)
         value = yield dev.most_recent

@@ -9,9 +9,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 try:
-    TRAP_SOUND = '/home/qsimexpcontrol/Music/trap.wav'
-    FAIL_SOUND = '/home/qsimexpcontrol/Music/swvader01.wav'
+    TRAP_SOUND = "/home/qsimexpcontrol/Music/trap.wav"
+    FAIL_SOUND = "/home/qsimexpcontrol/Music/swvader01.wav"
     from playsound import playsound
+
     SOUND_LOADED = True
 except (ImportError, FileNotFoundError):
     logger.error("Sounds not loaded")
@@ -41,17 +42,18 @@ class LoadControl(QFrame):
         connects incoming signals to relevant functions
         """
         from labrad.units import WithUnit as U
+
         self.U = U
         if self.cxn is None:
             self.cxn = yield Connection(name="Load Control")
             yield self.cxn.connect()
-        self.PMT = yield self.cxn.get_server('normalpmtflow')
-        self.pv = yield self.cxn.get_server('parametervault')
-        self.TTL = yield self.cxn.get_server('arduinottl')
-        self.oven = yield self.cxn.get_server('ovenserver')
-        self.reg = yield self.cxn.get_server('registry')
+        self.PMT = yield self.cxn.get_server("normalpmtflow")
+        self.pv = yield self.cxn.get_server("parametervault")
+        self.TTL = yield self.cxn.get_server("arduinottl")
+        self.oven = yield self.cxn.get_server("ovenserver")
+        self.reg = yield self.cxn.get_server("registry")
         try:
-            yield self.reg.cd(['', 'settings'])
+            yield self.reg.cd(["", "settings"])
             self.settings = yield self.reg.dir()
             self.settings = self.settings[1]
         except ImportError:
@@ -62,18 +64,20 @@ class LoadControl(QFrame):
     @inlineCallbacks
     def setup_listeners(self):
         yield self.PMT.signal__new_count(SIGNALID)
-        yield self.PMT.addListener(listener=self.on_new_counts,
-                                   source=None, ID=SIGNALID)
+        yield self.PMT.addListener(
+            listener=self.on_new_counts, source=None, ID=SIGNALID
+        )
 
     # noinspection PyArgumentList
     @inlineCallbacks
     def initialize_gui(self):
         layout = QGridLayout()
-        self.shutter_oven_button = QCustomSwitchChannel('399/Oven',
-                                                        ('Closed/Oven Off', 'Open/Oven On'))
+        self.shutter_oven_button = QCustomSwitchChannel(
+            "399/Oven", ("Closed/Oven Off", "Open/Oven On")
+        )
         self.shutter_oven_button.setFrameStyle(QFrame.NoFrame)
         self.shutter_oven_button.TTLswitch.toggled.connect(self.toggle)
-        self.timer_widget = QCustomTimer('Loading Time', show_control=False)
+        self.timer_widget = QCustomTimer("Loading Time", show_control=False)
         self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 5.0))
         self.max_time_widget = QCustomSpinBox("Max Time (m)", (0.0, 30.0))
 
@@ -85,12 +89,12 @@ class LoadControl(QFrame):
         self.max_time_widget.setStepSize(0.1)
         self.max_time_widget.spinLevel.setDecimals(1)
 
-        if 'oven' in self.settings:
-            value = yield self.reg.get('oven')
+        if "oven" in self.settings:
+            value = yield self.reg.get("oven")
             self.current_widget.spinLevel.setValue(value)
 
-        if '399 trapshutter' in self.settings:
-            value = yield self.reg.get('399 trapshutter')
+        if "399 trapshutter" in self.settings:
+            value = yield self.reg.get("399 trapshutter")
             value = bool(value)
             self.shutter_oven_button.TTLswitch.setChecked(value)
         else:
@@ -105,13 +109,16 @@ class LoadControl(QFrame):
     @inlineCallbacks
     def on_new_counts(self, signal, pmt_value):
         # this throws error on closeout since listner is yielding to server
-        disc_value = yield self.pv.get_parameter('Loading', 'ion_threshold')
+        disc_value = yield self.pv.get_parameter("Loading", "ion_threshold")
         switch_on = not self.shutter_oven_button.TTLswitch.isChecked()
         if (pmt_value >= disc_value) and switch_on:
             self.shutter_oven_button.TTLswitch.setChecked(True)
             if SOUND_LOADED:
                 playsound(TRAP_SOUND)
-        elif (self.timer_widget.time >= float(self.max_time_widget.spinLevel.value())*60.0) and switch_on:
+        elif (
+            self.timer_widget.time
+            >= float(self.max_time_widget.spinLevel.value()) * 60.0
+        ) and switch_on:
             self.shutter_oven_button.TTLswitch.setChecked(True)
             if SOUND_LOADED:
                 playsound(FAIL_SOUND)
@@ -130,15 +137,15 @@ class LoadControl(QFrame):
     @inlineCallbacks
     def current_changed(self, value: float):
         """:param value: The current in amps"""
-        yield self.oven.oven_current(self.U(value, 'A'))
-        if 'oven' in self.settings:
-            yield self.reg.set('oven', value)
+        yield self.oven.oven_current(self.U(value, "A"))
+        if "oven" in self.settings:
+            yield self.reg.set("oven", value)
 
     @inlineCallbacks
     def change_state(self, state: bool) -> None:
         """:param state: a bool representing whether the state is toggled on or off"""
-        if '399 trapshutter' in self.settings:
-            yield self.reg.set('399 trapshutter', state)
+        if "399 trapshutter" in self.settings:
+            yield self.reg.set("399 trapshutter", state)
         yield self.TTL.ttl_output(10, not state)
 
     def closeEvent(self, x):

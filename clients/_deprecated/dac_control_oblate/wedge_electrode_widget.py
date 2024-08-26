@@ -10,8 +10,9 @@ from PyQt5.QtCore import *
 
 class Wedge:
 
-    def __init__(self, x_coord, y_coord, starting_angle,
-                 top_voltage=0.0, bottom_voltage=0.0):
+    def __init__(
+        self, x_coord, y_coord, starting_angle, top_voltage=0.0, bottom_voltage=0.0
+    ):
         self.top_voltage = top_voltage
         self.bottom_voltage = bottom_voltage
         self.x_coord = x_coord
@@ -51,7 +52,7 @@ class ElectrodeIndicator(QWidget):
 
         self.quads = [quad1, quad2, quad3, quad4]
 
-        self.setWindowTitle('Electrode Indicator')
+        self.setWindowTitle("Electrode Indicator")
         self.show()
 
     def paintEvent(self, e):
@@ -64,7 +65,7 @@ class ElectrodeIndicator(QWidget):
     def draw_wedges(self, qp):
         frame_width = self.frameGeometry().width()
         frame_height = self.frameGeometry().height()
-        trap_diameter = .9 * min(frame_height, frame_width / 2)
+        trap_diameter = 0.9 * min(frame_height, frame_width / 2)
         center_top = QPoint(int(frame_width / 4), int(frame_height / 2))
         center_bottom = QPoint(int(3 * frame_width / 4), int(frame_height / 2))
 
@@ -82,29 +83,49 @@ class ElectrodeIndicator(QWidget):
         for quad in self.quads[:4]:
             qp.setBrush(quad.top_color)
             path = QPainterPath(center_top)
-            path.arcTo(x_coord_top, y_coord_top,
-                       trap_diameter, trap_diameter,
-                       quad.starting_angle, 90.0)
+            path.arcTo(
+                x_coord_top,
+                y_coord_top,
+                trap_diameter,
+                trap_diameter,
+                quad.starting_angle,
+                90.0,
+            )
             path.lineTo(center_top)
             qp.drawPath(path)
 
             qp.setBrush(quad.bottom_color)
             path = QPainterPath(center_bottom)
-            path.arcTo(x_coord_bottom, y_coord_bottom,
-                       trap_diameter, trap_diameter,
-                       quad.starting_angle, 90.0)
+            path.arcTo(
+                x_coord_bottom,
+                y_coord_bottom,
+                trap_diameter,
+                trap_diameter,
+                quad.starting_angle,
+                90.0,
+            )
             path.lineTo(center_bottom)
             qp.drawPath(path)
 
         pen = QtGui.QPen(Qt.black, 1, Qt.PenStyle.SolidLine)
         qp.setPen(pen)
         for i in range(4):
-            qp.drawText(center_top + QtCore.QPoint(int(signs[i][0] * trap_diameter / 8),
-                                                   int(signs[i][1] * trap_diameter / 8)),
-                        str(round(self.quads[i].top_voltage, 4)))
-            qp.drawText(center_bottom + QtCore.QPoint(int(signs[i][0] * trap_diameter / 8),
-                                                      int(signs[i][1] * trap_diameter / 8)),
-                        str(round(self.quads[i].bottom_voltage, 4)))
+            qp.drawText(
+                center_top
+                + QtCore.QPoint(
+                    int(signs[i][0] * trap_diameter / 8),
+                    int(signs[i][1] * trap_diameter / 8),
+                ),
+                str(round(self.quads[i].top_voltage, 4)),
+            )
+            qp.drawText(
+                center_bottom
+                + QtCore.QPoint(
+                    int(signs[i][0] * trap_diameter / 8),
+                    int(signs[i][1] * trap_diameter / 8),
+                ),
+                str(round(self.quads[i].bottom_voltage, 4)),
+            )
 
     def draw_values(self, qp):
         pen = QtGui.QPen(Qt.red, 2, Qt.PenStyle.SolidLine)

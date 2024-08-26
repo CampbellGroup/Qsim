@@ -5,14 +5,14 @@ import time
 
 
 class ticklescan(QsimExperiment):
-    name = 'Tickle Scan'
+    name = "Tickle Scan"
 
     exp_parameters = []
-    exp_parameters.append(('ticklescan', 'amplitude'))
-    exp_parameters.append(('ticklescan', 'frequency_scan'))
-    exp_parameters.append(('ticklescan', 'average'))
-    exp_parameters.append(('ticklescan', 'offset'))
-    exp_parameters.append(('ticklescan', 'waveform'))
+    exp_parameters.append(("ticklescan", "amplitude"))
+    exp_parameters.append(("ticklescan", "frequency_scan"))
+    exp_parameters.append(("ticklescan", "average"))
+    exp_parameters.append(("ticklescan", "offset"))
+    exp_parameters.append(("ticklescan", "waveform"))
 
     def initialize(self, cxn, context, ident):
 
@@ -22,18 +22,24 @@ class ticklescan(QsimExperiment):
         self.chan = 1
 
     def run(self, cxn, context):
-
         """
         Main loop
         """
 
-        self.setup_datavault('Frequency', 'kCounts/sec')
-        self.setup_grapher('tickle_scan')
+        self.setup_datavault("Frequency", "kCounts/sec")
+        self.setup_grapher("tickle_scan")
         self.set_scannable_parameters()
-        self.x_values = self.get_scan_list(self.p["ticklescan.frequency_scan"], units='Hz')
+        self.x_values = self.get_scan_list(
+            self.p["ticklescan.frequency_scan"], units="Hz"
+        )
         self.rg.set_output(self.chan, True)
-        self.rg.apply_waveform(self.p["ticklescan.waveform"], WithUnit(self.x_values[0], 'Hz'),
-                              self.amplitude, self.offset, self.chan)
+        self.rg.apply_waveform(
+            self.p["ticklescan.waveform"],
+            WithUnit(self.x_values[0], "Hz"),
+            self.amplitude,
+            self.offset,
+            self.chan,
+        )
         time.sleep(1)
 
         for i, freq in enumerate(self.x_values):
@@ -41,13 +47,12 @@ class ticklescan(QsimExperiment):
             if should_break:
                 break
 
-            self.rg.frequency(self.chan, WithUnit(freq, 'Hz'))
-            counts = self.pmt.get_next_counts('ON', self.average, True)
+            self.rg.frequency(self.chan, WithUnit(freq, "Hz"))
+            counts = self.pmt.get_next_counts("ON", self.average, True)
             time.sleep(0.1)
             self.dv.add(freq, counts)
 
     def set_scannable_parameters(self):
-
         """
         gets parameters, called in run so scan works
         """
@@ -58,10 +63,13 @@ class ticklescan(QsimExperiment):
 
     def finalize(self, cxn, context):
         self.rg.set_output(self.chan, True)
-        self.rg.apply_waveform("DC", WithUnit(0.0, "Hz"), WithUnit(0.0, "V"), self.offset, self.chan)
-        self.rg.set_output(self.chan, False) # turn off at end of scan
+        self.rg.apply_waveform(
+            "DC", WithUnit(0.0, "Hz"), WithUnit(0.0, "V"), self.offset, self.chan
+        )
+        self.rg.set_output(self.chan, False)  # turn off at end of scan
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = ticklescan(cxn=cxn)

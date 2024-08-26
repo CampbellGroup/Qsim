@@ -5,9 +5,10 @@ from labrad.units import WithUnit
 
 class TurnOffAll(PulseSequence):
     def sequence(self):
-        dur = WithUnit(1., 'us')
+        dur = WithUnit(1.0, "us")
         for channel in hc.dds_channel_dict.keys():
-            if channel not in ['RF_Drive', 'Microwave_qubit']:
-                self.add_dds(channel, self.start, dur,
-                             WithUnit(0, 'MHz'), WithUnit(-46.0, 'dBm'))
+            if channel not in ["RF_Drive", "Microwave_qubit"]:
+                self.add_dds(
+                    channel, self.start, dur, WithUnit(0, "MHz"), WithUnit(-46.0, "dBm")
+                )
         self.end = self.start + dur

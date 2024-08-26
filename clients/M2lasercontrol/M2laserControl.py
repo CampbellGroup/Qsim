@@ -19,8 +19,12 @@ class myWebView(QtWebKit.QWebView):
     def __init__(self, parent=None):
         super(myWebView, self).__init__(parent)
         self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled, True)
-        self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanOpenWindows, True)
-        self.settings().setAttribute(QtWebKit.QWebSettings.JavascriptCanAccessClipboard, True)
+        self.settings().setAttribute(
+            QtWebKit.QWebSettings.JavascriptCanOpenWindows, True
+        )
+        self.settings().setAttribute(
+            QtWebKit.QWebSettings.JavascriptCanAccessClipboard, True
+        )
         self.page().setNetworkAccessManager(networkAccessManager)
 
         url = url = QtCore.QUrl("http://10.97.112.16/control.htm")
@@ -66,17 +70,22 @@ class M2Window(QtGui.QWidget):
         connects incoming signals to relavent functions
         """
         from labrad.wrappers import connectAsync
-        self.cxn = yield connectAsync('10.97.112.2', name=socket.gethostname() + ' M2 Client', password='lab')
+
+        self.cxn = yield connectAsync(
+            "10.97.112.2", name=socket.gethostname() + " M2 Client", password="lab"
+        )
         self.server = yield self.cxn.multiplexerserver
         yield self.server.signal__frequency_changed(SIGNALID1)
-        yield self.server.addListener(listener=self.updateFrequency, source=None, ID=SIGNALID1)
+        yield self.server.addListener(
+            listener=self.updateFrequency, source=None, ID=SIGNALID1
+        )
 
         self.initializeGUI()
 
     def initializeGUI(self):
         layout = QtGui.QGridLayout()
-        self.setWindowTitle('Ti-Saph Control')
-        qBox = QtGui.QGroupBox('Wave Length and Lock settings')
+        self.setWindowTitle("Ti-Saph Control")
+        qBox = QtGui.QGroupBox("Wave Length and Lock settings")
         subLayout = QtGui.QGridLayout()
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0), returnValue
@@ -85,13 +94,13 @@ class M2Window(QtGui.QWidget):
         font = QtGui.QFont()
         font.setBold(True)
         font.setPointSize(30)
-        self.title = QtGui.QLabel('M Squared Ti-Saph Laser')
+        self.title = QtGui.QLabel("M Squared Ti-Saph Laser")
         self.title.setFont(font)
         self.title.setAlignment(QtCore.Qt.AlignCenter)
-        self.wavelength = QtGui.QLabel('freq')
-        self.wavelength.setFont(QtGui.QFont('MS Shell Dlg 2', pointSize=50))
+        self.wavelength = QtGui.QLabel("freq")
+        self.wavelength.setFont(QtGui.QFont("MS Shell Dlg 2", pointSize=50))
         self.wavelength.setAlignment(QtCore.Qt.AlignCenter)
-        self.wavelength.setStyleSheet('color: maroon')
+        self.wavelength.setStyleSheet("color: maroon")
         subLayout.addWidget(self.title, 0, 0)
         subLayout.addWidget(self.webView, 1, 0)
         subLayout.addWidget(self.wavelength, 2, 0)

@@ -9,51 +9,51 @@ from labrad.units import WithUnit as U
 
 class FidelityTweakUp(QsimExperiment):
     """
-Performs a continuous state preparation and measurement experiment of the ion. This experiment's paramters can be
-modified on the fly, for use in tuning the fidelity of the ion.
+    Performs a continuous state preparation and measurement experiment of the ion. This experiment's paramters can be
+    modified on the fly, for use in tuning the fidelity of the ion.
 
-This experiment has been modified to be exclusively used with standard I = 1/2 qubit state readout, and a separate
-experiment is written for Shelving readout of the qubit.
+    This experiment has been modified to be exclusively used with standard I = 1/2 qubit state readout, and a separate
+    experiment is written for Shelving readout of the qubit.
 
-Pulse sequence diagram (369DP, 935SP, and 976SP always on):
+    Pulse sequence diagram (369DP, 935SP, and 976SP always on):
 
-Standard:
-    DopplerCoolingSP |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁|████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁
-    StateDetectionSP |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-    OpticalPumpingSP |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-    760SP/760SP2     |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁|████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-    ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-         (TurnOffAll) DC          OP          StandardSD   DC          BSP*        StandardSD
+    Standard:
+        DopplerCoolingSP |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁|████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁
+        StateDetectionSP |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+        OpticalPumpingSP |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        760SP/760SP2     |████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁|████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+             (TurnOffAll) DC          OP          StandardSD   DC          BSP*        StandardSD
 
-FiberEOM:
-    WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-    WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-    760SP/760SP2     |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁|████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-    ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-         (TurnOffAll) DC          OP          StandardSD   DC          BSP*        StandardSD
+    FiberEOM:
+        WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+        WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        760SP/760SP2     |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁|████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+             (TurnOffAll) DC          OP          StandardSD   DC          BSP*        StandardSD
 
-*The BrightStatePumping subsequence shown above is for Doppler-cooling-based pumping. In general, a microwave pulse is
-usually used to perform the pumping operation
-"""
+    *The BrightStatePumping subsequence shown above is for Doppler-cooling-based pumping. In general, a microwave pulse is
+    usually used to perform the pumping operation
+    """
 
-    name = 'Fidelity Tweak Up'
+    name = "Fidelity Tweak Up"
 
     exp_parameters = []
 
-    exp_parameters.append(('Pi_times', 'qubit_0'))
-    exp_parameters.append(('Pi_times', 'qubit_plus'))
-    exp_parameters.append(('Pi_times', 'qubit_minus'))
-    exp_parameters.append(('Modes', 'state_detection_mode'))
-    exp_parameters.append(('Modes', 'bright_state_pumping'))
-    exp_parameters.append(('MicrowaveInterrogation', 'repetitions'))
-    exp_parameters.append(('StandardStateDetection', 'repetitions'))
-    exp_parameters.append(('StandardStateDetection', 'points_per_histogram'))
-    exp_parameters.append(('StandardStateDetection', 'state_readout_threshold'))
+    exp_parameters.append(("Pi_times", "qubit_0"))
+    exp_parameters.append(("Pi_times", "qubit_plus"))
+    exp_parameters.append(("Pi_times", "qubit_minus"))
+    exp_parameters.append(("Modes", "state_detection_mode"))
+    exp_parameters.append(("Modes", "bright_state_pumping"))
+    exp_parameters.append(("MicrowaveInterrogation", "repetitions"))
+    exp_parameters.append(("StandardStateDetection", "repetitions"))
+    exp_parameters.append(("StandardStateDetection", "points_per_histogram"))
+    exp_parameters.append(("StandardStateDetection", "state_readout_threshold"))
     exp_parameters.extend(sequence.all_required_parameters())
 
     # hide some parameters
-    exp_parameters.remove(('MicrowaveInterrogation', 'detuning'))
-    exp_parameters.remove(('MicrowaveInterrogation', 'duration'))
+    exp_parameters.remove(("MicrowaveInterrogation", "detuning"))
+    exp_parameters.remove(("MicrowaveInterrogation", "duration"))
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
@@ -65,16 +65,16 @@ usually used to perform the pumping operation
         qubit = self.p.Line_Selection.qubit
         reps = self.p.MicrowaveInterrogation.repetitions
 
-        if qubit == 'qubit_plus':
+        if qubit == "qubit_plus":
             pi_time = self.p.Pi_times.qubit_plus
-        elif qubit == 'qubit_minus':
+        elif qubit == "qubit_minus":
             pi_time = self.p.Pi_times.qubit_minus
         else:
             pi_time = self.p.Pi_times.qubit_0
 
-        self.p['MicrowaveInterrogation.duration'] = reps * pi_time
-        self.p['MicrowaveInterrogation.detuning'] = U(0.0, 'kHz')
-        self.p['Modes.state_detection_mode'] = 'Standard'
+        self.p["MicrowaveInterrogation.duration"] = reps * pi_time
+        self.p["MicrowaveInterrogation.detuning"] = U(0.0, "kHz")
+        self.p["Modes.state_detection_mode"] = "Standard"
 
         self.setup_prob_datavault()
         i = 0
@@ -101,24 +101,28 @@ usually used to perform the pumping operation
                 self.program_pulser(sequence)
 
     def setup_prob_datavault(self):
-        self.dv.cd(['', 'fidelity_tweak_up'], True)
+        self.dv.cd(["", "fidelity_tweak_up"], True)
 
-        self.dataset_prob = self.dv.new('fidelity_tweak_up', [('run', 'prob')],
-                                        [('Prob', 'bright_prep', 'num'),
-                                         ('Prob', 'dark_prep', 'num'),
-                                         ('Prob', 'contrast', 'num')])
-        self.grapher.plot(self.dataset_prob, 'Fidelity', False)
+        self.dataset_prob = self.dv.new(
+            "fidelity_tweak_up",
+            [("run", "prob")],
+            [
+                ("Prob", "bright_prep", "num"),
+                ("Prob", "dark_prep", "num"),
+                ("Prob", "contrast", "num"),
+            ],
+        )
+        self.grapher.plot(self.dataset_prob, "Fidelity", False)
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter])
 
     def plot_prob(self, num, counts_dark, counts_bright):
         prob_dark = self.get_pop(counts_dark)
         prob_bright = self.get_pop(counts_bright)
-        self.dv.add(num, prob_dark, prob_bright,
-                    prob_bright - prob_dark)
+        self.dv.add(num, prob_dark, prob_bright, prob_bright - prob_dark)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     experiment = FidelityTweakUp(cxn=cxn)

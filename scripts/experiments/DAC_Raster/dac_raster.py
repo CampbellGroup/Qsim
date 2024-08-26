@@ -6,9 +6,12 @@ load_into_scriptscanner = True
 allow_concurrent = []
 ### END EXPERIMENT INFO
 """
+
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
-from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import InterleavedLinescan
+from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import (
+    InterleavedLinescan,
+)
 from config.dac_ad660_config import HardwareConfiguration as HC
 from twisted.internet.defer import inlineCallbacks
 import time
@@ -23,7 +26,7 @@ class Electrode:
         if name:
             self.name = name
         else:
-            self.name = str('DAC: ' + str(dac))
+            self.name = str("DAC: " + str(dac))
 
 
 class DACRaster(QsimExperiment):
@@ -31,13 +34,14 @@ class DACRaster(QsimExperiment):
     This experiment will scan through a user specified list of DAC voltages and can be run when
     first trying to load the trap, or if the loadable position in the trap has been lost.
     """
-    name = 'DAC Raster'
+
+    name = "DAC Raster"
 
     exp_parameters = []
-    exp_parameters.append(('dacraster', 'RF1_scan'))
-    exp_parameters.append(('dacraster', 'DC1_scan'))
-    exp_parameters.append(('dacraster', 'Delay_After_DAC_Change'))
-    exp_parameters.append(('dacraster', 'PMT_counts_to_average'))
+    exp_parameters.append(("dacraster", "RF1_scan"))
+    exp_parameters.append(("dacraster", "DC1_scan"))
+    exp_parameters.append(("dacraster", "Delay_After_DAC_Change"))
+    exp_parameters.append(("dacraster", "PMT_counts_to_average"))
     exp_parameters.extend(InterleavedLinescan.all_required_parameters())
 
     def initialize(self, cxn, context, ident):
@@ -51,14 +55,16 @@ class DACRaster(QsimExperiment):
         self.setup_datavault()
 
         for i, channel in enumerate(self.dac_channels):
-            electrode = Electrode(channel.dac_channel_number,
-                                  channel.allowed_voltage_range[0],
-                                  channel.allowed_voltage_range[1],
-                                  name=channel.name)
+            electrode = Electrode(
+                channel.dac_channel_number,
+                channel.allowed_voltage_range[0],
+                channel.allowed_voltage_range[1],
+                name=channel.name,
+            )
             self.electrodes[electrode.name] = electrode
 
-        self.RF_values = self.get_scan_list(self.p['dacraster.RF1_scan'], 'V')
-        self.DC_values = self.get_scan_list(self.p['dacraster.DC1_scan'], 'V')
+        self.RF_values = self.get_scan_list(self.p["dacraster.RF1_scan"], "V")
+        self.DC_values = self.get_scan_list(self.p["dacraster.DC1_scan"], "V")
 
         self.total_step = len(self.RF_values) * len(self.DC_values)
 
@@ -67,18 +73,21 @@ class DACRaster(QsimExperiment):
         step_count = 0
 
         for RF_voltage in self.RF_values:
-            self.update_dac(RF_voltage/2, self.electrodes['RF Rod 1'])
-            self.update_dac(-RF_voltage/2, self.electrodes['RF Rod 2'])
+            self.update_dac(RF_voltage / 2, self.electrodes["RF Rod 1"])
+            self.update_dac(-RF_voltage / 2, self.electrodes["RF Rod 2"])
 
             for DC_voltage in self.DC_values:
                 step_count += 1
                 progress = step_count / self.total_step
-                self.update_dac(DC_voltage/2, self.electrodes['DC Rod 1'])
-                self.update_dac(-DC_voltage/2, self.electrodes['DC Rod 2'])
+                self.update_dac(DC_voltage / 2, self.electrodes["DC Rod 1"])
+                self.update_dac(-DC_voltage / 2, self.electrodes["DC Rod 2"])
 
-                time.sleep(self.p['dacraster.Delay_After_DAC_Change']['s'])
-                should_break = self.take_data(progress, cxn,
-                                              (RF_voltage/2, DC_voltage/2, -DC_voltage/2, -RF_voltage/2))
+                time.sleep(self.p["dacraster.Delay_After_DAC_Change"]["s"])
+                should_break = self.take_data(
+                    progress,
+                    cxn,
+                    (RF_voltage / 2, DC_voltage / 2, -DC_voltage / 2, -RF_voltage / 2),
+                )
                 if should_break:
                     return True
 
@@ -98,23 +107,23 @@ class DACRaster(QsimExperiment):
         """
         Adds parameters to datavault and parameter vault
         """
-        self.dv.cd(['', self.name], True)
-        self.dataset = self.dv.new(self.name, [("RF1", 'num'),
-                                   ("DC1", 'num'),
-                                   ("DC2", 'num'),
-                                   ("RF2", 'num')],
-                                   [("fwhm", '', 'num')], context=self.context)
+        self.dv.cd(["", self.name], True)
+        self.dataset = self.dv.new(
+            self.name,
+            [("RF1", "num"), ("DC1", "num"), ("DC2", "num"), ("RF2", "num")],
+            [("fwhm", "", "num")],
+            context=self.context,
+        )
         for parameter in self.p:
             self.dv.add_parameter(parameter, self.p[parameter], context=self.context)
         return self.dataset
-
 
     @inlineCallbacks
     def update_dac(self, voltage, electrode):
         yield self.DACs.set_individual_analog_voltages([(electrode.dac, voltage)])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cxn = labrad.connect()
     scanner = cxn.scriptscanner
     exprt = DACRaster(cxn=cxn)
