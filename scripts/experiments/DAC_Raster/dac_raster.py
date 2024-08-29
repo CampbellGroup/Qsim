@@ -7,26 +7,16 @@ allow_concurrent = []
 ### END EXPERIMENT INFO
 """
 
+import time
+
 import labrad
-from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
+from twisted.internet.defer import inlineCallbacks
+
 from Qsim.scripts.experiments.Interleaved_Linescan.interleaved_linescan import (
     InterleavedLinescan,
 )
+from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from config.dac_ad660_config import HardwareConfiguration as HC
-from twisted.internet.defer import inlineCallbacks
-import time
-import numpy as np
-
-
-class Electrode:
-    def __init__(self, dac, minval, maxval, name=None):
-        self.dac = str(dac).zfill(2)
-        self.minval = minval
-        self.maxval = maxval
-        if name:
-            self.name = name
-        else:
-            self.name = str("DAC: " + str(dac))
 
 
 class DACRaster(QsimExperiment):
@@ -55,13 +45,7 @@ class DACRaster(QsimExperiment):
         self.setup_datavault()
 
         for i, channel in enumerate(self.dac_channels):
-            electrode = Electrode(
-                channel.dac_channel_number,
-                channel.allowed_voltage_range[0],
-                channel.allowed_voltage_range[1],
-                name=channel.name,
-            )
-            self.electrodes[electrode.name] = electrode
+            self.electrodes[channel.name] = channel.dac_channel_number
 
         self.RF_values = self.get_scan_list(self.p["dacraster.RF1_scan"], "V")
         self.DC_values = self.get_scan_list(self.p["dacraster.DC1_scan"], "V")
@@ -119,8 +103,8 @@ class DACRaster(QsimExperiment):
         return self.dataset
 
     @inlineCallbacks
-    def update_dac(self, voltage, electrode):
-        yield self.DACs.set_individual_analog_voltages([(electrode.dac, voltage)])
+    def update_dac(self, voltage, dac_num):
+        yield self.DACs.set_individual_analog_voltages([(dac_num, voltage)])
 
 
 if __name__ == "__main__":
