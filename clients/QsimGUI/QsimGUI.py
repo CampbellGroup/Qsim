@@ -1,11 +1,11 @@
 #!/usr/bin/python
+import logging
 import os
 import sys
 
-from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
+from PyQt5.QtWidgets import *
 from twisted.internet.defer import inlineCallbacks
-import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -43,14 +43,14 @@ class QsimGUI(QMainWindow):
         script_scanner = self.make_script_scanner_widget(reactor, cxn)
         wavemeter = self.make_wavemeter_widget(reactor, cxn)
         control = self.make_control_widget(reactor, cxn)
-        ev_pump = self.make_ev_pump_widget(reactor, cxn)
+        # ev_pump = self.make_ev_pump_widget(reactor, cxn)
 
         # add tabs
         self.tabWidget = QTabWidget()
         self.tabWidget.addTab(wavemeter, "&Wavemeter")
         self.tabWidget.addTab(script_scanner, "&Script Scanner")
         self.tabWidget.addTab(control, "&Control")
-        self.tabWidget.addTab(ev_pump, "&EV Pump")
+        # self.tabWidget.addTab(ev_pump, "&EV Pump")
         # self.tabWidget.addTab(WF, '&Windfreak')
 
         self.tabWidget.setMovable(True)
@@ -127,6 +127,8 @@ class QsimGUI(QMainWindow):
         widget = QWidget()
         from Qsim.clients.RF_control.RFcontrol import RFControl
         from common.lib.clients.PMT_Control.pmt_control import PMTWidget
+        from common.lib.clients.evPump.evPumpClient import eVPumpClient
+
 
         # from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import SwitchClient
@@ -136,13 +138,14 @@ class QsimGUI(QMainWindow):
         from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import (
             KeithleyClient,
         )
+        from common.lib.clients.Multiplexer.multiplexerclient import MiniWavemeterClient
 
         from Qsim.clients.DDS.dds_control import ScriptResponsiveDDSControlWidget
         from common.lib.clients.pulser_switch.pulser_switch_control import SwitchWidget
 
         # from Qsim.clients.windfreak_client.windfreak_client import WindfreakClient
 
-        grid_layout = QGridLayout()
+        layout = QHBoxLayout()
 
         # addWidget(widget, vertical-pos, horizontal-pos, vertical-span, horizontal-span)
         # column one
@@ -151,31 +154,41 @@ class QsimGUI(QMainWindow):
         col_one.addWidget(SwitchClient(reactor, cxn))
         # col_one.addWidget(cameraswitch(reactor, cxn))
         col_one.addWidget(PMTWidget(reactor, cxn))
+        col_one.addWidget(LoadControl(reactor))
+        col_one.addWidget(eVPumpClient(reactor, cxn))
         col_one.addStretch(1)
         col_one.addWidget(RFControl(reactor, cxn))
         col_one_widget.setLayout(col_one)
         col_one_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Minimum)
-        grid_layout.addWidget(col_one_widget, 0, 0, 6, 1)
+        layout.addWidget(col_one_widget)
 
         # grid_layout.addWidget(WindfreakClient(reactor), 6, 0, 1, 3)
 
         # column two
-        grid_layout.addWidget(DACClient(reactor, cxn), 0, 1, 4, 2)
-        grid_layout.addWidget(LoadControl(reactor), 4, 1, 2, 1)
-        grid_layout.addWidget(PiezoClient(reactor), 4, 2, 2, 1)
+        col_two_widget = QWidget()
+        col_two = QVBoxLayout()
+
+        col_two.addWidget(DACClient(reactor, cxn))
+        # grid_layout.addWidget(LoadControl(reactor), 4, 1, 2, 1)
+        col_two.addWidget(PiezoClient(reactor))
+        col_two.addWidget(KeithleyClient(reactor, cxn))
+        col_two.addStretch(1)
+
+        col_two_widget.setLayout(col_two)
+        layout.addWidget(col_two_widget)
         # column three
 
         col_three_widget = QWidget()
         col_three = QVBoxLayout()
         col_three.addWidget(ScriptResponsiveDDSControlWidget(reactor, cxn))
         col_three.addWidget(SwitchWidget(reactor))
-        col_three.addWidget(KeithleyClient(reactor, cxn))
+        col_three.addWidget(MiniWavemeterClient(reactor))
         col_three.addStretch(1)
         col_three_widget.setLayout(col_three)
-        grid_layout.addWidget(col_three_widget, 0, 3, 8, 2)
+        layout.addWidget(col_three_widget)
 
         # grid_layout.setSpacing(1)
-        widget.setLayout(grid_layout)
+        widget.setLayout(layout)
         return widget
 
     # def make_windfreak_widget(self, reactor, cxn):
