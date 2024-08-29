@@ -8,7 +8,7 @@ from scripts.pulse_sequences.sub_sequences.state_detection.standard_state_detect
     StandardStateDetection,
 )
 from scripts.pulse_sequences.sub_sequences.microwave_interrogation.microwave_interrogation import (
-    microwave_interogation,
+    MicrowaveInterrogation,
 )
 from scripts.pulse_sequences.sub_sequences.optical_pumping import OpticalPumping
 
@@ -21,7 +21,7 @@ class raman_411_point(PulseSequence):
         raman_411_interogation,
         StandardStateDetection,
         OpticalPumping,
-        microwave_interogation,
+        MicrowaveInterrogation,
     ]
 
     required_parameters = []
@@ -31,7 +31,7 @@ class raman_411_point(PulseSequence):
         self.add_sequence(TurnOffAll)
         self.add_sequence(DopplerCooling)
         self.add_sequence(OpticalPumping)
-        self.add_sequence(microwave_interogation)
+        self.add_sequence(MicrowaveInterrogation)
         self.add_sequence(raman_411_interogation)
-        self.add_sequence(microwave_interogation)
+        self.add_sequence(MicrowaveInterrogation)
         self.add_sequence(StandardStateDetection)
