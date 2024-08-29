@@ -16,13 +16,15 @@ timeout = 20
 ### END NODE INFO
 """
 
-from twisted.internet.defer import returnValue
+import socket
+
+import numpy as np
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks
-from config.deprecated.dac_ad660_config_oblate import hardwareConfiguration as hc
+from twisted.internet.defer import returnValue
 from twisted.internet.task import LoopingCall
-import socket
-import numpy as np
+
+from config._deprecated.dac_ad660_config_oblate import hardwareConfiguration as hc
 
 
 class Electrode:
