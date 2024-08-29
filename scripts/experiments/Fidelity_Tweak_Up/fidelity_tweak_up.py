@@ -92,7 +92,7 @@ class FidelityTweakUp(QsimExperiment):
 
             self.plot_prob(i, counts_bright, counts_dark)
             should_break = self.update_progress(np.random.random())
-            old_params = dict(self.p.iteritems())
+            old_params = dict(self.p.items())
             if should_break:
                 break
             self.reload_all_parameters()

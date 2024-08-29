@@ -35,7 +35,7 @@ class driftTracker(LabradServer):
         self.cxn = yield connectAsync(name="Drift Tracker")
         yield self.setupListeners()
         self.tracked_servers = []
-        for key, value in self.tracked_items.iteritems():
+        for key, value in self.tracked_items.items():
             self.tracked_servers = value[0]
             print(self.tracked_servers)
 
@@ -81,7 +81,7 @@ class driftTracker(LabradServer):
     @inlineCallbacks
     def update_fast_loop(self):
 
-        for key, value in self.tracked_items.iteritems():
+        for key, value in self.tracked_items.items():
             server_name = value[0]
             server_name = server_name.replace(" ", "_").lower()
             method_name = value[1]

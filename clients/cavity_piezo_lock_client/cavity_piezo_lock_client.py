@@ -34,7 +34,7 @@ class cavity_piezo_lock_client(QtGui.QWidget):
             lambda state=remote_button.TTLswitch.isDown(): self.on_remote_toggled(state)
         )
         layout.addWidget(remote_button, 0, 0)  # puts remote button at top left
-        channel_info = piezo_config.info
+        channel_info = piezo_config.channels
 
         for key in channel_info:
             initial_channel_setting = yield self.server.get_output_state(

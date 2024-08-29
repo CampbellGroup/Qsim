@@ -116,14 +116,14 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def ezup(self, isheld):
-        for name, dacchan in self.topelectrodes.iteritems():
+        for name, dacchan in self.topelectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
             yield self.setvalue(currentvalue + 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue + 1)
 
-        for name, dacchan in self.bottomelectrodes.iteritems():
+        for name, dacchan in self.bottomelectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
@@ -132,14 +132,14 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def ezdown(self, isheld):
-        for name, dacchan in self.bottomelectrodes.iteritems():
+        for name, dacchan in self.bottomelectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
             yield self.setvalue(currentvalue + 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue + 1)
 
-        for name, dacchan in self.topelectrodes.iteritems():
+        for name, dacchan in self.topelectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
@@ -148,13 +148,13 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def exup(self, isheld):
-        for name, dacchan in self.xpluselectrodes.iteritems():
+        for name, dacchan in self.xpluselectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
             yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
-        for name, dacchan in self.xminuselectrodes.iteritems():
+        for name, dacchan in self.xminuselectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
@@ -163,13 +163,13 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def exdown(self, isheld):
-        for name, dacchan in self.xminuselectrodes.iteritems():
+        for name, dacchan in self.xminuselectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
             yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
-        for name, dacchan in self.xpluselectrodes.iteritems():
+        for name, dacchan in self.xpluselectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
@@ -178,13 +178,13 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def eyup(self, isheld):
-        for name, dacchan in self.ypluselectrodes.iteritems():
+        for name, dacchan in self.ypluselectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
             yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
-        for name, dacchan in self.yminuselectrodes.iteritems():
+        for name, dacchan in self.yminuselectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
@@ -193,13 +193,13 @@ class dacclient(QtGui.QWidget):
 
     @inlineCallbacks
     def eydown(self, isheld):
-        for name, dacchan in self.yminuselectrodes.iteritems():
+        for name, dacchan in self.yminuselectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue <= 0:
                 break
             yield self.setvalue(currentvalue - 1, [name, dacchan])
             self.d[dacchan].spinLevel.setValue(currentvalue - 1)
-        for name, dacchan in self.ypluselectrodes.iteritems():
+        for name, dacchan in self.ypluselectrodes.items():
             currentvalue = yield self.reg.get(name)
             if currentvalue >= 255:
                 break
