@@ -1,10 +1,12 @@
-from common.lib.clients.qtui.switch import QCustomSwitchChannel
-from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
-from common.lib.clients.qtui.timer import QCustomTimer
-from twisted.internet.defer import inlineCallbacks
-from common.lib.clients.connection import Connection
-from PyQt5.QtWidgets import *
 import logging
+
+from PyQt5.QtWidgets import *
+from twisted.internet.defer import inlineCallbacks
+
+from common.lib.clients.connection import Connection
+from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
+from common.lib.clients.qtui.switch import QCustomSwitchChannel
+from common.lib.clients.qtui.timer import QCustomTimer
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +32,7 @@ class LoadControl(QFrame):
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.MinimumExpanding)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
         self.reactor = reactor
-        self.kt = None
-        self.bi_directional_state = False
+        self.changing = False
         self.cxn = cxn
         self.connect()
 
@@ -47,9 +48,9 @@ class LoadControl(QFrame):
         if self.cxn is None:
             self.cxn = yield Connection(name="Load Control")
             yield self.cxn.connect()
-        self.PMT = yield self.cxn.get_server("normalpmtflow")
+        self.pmt = yield self.cxn.get_server("normalpmtflow")
         self.pv = yield self.cxn.get_server("parametervault")
-        self.TTL = yield self.cxn.get_server("arduinottl")
+        self.arduinottl = yield self.cxn.get_server("arduinottl")
         self.oven = yield self.cxn.get_server("ovenserver")
         self.reg = yield self.cxn.get_server("registry")
         try:
@@ -63,8 +64,8 @@ class LoadControl(QFrame):
 
     @inlineCallbacks
     def setup_listeners(self):
-        yield self.PMT.signal__new_count(SIGNALID)
-        yield self.PMT.addListener(
+        yield self.pmt.signal__new_count(SIGNALID)
+        yield self.pmt.addListener(
             listener=self.on_new_counts, source=None, ID=SIGNALID
         )
 
@@ -118,13 +119,14 @@ class LoadControl(QFrame):
         elif (
             self.timer_widget.time
             >= float(self.max_time_widget.spinLevel.value()) * 60.0
-        ) and switch_on:
+        ) and switch_on and not self.changing:
             self.shutter_oven_button.TTLswitch.setChecked(True)
             if SOUND_LOADED:
                 playsound(FAIL_SOUND)
 
     @inlineCallbacks
     def toggle(self, value):
+        self.changing = True
         yield self.change_state(value)
         if not value:
             self.timer_widget.reset()
@@ -133,6 +135,7 @@ class LoadControl(QFrame):
         else:
             yield self.oven.oven_output(False)
             self.timer_widget.reset()
+        self.changing = False
 
     @inlineCallbacks
     def current_changed(self, value: float):
@@ -146,7 +149,7 @@ class LoadControl(QFrame):
         """:param state: a bool representing whether the state is toggled on or off"""
         if "399 trapshutter" in self.settings:
             yield self.reg.set("399 trapshutter", state)
-        yield self.TTL.ttl_output(10, not state)
+        yield self.arduinottl.ttl_output(10, not state)
 
     def closeEvent(self, x):
         self.reactor.stop()
