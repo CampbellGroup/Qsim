@@ -1,9 +1,11 @@
-from common.lib.servers.script_scanner.experiment import experiment
-import numpy as np
 from typing import Union
 
+import numpy as np
 
-class QsimExperiment(experiment):
+from common.lib.servers.script_scanner.experiment import Experiment
+
+
+class QsimExperiment(Experiment):
     exp_parameters = list()
 
     @classmethod
@@ -20,7 +22,7 @@ class QsimExperiment(experiment):
     ):
 
         required_parameters = self.all_required_parameters()
-        super(experiment, self).__init__(name, required_parameters)
+        super(Experiment, self).__init__(name, required_parameters)
 
         if name is None:
             self.name = self.__class__.__name__
@@ -40,7 +42,7 @@ class QsimExperiment(experiment):
         connect the experiment and performs checks for the presence of the following servers:
         DataVault, NormalPMTFlow, Pulser, and RealSimpleGrapher
         """
-        experiment._connect(self)
+        Experiment._connect(self)
         try:
             self.dv = self.cxn.servers["Data Vault"]
         except KeyError as error:
@@ -274,3 +276,9 @@ class QsimExperiment(experiment):
         self.pmt.set_mode(self.init_mode)
         self.finalize(cxn, context)
         self.sc.finish_confirmed(self.ident)
+
+# class QsimCalibratingExperiment(QsimExperiment):
+#
+#     def _run(self, cxn, context):
+#         starttime = time.time()
+#         super().

@@ -1,12 +1,12 @@
-from common.lib.clients.qtui.multiplexerchannel import QCustomWavemeterChannel
-from common.lib.clients.qtui.multiplexerPID import QCustomPID
-from common.lib.clients.qtui.q_custom_text_changing_button import TextChangingButton
-from twisted.internet.defer import inlineCallbacks, returnValue
-from common.lib.clients.qtui.switch import QCustomSwitchChannel
-from PyQt4 import QtGui
-import socket
 import os
+import socket
 import time
+
+from PyQt4 import QtGui
+from twisted.internet.defer import inlineCallbacks
+
+from common.lib.clients.qtui.switch import QCustomSwitchChannel
+from lib.clients.Multiplexer.multiplexerchannel import QCustomWavemeterChannel
 
 
 class rear_port_client(QtGui.QWidget):
@@ -70,7 +70,6 @@ class rear_port_client(QtGui.QWidget):
         subLayout.addWidget(self.widget, 0, 0, 1, 3)
         subLayout.addWidget(self.continuous_switch, 1, 0, 1, 1)
         self.setLayout(layout)
-        from twisted.internet.reactor import callLater
 
         self.update_value()
 
