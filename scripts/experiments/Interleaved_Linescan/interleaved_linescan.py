@@ -2,11 +2,11 @@
 
 import labrad
 import numpy as np
-
-from Qsim.scripts.pulse_sequences.interleaved_point import InterleavedPoint
-from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 from scipy.optimize import curve_fit
+
+from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
+from Qsim.scripts.pulse_sequences.interleaved_point import InterleavedPoint
 
 
 class InterleavedLinescan(QsimExperiment):
@@ -77,6 +77,10 @@ class InterleavedLinescan(QsimExperiment):
         # after performing a Shelving experiment, should not affect fit. Then set the parameter
         # in parametervault to the fitted center
         try:
+            ampl_guess = max(return_counts[2:])
+            self.fit_guess = [25, 30, ampl_guess, 0.0]
+
+            # noinspection PyTupleAssignmentBalance
             popt, pcov = curve_fit(
                 self.lorentzian_fit,
                 return_detuning[2:],
