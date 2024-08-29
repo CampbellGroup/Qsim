@@ -16,26 +16,16 @@ timeout = 20
 ### END NODE INFO
 """
 
-from twisted.internet.defer import returnValue
+import socket
+
+import numpy as np
 from labrad.server import LabradServer, setting
 from twisted.internet.defer import inlineCallbacks
-from config.dac_ad660_config import MultipoleConfiguration as MC
-from config.dac_ad660_config import HardwareConfiguration as HC
+from twisted.internet.defer import returnValue
 from twisted.internet.task import LoopingCall
-import socket
-import numpy as np
 
-
-class Electrode:
-
-    def __init__(self, dac, minval, maxval, name=None):
-        self.dac = dac
-        self.minval = minval
-        self.maxval = maxval
-        if name:
-            self.name = name
-        else:
-            self.name = str("DAC: " + str(dac))
+from config.dac_ad660_config import HardwareConfiguration as HC
+from config.dac_ad660_config import MultipoleConfiguration as MC
 
 
 class MultipoleServer(LabradServer):
@@ -67,10 +57,9 @@ class MultipoleServer(LabradServer):
         yield self.reg.cd(["", "settings"], True)
         self.multipoles = yield self.reg.get("Multipoles")
 
-        self.electrodes = []
+        self.dac_channels = []
         for i, channel in enumerate(HC.dac_channels):
-            electrode = Electrode(channel.dac_channel_number, minval=-10.0, maxval=10.0)
-            self.electrodes.append(electrode)
+            self.dac_channels.append(channel.dac_channel_number)
             # self.update_dac(0.0, channel)
 
         self.lc.start(5.0)  # start registry saving looping call
@@ -103,7 +92,7 @@ class MultipoleServer(LabradServer):
         evector = self.M.dot(mvector)
 
         for i, voltage in enumerate(evector):
-            yield self.update_dac(voltage, self.electrodes[i])
+            yield self.update_dac(voltage, self.dac_channels[i])
         self.multipoles = mvector
         returnValue(evector)
 
@@ -117,11 +106,10 @@ class MultipoleServer(LabradServer):
         returnValue(self.multipoles)
 
     @inlineCallbacks
-    def update_dac(self, voltage, electrode):
+    def update_dac(self, voltage, dac_num):
         if not self.server:
             returnValue("Server not Connected")
-        dac = electrode.dac
-        yield self.server.set_individual_analog_voltages([(dac, voltage)])
+        yield self.server.set_individual_analog_voltages([(dac_num, voltage)])
 
     @inlineCallbacks
     def loop(self):
