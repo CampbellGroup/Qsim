@@ -1,11 +1,13 @@
-from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
+import time
+
+from PyQt5.QtWidgets import *
+from twisted.internet.defer import inlineCallbacks
+
 from clients._deprecated.dac_control_oblate.wedge_electrode_widget import (
     ElectrodeIndicator,
 )
-from twisted.internet.defer import inlineCallbacks
-from PyQt5.QtWidgets import *
-from config.deprecated.dac_ad660_config_oblate import hardwareConfiguration as hc
-import time
+from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
+from config._deprecated.dac_ad660_config_oblate import hardwareConfiguration as hc
 
 
 class Electrode:

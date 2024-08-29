@@ -4,14 +4,15 @@ Created on Jun 16, 2016
 @author: qsimexpcontrol
 """
 
-import labrad
-from common.lib.servers.script_scanner.scan_methods import experiment
-from labrad.units import WithUnit
 import time
+
+import labrad
 import numpy as np
 
+from common.lib.servers.script_scanner.scan_methods import Experiment
 
-class dacRaster(experiment):
+
+class dacRaster(Experiment):
 
     name = "DAC Raster"
 

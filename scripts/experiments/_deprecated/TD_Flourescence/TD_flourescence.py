@@ -1,12 +1,13 @@
 import labrad
 import numpy as np
 import scipy.fftpack
-from common.lib.servers.script_scanner.scan_methods import experiment
-from Qsim.scripts.pulse_sequences.sub_sequences.record_time_tags import RecordTimeTags
 from treedict import TreeDict
 
+from Qsim.scripts.pulse_sequences.sub_sequences.record_time_tags import RecordTimeTags
+from common.lib.servers.script_scanner.scan_methods import Experiment
 
-class TD_flourescence(experiment):
+
+class TD_flourescence(Experiment):
 
     name = "TD Flourescence"
 
