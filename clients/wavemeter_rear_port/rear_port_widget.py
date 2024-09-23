@@ -6,7 +6,7 @@ from PyQt4 import QtGui
 from twisted.internet.defer import inlineCallbacks
 
 from common.lib.clients.qtui.switch import QCustomSwitchChannel
-from lib.clients.Multiplexer.multiplexerchannel import QCustomWavemeterChannel
+from common.lib.clients.Multiplexer.multiplexerchannel import QCustomWavemeterChannel
 
 
 class rear_port_client(QtGui.QWidget):
