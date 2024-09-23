@@ -2,7 +2,7 @@ from typing import Union
 
 import numpy as np
 
-from common.lib.servers.script_scanner.experiment import Experiment
+from common.lib.servers.script_scanner.scan_methods import Experiment
 
 
 class QsimExperiment(Experiment):
