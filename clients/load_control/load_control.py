@@ -50,7 +50,7 @@ class LoadControl(QFrame):
             yield self.cxn.connect()
         self.pmt = yield self.cxn.get_server("normalpmtflow")
         self.pv = yield self.cxn.get_server("parametervault")
-        self.arduinottl = yield self.cxn.get_server("arduinottl")
+        # self.arduinottl = yield self.cxn.get_server("arduinottl")
         self.oven = yield self.cxn.get_server("ovenserver")
         self.reg = yield self.cxn.get_server("registry")
         try:
@@ -79,25 +79,25 @@ class LoadControl(QFrame):
         self.shutter_oven_button.setFrameStyle(QFrame.NoFrame)
         self.shutter_oven_button.TTLswitch.toggled.connect(self.toggle)
         self.timer_widget = QCustomTimer("Loading Time", show_control=False)
-        self.current_widget = QCustomSpinBox("Current ('A')", (0.0, 5.0))
-        self.max_time_widget = QCustomSpinBox("Max Time (m)", (0.0, 30.0))
+        self.current_widget = QCustomSpinBox((0.0, 5.0), title="Oven current", suffix="A")
+        self.max_time_widget = QCustomSpinBox((0.0, 30.0), title="Max time", suffix="m")
 
-        self.current_widget.setStepSize(0.01)
-        self.current_widget.spinLevel.setDecimals(2)
-        self.current_widget.spinLevel.valueChanged.connect(self.current_changed)
+        self.current_widget.set_step_size(0.01)
+        self.current_widget.set_decimals(2)
+        self.current_widget.spin_level.valueChanged.connect(self.current_changed)
 
-        self.max_time_widget.spinLevel.setValue(10.0)
-        self.max_time_widget.setStepSize(0.1)
-        self.max_time_widget.spinLevel.setDecimals(1)
+        self.max_time_widget.set_value(10.0)
+        self.max_time_widget.set_step_size(0.1)
+        self.max_time_widget.set_decimals(1)
 
         if "oven" in self.settings:
             value = yield self.reg.get("oven")
-            self.current_widget.spinLevel.setValue(value)
+            self.current_widget.spin_level.setValue(value)
 
         if "399 trapshutter" in self.settings:
             value = yield self.reg.get("399 trapshutter")
             value = bool(value)
-            self.shutter_oven_button.TTLswitch.setChecked(value)
+            self.shutter_oven_button.TTLswitch.setChecked(not value)
         else:
             self.shutter_oven_button.TTLswitch.setChecked(False)
 
@@ -117,8 +117,8 @@ class LoadControl(QFrame):
             if SOUND_LOADED:
                 playsound(TRAP_SOUND)
         elif (
-            self.timer_widget.time
-            >= float(self.max_time_widget.spinLevel.value()) * 60.0
+                self.timer_widget.time
+                >= float(self.max_time_widget.spin_level.value()) * 60.0
         ) and switch_on and not self.changing:
             self.shutter_oven_button.TTLswitch.setChecked(True)
             if SOUND_LOADED:
@@ -127,13 +127,14 @@ class LoadControl(QFrame):
     @inlineCallbacks
     def toggle(self, value):
         self.changing = True
-        yield self.change_state(value)
         if not value:
             self.timer_widget.reset()
             self.timer_widget.start()
             yield self.oven.oven_output(True)
+            yield self.set_shutter_state(True)
         else:
             yield self.oven.oven_output(False)
+            yield self.set_shutter_state(False)
             self.timer_widget.reset()
         self.changing = False
 
@@ -145,11 +146,11 @@ class LoadControl(QFrame):
             yield self.reg.set("oven", value)
 
     @inlineCallbacks
-    def change_state(self, state: bool) -> None:
+    def set_shutter_state(self, state: bool) -> None:
         """:param state: a bool representing whether the state is toggled on or off"""
         if "399 trapshutter" in self.settings:
             yield self.reg.set("399 trapshutter", state)
-        yield self.arduinottl.ttl_output(10, not state)
+        p = yield self.oven.shutter_output(state)
 
     def closeEvent(self, x):
         self.reactor.stop()
