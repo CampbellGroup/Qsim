@@ -1,9 +1,9 @@
 import labrad
-from common.lib.servers.abstractservers.script_scanner.scan_methods import experiment
+from common.lib.servers.script_scanner.scan_methods import Experiment
 import time
 
 
-class M2pumpmonitor(experiment):
+class M2pumpmonitor(Experiment):
 
     name = "M2 Pump Monitor"
 
