@@ -2,7 +2,7 @@
 ### BEGIN NODE INFO
 [info]
 name = Multipole Server
-version = 1.0
+version = 1.1
 description =
 instancename = Multipole Server
 
