@@ -38,16 +38,16 @@ class KeithleyClient(QtGui.QWidget):
         qBox.setLayout(subLayout)
         layout.addWidget(qBox, 0, 0)
 
-        self.volt1widget = QCustomSpinBox("Amplitude (Vpp)", (0, 30))
-        self.volt2widget = QCustomSpinBox("Amplitude (Vpp)", (0, 30))
+        self.volt1widget = QCustomSpinBox((0, 30), suffix="V")
+        self.volt2widget = QCustomSpinBox((0, 30), suffix="V")
 
-        self.volt1widget.spinLevel.valueChanged.connect(
-            lambda value=self.volt1widget.spinLevel.value(), chan=1: self.voltchanged(
+        self.volt1widget.spin_level.valueChanged.connect(
+            lambda value=self.volt1widget.spin_level.value(), chan=1: self.voltchanged(
                 chan, value
             )
         )
-        self.volt2widget.spinLevel.valueChanged.connect(
-            lambda value=self.volt2widget.spinLevel.value(), chan=2: self.voltchanged(
+        self.volt2widget.spin_level.valueChanged.connect(
+            lambda value=self.volt2widget.spin_level.value(), chan=2: self.voltchanged(
                 chan, value
             )
         )

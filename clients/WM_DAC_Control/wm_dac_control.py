@@ -34,10 +34,10 @@ class wm_dac_control(QWidget):
     def initializeGUI(self):
         layout = QGridLayout()
 
-        control = QCustomSpinBox("DC value ('V')", (-5.0, 5.0))
-        control.setStepSize(0.0001)
-        control.spinLevel.setDecimals(4)
-        control.spinLevel.valueChanged.connect(self.set_dac)
+        control = QCustomSpinBox((-5.0, 5.0), title="DC value", suffix="V")
+        control.set_step_size(0.0001)
+        control.spin_level.set_decimals(4)
+        control.spin_level.valueChanged.connect(self.set_dac)
         layout.addWidget(control)
         self.setLayout(layout)
 

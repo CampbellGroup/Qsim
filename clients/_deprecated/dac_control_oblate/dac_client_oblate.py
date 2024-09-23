@@ -21,12 +21,12 @@ class Electrode:
         self.setup_widget()
 
     def setup_widget(self):
-        self.spinBox = QCustomSpinBox(self.name, (self.minval, self.maxval))
+        self.spinBox = QCustomSpinBox((self.minval, self.maxval), title=self.name)
         self.init_voltage = 0.0
-        self.spinBox.spinLevel.setValue(0.0)
+        self.spinBox.spin_level.setValue(0.0)
 
-        self.spinBox.setStepSize(0.0001)
-        self.spinBox.spinLevel.setDecimals(4)
+        self.spinBox.set_step_size(0.0001)
+        self.spinBox.spin_level.set_decimals(4)
 
 
 class dacclient(QFrame):
@@ -69,11 +69,11 @@ class dacclient(QFrame):
             if i >= 4:
                 j = 1
                 i = i - 4
-            spinbox = QCustomSpinBox(multipole, (-100, 100))
-            spinbox.setStepSize(0.001)
-            spinbox.spinLevel.setDecimals(3)
-            spinbox.spinLevel.setValue(self.init_multipoles[k])
-            spinbox.spinLevel.valueChanged.connect(self.change_multipole)
+            spinbox = QCustomSpinBox((-100, 100), title=multipole)
+            spinbox.set_step_size(0.001)
+            spinbox.spin_level.set_decimals(3)
+            spinbox.spin_level.setValue(self.init_multipoles[k])
+            spinbox.spin_level.valueChanged.connect(self.change_multipole)
             layout.addWidget(spinbox, 3 + j, i + 1, 1, 1)
             self.multipoles.append(spinbox)
 
@@ -88,8 +88,8 @@ class dacclient(QFrame):
             )
             self.electrodes[electrode.octant] = electrode
             subLayout.addWidget(electrode.spinBox)
-            electrode.spinBox.spinLevel.valueChanged.connect(
-                lambda value=electrode.spinBox.spinLevel.value(), electrode=electrode: self.update_dac(
+            electrode.spinBox.spin_level.valueChanged.connect(
+                lambda value=electrode.spinBox.spin_level.value(), electrode=electrode: self.update_dac(
                     value, electrode
                 )
             )
@@ -102,11 +102,11 @@ class dacclient(QFrame):
         self.start = time.time()
         Mvector = []
         for multipole in self.multipoles:
-            Mvector.append(multipole.spinLevel.value())
+            Mvector.append(multipole.spin_level.value())
         Evector = yield self.server.set_multipoles(Mvector)
         if len(Evector) == 8:
             for octant, voltage in enumerate(Evector):
-                self.electrodes[octant + 1].spinBox.spinLevel.setValue(voltage)
+                self.electrodes[octant + 1].spinBox.spin_level.setValue(voltage)
                 self.electrodeind.update_octant(octant + 1, voltage)
 
     @inlineCallbacks

@@ -34,24 +34,24 @@ class cal_lock(QtGui.QWidget):
         lockwidget = QCustomSwitchChannel("Lock Cal", ("Locked", "Unlocked"))
         lockwidget.TTLswitch.toggled.connect(self.toggle)
 
-        offsetwidget = QCustomSpinBox("DC offset", (-1.0, 1.0))
-        setpointwidget = QCustomSpinBox("Set Point", (811.0, 812.0))
-        gainwidget = QCustomSpinBox("Gain", (0.1, 10000.0))
+        offsetwidget = QCustomSpinBox((-1.0, 1.0), title="DC offset", suffix="V")
+        setpointwidget = QCustomSpinBox((811.0, 812.0), title="Set Point")
+        gainwidget = QCustomSpinBox((0.1, 10000.0), title="Gain")
 
-        offsetwidget.setStepSize(0.001)
-        setpointwidget.setStepSize(0.000001)
-        gainwidget.setStepSize(0.1)
+        offsetwidget.set_step_size(0.001)
+        setpointwidget.set_step_size(0.000001)
+        gainwidget.set_step_size(0.1)
 
-        offsetwidget.spinLevel.setDecimals(3)
-        setpointwidget.spinLevel.setDecimals(6)
-        gainwidget.spinLevel.setDecimals(1)
+        offsetwidget.spin_level.set_decimals(3)
+        setpointwidget.spin_level.set_decimals(6)
+        gainwidget.spin_level.set_decimals(1)
 
-        setpointwidget.spinLevel.setValue(self.set)
-        gainwidget.spinLevel.setValue(self.gain)
+        setpointwidget.spin_level.setValue(self.set)
+        gainwidget.spin_level.setValue(self.gain)
 
-        offsetwidget.spinLevel.valueChanged.connect(self.offset)
-        setpointwidget.spinLevel.valueChanged.connect(self.set_point)
-        gainwidget.spinLevel.valueChanged.connect(self.set_gain)
+        offsetwidget.spin_level.valueChanged.connect(self.offset)
+        setpointwidget.spin_level.valueChanged.connect(self.set_point)
+        gainwidget.spin_level.valueChanged.connect(self.set_gain)
 
         layout.addWidget(lockwidget, 0, 0)
         layout.addWidget(offsetwidget, 0, 1)

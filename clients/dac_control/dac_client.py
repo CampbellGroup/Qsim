@@ -51,15 +51,15 @@ class DACClient(QFrame):
         length_of_column = 2
         for i, channel in enumerate(self.dac_channels):
             spinbox = QCustomSpinBox(
-                channel.name,
                 (channel.allowed_voltage_range[0], channel.allowed_voltage_range[1]),
+                title=channel.name, suffix="V"
             )
-            spinbox.spinLevel.setValue(0.0)
-            spinbox.setStepSize(0.0001)
-            spinbox.spinLevel.setDecimals(4)
-            spinbox.spinLevel.setValue(self.init_voltages[channel.dac_channel_number])
-            spinbox.spinLevel.valueChanged.connect(
-                lambda val=spinbox.spinLevel.value(), chan=channel: self.update_dac(
+            spinbox.spin_level.setValue(0.0)
+            spinbox.set_step_size(0.0001)
+            spinbox.set_decimals(4)
+            spinbox.set_value(self.init_voltages[channel.dac_channel_number])
+            spinbox.spin_level.valueChanged.connect(
+                lambda val=spinbox.spin_level.value(), chan=channel: self.update_dac(
                     val, chan
                 )
             )
@@ -78,11 +78,12 @@ class DACClient(QFrame):
         self.multipole_spinboxes = []
         length_of_column = 2
         for i, multipole in enumerate(MC.multipoles):
-            spinbox = QCustomSpinBox(multipole.name, (-100, 100))
-            spinbox.setStepSize(0.001)
-            spinbox.spinLevel.setDecimals(3)
-            spinbox.spinLevel.setValue(self.init_multipoles[i])
-            spinbox.spinLevel.valueChanged.connect(self.change_multipole)
+            spinbox = QCustomSpinBox((-100, 100), title=multipole.name)
+            spinbox.set_step_size(0.001)
+            spinbox.set_decimals(3)
+            spinbox.set_value(self.init_multipoles[i])
+            spinbox.set_value(self.init_multipoles[i])
+            spinbox.spin_level.valueChanged.connect(self.change_multipole)
             if multipole.displayed:
                 multipole_layout.addWidget(
                     spinbox, i % length_of_column, i // length_of_column
@@ -110,13 +111,13 @@ class DACClient(QFrame):
         self.start = time.time()
         mvector = []
         for multipole in self.multipole_spinboxes:
-            mvector.append(multipole.spinLevel.value())
+            mvector.append(multipole.spin_level.value())
         evector = yield self.multipole_server.set_multipoles(mvector)
         if len(evector) == 8:
             for i, voltage in enumerate(evector):
                 electrode = self.electrode_spinboxes[i]
                 dac_channel = self.dac_channels[i]
-                electrode.spinLevel.setValue(voltage)
+                electrode.spin_level.setValue(voltage)
                 self.electrode_indicator.update_rod(
                     dac_channel.dac_channel_number, voltage
                 )

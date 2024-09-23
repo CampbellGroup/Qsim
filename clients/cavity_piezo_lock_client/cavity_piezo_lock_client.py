@@ -53,7 +53,7 @@ class cavity_piezo_lock_client(QtGui.QWidget):
             voltage_spin_box = QtGui.QDoubleSpinBox()
             voltage_spin_box.setRange(0.0, 150.0)
             voltage_spin_box.setSingleStep(0.1)
-            voltage_spin_box.setDecimals(3)
+            voltage_spin_box.set_decimals(3)
             voltage_spin_box.setValue(initial_voltage)
             voltage_spin_box.setKeyboardTracking(False)
             voltage_spin_box.valueChanged.connect(
