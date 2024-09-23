@@ -2,8 +2,6 @@
 import labrad
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from Qsim.scripts.pulse_sequences.sub_sequences.record_time_tags import RecordTimeTags
-from treedict import TreeDict
-from processFFT import processFFT
 from labrad.units import WithUnit as U
 import numpy as np
 
@@ -33,11 +31,11 @@ class PMT_FFT(QsimExperiment):
         self.init_mode = self.pmt.getcurrentmode()
         self.init_freq = self.pulser.frequency("369DP")
         self.pmt.set_mode("Normal")
-        self.processor = processFFT()
+        # self.processor = processFFT()
 
     def programPulseSequence(self, record_time):
         seq = RecordTimeTags(
-            TreeDict.fromdict({"RecordTimetags.record_timetags_duration": record_time})
+            {"RecordTimetags.record_timetags_duration": record_time}
         )
         seq.program_sequence(self.pulser)
 
@@ -52,9 +50,7 @@ class PMT_FFT(QsimExperiment):
         pwr = np.zeros_like(self.freqs)
         for i in range(self.average):
             seq = RecordTimeTags(
-                TreeDict.fromdict(
-                    {"RecordTimetags.record_timetags_duration": self.record_time}
-                )
+                {"RecordTimetags.record_timetags_duration": self.record_time}
             )
             seq.program_sequence(self.pulser)
             self.pulser.reset_timetags()
