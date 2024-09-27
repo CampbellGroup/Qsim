@@ -33,14 +33,14 @@ class CoherenceMeasurement(QsimExperiment):
 
     def run(self, cxn, context):
 
-        if self.p.MicrowaveInterrogation.AC_line_trigger == "On":
+        if self.p["MicrowaveInterrogation.AC_line_trigger"] == "On":
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(
-                self.p.MicrowaveInterrogation.delay_from_line_trigger
+                self.p["MicrowaveInterrogation.delay_from_line_trigger"]
             )
 
-        scan_parameter = self.p.MicrowaveRamsey.scan_type
-        mode = self.p.Modes.state_detection_mode
+        scan_parameter = self.p["MicrowaveRamsey.scan_type"]
+        mode = self.p["Modes.state_detection_mode"]
         if mode == "Shelving":
             self.setup_coherence_shelving_datavault()
         self.setup_datavault(
@@ -48,7 +48,7 @@ class CoherenceMeasurement(QsimExperiment):
         )  # gives the x and y names to Data Vault
         self.setup_grapher("Microwave Ramsey Experiment")
         self.dark_time = self.get_scan_list(
-            self.p.CoherenceMeasurement.delay_times, "ms"
+            self.p["CoherenceMeasurement.delay_times"], "ms"
         )
         for i, dark_time in enumerate(self.dark_time):
             should_break = self.update_progress(i / float(len(self.dark_time)))
@@ -72,12 +72,12 @@ class CoherenceMeasurement(QsimExperiment):
                 )
                 errors = np.where(
                     doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                    <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                 )
                 counts = np.delete(detection_counts, errors)
             else:
                 [counts] = self.run_sequence()
-            if i % self.p.StandardStateDetection.points_per_histogram == 0:
+            if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
             pop = self.get_pop(counts)

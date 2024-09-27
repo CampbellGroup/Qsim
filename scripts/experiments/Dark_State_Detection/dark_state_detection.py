@@ -60,17 +60,17 @@ class DarkStateDetection(QsimExperiment):
         print("Initial line center at " + str(self.init_line_center))
 
         # fix the interrogation time to be the pi_time and the detuning to be 0
-        self.p["MicrowaveInterrogation.duration"] = self.p.Pi_times.qubit_0
+        self.p["MicrowaveInterrogation.duration"] = self.p["Pi_times.qubit_0"]
         self.p["MicrowaveInterrogation.detuning"] = U(0.0, "kHz")
 
-        mode = self.p.Modes.state_detection_mode
+        mode = self.p["Modes.state_detection_mode"]
         self.setup_prob_datavault()
         i = 0
 
         # run loop continuously until user stops experiment
         while True:
             i += 1
-            points_per_hist = self.p.StandardStateDetection.points_per_histogram
+            points_per_hist = self.p["StandardStateDetection.points_per_histogram"]
             self.program_pulser(sequence)
             # run and process data if detection mode is shelving
             if mode == "Shelving":
@@ -133,7 +133,7 @@ class DarkStateDetection(QsimExperiment):
 
             # if the phase list is random we want to always reprogram the pulser so that
             # a new set of random phases is set for the next set of N experiments
-            if self.p.BrightStatePumping.microwave_phase_list == "random":
+            if self.p["BrightStatePumping.microwave_phase_list"] == "random":
                 self.program_pulser(sequence)
 
     def setup_prob_datavault(self):
@@ -179,7 +179,7 @@ class DarkStateDetection(QsimExperiment):
         padWidth = 1  # delete this many experiments before and after the detected doppler error
         dark_errors = np.where(
             counts_doppler_dark
-            <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+            <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
         )
         dark_delete = np.array([])
         for error in dark_errors[0]:
@@ -210,10 +210,10 @@ class DarkStateDetection(QsimExperiment):
             print("Lorentzian is weak or missing")
             return RuntimeError
 
-        if self.p.MicrowaveInterrogation.AC_line_trigger == "On":
+        if self.p["MicrowaveInterrogation.AC_line_trigger"] == "On":
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(
-                self.p.MicrowaveInterrogation.delay_from_line_trigger
+                self.p["MicrowaveInterrogation.delay_from_line_trigger"]
             )
 
         fit_guess = [5.0, 30.0, 4000.0, 1.0]

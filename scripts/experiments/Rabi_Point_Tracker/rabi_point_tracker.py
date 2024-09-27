@@ -43,28 +43,28 @@ class RabiPointTracker(QsimExperiment):
         plot the probability of being in the up state as a function of real lab time,
         which will be kept track of using the native 'time' function in python
         """
-        qubit = self.p.Line_Selection.qubit
+        qubit = self.p["Line_Selection.qubit"]
         self.p["Modes.state_detection_mode"] = "Standard"
 
         if qubit == "qubit_0":
-            self.pi_time = self.p.Pi_times.qubit_0
+            self.pi_time = self.p["Pi_times.qubit_0"]
 
         elif qubit == "qubit_plus":
-            self.pi_time = self.p.Pi_times.qubit_plus
+            self.pi_time = self.p["Pi_times.qubit_plus"]
 
         elif qubit == "qubit_minus":
-            self.pi_time = self.p.Pi_times.qubit_minus
+            self.pi_time = self.p["Pi_times.qubit_minus"]
 
-        # init_bright_state_pumping_method = self.p.BrightStatePumping.method
-        # init_microwave_pulse_sequence = self.p.MicrowaveInterogation.pulse_sequence
-        # init_optical_pumping_method = self.p.OpticalPumping.method
+        # init_bright_state_pumping_method = self.p["BrightStatePumping.method"]
+        # init_microwave_pulse_sequence = self.p["MicrowaveInterogation.pulse_sequence"]
+        # init_optical_pumping_method = self.p["OpticalPumping.method"]
 
         # self.p['MicrowaveInterrogation.pulse_sequence'] = 'standard'
 
-        init_line_trigger_state = self.p.MicrowaveInterogation.AC_line_trigger
+        init_line_trigger_state = self.p["MicrowaveInterogation.AC_line_trigger"]
         self.pulser.line_trigger_state(False)
 
-        if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == "OFF":
+        if self.p["RabiPointTracker.shelving_fidelity_drift_tracking"] == "OFF":
             # dont need to setup seperate connection to datavault and grapher if we
             # are drift tracking during the shelving experiment
             self.setup_datavault(
@@ -72,11 +72,11 @@ class RabiPointTracker(QsimExperiment):
             )  # gives the x and y names to Data Vault
             self.setup_grapher("Rabi Point Tracker")
 
-        self.n_pi_times = self.p.RabiPointTracker.number_pi_times
+        self.n_pi_times = self.p["RabiPointTracker.number_pi_times"]
         init_time = U(time.time(), "s")
         i = 0
         while True:
-            if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == "OFF":
+            if self.p["RabiPointTracker.shelving_fidelity_drift_tracking"] == "OFF":
                 should_break = self.update_progress(np.random.rand())
                 if should_break:
                     break
@@ -87,20 +87,20 @@ class RabiPointTracker(QsimExperiment):
             [counts] = self.run_sequence()
             time_since_start = U(time.time(), "s") - init_time
 
-            if (i % self.p.StandardStateDetection.points_per_histogram == 0) & (
-                self.p.RabiPointTracker.shelving_fidelity_drift_tracking == "OFF"
+            if (i % self.p["StandardStateDetection.points_per_histogram"] == 0) & (
+                    self.p["RabiPointTracker.shelving_fidelity_drift_tracking"] == "OFF"
             ):
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
 
             pop = self.get_pop(counts)
-            if self.p.RabiPointTracker.pi_time_feedback == "ON":
+            if self.p["RabiPointTracker.pi_time_feedback"] == "ON":
                 self.update_pi_time(pop, gain=0.1)
 
             # if we are drift tracking during a shelving fidelity run we want to return
             # the measured pop to the shelving fidelity experiment so it can make a decision
             # based on the observed population
-            if self.p.RabiPointTracker.shelving_fidelity_drift_tracking == "ON":
+            if self.p["RabiPointTracker.shelving_fidelity_drift_tracking"] == "ON":
                 return pop
 
             self.dv.add(time_since_start["s"], pop)

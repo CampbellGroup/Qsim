@@ -45,11 +45,11 @@ class MetastableQubitQND(QsimExperiment):
             "qubit_0"  # define the bright state prep as qubit_0
         )
         self.p["Modes.state_detection_mode"] = "Shelving"
-        self.p["MicrowaveInterrogation.duration"] = self.p.Pi_times.qubit_0
+        self.p["MicrowaveInterrogation.duration"] = self.p["Pi_times.qubit_0"]
 
         self.number_exps = []
         self.times = self.get_scan_list(
-            self.p.MetastableMicrowaveRabiFlopping.scan, "us"
+            self.p["MetastableMicrowaveRabiFlopping.scan"], "us"
         )
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i / float(len(self.times)))
@@ -64,14 +64,14 @@ class MetastableQubitQND(QsimExperiment):
             )
 
             failed_heralding = np.where(
-                herald_counts >= self.p.ShelvingStateDetection.state_readout_threshold
+                herald_counts >= self.p["ShelvingStateDetection.state_readout_threshold"]
             )
             doppler_errors = np.where(
                 doppler_counts
-                <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
             )
             qnd_to_ground_state = np.where(
-                qnd_counts >= self.p.ShelvingStateDetection.state_readout_threshold
+                qnd_counts >= self.p["ShelvingStateDetection.state_readout_threshold"]
             )
 
             # this will combine all errors into one array and delete repeats (error on both doppler and herald)

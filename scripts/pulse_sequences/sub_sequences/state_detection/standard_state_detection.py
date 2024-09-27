@@ -14,6 +14,8 @@ class StandardStateDetection(PulseSequence):
         ("ddsDefaults", "repump_935_freq"),
         ("ddsDefaults", "qubit_dds_freq"),
         ("ddsDefaults", "DP369_freq"),
+        ("ddsDefaults", "repump_976_freq"),
+        ("ddsDefaults", "repump_976_power"),
         ("Modes", "laser_369"),
     ]
 
@@ -56,7 +58,7 @@ class StandardStateDetection(PulseSequence):
                 "ReadoutCount", self.start, p["StandardStateDetection.duration"]
             )
             self.add_ttl(
-                "WindfreakSynthHDTTL", self.start, p["StandardStateDetection.duration"]
+                "SynthHDTTL", self.start, p["StandardStateDetection.duration"]
             )
             self.add_dds(
                 "935SP",
@@ -64,6 +66,13 @@ class StandardStateDetection(PulseSequence):
                 p["StandardStateDetection.duration"],
                 p["ddsDefaults.repump_935_freq"],
                 p["StandardStateDetection.repump_power"],
+            )
+            self.add_dds(
+                "976SP",
+                self.start,
+                p["StandardStateDetection.duration"],
+                p["ddsDefaults.repump_976_freq"],
+                p["ddsDefaults.repump_976_power"],
             )
             self.add_dds(
                 "369DP",

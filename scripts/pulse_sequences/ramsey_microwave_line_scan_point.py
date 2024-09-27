@@ -36,7 +36,7 @@ class RamseyMicrowaveLineScanPoint(PulseSequence):
 
     def sequence(self):
         p = self.parameters
-        mode = p.Modes.state_detection_mode
+        mode = p["Modes.state_detection_mode"]
 
         self.add_sequence(TurnOffAll)
 

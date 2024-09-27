@@ -49,7 +49,7 @@ class IonPositionTracker(QsimExperiment):
         self.set_scannable_parameters()
         self.set_exp_settings()
         init_time = time.time()
-        while elapsed <= self.p.images.measure_time:
+        while elapsed <= self.p["images.measure_time"]:
             data = np.reshape(
                 self.cam.get_most_recent_image(),
                 (self.image_y_length, self.image_x_length),
@@ -59,7 +59,7 @@ class IonPositionTracker(QsimExperiment):
             elapsed = WithUnit(time.time() - init_time, "s")
             self.dv.add([elapsed["s"], xPos, yPos])
             should_break = self.update_progress(
-                elapsed["s"] / self.p.images.measure_time["s"]
+                elapsed["s"] / self.p["images.measure_time"]["s"]
             )
             if should_break:
                 break
@@ -80,12 +80,10 @@ class IonPositionTracker(QsimExperiment):
         self.cam.start_live_display()
 
     def set_scannable_parameters(self):
-        center_y = self.p.images.image_center_x["pix"]  # switched for same reason
-        center_x = self.p.images.image_center_y["pix"]
-        height = self.p.images.image_width["pix"]
-        width = self.p.images.image_height[
-            "pix"
-        ]  # switched due to transpose of camera data
+        center_y = self.p["images.image_center_x"]["pix"]  # switched for same reason
+        center_x = self.p["images.image_center_y"]["pix"]
+        height = self.p["images.image_width"]["pix"]
+        width = self.p["images.image_height"]["pix"]  # switched due to transpose of camera data
         self.x_pixel_range = [
             int(center_x - width / 2),
             int(center_x + width / 2),

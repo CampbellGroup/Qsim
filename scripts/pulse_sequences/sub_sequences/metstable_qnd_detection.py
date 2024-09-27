@@ -20,34 +20,34 @@ class MetastableQNDDetection(PulseSequence):
 
         # first we deshelve the F=3 manifold
 
-        self.add_ttl("976SP", self.start, p.MetastableStateDetection.duration)
+        self.add_ttl("976SP", self.start, p["MetastableStateDetection.duration"])
 
         self.add_dds(
             "935SP",
             self.start,
-            p.MetastableStateDetection.duration,
-            p.ddsDefaults.repump_935_freq,
-            p.MetastableStateDetection.repump_power,
+            p["MetastableStateDetection.duration"],
+            p["ddsDefaults.repump_935_freq"],
+            p["MetastableStateDetection.repump_power"],
         )
 
-        self.add_ttl("ReadoutCount", self.start, p.MetastableStateDetection.duration)
+        self.add_ttl("ReadoutCount", self.start, p["MetastableStateDetection.duration"])
 
         self.add_dds(
             "369DP",
             self.start,
-            p.MetastableStateDetection.duration,
-            p.Transitions.main_cooling_369 / 2.0
-            + p.ddsDefaults.DP369_freq
-            + p.MetastableStateDetection.detuning / 2.0,
-            p.MetastableStateDetection.CW_power,
+            p["MetastableStateDetection.duration"],
+            p["Transitions.main_cooling_369"] / 2.0
+            + p["ddsDefaults.DP369_freq"]
+            + p["MetastableStateDetection.detuning"] / 2.0,
+            p["MetastableStateDetection.CW_power"],
         )
 
         self.add_dds(
             "DopplerCoolingSP",
             self.start,
-            p.MetastableStateDetection.duration,
-            p.ddsDefaults.doppler_cooling_freq,
-            p.ddsDefaults.doppler_cooling_power,
+            p["MetastableStateDetection.duration"],
+            p["ddsDefaults.doppler_cooling_freq"],
+            p["ddsDefaults.doppler_cooling_power"],
         )
 
-        self.end = self.start + p.MetastableStateDetection.duration
+        self.end = self.start + p["MetastableStateDetection.duration"]

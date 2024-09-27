@@ -45,14 +45,14 @@ class MicrowavePoint(PulseSequence):
         if mode == "Standard" or mode == "StandardFiberEOM":
             self.add_sequence(DopplerCooling)
             self.add_sequence(OpticalPumping)
-            for i in range(int(p.MicrowaveInterrogation.repetitions)):
+            for i in range(int(p["MicrowaveInterrogation.repetitions"])):
                 self.add_sequence(MicrowaveInterrogation)
             self.add_sequence(StandardStateDetection)
 
         elif mode == "Shelving":
             self.add_sequence(ShelvingDopplerCooling)
             self.add_sequence(OpticalPumping)
-            for i in range(int(p.MicrowaveInterrogation.repetitions)):
+            for i in range(int(p["MicrowaveInterrogation.repetitions"])):
                 self.add_sequence(MicrowaveInterrogation)
             self.add_sequence(Shelving)
             self.add_sequence(ShelvingStateDetection)

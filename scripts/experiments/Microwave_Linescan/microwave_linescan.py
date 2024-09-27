@@ -33,8 +33,8 @@ class MicrowaveLineScan(QsimExperiment):
 
     FiberEOM:
         369SP            |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
-        WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
-        WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        SynthHD          |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
+        SynthNV          |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
         MicrowaveTTL     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
         Microwave_qubit  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▓▓▓▓▓▓▓▓▓▓▁▁▁▁▁▁▁▁▁▁▁▁
         935SP/976SP      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
@@ -79,29 +79,29 @@ class MicrowaveLineScan(QsimExperiment):
         data = self.setup_datavault(
             "frequency", "probability"
         )  # gives the x and y names to Data Vault
-        qubit = self.p.Line_Selection.qubit
+        qubit = self.p["Line_Selection.qubit"]
         print(qubit)
-        print(self.p.MicrowaveInterrogation.PulseSequence)
+        print(self.p["MicrowaveInterrogation.pulse_sequence"])
         self.setup_grapher("Microwave Linescan " + qubit)
-        self.detunings = self.get_scan_list(self.p.MicrowaveLinescan.scan, "kHz")
-        mode = self.p.Modes.state_detection_mode
+        self.detunings = self.get_scan_list(self.p["MicrowaveLinescan.scan"], "kHz")
+        mode = self.p["Modes.state_detection_mode"]
         self.pulser.line_trigger_state(
-            self.p.MicrowaveInterrogation.AC_line_trigger == "On"
+            self.p["MicrowaveInterrogation.AC_line_trigger"] == "On"
         )
 
-        linescan_type = self.p.MicrowaveLinescan.linescan_type
+        linescan_type = self.p["MicrowaveLinescan.linescan_type"]
 
         if qubit == "qubit_0":
-            center = self.p.Transitions.qubit_0
-            pi_time = self.p.Pi_times.qubit_0
+            center = self.p["Transitions.qubit_0"]
+            pi_time = self.p["Pi_times.qubit_0"]
 
         elif qubit == "qubit_plus":
-            center = self.p.Transitions.qubit_plus
-            pi_time = self.p.Pi_times.qubit_plus
+            center = self.p["Transitions.qubit_plus"]
+            pi_time = self.p["Pi_times.qubit_plus"]
 
         elif qubit == "qubit_minus":
-            center = self.p.Transitions.qubit_minus
-            pi_time = self.p.Pi_times.qubit_minus
+            center = self.p["Transitions.qubit_minus"]
+            pi_time = self.p["Pi_times.qubit_minus"]
 
         self.p["MicrowaveInterrogation.duration"] = pi_time
         deltas, probs = [], []
@@ -122,7 +122,7 @@ class MicrowaveLineScan(QsimExperiment):
                 )
                 errors = np.where(
                     doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                    <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                 )
                 counts = np.delete(detection_counts, errors)
             if mode == "Standard":
@@ -130,7 +130,7 @@ class MicrowaveLineScan(QsimExperiment):
             if mode == "StandardFiberEOM":
                 [counts] = self.run_sequence()
 
-            if i % self.p.StandardStateDetection.points_per_histogram == 0:
+            if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
 

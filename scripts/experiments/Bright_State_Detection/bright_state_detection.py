@@ -41,8 +41,8 @@ class BrightStateDetection(QsimExperiment):
         self.hist_std_dev = 0.0
 
     def run(self, cxn, context):
-        mode = self.p.Modes.state_detection_mode
-        threshold = self.p.ShelvingStateDetection.state_readout_threshold
+        mode = self.p["Modes.state_detection_mode"]
+        threshold = self.p["ShelvingStateDetection.state_readout_threshold"]
         self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
         self.init_line_center = self.run_interleaved_linescan()
         self.setup_prob_datavault()
@@ -51,11 +51,11 @@ class BrightStateDetection(QsimExperiment):
         # run loop continuously until user stops experiment
         while True:
             self.pv.set_parameter(
-                ("MicrowaveInterrogation", "duration", self.p.Pi_times.qubit_0)
+                ("MicrowaveInterrogation", "duration", self.p["Pi_times.qubit_0"])
             )
 
             i += 1
-            points_per_hist = self.p.StandardStateDetection.points_per_histogram
+            points_per_hist = self.p["StandardStateDetection.points_per_histogram"]
             self.program_pulser(sequence)
             # run and process data if detection mode is shelving
             if mode == "Shelving":
@@ -67,7 +67,7 @@ class BrightStateDetection(QsimExperiment):
 
                 doppler_errors = np.where(
                     doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                    <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                 )
                 doppler_errors = np.unique(
                     np.concatenate((doppler_errors[0], doppler_errors[0] - 1.0))
@@ -95,7 +95,7 @@ class BrightStateDetection(QsimExperiment):
 
             self.plot_prob(i, counts)
             bright_only_counts = counts[
-                np.where(counts > self.p.ShelvingStateDetection.state_readout_threshold)
+                np.where(counts > self.p["ShelvingStateDetection.state_readout_threshold"])
             ]
             if mode == "Shelving":
                 if i == 1:
@@ -134,7 +134,7 @@ class BrightStateDetection(QsimExperiment):
                     #        break
 
             should_break = self.update_progress(np.random.random())
-            old_params = dict(self.p.iteritems())
+            old_params = dict(self.p.items())
             if should_break:
                 break
             self.reload_all_parameters()
@@ -183,10 +183,10 @@ class BrightStateDetection(QsimExperiment):
         self.line_tracker.initialize(self.cxn, linescan_context, self.ident)
         self.line_tracker.run(self.cxn, linescan_context)
 
-        if self.p.MicrowaveInterrogation.AC_line_trigger == "On":
+        if self.p["MicrowaveInterrogation.AC_line_trigger"] == "On":
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(
-                self.p.MicrowaveInterrogation.delay_from_line_trigger
+                self.p["MicrowaveInterrogation.delay_from_line_trigger"]
             )
 
         self.reload_all_parameters()

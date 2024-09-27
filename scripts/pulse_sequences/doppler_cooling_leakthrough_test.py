@@ -34,13 +34,13 @@ class DopplerCoolingLeakthroughTest(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        if p.Modes.state_detection_mode == "Standard":
+        if p["Modes.state_detection_mode"] == "Standard":
             self.add_sequence(DopplerCooling)
             self.add_sequence(OpticalPumping)
             self.add_sequence(DoublePass369)
             self.add_sequence(StandardStateDetection)
 
-        elif p.Modes.state_detection_mode == "Shelving":
+        elif p["Modes.state_detection_mode"] == "Shelving":
             self.add_sequence(ShelvingDopplerCooling)
             self.add_sequence(OpticalPumping)
             self.add_sequence(DoublePass369)

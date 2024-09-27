@@ -28,60 +28,60 @@ class ShelvingDopplerCooling(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        mode = p.modes.laser_369
+        mode = p["Modes.laser_369"]
 
         if mode == "Standard":
             self.add_dds(
                 "DopplerCoolingSP",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.ddsDefaults.doppler_cooling_freq,
-                p.ddsDefaults.doppler_cooling_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["ddsDefaults.doppler_cooling_freq"],
+                p["ddsDefaults.doppler_cooling_power"],
             )
             self.add_dds(
                 "369DP",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.Transitions.main_cooling_369 / 2.0
-                + p.ddsDefaults.DP369_freq
-                + p.DopplerCooling.detuning / 2.0,
-                p.DopplerCooling.cooling_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["Transitions.main_cooling_369"] / 2.0
+                + p["ddsDefaults.DP369_freq"]
+                + p["DopplerCooling.detuning"] / 2.0,
+                p["DopplerCooling.cooling_power"],
             )
             self.add_dds(
                 "935SP",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.ddsDefaults.repump_935_freq,
-                p.DopplerCooling.repump_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["ddsDefaults.repump_935_freq"],
+                p["DopplerCooling.repump_power"],
             )
             self.add_dds(
                 "760SP",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.ddsDefaults.repump_760_1_freq,
-                p.ddsDefaults.repump_760_1_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["ddsDefaults.repump_760_1_freq"],
+                p["ddsDefaults.repump_760_1_power"],
             )
             self.add_dds(
                 "760SP2",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.ddsDefaults.repump_760_2_freq,
-                p.ddsDefaults.repump_760_2_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["ddsDefaults.repump_760_2_freq"],
+                p["ddsDefaults.repump_760_2_power"],
             )
             self.add_ttl(
-                "ReadoutCount", self.start, p.Shelving_Doppler_Cooling.duration
+                "ReadoutCount", self.start, p["Shelving_Doppler_Cooling.duration"]
             )
             self.add_ttl(
-                "TimeResolvedCount", self.start, p.Shelving_Doppler_Cooling.duration
+                "TimeResolvedCount", self.start, p["Shelving_Doppler_Cooling.duration"]
             )
-            self.end = self.start + p.Shelving_Doppler_Cooling.duration
+            self.end = self.start + p["Shelving_Doppler_Cooling.duration"]
 
         if mode == "FiberEOM" or mode == "FiberEOM173":
             self.add_dds(
                 "369DP",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.Transitions.main_cooling_369 / 2.0
+                p["Shelving_Doppler_Cooling.duration"],
+                p["Transitions.main_cooling_369"] / 2.0
                 + p.ddsDefaults.DP369_freq
                 + p.DopplerCooling.detuning / 2.0,
                 p.DopplerCooling.cooling_power,

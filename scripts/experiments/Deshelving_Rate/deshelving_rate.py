@@ -29,7 +29,7 @@ class DeshelvingRate(QsimExperiment):
         self.p["Modes.state_detection_mode"] = "Shelving"
         self.setup_datavault("time", "probability")
         self.setup_grapher("Shelving")
-        self.times = self.get_scan_list(self.p.DeshelvingRate.scan, "ms")
+        self.times = self.get_scan_list(self.p["DeshelvingRate.scan"], "ms")
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i / float(len(self.times)))
             if should_break:
@@ -39,7 +39,7 @@ class DeshelvingRate(QsimExperiment):
             [doppler_counts, detection_counts] = self.run_sequence(num=2, max_runs=500)
             deshelving_errors = np.where(
                 doppler_counts
-                <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
             )
             detection_counts = np.delete(detection_counts, deshelving_errors)
             hist = self.process_data(detection_counts)

@@ -83,38 +83,38 @@ class MicrowaveInterrogation(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        if p.MicrowaveInterrogation.PulseSequence == "standard":
+        if p["MicrowaveInterrogation.pulse_sequence"] == "standard":
             self.add_sequence(MicrowaveSequenceStandard)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "knill":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "knill":
             self.add_sequence(Knill)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "BB1":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "BB1":
             self.add_sequence(BB1)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "SpinEcho":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "SpinEcho":
             self.add_sequence(SpinEcho)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "SuSequence":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "SuSequence":
             self.add_sequence(SuSequence)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "DoubleStandard":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "DoubleStandard":
             self.add_sequence(StandardPiPulseClock)
             self.add_sequence(standard_pi_pulse_minus)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "DoubleKnill":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "DoubleKnill":
             self.add_sequence(KnillPiPulseClock)
             self.add_sequence(knill_pi_pulse_minus)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "DoubleSpinEcho":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "DoubleSpinEcho":
             self.add_sequence(SpinEchoPiPulseClock)
             self.add_sequence(spin_echo_pi_pulse_minus)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "ClockStandard_KnillZeeman":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "ClockStandard_KnillZeeman":
             self.add_sequence(StandardPiPulseClock)
             self.add_sequence(knill_pi_pulse_minus)
 
-        elif p.MicrowaveInterrogation.PulseSequence == "TripleMicrowave":
+        elif p["MicrowaveInterrogation.pulse_sequence"] == "TripleMicrowave":
             self.add_sequence(KnillPiPulseClock)
             self.add_sequence(knill_pi_pulse_minus)
             self.add_sequence(knill_pi_pulse_plus)

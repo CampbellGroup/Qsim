@@ -31,7 +31,7 @@ class DopplerCoolingLeakthroughTest(QsimExperiment):
     def run(self, cxn, context):
         self.setup_datavault("time", "probability")
         self.setup_grapher("DopplerCoolingLeakthroughTest")
-        self.times = self.get_scan_list(self.p.EmptySequence.scan_empty_duration, "us")
+        self.times = self.get_scan_list(self.p["EmptySequence.scan_empty_duration"], "us")
         for i, duration in enumerate(self.times):
 
             should_break = self.update_progress(i / float(len(self.times)))
@@ -40,11 +40,11 @@ class DopplerCoolingLeakthroughTest(QsimExperiment):
 
             self.p["DoublePass369.duration"] = U(duration, "us")
 
-            if self.p.Modes.state_detection_mode == "Standard":
+            if self.p["Modes.state_detection_mode"] == "Standard":
                 self.program_pulser(sequence)
                 [counts] = self.run_sequence(num=1, max_runs=1000)
 
-            elif self.p.Modes.state_detection_mode == "Shelving":
+            elif self.p["Modes.state_detection_mode"] == "Shelving":
                 self.program_pulser(sequence)
                 [doppler_counts, counts] = self.run_sequence(num=2, max_runs=500)
                 doppler_errors = np.where(

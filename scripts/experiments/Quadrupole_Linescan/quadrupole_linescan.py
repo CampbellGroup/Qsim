@@ -27,18 +27,18 @@ class QuadrupoleLineScan(QsimExperiment):
 
     def run(self, cxn, context):
 
-        if self.p.MicrowaveInterrogation.AC_line_trigger == "On":
+        if self.p["MicrowaveInterrogation.AC_line_trigger"] == "On":
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(
-                self.p.MicrowaveInterrogation.delay_from_line_trigger
+                self.p["MicrowaveInterrogation.delay_from_line_trigger"]
             )
 
         self.setup_datavault("frequency", "probability")
         self.setup_grapher("Quadrupole Linescan")
-        self.detunings = self.get_scan_list(self.p.QuadrupoleLinescan.scan, "kHz")
-        center = self.p.Transitions.quadrupole
+        self.detunings = self.get_scan_list(self.p["QuadrupoleLinescan.scan"], "kHz")
+        center = self.p["Transitions.quadrupole"]
         self.p["Line_Selection.qubit"] = "qubit_0"
-        self.p["MicrowaveInterrogation.duration"] = self.p.Pi_times.qubit_0
+        self.p["MicrowaveInterrogation.duration"] = self.p["Pi_times.qubit_0"]
 
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i / float(len(self.detunings)))

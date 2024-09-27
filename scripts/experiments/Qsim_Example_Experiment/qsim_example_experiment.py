@@ -18,7 +18,7 @@ class ExperimentExample(QsimExperiment):
     # parameter vault All parameters must be defined in the registry under
     # the Parameter Vault folder before they are available in the experiment.
     # All parameters will be available in the main experiment function via a
-    # variable named self.p.parameter_folder.parameter
+    # variable named self.p["parameter_folder.parameter"]
 
     exp_parameters = []
     exp_parameters.append(
@@ -49,11 +49,11 @@ class ExperimentExample(QsimExperiment):
             "experiment_example"
         )  # Tells the grapher which tab to plot the data on
         self.amplitude = (
-            self.p.example_parameters.Amplitude
+            self.p["example_parameters.Amplitude"]
         )  # shortens the amplitude name
         # the following generates a list of the points used in the scan. If the points
         # have LabRAD unit types they can be specified in the second argument
-        self.x_values = self.get_scan_list(self.p.example_parameters.Range, units=None)
+        self.x_values = self.get_scan_list(self.p["example_parameters.Range"], units=None)
 
         # Main Loop. Every iteration will have an index i and an associated x point
         for i, x_point in enumerate(self.x_values):

@@ -50,7 +50,7 @@ class MicrowaveRabiFloppingClock(QsimExperiment):
             self.program_pulser(sequence)
             [counts] = self.run_sequence()
 
-            if i % self.p.StandardStateDetection.points_per_histogram == 0:
+            if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
 

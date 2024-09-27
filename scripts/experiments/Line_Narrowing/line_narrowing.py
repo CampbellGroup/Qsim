@@ -37,15 +37,15 @@ class LineNarrowing(QsimExperiment):
         self.setup_parameters()
         if self.multipole_direction == "Ex":
             x_values = self.get_scan_list(
-                self.p.Line_Narrowing.voltage_scan_x, units=None
+                self.p["Line_Narrowing.voltage_scan_x"], units=None
             )
         elif self.multipole_direction == "Ey":
             x_values = self.get_scan_list(
-                self.p.Line_Narrowing.voltage_scan_y, units=None
+                self.p["Line_Narrowing.voltage_scan_y"], units=None
             )
         elif self.multipole_direction == "Ez":
             x_values = self.get_scan_list(
-                self.p.Line_Narrowing.voltage_scan_z, units=None
+                self.p["Line_Narrowing.voltage_scan_z"], units=None
             )
 
         for i, step in enumerate(x_values):
@@ -59,7 +59,7 @@ class LineNarrowing(QsimExperiment):
 
     def setup_parameters(self):
 
-        self.multipole_direction = self.p.Line_Narrowing.direction
+        self.multipole_direction = self.p["Line_Narrowing.direction"]
         self.multipole_index = self.multipole_names[self.multipole_direction]
         self.multipoles = np.array(self.init_multipoles)
 

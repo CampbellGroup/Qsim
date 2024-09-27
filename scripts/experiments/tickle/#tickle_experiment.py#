@@ -44,9 +44,9 @@ class ticklescan(QsimExperiment):
         self.mps.set_multipoles(self.multipoles)
         self.pulser.frequency('369DP', self.cooling_center + self.laser_detuning/2.0)
         self.pulser.amplitude('DopplerCoolingSP', self.laser_power)
-        self.x_values = self.get_scan_list(self.p.ticklescan.frequency_scan, units='Hz')
+        self.x_values = self.get_scan_list(self.p["ticklescan.frequency_scan"], units='Hz')
         self.rg.set_output(self.chan, True)
-        self.rg.applywaveform(self.p.ticklescan.waveform, WithUnit(self.x_values[0], 'Hz'),
+        self.rg.applywaveform(self.p["ticklescan.waveform"], WithUnit(self.x_values[0], 'Hz'),
                               self.amplitude, self.offset, self.chan)
         time.sleep(1)
 
@@ -65,13 +65,13 @@ class ticklescan(QsimExperiment):
         gets parameters, called in run so scan works
         '''
 
-        self.amplitude = self.p.ticklescan.amplitude
-        self.offset = self.p.ticklescan.offset
-        self.average = int(self.p.ticklescan.average)
-        self.cooling_center = self.p.Transitions.main_cooling_369/2. + self.U(200.0, 'MHz')
-        self.laser_detuning = self.p.ticklescan.detuning_369
-        self.laser_power = self.p.ticklescan.tickle_cooling_power
-        self.multipole = self.p.ticklescan.M5
+        self.amplitude = self.p["ticklescan.amplitude"]
+        self.offset = self.p["ticklescan.offset"]
+        self.average = int(self.p["ticklescan.average"])
+        self.cooling_center = self.p["Transitions.main_cooling_369/2."] + self.U(200.0, 'MHz')
+        self.laser_detuning = self.p["ticklescan.detuning_369"]
+        self.laser_power = self.p["ticklescan.tickle_cooling_power"]
+        self.multipole = self.p["ticklescan.M5"]
         self.multipoles = np.array(self.init_multipoles)
 
     def finalize(self, cxn, context):

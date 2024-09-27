@@ -55,10 +55,10 @@ class HighFidelityMeasurement(QsimExperiment):
         print("Init DAC voltage is " + str(self.init_dac_port_822_voltage) + " mV")
 
         # set the line trigger state to the appropriate state
-        if self.p.MicrowaveInterrogation.AC_line_trigger == "On":
+        if self.p["MicrowaveInterrogation.AC_line_trigger"] == "On":
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(
-                self.p.MicrowaveInterrogation.delay_from_line_trigger
+                self.p["MicrowaveInterrogation.delay_from_line_trigger"]
             )
         self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
 

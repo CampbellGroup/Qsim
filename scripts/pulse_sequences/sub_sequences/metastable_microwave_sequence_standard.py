@@ -15,17 +15,17 @@ class MetastableMicrowaveSequenceStandard(PulseSequence):
 
     def sequence(self):
         p = self.parameters
-        center = p.Transitions.MetastableQubit
+        center = p["Transitions.MetastableQubit"]
         DDS_freq = (
-            p.ddsDefaults.metastable_qubit_dds_freq
-            + (p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
+                p["ddsDefaults.metastable_qubit_dds_freq"]
+                + (p["Metastable_Microwave_Interrogation.detuning"] + center) / 8.0
         )
 
         self.add_dds(
             "3GHz_qubit",
             self.start,
-            p.Metastable_Microwave_Interrogation.duration,
+            p["Metastable_Microwave_Interrogation.duration"],
             DDS_freq,
-            p.ddsDefaults.metastable_qubit_dds_power,
+            p["ddsDefaults.metastable_qubit_dds_power"],
         )
-        self.end = self.start + p.Metastable_Microwave_Interrogation.duration
+        self.end = self.start + p["Metastable_Microwave_Interrogation.duration"]

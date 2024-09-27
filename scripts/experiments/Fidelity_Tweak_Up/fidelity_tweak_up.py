@@ -26,8 +26,8 @@ class FidelityTweakUp(QsimExperiment):
              (TurnOffAll) DC          OP          StandardSD   DC          BSP*        StandardSD
 
     FiberEOM:
-        WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-        WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        SynthHD          |▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+        SynthNV          |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
         760SP/760SP2     |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁|████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
         ReadoutCount     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████|▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
              (TurnOffAll) DC          OP          StandardSD   DC          BSP*        StandardSD
@@ -62,15 +62,15 @@ class FidelityTweakUp(QsimExperiment):
 
     def run(self, cxn, context):
 
-        qubit = self.p.Line_Selection.qubit
-        reps = self.p.MicrowaveInterrogation.repetitions
+        qubit = self.p["Line_Selection.qubit"]
+        reps = self.p["MicrowaveInterrogation.repetitions"]
 
         if qubit == "qubit_plus":
-            pi_time = self.p.Pi_times.qubit_plus
+            pi_time = self.p["Pi_times.qubit_plus"]
         elif qubit == "qubit_minus":
-            pi_time = self.p.Pi_times.qubit_minus
+            pi_time = self.p["Pi_times.qubit_minus"]
         else:
-            pi_time = self.p.Pi_times.qubit_0
+            pi_time = self.p["Pi_times.qubit_0"]
 
         self.p["MicrowaveInterrogation.duration"] = reps * pi_time
         self.p["MicrowaveInterrogation.detuning"] = U(0.0, "kHz")
@@ -81,7 +81,7 @@ class FidelityTweakUp(QsimExperiment):
         self.program_pulser(sequence)
         while True:
             i += 1
-            points_per_hist = self.p.StandardStateDetection.points_per_histogram
+            points_per_hist = self.p["StandardStateDetection.points_per_histogram"]
             [counts_bright, counts_dark] = self.run_sequence(max_runs=500, num=2)
 
             if i % points_per_hist == 0:

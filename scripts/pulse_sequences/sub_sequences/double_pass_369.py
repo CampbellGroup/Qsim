@@ -15,9 +15,9 @@ class DoublePass369(PulseSequence):
         self.add_dds(
             "369DP",
             self.start,
-            p.DoublePass369.duration,
-            p.Transitions.main_cooling_369 / 2.0 + p.ddsDefaults.DP369_freq,
-            p.DoublePass369.power,
+            p["DoublePass369.duration"],
+            p["Transitions.main_cooling_369"] / 2.0 + p["ddsDefaults.DP369_freq"],
+            p["DoublePass369.power"],
         )
 
-        self.end = self.start + p.DoublePass369.duration
+        self.end = self.start + p["DoublePass369.duration"]

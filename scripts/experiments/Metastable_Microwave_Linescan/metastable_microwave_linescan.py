@@ -48,17 +48,17 @@ class MetastableMicrowaveLineScan(QsimExperiment):
         )  # gives the x and y names to Data Vault
         self.setup_grapher("Metastable Microwave Linescan")
         self.detunings = self.get_scan_list(
-            self.p.MetastableMicrowaveLinescan.scan, "kHz"
+            self.p["MetastableMicrowaveLinescan.scan"], "kHz"
         )
 
-        qubit = self.p.Line_Selection.qubit
+        qubit = self.p["Line_Selection.qubit"]
         if qubit == "qubit_0":
-            center = self.p.Transitions.qubit_0
-            pi_time = self.p.Pi_times.qubit_0
+            center = self.p["Transitions.qubit_0"]
+            pi_time = self.p["Pi_times.qubit_0"]
 
         elif qubit == "qubit_plus":
-            center = self.p.Transitions.qubit_plus
-            pi_time = self.p.Pi_times.qubit_plus
+            center = self.p["Transitions.qubit_plus"]
+            pi_time = self.p["Pi_times.qubit_plus"]
 
         elif qubit == "qubit_minus":
             center = self.p.Transitions.qubit_minus

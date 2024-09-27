@@ -32,7 +32,7 @@ class MicrowaveLineScanPlus(QsimExperiment):
             "frequency", "probability"
         )  # gives the x and y names to Data Vault
         self.setup_grapher("Microwave Linescan qubit_plus")
-        self.detunings = self.get_scan_list(self.p.MicrowaveLinescan.scan, "kHz")
+        self.detunings = self.get_scan_list(self.p["MicrowaveLinescan.scan"], "kHz")
 
         self.set_default_parameters()
 
@@ -47,13 +47,13 @@ class MicrowaveLineScanPlus(QsimExperiment):
 
             [counts] = self.run_sequence()
 
-            if i % self.p.StandardStateDetection.points_per_histogram == 0:
+            if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
 
             pop = self.get_pop(counts)
-            self.dv.add(detuning + self.p.Transitions.qubit_plus["kHz"], pop)
-            deltas.append(detuning + self.p.Transitions.qubit_plus["kHz"])
+            self.dv.add(detuning + self.p["Transitions.qubit_plus"]["kHz"], pop)
+            deltas.append(detuning + self.p["Transitions.qubit_plus"]["kHz"])
             probs.append(pop)
 
         param_guess = [
@@ -69,7 +69,7 @@ class MicrowaveLineScanPlus(QsimExperiment):
         return should_break
 
     def set_default_parameters(self):
-        self.p["MicrowaveInterrogation.duration"] = self.p.Pi_times.qubit_plus
+        self.p["MicrowaveInterrogation.duration"] = self.p["Pi_times.qubit_plus"]
         self.p["OpticalPumping.method"] = "Standard"
 
     def finalize(self, cxn, context):

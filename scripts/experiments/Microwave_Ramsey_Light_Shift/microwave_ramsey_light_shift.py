@@ -41,8 +41,8 @@ class MicrowaveRamseyLightShift(QsimExperiment):
 
     FiberEOM:
         369SP            |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-        WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-        WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        SynthHD          |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+        SynthNV          |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
         MicrowaveTTL     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█████▁▁▁▁▁▁▁▁▁█████▁▁▁▁▁▁▁▁▁▁▁▁
         Microwave_qubit  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█████▁▁▁▁▁▁▁▁▁█████▁▁▁▁▁▁▁▁▁▁▁▁
         532SP            |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
@@ -86,16 +86,16 @@ class MicrowaveRamseyLightShift(QsimExperiment):
 
     def run(self, cxn, context):
 
-        if self.p.MicrowaveInterrogation.AC_line_trigger == "On":
+        if self.p["MicrowaveInterrogation.AC_line_trigger"] == "On":
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(
-                self.p.MicrowaveInterrogation.delay_from_line_trigger
+                self.p["MicrowaveInterrogation.delay_from_line_trigger"]
             )
 
-        scan_parameter = self.p.MicrowaveRamsey.scan_type
-        mode = self.p.Modes.state_detection_mode
+        scan_parameter = self.p["MicrowaveRamsey.scan_type"]
+        mode = self.p["Modes.state_detection_mode"]
 
-        self.p["MicrowaveInterrogation.detuning"] = self.p.MicrowaveRamsey.detuning
+        self.p["MicrowaveInterrogation.detuning"] = self.p["MicrowaveRamsey.detuning"]
         self.init_line_center = None  #########
         if scan_parameter == "delay_time":
             self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
@@ -106,7 +106,7 @@ class MicrowaveRamseyLightShift(QsimExperiment):
             )  # gives the x and y names to Data Vault
             self.setup_grapher("Microwave Ramsey Experiment")
             self.dark_time = self.get_scan_list(
-                self.p.MicrowaveRamsey.delay_time, "ms", shuffle=False
+                self.p["MicrowaveRamsey.delay_time"], "ms", shuffle=False
             )
             last_scanned = (
                 time.time()
@@ -124,12 +124,12 @@ class MicrowaveRamseyLightShift(QsimExperiment):
                     )
                     errors = np.where(
                         doppler_counts
-                        <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                        <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                     )
                     counts = np.delete(detection_counts, errors)
                 else:
                     [counts, counts_control] = self.run_sequence(max_runs=500, num=2)
-                if i % self.p.StandardStateDetection.points_per_histogram == 0:
+                if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                     hist = self.process_data(counts)
                     self.plot_hist(hist)
                 pop = self.get_pop(counts)

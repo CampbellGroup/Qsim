@@ -198,8 +198,8 @@ class ManifoldDetection(QsimExperiment):
             self.pulser.amplitude("760SP", U(-46.0, "dBm"))
             self.pulser.amplitude("760SP2", U(-46.0, "dBm"))
         if state == "On":
-            self.pulser.amplitude("760SP", self.p.ddsDefaults.repump_760_1_power)
-            self.pulser.amplitude("760SP2", self.p.ddsDefaults.repump_760_2_power)
+            self.pulser.amplitude("760SP", self.p["ddsDefaults.repump_760_1_power"])
+            self.pulser.amplitude("760SP2", self.p["ddsDefaults.repump_760_2_power"])
 
     def toggle_shelving_laser(self, state):
         if state == "Off":
@@ -207,7 +207,7 @@ class ManifoldDetection(QsimExperiment):
         if state == "On":
             self.pulser.amplitude(
                 "411DP1", U(-20.0, "dBm")
-            )  # self.p.ddsDefaults.DP1_411_power)
+            )  # self.p["ddsDefaults.DP1_411_power"])
 
     def finalize(self, cxn, context):
         self.toggle_repump_lasers("On")

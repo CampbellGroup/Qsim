@@ -82,10 +82,10 @@ class OpticalPumping(PulseSequence):
 
         elif mode == "FiberEOM":
             self.add_ttl(
-                "WindfreakSynthNVTTL", self.start, p["OpticalPumping.duration"]
+                "SynthNVTTL", self.start, p["OpticalPumping.duration"]
             )
             self.add_ttl(
-                "WindfreakSynthHDTTL", self.start, p["OpticalPumping.duration"]
+                "SynthHDTTL", self.start, p["OpticalPumping.duration"]
             )
             self.add_dds(
                 "369DP",
@@ -125,7 +125,7 @@ class OpticalPumping(PulseSequence):
 
         elif mode == "FiberEOM173":
             self.add_ttl(
-                "WindfreakSynthHDTTL", self.start, p["OpticalPumping.duration"]
+                "SynthHDTTL", self.start, p["OpticalPumping.duration"]
             )
             self.add_dds(
                 "369DP",

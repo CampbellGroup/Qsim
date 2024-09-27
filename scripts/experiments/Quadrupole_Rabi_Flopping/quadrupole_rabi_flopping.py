@@ -29,12 +29,12 @@ class QuadrupoleRabiFlopping(QsimExperiment):
     def run(self, cxn, context):
 
         self.p["Modes.state_detection_mode"] = "Standard"
-        self.p["MicrowaveInterrogation.duration"] = self.p.Pi_times.qubit_0
+        self.p["MicrowaveInterrogation.duration"] = self.p["Pi_times.qubit_0"]
         self.setup_datavault(
             "time", "probability"
         )  # gives the x and y names to Data Vault
         self.setup_grapher("Quadrupole Rabi Flopping")
-        self.times = self.get_scan_list(self.p.QuadrupoleRabiFlopping.scan, "us")
+        self.times = self.get_scan_list(self.p["QuadrupoleRabiFlopping.scan"], "us")
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i / float(len(self.times)))
             if should_break:

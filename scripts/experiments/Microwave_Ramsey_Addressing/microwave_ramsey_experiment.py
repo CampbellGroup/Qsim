@@ -29,8 +29,8 @@ class MicrowaveRamseyExperiment(QsimExperiment):
 
     FiberEOM:
         369SP            |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-        WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
-        WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        SynthHD          |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
+        SynthNV          |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
         MicrowaveTTL     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█████▁▁▁▁▁▁▁▁▁█████▁▁▁▁▁▁▁▁▁▁▁▁
         Microwave_qubit  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▓▓▓▓▓▁▁▁▁▁▁▁▁▁▓▓▓▓▓▁▁▁▁▁▁▁▁▁▁▁▁
         935SP/976SP      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████████████
@@ -67,21 +67,21 @@ class MicrowaveRamseyExperiment(QsimExperiment):
         self.ident = ident
 
     def run(self, cxn, context):
-        if self.p.MicrowaveInterrogation.AC_line_trigger == "On":
+        if self.p["MicrowaveInterrogation.AC_line_trigger"] == "On":
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(
-                self.p.MicrowaveInterrogation.delay_from_line_trigger
+                self.p["MicrowaveInterrogation.delay_from_line_trigger"]
             )
 
-        mode = self.p.Modes.state_detection_mode
+        mode = self.p["Modes.state_detection_mode"]
 
-        self.p["MicrowaveInterrogation.detuning"] = self.p.MicrowaveRamsey.detuning
+        self.p["MicrowaveInterrogation.detuning"] = self.p["MicrowaveRamsey.detuning"]
 
         self.setup_datavault(
             "time", "probability"
         )  # gives the x and y names to Data Vault
         self.setup_grapher("Microwave Ramsey Experiment")
-        self.dark_time = self.get_scan_list(self.p.MicrowaveRamsey.delay_time, "ms")
+        self.dark_time = self.get_scan_list(self.p["MicrowaveRamsey.delay_time"], "ms")
         for i, dark_time in enumerate(self.dark_time):
             should_break = self.update_progress(i / float(len(self.dark_time)))
             if should_break:
@@ -94,12 +94,12 @@ class MicrowaveRamseyExperiment(QsimExperiment):
                 )
                 errors = np.where(
                     doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                    <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                 )
                 counts = np.delete(detection_counts, errors)
             else:
                 [counts] = self.run_sequence()
-            if i % self.p.StandardStateDetection.points_per_histogram == 0:
+            if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
             pop = self.get_pop(counts)

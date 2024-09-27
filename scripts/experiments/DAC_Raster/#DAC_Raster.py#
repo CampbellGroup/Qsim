@@ -19,9 +19,9 @@ class dacRaster(QsimExperiment):
         self.mps = self.cxn.multipole_server
         self.init_multipoles = cxn.multipole_server.get_multipoles()
         self.multipoles = np.array(self.init_multipoles)
-        self.Xvalues = self.get_scan_list(self.p.dacraster.voltage_scan_x, units=None)
-        self.Yvalues = self.get_scan_list(self.p.dacraster.voltage_scan_y, units=None)
-        self.Zvalues = self.get_scan_list(self.p.dacraster.voltage_scan_z, units=None)
+        self.Xvalues = self.get_scan_list(self.p["dacraster.voltage_scan_x"], units=None)
+        self.Yvalues = self.get_scan_list(self.p["dacraster.voltage_scan_y"], units=None)
+        self.Zvalues = self.get_scan_list(self.p["dacraster.voltage_scan_z"], units=None)
 
         self.totalstep = (len(self.Xvalues))*(len(self.Yvalues))*(len(self.Zvalues))
 

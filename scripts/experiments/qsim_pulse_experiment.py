@@ -44,7 +44,7 @@ class QsimPulseExperiment(QsimExperiment):
 
         pulse_sequence = sequence(self.p)
         pulse_sequence.program_sequence(self.pulser)
-        self.pulser.start_number(int(self.p.StateDetection.repetitions))
+        self.pulser.start_number(int(self.p["StateDetection.repetitions"]))
         self.pulser.wait_sequence_done()
         self.pulser.stop_sequence()
         counts = self.pulser.get_readout_counts()
@@ -83,7 +83,7 @@ class QsimPulseExperiment(QsimExperiment):
             self.dv.add_parameter(parameter, self.p[parameter], context=self.prob_ctx)
 
     def process_data(self, counts):
-        data = np.column_stack((np.arange(self.p.StateDetection.repetitions), counts))
+        data = np.column_stack((np.arange(self.p["StateDetection.repetitions"]), counts))
         y = np.histogram(
             data[:, 1], int(np.max([data[:, 1].max() - data[:, 1].min(), 1]))
         )
@@ -99,7 +99,7 @@ class QsimPulseExperiment(QsimExperiment):
         self.rsg.plot(self.dataset_hist, "Histogram", False)
 
     def plot_prob(self, num, counts):
-        self.thresholdVal = self.p.StateDetection.state_readout_threshold
+        self.thresholdVal = self.p["StateDetection.state_readout_threshold"]
         prob = len(np.where(counts > self.thresholdVal)[0]) / float(len(counts))
         self.dv.add(num, prob, context=self.prob_ctx)
 

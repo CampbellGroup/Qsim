@@ -43,13 +43,15 @@ class ImageFluorescence(QsimExperiment):
         self.set_scannable_parameters()
         self.set_exp_settings()
         init_time = time.time()
-        while elapsed <= self.p.images.measure_time:
+        while elapsed <= self.p["images.measure_time:"]
             data = self.cam.get_most_recent_image()
             data = data.sum() / float(len(data))
             elapsed = WithUnit(time.time() - init_time, "s")
             self.dv.add(elapsed["s"], data)
             should_break = self.update_progress(
-                elapsed["s"] / self.p.images.measure_time["s"]
+                elapsed["s"] / self.p["images.measure_time["
+            s
+            "]"]
             )
             if should_break:
                 break
@@ -70,10 +72,16 @@ class ImageFluorescence(QsimExperiment):
         self.cam.start_live_display()
 
     def set_scannable_parameters(self):
-        center_y = self.p.images.image_center_x["pix"]  # switched for same reason
-        center_x = self.p.images.image_center_y["pix"]
-        height = self.p.images.image_width["pix"]
-        width = self.p.images.image_height[
+        center_y = self.p["images.image_center_x["
+        pix
+        "]"]  # switched for same reason
+        center_x = self.p["images.image_center_y["
+        pix
+        "]"]
+        height = self.p["images.image_width["
+        pix
+        "]"]
+        width = self.p["images.image_height["]
             "pix"
         ]  # switched due to transpose of camera data
         self.x_pixel_range = [

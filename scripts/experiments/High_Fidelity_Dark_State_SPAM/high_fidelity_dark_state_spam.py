@@ -55,17 +55,17 @@ class HighFidelityDarkStateSpam(QsimExperiment):
     def run(self, cxn, context):
 
         # set the line trigger state to the appropriate state
-        if self.p.MicrowaveInterrogation.AC_line_trigger == "On":
+        if self.p["MicrowaveInterrogation.AC_line_trigger"] == "On":
             self.pulser.line_trigger_state(True)
             self.pulser.line_trigger_duration(
-                self.p.MicrowaveInterrogation.delay_from_line_trigger
+                self.p["MicrowaveInterrogation.delay_from_line_trigger"]
             )
 
         # self.perform_initial_tweak_up()
         break_1, break_2 = self.perform_initial_tweak_up()
         self.set_fixed_params()  # force certain parameters to have fixed values
         self.setup_high_fidelity_datavault()  # setup datavault folders for receiving HiFi data
-        self.reps = self.p.ShelvingStateDetection.repetitions
+        self.reps = self.p["ShelvingStateDetection.repetitions"]
 
         print("Init DAC voltage is " + str(self.init_dac_port_822_voltage) + " mV")
 
@@ -130,7 +130,7 @@ class HighFidelityDarkStateSpam(QsimExperiment):
                 else:
                     pass
 
-            if j >= self.p.HighFidelityMeasurement.sequence_iterations:
+            if j >= self.p["HighFidelityMeasurement.sequence_iterations"]:
                 break_1, break_2 = self.periodic_tweak_up()
                 j = 0
 

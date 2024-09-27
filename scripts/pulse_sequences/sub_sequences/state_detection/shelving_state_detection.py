@@ -43,7 +43,7 @@ class ShelvingStateDetection(PulseSequence):
             p.ddsDefaults.repump_976_power,
         )
 
-        # self.addTTL('WindfreakSynthHDTTL',
+        # self.addTTL('SynthHDTTL',
         #            self.start,
         #            p.ShelvingStateDetection.duration)
 

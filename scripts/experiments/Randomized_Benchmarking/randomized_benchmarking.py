@@ -38,7 +38,7 @@ class RandomizedBenchmarking(QsimExperiment):
     def run(self, cxn, context):
         # if we want to line trigger tell the pulser to do so
         self.pulser.line_trigger_state(
-            self.p.MicrowaveInterrogation.AC_line_trigger == "On"
+            self.p["MicrowaveInterrogation.AC_line_trigger"] == "On"
         )
 
         sets = []
@@ -48,7 +48,7 @@ class RandomizedBenchmarking(QsimExperiment):
             sets.append(int(i.split("_")[2]))
         sequences = []
         # print(max(sets))
-        if self.p.RandomizedBenchmarking.sequence_generation == "Use Most Recent Set":
+        if self.p["RandomizedBenchmarking.sequence_generation"] == "Use Most Recent Set":
             path = path_to_files + "Sequence_Set_" + str(max(sets))
             expected_outcomes = np.loadtxt(
                 path + "/Sequence_Final_States.csv", delimiter=",", dtype=np.str
@@ -56,16 +56,16 @@ class RandomizedBenchmarking(QsimExperiment):
             for i in os.listdir(path):
                 sequences.append(i)
 
-        elif self.p.RandomizedBenchmarking.sequence_generation == "Generate New Set":
+        elif self.p["RandomizedBenchmarking.sequence_generation"] == "Generate New Set":
             path = path_to_files + "Sequence_Set_" + str(max(sets) + 1)
             lengths = [
-                int(i) for i in self.p.RandomizedBenchmarking.set_of_lengths.split(",")
+                int(i) for i in self.p["RandomizedBenchmarking.set_of_lengths.split(""],")
             ]
             print("Generating new RB sequence... please hold.")
             generate_sequences.generate_and_save_sequences(
                 lengths,
-                int(self.p.RandomizedBenchmarking.clifford_sequences),
-                int(self.p.RandomizedBenchmarking.pauli_randomizations),
+                int(self.p["RandomizedBenchmarking.clifford_sequences"]),
+                int(self.p["RandomizedBenchmarking.pauli_randomizations"]),
                 path,
             )
             expected_outcomes = np.loadtxt(
@@ -76,7 +76,7 @@ class RandomizedBenchmarking(QsimExperiment):
                 sequences.append(i)
 
         sequences.remove("Sequence_Final_States.csv")
-        mode = self.p.Modes.state_detection_mode
+        mode = self.p["Modes.state_detection_mode"]
 
         # These 3 lines need to change for rb
         self.setup_datavault(
@@ -86,9 +86,9 @@ class RandomizedBenchmarking(QsimExperiment):
         self.setup_grapher("Randomized Benchmarking")
         total_number_sequences = len(sequences)
         np.random.shuffle(sequences)
-        # print(self.p.Pi_times.qubit_0['us'])
-        # print(self.p.MicrowaveInterrogation.ttl_switch_delay['us'])
-        # print(self.p.Transitions.qubit_0['kHz'])
+        # print(self.p["Pi_times.qubit_0"]['us'])
+        # print(self.p["MicrowaveInterrogation.ttl_switch_delay"]['us'])
+        # print(self.p["Transitions.qubit_0"]['kHz'])
         for i in range(len(sequences)):
             should_break = self.update_progress(i / float(total_number_sequences))
             if should_break:
@@ -113,13 +113,13 @@ class RandomizedBenchmarking(QsimExperiment):
                 )
                 errors = np.where(
                     doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                    <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                 )
                 counts = np.delete(detection_counts, errors)
             elif mode == "Standard":
                 [counts] = self.run_sequence(max_runs=1000, num=1)
 
-            if i % self.p.StandardStateDetection.points_per_histogram == 0:
+            if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
 

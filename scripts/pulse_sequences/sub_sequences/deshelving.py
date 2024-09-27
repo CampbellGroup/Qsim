@@ -29,7 +29,7 @@ class Deshelving(PulseSequence):
         self.add_dds(
             "369DP",
             self.start,
-            p.Deshelving.duration,
+            p["Deshelving.duration"],
             p.Transitions.main_cooling_369 / 2.0
             + p.ddsDefaults.DP369_freq
             + p.DopplerCooling.detuning / 2.0,

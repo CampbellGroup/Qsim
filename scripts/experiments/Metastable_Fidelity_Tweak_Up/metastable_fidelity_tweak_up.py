@@ -32,11 +32,11 @@ class MetastableFidelityTweakUp(QsimExperiment):
     def run(self, cxn, context):
 
         self.p["Line_Selection.qubit"] = "qubit_0"
-        self.p["MicrowaveInterrogation.duration"] = self.p.Pi_times.qubit_0
+        self.p["MicrowaveInterrogation.duration"] = self.p["Pi_times.qubit_0"]
         self.p["MicrowaveInterrogation.detuning"] = U(0.0, "kHz")
 
         self.p["Metastable_Microwave_Interrogation.duration"] = (
-            self.p.Pi_times.metastable_qubit
+            self.p["Pi_times.metastable_qubit"]
         )
         self.p["Metastable_Microwave_Interrogation.detuning"] = U(0.0, "kHz")
 
@@ -63,15 +63,15 @@ class MetastableFidelityTweakUp(QsimExperiment):
             ] = self.run_sequence(max_runs=250, num=4)
             failed_four_heralding_bright = np.where(
                 counts_herald_bright_1
-                >= self.p.ShelvingStateDetection.state_readout_threshold
+                >= self.p["ShelvingStateDetection.state_readout_threshold"]
             )
             failed_three_heralding_bright = np.where(
                 counts_herald_bright_2
-                >= self.p.ShelvingStateDetection.state_readout_threshold
+                >= self.p["ShelvingStateDetection.state_readout_threshold"]
             )
             doppler_errors_bright = np.where(
                 counts_doppler_bright
-                <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
             )
             all_bright_errors = np.unique(
                 np.concatenate(
@@ -90,11 +90,11 @@ class MetastableFidelityTweakUp(QsimExperiment):
             )
             failed_heralding_dark = np.where(
                 counts_herald_dark
-                >= self.p.ShelvingStateDetection.state_readout_threshold
+                >= self.p["ShelvingStateDetection.state_readout_threshold"]
             )
             doppler_errors_dark = np.where(
                 counts_doppler_dark
-                <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
             )
             all_dark_errors = np.unique(
                 np.concatenate((failed_heralding_dark[0], doppler_errors_dark[0]))

@@ -30,6 +30,7 @@ class BrightStatePumping(PulseSequence):
         ("ddsDefaults", "repump_976_freq"),
         ("ddsDefaults", "repump_976_power"),
         ("Modes", "bright_state_pumping"),
+        ("Modes", "laser_369"),
     ]
 
     required_subsequences = [
@@ -42,13 +43,13 @@ class BrightStatePumping(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        prep_method = p.Modes.bright_state_pumping
-        laser_mode = p.Modes.laser_369
+        prep_method = p["Modes.bright_state_pumping"]
+        laser_mode = p["Modes.laser_369"]
 
         if prep_method == "Doppler Cooling":
             if laser_mode == "FiberEOM":
                 self.add_ttl(
-                    "WindfreakSynthHDTTL", self.start, p["BrightStatePumping.duration"]
+                    "SynthHDTTL", self.start, p["BrightStatePumping.duration"]
                 )
                 self.add_dds(
                     "369DP",
@@ -73,10 +74,10 @@ class BrightStatePumping(PulseSequence):
                     p["ddsDefaults.repump_976_freq"],
                     p["ddsDefaults.repump_976_power"],
                 )
-                self.end = self.start + p.BrightStatePumping.duration
+                self.end = self.start + p["BrightStatePumping.duration"]
 
             elif laser_mode == "FiberEOM173":
-                # self.addTTL('WindfreakSynthHDTTL',
+                # self.addTTL('SynthHDTTL',
                 #             self.start,
                 #             p["BrightStatePumping.duration"])
                 self.add_dds(
@@ -102,7 +103,7 @@ class BrightStatePumping(PulseSequence):
                     p["ddsDefaults.repump_976_freq"],
                     p["ddsDefaults.repump_976_power"],
                 )
-                self.end = self.start + p.BrightStatePumping.duration
+                self.end = self.start + p["BrightStatePumping.duration"]
 
             elif laser_mode == "Standard":
                 self.add_dds(
@@ -128,7 +129,7 @@ class BrightStatePumping(PulseSequence):
                     p["ddsDefaults.repump_935_freq"],
                     p["BrightStatePumping.repump_power"],
                 )
-                self.end = self.start + p.BrightStatePumping.duration
+                self.end = self.start + p["BrightStatePumping.duration"]
 
         elif prep_method == "Microwave":
             self.add_sequence(OpticalPumping)

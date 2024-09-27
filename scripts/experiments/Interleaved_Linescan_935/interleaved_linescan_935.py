@@ -126,11 +126,11 @@ class InterleavedLinescan935(QsimExperiment):
         self.probe_dac_port = 4
         self.pump_channel = 4
         self.pump_dac_port = 7
-        self.centerfrequency = self.p.Transitions.repump_935
-        self.scan_range = self.p.InterleavedScan935.scan_range
-        self.rescue_time = self.p.InterleavedScan935.rescue_time
-        self.wait_time = self.p.InterleavedScan935.rail_wait_time
-        self.repump_power = self.p.InterleavedScan935.repump_power
+        self.centerfrequency = self.p["Transitions.repump_935"]
+        self.scan_range = self.p["InterleavedScan935.scan_range"]
+        self.rescue_time = self.p["InterleavedScan935.rescue_time"]
+        self.wait_time = self.p["InterleavedScan935.rail_wait_time"]
+        self.repump_power = self.p["InterleavedScan935.repump_power"]
 
     def currentfrequency(self):
         try:

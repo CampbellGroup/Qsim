@@ -25,56 +25,56 @@ class MicrowaveSequenceStandard(PulseSequence):
         p = self.parameters
 
         #  select which zeeman level to prepare
-        if p.Line_Selection.qubit == "qubit_0":
-            center = p.Transitions.qubit_0
-        elif p.Line_Selection.qubit == "qubit_plus":
-            center = p.Transitions.qubit_plus
-        elif p.Line_Selection.qubit == "qubit_minus":
-            center = p.Transitions.qubit_minus
+        if p["Line_Selection.qubit"] == "qubit_0":
+            center = p["Transitions.qubit_0"]
+        elif p["Line_Selection.qubit"] == "qubit_plus":
+            center = p["Transitions.qubit_plus"]
+        elif p["Line_Selection.qubit"] == "qubit_minus":
+            center = p["Transitions.qubit_minus"]
         else:
             return
 
-        if p.MicrowaveInterrogation.microwave_source == "HP+DDS":
-            DDS_freq = p.ddsDefaults.qubit_dds_freq - (
-                p.MicrowaveInterrogation.detuning + center
+        if p["MicrowaveInterrogation.microwave_source"] == "HP+DDS":
+            DDS_freq = p["ddsDefaults.qubit_dds_freq"] - (
+                    p["MicrowaveInterrogation.detuning"] + center
             )
-            pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
+            pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
 
             self.add_ttl(
                 "MicrowaveTTL",
                 self.start + pulse_delay,
-                p.MicrowaveInterrogation.duration,
+                p["MicrowaveInterrogation.duration"],
             )
             self.add_dds(
                 "Microwave_qubit",
                 self.start,
-                p.MicrowaveInterrogation.duration + pulse_delay,
+                p["MicrowaveInterrogation.duration"] + pulse_delay,
                 DDS_freq,
-                p.MicrowaveInterrogation.power,
-                p.MicrowaveInterrogation.microwave_phase,
+                p["MicrowaveInterrogation.power"],
+                p["MicrowaveInterrogation.microwave_phase"],
             )
 
-            self.end = self.start + p.MicrowaveInterrogation.duration + pulse_delay
+            self.end = self.start + p["MicrowaveInterrogation.duration"] + pulse_delay
 
-        elif p.MicrowaveInterrogation.microwave_source == "DDSx32":
+        elif p["MicrowaveInterrogation.microwave_source"] == "DDSx32":
             DDS_freq = (
-                p.ddsDefaults.qubit_dds_x32_freq
-                + (p.MicrowaveInterrogation.detuning + center) / 32.0
+                    p["ddsDefaults.qubit_dds_x32_freq"]
+                    + (p["MicrowaveInterrogation.detuning"] + center) / 32.0
             )
-            pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
+            pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
 
             self.add_ttl(
                 "MicrowaveTTL",
                 self.start + pulse_delay,
-                p.MicrowaveInterrogation.duration,
+                p["MicrowaveInterrogation.duration"],
             )
             self.add_dds(
                 "Microwave_qubit",
                 self.start,
-                p.MicrowaveInterrogation.duration + pulse_delay,
+                p["MicrowaveInterrogation.duration"] + pulse_delay,
                 DDS_freq,
-                p.ddsDefaults.qubit_dds_x32_power,
-                p.MicrowaveInterrogation.microwave_phase / 32.0,
+                p["ddsDefaults.qubit_dds_x32_power"],
+                p["MicrowaveInterrogation.microwave_phase"] / 32.0,
             )
 
-            self.end = self.start + p.MicrowaveInterrogation.duration + pulse_delay
+            self.end = self.start + p["MicrowaveInterrogation.duration"] + pulse_delay

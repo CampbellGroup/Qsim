@@ -39,15 +39,15 @@ class Magnetometry(QsimExperiment):
         self.setup_parameters()
         if self.coil_direction == "Bx":
             x_values = self.get_scan_list(
-                self.p.Magnetometry.current_scan_x, units=Unit("A")
+                self.p["Magnetometry.current_scan_x"], units=Unit("A")
             )
         elif self.coil_direction == "By":
             x_values = self.get_scan_list(
-                self.p.Magnetometry.current_scan_y, units=Unit("A")
+                self.p["Magnetometry.current_scan_y"], units=Unit("A")
             )
         elif self.coil_direction == "Bz":
             x_values = self.get_scan_list(
-                self.p.Magnetometry.current_scan_z, units=Unit("A")
+                self.p["Magnetometry.current_scan_z"], units=Unit("A")
             )
 
         for i, current_step in enumerate(x_values):
@@ -68,7 +68,7 @@ class Magnetometry(QsimExperiment):
                 return should_break
 
     def setup_parameters(self):
-        self.coil_direction = self.p.Magnetometry.direction
+        self.coil_direction = self.p["Magnetometry.direction"]
         self.coil_index = self.coil_names[self.coil_direction]
         self.currents = np.array(self.init_currents)
 

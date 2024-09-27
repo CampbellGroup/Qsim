@@ -39,7 +39,7 @@ class WavemeterLinescanBadWM(QsimExperiment):
 
         self.ident = ident
         self.wm = self.cxn.multiplexerserver
-        # if self.p.wavemeterscan.lasername == 'Hudson':
+        # if self.p["wavemeterscan.lasername"] == 'Hudson':
         #    self.cxnhudwlm = labrad.connect('10.97.111.8', password='lab')
         #    self.wm = self.cxnhudwlm.multiplexerserver
 

@@ -31,12 +31,12 @@ class MetastableMicrowaveInterrogation173(PulseSequence):
             p.ddsDefaults.metastable_qubit_173_dds_power,
         )
         self.add_ttl(
-            "WindfreakSynthHDTTL",
+            "SynthHDTTL",
             self.start,
             p.Metastable_Microwave_Interrogation.duration,
         )
         self.add_ttl(
-            "WindfreakSynthNVTTL",
+            "SynthNVTTL",
             self.start,
             p.Metastable_Microwave_Interrogation.duration,
         )
@@ -80,12 +80,12 @@ class SweptMetastableMicrowaveInterrogation173(PulseSequence):
             ramp_rate,
         )
         self.add_ttl(
-            "WindfreakSynthHDTTL",
+            "SynthHDTTL",
             self.start,
             p.Metastable_Microwave_Interrogation.duration,
         )
         self.add_ttl(
-            "WindfreakSynthNVTTL",
+            "SynthNVTTL",
             self.start,
             p.Metastable_Microwave_Interrogation.duration,
         )

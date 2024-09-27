@@ -30,8 +30,8 @@ class MicrowaveRabiFlopping(QsimExperiment):
 
     FiberEOM:
         369SP            |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
-        WindfreakSynthHD |▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████████████████
-        WindfreakSynthNV |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        SynthHD          |▁▁▁▁▁▁▁▁▁▁▁▁████████████████████████████████████
+        SynthNV          |▁▁▁▁▁▁▁▁▁▁▁▁████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
         MicrowaveTTL     |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
         Microwave_qubit  |▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██████████▁▁▁▁▁▁▁▁▁▁▁▁
         935SP/976SP      |████████████████████████▁▁▁▁▁▁▁▁▁▁▁▁████████████
@@ -46,6 +46,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(("RabiFlopping", "scan"))
     exp_parameters.append(("DopplerCooling", "detuning"))
     exp_parameters.append(("Transitions", "main_cooling_369"))
+    exp_parameters.append(("BrightStatePumping", "bright_prep_method"))
 
     exp_parameters.append(("Modes", "state_detection_mode"))
     exp_parameters.append(("ShelvingStateDetection", "repetitions"))
@@ -71,12 +72,12 @@ class MicrowaveRabiFlopping(QsimExperiment):
 
         self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_channel)
         print(self.cavity_voltage)
-        qubit = self.p.Line_Selection.qubit
-        mode = self.p.Modes.state_detection_mode
+        qubit = self.p["Line_Selection.qubit"]
+        mode = self.p["Modes.state_detection_mode"]
 
-        init_bright_state_pumping_method = self.p.BrightStatePumping.method
-        init_microwave_pulse_sequence = self.p.MicrowaveInterrogation.PulseSequence
-        init_optical_pumping_method = self.p.OpticalPumping.method
+        init_bright_state_pumping_method = self.p["BrightStatePumping.bright_prep_method"]
+        init_microwave_pulse_sequence = self.p["MicrowaveInterrogation.pulse_sequence"]
+        init_optical_pumping_method = self.p["OpticalPumping.method"]
 
         self.p["BrightStatePumping.method"] = "Microwave"
         # self.p['BrightStatePumping.method'] = 'Doppler Cooling Fiber EOM'
@@ -84,7 +85,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
         # self.p['MicrowaveInterrogation.pulse_sequence'] = 'standard'
 
         self.pulser.line_trigger_state(
-            self.p.MicrowaveInterrogation.AC_line_trigger == "On"
+            self.p["MicrowaveInterrogation.AC_line_trigger"] == "On"
         )
 
         self.setup_datavault(
@@ -96,7 +97,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
             self.setup_datavault("time", "probability")
         self.setup_grapher("Rabi Flopping " + qubit)
 
-        self.times = self.get_scan_list(self.p.RabiFlopping.scan, "us")
+        self.times = self.get_scan_list(self.p["RabiFlopping.scan"], "us")
 
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i / float(len(self.times)))
@@ -117,14 +118,14 @@ class MicrowaveRabiFlopping(QsimExperiment):
                 )
                 errors = np.where(
                     doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                    <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                 )
                 counts = np.delete(detection_counts, errors)
                 countsDopFixed = np.delete(doppler_counts, errors)
             else:
                 [counts] = self.run_sequence()
 
-            if i % self.p.StandardStateDetection.points_per_histogram == 0:
+            if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                 hist = self.process_data(counts)
                 self.plot_hist(hist)
 
