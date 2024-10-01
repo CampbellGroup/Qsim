@@ -126,7 +126,7 @@ class QsimGUI(QMainWindow):
     def make_control_widget(self, reactor, cxn):
         widget = QWidget()
         from Qsim.clients.RF_control.RFcontrol import RFControl
-        from common.lib.clients.PMT_Control.pmt_control import PMTWidget
+        from common.lib.clients.PMT_Control.pmt_control_2 import PMTWidget
         from common.lib.clients.evPump.evPumpClient import eVPumpClient
 
 
