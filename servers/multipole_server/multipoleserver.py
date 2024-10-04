@@ -17,6 +17,7 @@ timeout = 20
 """
 
 import socket
+from copy import deepcopy
 
 import numpy as np
 from labrad.server import LabradServer, setting
@@ -35,6 +36,16 @@ class MultipoleServer(LabradServer):
         self.name = socket.gethostname() + " Multipole Server"
 
         self.M = MC.M
+
+        self.multipole_channels = MC.multipoles
+
+        self.multipole_name_to_index = {self.multipole_channels[i].name: i for i in range(len(self.multipole_channels))}
+
+        self.dac_channels = []
+        for i, channel in enumerate(HC.dac_channels):
+            self.dac_channels.append(channel.dac_channel_number)
+            # self.update_dac(0.0, channel)
+
         self.lc = LoopingCall(self.loop)
         self.connect()
 
@@ -55,12 +66,7 @@ class MultipoleServer(LabradServer):
         self.reg = self.cxn.registry
 
         yield self.reg.cd(["", "settings"], True)
-        self.multipoles = yield self.reg.get("Multipoles")
-
-        self.dac_channels = []
-        for i, channel in enumerate(HC.dac_channels):
-            self.dac_channels.append(channel.dac_channel_number)
-            # self.update_dac(0.0, channel)
+        self.multipoles_array = yield self.reg.get("Multipoles")
 
         self.lc.start(5.0)  # start registry saving looping call
 
@@ -88,22 +94,36 @@ class MultipoleServer(LabradServer):
 
     @setting(16, mvector="*v", returns="*v")
     def set_multipoles(self, c, mvector):
+        """
+        Updates the DACs to the multipoles contained in mvector.
+        """
         mvector = np.array(mvector)
         evector = self.M.dot(mvector)
 
         for i, voltage in enumerate(evector):
             yield self.update_dac(voltage, self.dac_channels[i])
-        self.multipoles = mvector
+        self.multipoles_array = mvector
         returnValue(evector)
+
+    @setting(19, multipole_name="s", value="v", returns="*v")
+    def set_multipole_by_name(self, c, multipole_name, value):
+        """
+        Sets the multipole with the given name to the given value
+        """
+        idx = self.multipole_name_to_index[multipole_name]
+        mvector = deepcopy(self.multipoles_array)
+        mvector[idx] = value
+        mp = yield self.set_multipoles(c, mvector)
+        returnValue(mp)
 
     @setting(17)
     def save_multipoles_to_registry(self, c):
-        yield self.reg.set("Multipoles", self.multipoles)
+        yield self.reg.set("Multipoles", self.multipoles_array)
 
     @setting(18, returns="*v")
     def get_multipoles(self, c):
         yield None
-        returnValue(self.multipoles)
+        returnValue(self.multipoles_array)
 
     @inlineCallbacks
     def update_dac(self, voltage, dac_num):
@@ -113,7 +133,7 @@ class MultipoleServer(LabradServer):
 
     @inlineCallbacks
     def loop(self):
-        yield self.reg.set("Multipoles", self.multipoles)
+        yield self.reg.set("Multipoles", self.multipoles_array)
 
 
 if __name__ == "__main__":
