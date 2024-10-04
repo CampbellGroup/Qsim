@@ -32,6 +32,7 @@ class OvenServer(LabradServer):
         self.max_current = U(5.00, "A")
         self.oven_channel = 3
         self.shutter_channel = 1
+        self.protection_channel = 2
         self.connect()
 
     @inlineCallbacks
@@ -50,7 +51,9 @@ class OvenServer(LabradServer):
         yield self.keithley.output(self.shutter_channel, False)
         yield self.keithley.voltage(self.shutter_channel, U(5.0, "V"))
         yield self.keithley.current(self.shutter_channel, U(0.8, "A"))
-        self.oven_state = False
+        yield self.keithley.output(self.protection_channel, False)
+        yield self.keithley.voltage(self.protection_channel, U(5.0, "V"))
+        yield self.keithley.current(self.protection_channel, U(0.8, "A"))
 
     @setting(16, value="v[A]")
     def oven_current(self, c, value):
@@ -64,8 +67,12 @@ class OvenServer(LabradServer):
         yield self.keithley.output(self.oven_channel, output)
 
     @setting(19, output="b")
-    def shutter_output(self, c, output):
+    def shutter_output_399(self, c, output):
         yield self.keithley.output(self.shutter_channel, output)
+
+    @setting(20, output="b")
+    def shutter_output_protection(self, c, output):
+        yield self.keithley.output(self.protection_channel, output)
 
     @setting(18, returns="b")
     def get_output(self, c):
