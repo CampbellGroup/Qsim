@@ -22,8 +22,6 @@ class manifold_measurement(PulseSequence):
         Deshelving,
     ]
 
-    required_parameters = [("BrightStatePumping", "bright_prep_method")]
-
     def sequence(self):
         self.add_sequence(TurnOffAll)
         self.add_sequence(ShelvingDopplerCooling)
