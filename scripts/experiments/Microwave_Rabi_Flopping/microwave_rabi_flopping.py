@@ -46,7 +46,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
     exp_parameters.append(("RabiFlopping", "scan"))
     exp_parameters.append(("DopplerCooling", "detuning"))
     exp_parameters.append(("Transitions", "main_cooling_369"))
-    exp_parameters.append(("BrightStatePumping", "bright_prep_method"))
+    exp_parameters.append(("Modes", "bright_state_pumping"))
 
     exp_parameters.append(("Modes", "state_detection_mode"))
     exp_parameters.append(("ShelvingStateDetection", "repetitions"))
@@ -75,7 +75,7 @@ class MicrowaveRabiFlopping(QsimExperiment):
         qubit = self.p["Line_Selection.qubit"]
         mode = self.p["Modes.state_detection_mode"]
 
-        init_bright_state_pumping_method = self.p["BrightStatePumping.bright_prep_method"]
+        init_bright_state_pumping_method = self.p["Modes.bright_state_pumping"]
         init_microwave_pulse_sequence = self.p["MicrowaveInterrogation.pulse_sequence"]
         init_optical_pumping_method = self.p["OpticalPumping.method"]
 
