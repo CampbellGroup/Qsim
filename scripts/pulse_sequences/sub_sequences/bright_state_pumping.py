@@ -18,7 +18,6 @@ class BrightStatePumping(PulseSequence):
         ("BrightStatePumping", "repump_power"),
         ("BrightStatePumping", "detuning"),
         ("BrightStatePumping", "duration"),
-        ("BrightStatePumping", "bright_prep_method"),
         ("BrightStatePumping", "microwave_phase_list"),
         ("BrightStatePumping", "start_with_Hadamard"),
         ("MicrowaveInterrogation", "repetitions"),

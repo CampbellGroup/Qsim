@@ -61,6 +61,13 @@ class OpticalPumping(PulseSequence):
                 p["OpticalPumping.repump_power"],
             )
             self.add_dds(
+                "976SP",
+                self.start,
+                p["OpticalPumping.duration"] + p["OpticalPumping.extra_repump_time"],
+                p["ddsDefaults.repump_976_freq"],
+                p["ddsDefaults.repump_976_power"],
+            )
+            self.add_dds(
                 "760SP",
                 self.start,
                 p["OpticalPumping.duration"] + p["OpticalPumping.extra_repump_time"],
@@ -104,6 +111,13 @@ class OpticalPumping(PulseSequence):
                 p["OpticalPumping.repump_power"],
             )
             self.add_dds(
+                "976SP",
+                self.start,
+                p["OpticalPumping.duration"] + p["OpticalPumping.extra_repump_time"],
+                p["ddsDefaults.repump_976_freq"],
+                p["ddsDefaults.repump_976_power"],
+            )
+            self.add_dds(
                 "760SP",
                 self.start,
                 p["OpticalPumping.duration"] + p["OpticalPumping.extra_repump_time"],
@@ -142,6 +156,13 @@ class OpticalPumping(PulseSequence):
                 p["OpticalPumping.duration"] + p["OpticalPumping.extra_repump_time"],
                 p["ddsDefaults.repump_935_freq"],
                 p["OpticalPumping.repump_power"],
+            )
+            self.add_dds(
+                "976SP",
+                self.start,
+                p["OpticalPumping.duration"] + p["OpticalPumping.extra_repump_time"],
+                p["ddsDefaults.repump_976_freq"],
+                p["ddsDefaults.repump_976_power"],
             )
             self.add_dds(
                 "760SP",

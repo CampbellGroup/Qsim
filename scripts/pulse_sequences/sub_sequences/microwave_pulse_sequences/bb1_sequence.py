@@ -26,15 +26,15 @@ class BB1(PulseSequence):
         p = self.parameters
 
         #  select which zeeman level to prepare
-        if p.Line_Selection.qubit == "qubit_0":
-            center = p.Transitions.qubit_0
-            pi_time = p.Pi_times.qubit_0
-            theta = (np.pi * p.MicrowaveInterrogation.duration / pi_time) % (
+        if p["Line_Selection.qubit"] == "qubit_0":
+            center = p["Transitions.qubit_0"]
+            pi_time = p["Pi_times.qubit_0"]
+            theta = (np.pi * p["MicrowaveInterrogation.duration"] / pi_time) % (
                 4.0 * np.pi
             )
-        elif p.Line_Selection.qubit == "qubit_plus":
-            center = p.Transitions.qubit_plus
-            pi_time = p.Pi_times.qubit_plus
+        elif p["Line_Selection.qubit"] == "qubit_plus":
+            center = p["Transitions.qubit_plus"]
+            pi_time = p["Pi_times.qubit_plus"]
             theta = (np.pi * p.MicrowaveInterrogation.duration / pi_time) % (
                 4.0 * np.pi
             )

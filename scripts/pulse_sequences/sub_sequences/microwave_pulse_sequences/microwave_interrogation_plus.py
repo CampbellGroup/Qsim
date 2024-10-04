@@ -15,22 +15,22 @@ class MicrowaveInterrogationPlus(PulseSequence):
 
     def sequence(self):
         p = self.parameters
-        center = p.Transitions.qubit_plus
-        DDS_freq = p.ddsDefaults.qubit_dds_freq - (
-            p.MicrowaveInterrogation.detuning + center
+        center = p["Transitions.qubit_plus"]
+        DDS_freq = p["ddsDefaults.qubit_dds_freq"] - (
+                p["MicrowaveInterrogation.detuning"] + center
         )
-        pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
+        pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
 
         self.add_ttl(
-            "MicrowaveTTL", self.start + pulse_delay, p.MicrowaveInterrogation.duration
+            "MicrowaveTTL", self.start + pulse_delay, p["MicrowaveInterrogation.duration"]
         )
         self.add_dds(
             "Microwave_qubit",
             self.start,
-            p.MicrowaveInterrogation.duration + pulse_delay,
+            p["MicrowaveInterrogation.duration"] + pulse_delay,
             DDS_freq,
-            p.MicrowaveInterrogation.power,
-            p.MicrowaveInterrogation.microwave_phase,
+            p["MicrowaveInterrogation.power"],
+            p["MicrowaveInterrogation.microwave_phase"],
         )
 
-        self.end = self.start + p.MicrowaveInterrogation.duration + pulse_delay
+        self.end = self.start + p["MicrowaveInterrogation.duration"] + pulse_delay

@@ -18,7 +18,7 @@ class PauliMinusId(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        if p.MicrowaveInterrogation.microwave_source == "HP+DDS":
+        if p["MicrowaveInterrogation.microwave_source"] == "HP+DDS":
             pi_time = p.Pi_times.qubit_0
             self.end = self.start + pi_time
 

@@ -18,9 +18,9 @@ class PauliY(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        if p.MicrowaveInterrogation.microwave_source == "HP+DDS":
-            DDS_freq = p.ddsDefaults.qubit_dds_freq - p.Transitions.qubit_0
-            pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
+        if p["MicrowaveInterrogation.microwave_source"] == "HP+DDS":
+            DDS_freq = p["ddsDefaults.qubit_dds_freq"] - p["Transitions.qubit_0"]
+            pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
             pi_time = p.Pi_times.qubit_0
 
             self.add_ttl("MicrowaveTTL", self.start + pulse_delay, pi_time)

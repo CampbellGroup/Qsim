@@ -18,10 +18,10 @@ class CliffordMinusZ(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        if p.MicrowaveInterrogation.microwave_source == "HP+DDS":
-            pi_time = p.Pi_times.qubit_0
+        if p["MicrowaveInterrogation.microwave_source"] == "HP+DDS":
+            pi_time = p["Pi_times.qubit_0"]
             self.end = self.start + pi_time / 2.0
 
-        elif p.MicrowaveInterrogation.microwave_source == "DDSx32":
-            pi_time = p.Pi_times.qubit_0
+        elif p["MicrowaveInterrogation.microwave_source"] == "DDSx32":
+            pi_time = p["Pi_times.qubit_0"]
             self.end = self.start + pi_time / 2.0

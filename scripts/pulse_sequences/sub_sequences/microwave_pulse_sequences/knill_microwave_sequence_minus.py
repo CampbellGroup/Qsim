@@ -20,10 +20,10 @@ class KnillSequenceMinus(PulseSequence):
         p = self.parameters
 
         #  just prepares the mF = -1 state
-        center = p.Transitions.qubit_minus
-        pi_time = p.Pi_times.qubit_minus
-        DDS_freq = p.ddsDefaults.qubit_dds_freq - (
-            p.MicrowaveInterogation.detuning + center
+        center = p["Transitions.qubit_minus"]
+        pi_time = p["Pi_times.qubit_minus"]
+        DDS_freq = p["ddsDefaults.qubit_dds_freq"] - (
+                p["MicrowaveInterogation.detuning"] + center
         )
 
         self.add_dds(
@@ -31,7 +31,7 @@ class KnillSequenceMinus(PulseSequence):
             self.start,
             pi_time,
             DDS_freq,
-            p.MicrowaveInterogation.power,
+            p["MicrowaveInterogation.power"],
             U(30.0, "deg"),
         )
         self.add_dds(
@@ -39,7 +39,7 @@ class KnillSequenceMinus(PulseSequence):
             self.start + pi_time,
             pi_time,
             DDS_freq,
-            p.MicrowaveInterogation.power,
+            p["MicrowaveInterogation.power"],
             U(0.0, "deg"),
         )
         self.add_dds(
@@ -47,7 +47,7 @@ class KnillSequenceMinus(PulseSequence):
             self.start + 2 * pi_time,
             pi_time,
             DDS_freq,
-            p.MicrowaveInterogation.power,
+            p["MicrowaveInterogation.power"],
             U(90.0, "deg"),
         )
         self.add_dds(
@@ -55,7 +55,7 @@ class KnillSequenceMinus(PulseSequence):
             self.start + 3 * pi_time,
             pi_time,
             DDS_freq,
-            p.MicrowaveInterogation.power,
+            p["MicrowaveInterogation.power"],
             U(0.0, "deg"),
         )
         self.add_dds(
@@ -63,7 +63,7 @@ class KnillSequenceMinus(PulseSequence):
             self.start + 4 * pi_time,
             pi_time,
             DDS_freq,
-            p.MicrowaveInterogation.power,
+            p["MicrowaveInterogation.power"],
             U(30.0, "deg"),
         )
         self.end = self.start + 5 * pi_time

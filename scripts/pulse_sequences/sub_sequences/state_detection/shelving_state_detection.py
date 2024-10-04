@@ -22,45 +22,45 @@ class ShelvingStateDetection(PulseSequence):
         p = self.parameters
 
         # standard readout count TTL, provides number of detected photons
-        self.add_ttl("ReadoutCount", self.start, p.ShelvingStateDetection.duration)
+        self.add_ttl("ReadoutCount", self.start, p["ShelvingStateDetection.duration"])
 
         # provides timetags
-        self.add_ttl("TimeResolvedCount", self.start, p.ShelvingStateDetection.duration)
+        self.add_ttl("TimeResolvedCount", self.start, p["ShelvingStateDetection.duration"])
 
         self.add_dds(
             "935SP",
             self.start,
-            p.ShelvingStateDetection.duration,
-            p.ddsDefaults.repump_935_freq,
-            p.ShelvingStateDetection.repump_power,
+            p["ShelvingStateDetection.duration"],
+            p["ddsDefaults.repump_935_freq"],
+            p["ShelvingStateDetection.repump_power"],
         )
 
         self.add_dds(
             "976SP",
             self.start,
-            p.ShelvingStateDetection.duration,
-            p.ddsDefaults.repump_976_freq,
-            p.ddsDefaults.repump_976_power,
+            p["ShelvingStateDetection.duration"],
+            p["ddsDefaults.repump_976_freq"],
+            p["ddsDefaults.repump_976_power"],
         )
 
         # self.addTTL('SynthHDTTL',
         #            self.start,
-        #            p.ShelvingStateDetection.duration)
+        #            p["ShelvingStateDetection.duration"])
 
         self.add_dds(
             "369DP",
             self.start,
-            p.ShelvingStateDetection.duration,
-            p.Transitions.main_cooling_369 / 2.0
-            + p.ddsDefaults.DP369_freq
-            + p.ShelvingStateDetection.detuning / 2.0,
-            p.ShelvingStateDetection.power,
+            p["ShelvingStateDetection.duration"],
+            p["Transitions.main_cooling_369"] / 2.0
+            + p["ddsDefaults.DP369_freq"]
+            + p["ShelvingStateDetection.detuning"] / 2.0,
+            p["ShelvingStateDetection.power"],
         )
         # Commented out because we are using the fiber EOM right now, not the DC/SD/OP path
         # self.addDDS('DopplerCoolingSP',
         #            self.start,
-        #            p.ShelvingStateDetection.duration,
-        #            p.ddsDefaults.doppler_cooling_freq,
-        #            p.ddsDefaults.doppler_cooling_power)
+        #            p["ShelvingStateDetection.duration"],
+        #            p["ddsDefaults.doppler_cooling_freq"],
+        #            p["ddsDefaults.doppler_cooling_power"])
 
-        self.end = self.start + p.ShelvingStateDetection.duration
+        self.end = self.start + p["ShelvingStateDetection.duration"]

@@ -14,9 +14,9 @@ class SingleSequenceRbTesting(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        DDS_freq = p.ddsDefaults.qubit_dds_freq - p.Transitions.qubit_0
-        pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
-        pi_time = p.Pi_times.qubit_0
+        DDS_freq = p["ddsDefaults.qubit_dds_freq"] - p["Transitions.qubit_0"]
+        pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
+        pi_time = p["Pi_times.qubit_0"]
 
         # Pauli Identity
         # self.addTTL('MicrowaveTTL',
@@ -42,7 +42,7 @@ class SingleSequenceRbTesting(PulseSequence):
             self.start + pi_time + pulse_delay,
             pi_time / 2.0 + pulse_delay,
             DDS_freq,
-            p.MicrowaveInterrogation.power,
+            p["MicrowaveInterrogation.power"],
             U(90.0, "deg"),
         )
 
@@ -62,7 +62,7 @@ class SingleSequenceRbTesting(PulseSequence):
             self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay,
             pi_time + pulse_delay,
             DDS_freq,
-            p.MicrowaveInterrogation.power,
+            p["MicrowaveInterrogation.power"],
             U(270.0, "deg"),
         )
 
@@ -90,7 +90,7 @@ class SingleSequenceRbTesting(PulseSequence):
             + pulse_delay,
             pi_time / 2.0 + pulse_delay,
             DDS_freq,
-            p.MicrowaveInterrogation.power,
+            p["MicrowaveInterrogation.power"],
             U(90.0, "deg"),
         )
 
@@ -102,7 +102,7 @@ class SingleSequenceRbTesting(PulseSequence):
         #             self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay  + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
         #             pi_time + pulse_delay,
         #             DDS_freq,
-        #             p.MicrowaveInterrogation.power,
+        #             p["MicrowaveInterrogation.power"],
         #             U(270.0, 'deg'))
         #
         # self.end = self.start + (3 * pi_time) + (2 * (pi_time / 2.0)) + (pulse_delay * 5)
@@ -138,7 +138,7 @@ class SingleSequenceRbTesting(PulseSequence):
                     self.start,
                     pi_time / 2.0 + pulse_delay,
                     DDS_freq,
-                    p.MicrowaveInterrogation.power,
+                    p["MicrowaveInterrogation.power"],
                     U(90.0, 'deg'))
 
         # Pauli minus y
@@ -149,7 +149,7 @@ class SingleSequenceRbTesting(PulseSequence):
                     self.start + pi_time / 2.0 + pulse_delay,
                     pi_time + pulse_delay,
                     DDS_freq,
-                    p.MicrowaveInterrogation.power,
+                    p["MicrowaveInterrogation.power"],
                     U(270.0, 'deg'))
 
         # Clifford y
@@ -160,7 +160,7 @@ class SingleSequenceRbTesting(PulseSequence):
                     self.start + pi_time / 2.0 + pulse_delay + pi_time + pulse_delay,
                     pi_time / 2.0 + pulse_delay,
                     DDS_freq,
-                    p.MicrowaveInterrogation.power,
+                    p["MicrowaveInterrogation.power"],
                     U(90.0, 'deg'))
 
         self.end = self.start + (1 * pi_time) + (2 * (pi_time / 2.0)) + (pulse_delay * 3)
@@ -183,7 +183,7 @@ class SingleSequenceRbTesting(PulseSequence):
                     self.start + pi_time + pulse_delay,
                     pi_time / 2.0 + pulse_delay,
                     DDS_freq,
-                    p.MicrowaveInterrogation.power,
+                    p["MicrowaveInterrogation.power"],
                     U(90.0, 'deg'))
 
         self.addTTL('MicrowaveTTL',
@@ -193,7 +193,7 @@ class SingleSequenceRbTesting(PulseSequence):
                     self.start + pi_time + pulse_delay + pi_time / 2.0 + pulse_delay,
                     pi_time + pulse_delay,
                     DDS_freq,
-                    p.MicrowaveInterrogation.power,
+                    p["MicrowaveInterrogation.power"],
                     U(270.0, 'deg'))
 
         self.addTTL('MicrowaveTTL',

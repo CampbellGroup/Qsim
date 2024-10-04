@@ -24,17 +24,17 @@ class KnillPulseAreaCorrectingSequence(PulseSequence):
         p = self.parameters
 
         #  select which zeeman level to prepare
-        if p.Line_Selection.qubit == "qubit_0":
-            center = p.Transitions.qubit_0
+        if p["Line_Selection.qubit"] == "qubit_0":
+            center = p["Transitions.qubit_0"]
 
-        elif p.Line_Selection.qubit == "qubit_plus":
-            center = p.Transitions.qubit_plus
+        elif p["Line_Selection.qubit"] == "qubit_plus":
+            center = p["Transitions.qubit_plus"]
 
-        elif p.Line_Selection.qubit == "qubit_minus":
-            center = p.Transitions.qubit_minus
+        elif p["Line_Selection.qubit"] == "qubit_minus":
+            center = p["Transitions.qubit_minus"]
 
-        DDS_freq = p.ddsDefaults.qubit_dds_freq - (
-            p.MicrowaveInterrogation.detuning + center
+        DDS_freq = p["ddsDefaults.qubit_dds_freq"] - (
+                p["MicrowaveInterrogation.detuning"] + center
         )
 
         ttl_off = U(800.0, "ns")
@@ -45,36 +45,36 @@ class KnillPulseAreaCorrectingSequence(PulseSequence):
         self.add_ttl(
             "MicrowaveTTL",
             self.start + ttl_off + start_delay,
-            p.MicrowaveInterrogation.duration - ttl_delay,
+            p["MicrowaveInterrogation.duration"] - ttl_delay,
         )
         self.add_ttl(
             "MicrowaveTTL3",
             self.start + ttl_off + start_delay,
-            p.MicrowaveInterrogation.duration,
+            p["MicrowaveInterrogation.duration"],
         )
         self.add_dds(
             "Microwave_qubit",
             self.start,
-            p.MicrowaveInterrogation.duration + ttl_off + start_delay,
+            p["MicrowaveInterrogation.duration"] + ttl_off + start_delay,
             DDS_freq,
-            p.MicrowaveInterrogation.power,
+            p["MicrowaveInterrogation.power"],
             U(30.0, "deg"),
         )
 
         # pulse 2
         self.add_ttl(
             "MicrowaveTTL",
-            self.start + p.MicrowaveInterrogation.duration + 2 * ttl_off + start_delay,
-            p.MicrowaveInterrogation.duration - ttl_delay,
+            self.start + p["MicrowaveInterrogation.duration"] + 2 * ttl_off + start_delay,
+            p["MicrowaveInterrogation.duration"] - ttl_delay,
         )
         self.add_ttl(
             "MicrowaveTTL3",
-            self.start + p.MicrowaveInterrogation.duration + 2 * ttl_off + start_delay,
-            p.MicrowaveInterrogation.duration,
+            self.start + p["MicrowaveInterrogation.duration"] + 2 * ttl_off + start_delay,
+            p["MicrowaveInterrogation.duration"],
         )
         self.add_dds(
             "Microwave_qubit",
-            self.start + p.MicrowaveInterrogation.duration + ttl_off + start_delay,
+            self.start + p["MicrowaveInterrogation.duration"] + ttl_off + start_delay,
             p.MicrowaveInterrogation.duration + ttl_off,
             DDS_freq,
             p.MicrowaveInterrogation.power,

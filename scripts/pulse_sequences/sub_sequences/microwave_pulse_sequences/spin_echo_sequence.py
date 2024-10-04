@@ -26,47 +26,47 @@ class SpinEcho(PulseSequence):
         p = self.parameters
 
         #  select which zeeman level to prepare
-        if p.Line_Selection.qubit == "qubit_0":
-            center = p.Transitions.qubit_0
-        elif p.Line_Selection.qubit == "qubit_plus":
-            center = p.Transitions.qubit_plus
-        elif p.Line_Selection.qubit == "qubit_minus":
-            center = p.Transitions.qubit_minus
+        if p["Line_Selection.qubit"] == "qubit_0":
+            center = p["Transitions.qubit_0"]
+        elif p["Line_Selection.qubit"] == "qubit_plus":
+            center = p["Transitions.qubit_plus"]
+        elif p["Line_Selection.qubit"] == "qubit_minus":
+            center = p["Transitions.qubit_minus"]
 
-        DDS_freq = p.ddsDefaults.qubit_dds_freq - (
-            p.MicrowaveInterrogation.detuning + center
+        DDS_freq = p["ddsDefaults.qubit_dds_freq"] - (
+                p["MicrowaveInterrogation.detuning"] + center
         )
-        pulse_delay = p.MicrowaveInterrogation.ttl_switch_delay
+        pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
 
         # Pi/2 around X
         self.add_ttl(
             "MicrowaveTTL",
             self.start + pulse_delay,
-            p.MicrowaveInterrogation.duration / 2.0,
+            p["MicrowaveInterrogation.duration"] / 2.0,
         )
 
         self.add_dds(
             "Microwave_qubit",
             self.start,
-            p.MicrowaveInterrogation.duration / 2.0 + pulse_delay,
+            p["MicrowaveInterrogation.duration"] / 2.0 + pulse_delay,
             DDS_freq,
-            p.MicrowaveInterrogation.power,
+            p["MicrowaveInterrogation.power"],
             U(0.0, "deg"),
         )
 
         # Pi around Y
         self.add_ttl(
             "MicrowaveTTL",
-            self.start + p.MicrowaveInterrogation.duration / 2.0 + 2 * pulse_delay,
-            p.MicrowaveInterrogation.duration,
+            self.start + p["MicrowaveInterrogation.duration"] / 2.0 + 2 * pulse_delay,
+            p["MicrowaveInterrogation.duration"],
         )
 
         self.add_dds(
             "Microwave_qubit",
-            self.start + p.MicrowaveInterrogation.duration / 2.0 + pulse_delay,
-            p.MicrowaveInterrogation.duration + pulse_delay,
+            self.start + p["MicrowaveInterrogation.duration"] / 2.0 + pulse_delay,
+            p["MicrowaveInterrogation.duration"] + pulse_delay,
             DDS_freq,
-            p.MicrowaveInterrogation.power,
+            p["MicrowaveInterrogation.power"],
             U(90.0, "deg"),
         )
 
@@ -74,9 +74,9 @@ class SpinEcho(PulseSequence):
         self.add_ttl(
             "MicrowaveTTL",
             self.start
-            + 3.0 * p.MicrowaveInterrogation.duration / 2.0
+            + 3.0 * p["MicrowaveInterrogation.duration"] / 2.0
             + 3 * pulse_delay,
-            p.MicrowaveInterrogation.duration / 2.0,
+            p["MicrowaveInterrogation.duration"] / 2.0,
         )
 
         self.add_dds(

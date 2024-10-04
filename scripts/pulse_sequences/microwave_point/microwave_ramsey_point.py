@@ -36,7 +36,7 @@ class MicrowaveRamseyPoint(PulseSequence):
     required_parameters = [("Modes", "state_detection_mode")]
 
     def sequence(self):
-        mode = self.parameters.Modes.state_detection_mode
+        mode = self.parameters["Modes.state_detection_mode"]
 
         if mode == "Shelving":
             self.add_sequence(TurnOffAll)

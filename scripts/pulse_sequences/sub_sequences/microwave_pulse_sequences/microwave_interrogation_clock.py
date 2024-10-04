@@ -14,7 +14,7 @@ class MicrowaveInterrogationClock(PulseSequence):
 
     def sequence(self):
         p = self.parameters
-        center = p.Transitions.qubit_0
+        center = p["Transitions.qubit_0"]
         DDS_freq = p.ddsDefaults.qubit_dds_freq - (
             p.MicrowaveInterrogation.detuning + center
         )

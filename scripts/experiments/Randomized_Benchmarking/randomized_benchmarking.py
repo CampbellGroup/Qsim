@@ -59,7 +59,7 @@ class RandomizedBenchmarking(QsimExperiment):
         elif self.p["RandomizedBenchmarking.sequence_generation"] == "Generate New Set":
             path = path_to_files + "Sequence_Set_" + str(max(sets) + 1)
             lengths = [
-                int(i) for i in self.p["RandomizedBenchmarking.set_of_lengths.split(""],")
+                int(i) for i in self.p["RandomizedBenchmarking.set_of_lengths"].split(",")
             ]
             print("Generating new RB sequence... please hold.")
             generate_sequences.generate_and_save_sequences(

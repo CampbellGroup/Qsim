@@ -17,30 +17,30 @@ class MetastableMicrowaveInterrogation173(PulseSequence):
 
     def sequence(self):
         p = self.parameters
-        center = p.Transitions.MetastableQubit173
+        center = p["Transitions.MetastableQubit173"]
         DDS_freq = (
-            p.ddsDefaults.metastable_qubit_173_dds_freq
-            + (p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
+                p["ddsDefaults.metastable_qubit_173_dds_freq"]
+                + (p["Metastable_Microwave_Interrogation.detuning"] + center) / 8.0
         )
 
         self.add_dds(
             "3GHz_qubit",
             self.start,
-            p.Metastable_Microwave_Interrogation.duration,
+            p["Metastable_Microwave_Interrogation.duration"],
             DDS_freq,
-            p.ddsDefaults.metastable_qubit_173_dds_power,
+            p["ddsDefaults.metastable_qubit_173_dds_power"],
         )
         self.add_ttl(
             "SynthHDTTL",
             self.start,
-            p.Metastable_Microwave_Interrogation.duration,
+            p["Metastable_Microwave_Interrogation.duration"],
         )
         self.add_ttl(
             "SynthNVTTL",
             self.start,
-            p.Metastable_Microwave_Interrogation.duration,
+            p["Metastable_Microwave_Interrogation.duration"],
         )
-        self.end = self.start + p.Metastable_Microwave_Interrogation.duration
+        self.end = self.start + p["Metastable_Microwave_Interrogation.duration"]
 
 
 class SweptMetastableMicrowaveInterrogation173(PulseSequence):
@@ -59,34 +59,34 @@ class SweptMetastableMicrowaveInterrogation173(PulseSequence):
 
     def sequence(self):
         p = self.parameters
-        center = p.Transitions.MetastableQubit173
+        center = p["Transitions.MetastableQubit173"]
         DDS_freq = (
-            p.ddsDefaults.metastable_qubit_173_dds_freq
-            + (p.Metastable_Microwave_Interrogation.detuning + center) / 8.0
+                p["ddsDefaults.metastable_qubit_173_dds_freq"]
+                + (p["Metastable_Microwave_Interrogation.detuning"] + center) / 8.0
         )
         ramp_rate = U(
-            p.Metastable_Microwave_Interrogation.ramp_width["MHz"]
-            / p.Metastable_Microwave_Interrogation.duration["ms"],
+            p["Metastable_Microwave_Interrogation.ramp_width"]["MHz"]
+            / p["Metastable_Microwave_Interrogation.duration"]["ms"],
             "MHz",
         )
 
         self.add_dds(
             "3GHz_qubit",
             self.start,
-            p.Metastable_Microwave_Interrogation.duration,
+            p["Metastable_Microwave_Interrogation.duration"],
             DDS_freq,
-            p.ddsDefaults.metastable_qubit_173_dds_power,
+            p["ddsDefaults.metastable_qubit_173_dds_power"],
             U(0.0, "deg"),
             ramp_rate,
         )
         self.add_ttl(
             "SynthHDTTL",
             self.start,
-            p.Metastable_Microwave_Interrogation.duration,
+            p["Metastable_Microwave_Interrogation.duration"],
         )
         self.add_ttl(
             "SynthNVTTL",
             self.start,
-            p.Metastable_Microwave_Interrogation.duration,
+            p["Metastable_Microwave_Interrogation.duration"],
         )
-        self.end = self.start + p.Metastable_Microwave_Interrogation.duration
+        self.end = self.start + p["Metastable_Microwave_Interrogation.duration"]
