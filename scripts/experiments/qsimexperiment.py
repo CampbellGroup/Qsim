@@ -157,7 +157,7 @@ class QsimExperiment(Experiment):
             counts_parsed.append(counts[i::num])
         return counts_parsed
 
-    def run_sequence_with_timetags(self, max_runs=1000, num=1):
+    def run_sequence_with_timetags(self, max_runs: int = 1000, num: int = 1) -> tuple[np.array, np.array]:
         # empty arrays to store photon counts and time tags
         counts = np.array([])
         tt = np.array([])
