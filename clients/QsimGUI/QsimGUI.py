@@ -131,7 +131,7 @@ class QsimGUI(QMainWindow):
 
 
         # from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
-        from common.lib.clients.switchclient.switchclient import SwitchClient
+        # from common.lib.clients.switchclient.switchclient import SwitchClient
         from clients.dac_control.dac_client import DACClient
         from Qsim.clients.load_control.load_control import LoadControl
         from common.lib.clients.piezo_client.PiezoClient import PiezoClient
@@ -151,7 +151,7 @@ class QsimGUI(QMainWindow):
         # column one
         col_one_widget = QWidget()
         col_one = QVBoxLayout()
-        col_one.addWidget(SwitchClient(reactor, cxn))
+        # col_one.addWidget(SwitchClient(reactor, cxn))
         # col_one.addWidget(cameraswitch(reactor, cxn))
         col_one.addWidget(PMTWidget(reactor, cxn))
         col_one.addWidget(LoadControl(reactor))

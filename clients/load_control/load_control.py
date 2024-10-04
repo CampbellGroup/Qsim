@@ -73,11 +73,21 @@ class LoadControl(QFrame):
     @inlineCallbacks
     def initialize_gui(self):
         layout = QGridLayout()
-        self.shutter_oven_button = QCustomSwitchChannel(
-            "399/Oven", ("Closed/Oven Off", "Open/Oven On")
+        self.master_button = QCustomSwitchChannel(
+            "Master Load Switch", ("Open/Oven On", "Closed/Oven Off")
         )
-        self.shutter_oven_button.setFrameStyle(QFrame.NoFrame)
-        self.shutter_oven_button.TTLswitch.toggled.connect(self.toggle)
+        self.master_button.setFrameStyle(QFrame.NoFrame)
+        self.master_button.TTLswitch.toggled.connect(self.master_toggle)
+
+        self.button_399 = QCustomSwitchChannel("399 Shutter", ("Open", "Closed"))
+        self.button_399.setFrameStyle(QFrame.NoFrame)
+        self.button_399.TTLswitch.toggled.connect(self.set_shutter_state_399)
+
+        self.button_protection = QCustomSwitchChannel("Protection Beam Shutter", ("Open", "Closed"))
+        self.button_protection.setFrameStyle(QFrame.NoFrame)
+        self.button_protection.TTLswitch.toggled.connect(self.set_shutter_state_protection)
+
+
         self.timer_widget = QCustomTimer("Loading Time", show_control=False)
         self.current_widget = QCustomSpinBox((0.0, 5.0), title="Oven current", suffix="A")
         self.max_time_widget = QCustomSpinBox((0.0, 30.0), title="Max time", suffix="m")
@@ -93,48 +103,60 @@ class LoadControl(QFrame):
         if "oven" in self.settings:
             value = yield self.reg.get("oven")
             self.current_widget.spin_level.setValue(value)
+        self.master_button.TTLswitch.setChecked(False)
 
         if "399 trapshutter" in self.settings:
             value = yield self.reg.get("399 trapshutter")
             value = bool(value)
-            self.shutter_oven_button.TTLswitch.setChecked(not value)
+            self.button_399.TTLswitch.setChecked(value)
         else:
-            self.shutter_oven_button.TTLswitch.setChecked(False)
+            self.button_399.TTLswitch.setChecked(False)
 
-        layout.addWidget(self.shutter_oven_button, 0, 0, 1, 2)
-        layout.addWidget(self.current_widget, 1, 0, 1, 1)
-        layout.addWidget(self.max_time_widget, 1, 1, 1, 1)
-        layout.addWidget(self.timer_widget, 2, 0, 1, 2)
+        if "protection trapshutter" in self.settings:
+            value = yield self.reg.get("protection trapshutter")
+            value = bool(value)
+            self.button_protection.TTLswitch.setChecked(value)
+        else:
+            self.button_protection.TTLswitch.setChecked(False)
+
+        layout.addWidget(self.master_button, 0, 0, 1, 2)
+        layout.addWidget(self.button_399, 1, 0, 1, 2)
+        layout.addWidget(self.button_protection, 2, 0, 1, 2)
+        layout.addWidget(self.current_widget, 3, 0, 1, 1)
+        layout.addWidget(self.max_time_widget, 3, 1, 1, 1)
+        layout.addWidget(self.timer_widget, 4, 0, 1, 2)
         self.setLayout(layout)
 
     @inlineCallbacks
     def on_new_counts(self, signal, pmt_value):
         # this throws error on closeout since listner is yielding to server
         disc_value = yield self.pv.get_parameter("Loading", "ion_threshold")
-        switch_on = not self.shutter_oven_button.TTLswitch.isChecked()
+        switch_on = self.master_button.TTLswitch.isChecked()
         if (pmt_value >= disc_value) and switch_on:
-            self.shutter_oven_button.TTLswitch.setChecked(True)
+            self.master_button.TTLswitch.setChecked(False)
             if SOUND_LOADED:
                 playsound(TRAP_SOUND)
         elif (
                 self.timer_widget.time
                 >= float(self.max_time_widget.spin_level.value()) * 60.0
         ) and switch_on and not self.changing:
-            self.shutter_oven_button.TTLswitch.setChecked(True)
+            self.master_button.TTLswitch.setChecked(False)
             if SOUND_LOADED:
                 playsound(FAIL_SOUND)
 
     @inlineCallbacks
-    def toggle(self, value):
+    def master_toggle(self, value):
         self.changing = True
-        if not value:
+        if value:
             self.timer_widget.reset()
             self.timer_widget.start()
             yield self.oven.oven_output(True)
-            yield self.set_shutter_state(True)
+            yield self.button_399.TTLswitch.setChecked(True)
+            yield self.button_protection.TTLswitch.setChecked(True)
         else:
             yield self.oven.oven_output(False)
-            yield self.set_shutter_state(False)
+            yield self.button_399.TTLswitch.setChecked(False)
+            #            yield self.button_protection.TTLswitch.setChecked(False)
             self.timer_widget.reset()
         self.changing = False
 
@@ -146,11 +168,18 @@ class LoadControl(QFrame):
             yield self.reg.set("oven", value)
 
     @inlineCallbacks
-    def set_shutter_state(self, state: bool) -> None:
+    def set_shutter_state_399(self, state: bool) -> None:
         """:param state: a bool representing whether the state is toggled on or off"""
         if "399 trapshutter" in self.settings:
             yield self.reg.set("399 trapshutter", state)
-        p = yield self.oven.shutter_output(state)
+        p = yield self.oven.shutter_output_399(state)
+
+    @inlineCallbacks
+    def set_shutter_state_protection(self, state: bool) -> None:
+        """:param state: a bool representing whether the state is toggled on or off"""
+        if "protection trapshutter" in self.settings:
+            yield self.reg.set("protection trapshutter", state)
+        p = yield self.oven.shutter_output_protection(state)
 
     def closeEvent(self, x):
         self.reactor.stop()
