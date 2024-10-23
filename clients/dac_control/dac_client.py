@@ -1,5 +1,5 @@
 from common.lib.clients.qtui.QCustomSpinBox import QCustomSpinBox
-from clients.dac_control.electrode_widget import ElectrodeIndicator
+from Qsim.clients.dac_control.electrode_widget import ElectrodeIndicator
 from twisted.internet.defer import inlineCallbacks
 from PyQt5.QtWidgets import *
 from config.dac_ad660_config import HardwareConfiguration as HC

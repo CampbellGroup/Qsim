@@ -130,7 +130,7 @@ class QsimGUI(QMainWindow):
 
         # from Qsim.clients.cameraswitch.cameraswitch import cameraswitch
         from common.lib.clients.switchclient.switchclient import SwitchClient
-        from clients.dac_control.dac_client import DACClient
+        from Qsim.clients.dac_control.dac_client import DACClient
         from Qsim.clients.load_control.load_control import LoadControl
         from common.lib.clients.piezo_client.PiezoClient import PiezoClient
         from common.lib.clients.keithley_2231A_30_3.keithley_2231A_30_3 import (
@@ -141,6 +141,8 @@ class QsimGUI(QMainWindow):
         from common.lib.clients.pulser_switch.pulser_switch_control import SwitchWidget
 
         # from Qsim.clients.windfreak_client.windfreak_client import WindfreakClient
+
+        from common.lib.clients.status_bar.status_bar import StatusBar
 
         grid_layout = QGridLayout()
 
@@ -163,6 +165,7 @@ class QsimGUI(QMainWindow):
         grid_layout.addWidget(DACClient(reactor, cxn), 0, 1, 4, 2)
         grid_layout.addWidget(LoadControl(reactor), 4, 1, 2, 1)
         grid_layout.addWidget(PiezoClient(reactor), 4, 2, 2, 1)
+        grid_layout.addWidget(StatusBar(reactor, cxn), 6, 1, 1, 2)
         # column three
 
         col_three_widget = QWidget()
