@@ -78,7 +78,9 @@ class InterleavedLinescan(QsimExperiment):
         # in parametervault to the fitted center
         try:
             ampl_guess = max(return_counts[2:])
-            self.fit_guess = [25, 30, ampl_guess, 0.0]
+            center_guess = return_detuning[2:][np.argmax(return_counts[2:])]
+            print('center guess', center_guess)
+            self.fit_guess = [center_guess, 30, ampl_guess, 0.0]
 
             # noinspection PyTupleAssignmentBalance
             popt, pcov = curve_fit(
