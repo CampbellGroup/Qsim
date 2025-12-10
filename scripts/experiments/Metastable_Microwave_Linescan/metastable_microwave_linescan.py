@@ -61,59 +61,72 @@ class MetastableMicrowaveLineScan(QsimExperiment):
             pi_time = self.p["Pi_times.qubit_plus"]
 
         elif qubit == "qubit_minus":
-            center = self.p.Transitions.qubit_minus
-            pi_time = self.p.Pi_times.qubit_minus
+            center = self.p["Transitions.qubit_minus"]
+            pi_time = self.p["Pi_times.qubit_minus"]
 
         self.p["MicrowaveInterrogation.duration"] = pi_time
-        self.p["Metastable_Microwave_Interrogation.duration"] = (
-            self.p.Pi_times.metastable_qubit
-        )
+        self.p["Metastable_Microwave_Interrogation.duration"] = self.p[
+            "Pi_times.metastable_qubit"
+        ]
         self.p["Modes.state_detection_mode"] = "Shelving"
-
-        print(self.p["Metastable_Microwave_Interrogation.duration"])
 
         for i, detuning in enumerate(self.detunings):
             should_break = self.update_progress(i / float(len(self.detunings)))
             if should_break:
                 break
             self.p["Metastable_Microwave_Interrogation.detuning"] = U(detuning, "kHz")
-            if self.p.MetastableStateDetection.herald_state_prep == "Off":
+            if self.p["MetastableStateDetection.herald_state_prep"] == "Off":
                 self.program_pulser(sequence)
                 [doppler_counts, detection_counts] = self.run_sequence(
                     max_runs=500, num=2
                 )
                 errors = np.where(
                     doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                    <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                 )
                 counts = np.delete(detection_counts, errors)
 
-            if self.p.MetastableStateDetection.herald_state_prep == "On":
+            if self.p["MetastableStateDetection.herald_state_prep"] == "On":
                 self.program_pulser(heralded_sequence)
                 [doppler_counts, herald_counts, detection_counts] = self.run_sequence(
                     max_runs=333, num=3
                 )
-                failed_heralding = np.where(
-                    herald_counts
-                    >= self.p.ShelvingStateDetection.state_readout_threshold
-                )
-                doppler_errors = np.where(
-                    doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
-                )
-                # this will combine all errors into one array and delete repeats (error on both doppler and herald)
-                all_errors = np.unique(
-                    np.concatenate((failed_heralding[0], doppler_errors[0]))
+                # failed_heralding = np.where(
+                #     herald_counts
+                #     >= self.p["ShelvingStateDetection.state_readout_threshold"]
+                # )
+                # doppler_errors = np.where(
+                #     doppler_counts
+                #     <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
+                # )
+                # # this will combine all errors into one array and delete repeats (error on both doppler and herald)
+                # all_errors = np.unique(
+                #     np.concatenate((failed_heralding[0], doppler_errors[0]))
+                # )
+                # counts = np.delete(detection_counts, all_errors)
+                # len(counts)
+                all_errors = np.where(
+                    (
+                        doppler_counts
+                        <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
+                    )
+                    | (
+                        herald_counts
+                        >= self.p["ShelvingStateDetection.state_readout_threshold"]
+                    )
                 )
                 counts = np.delete(detection_counts, all_errors)
-                print
-                len(counts)
+                print(
+                    "Percent failed to state prep: ",
+                    len(all_errors[0]) / len(detection_counts) * 100,
+                    "%",
+                )
 
             hist = self.process_data(counts)
             self.plot_hist(hist)
             pop = self.get_pop(counts)
 
-            self.dv.add(detuning + self.p.Transitions.MetastableQubit["kHz"], pop)
+            self.dv.add(detuning + self.p["Transitions.MetastableQubit"]["kHz"], pop)
 
     def finalize(self, cxn, context):
         pass

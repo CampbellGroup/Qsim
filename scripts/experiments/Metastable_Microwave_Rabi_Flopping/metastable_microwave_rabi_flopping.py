@@ -48,10 +48,10 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
             "qubit_0"  # define the bright state prep as qubit_0
         )
         self.p["Modes.state_detection_mode"] = "Shelving"
-        self.p["MicrowaveInterrogation.duration"] = self.p.Pi_times.qubit_0
+        self.p["MicrowaveInterrogation.duration"] = self.p["Pi_times.qubit_0"]
 
         self.times = self.get_scan_list(
-            self.p.MetastableMicrowaveRabiFlopping.scan, "us"
+            self.p["MetastableMicrowaveRabiFlopping.scan"], "us"
         )
         for i, duration in enumerate(self.times):
             should_break = self.update_progress(i / float(len(self.times)))
@@ -62,37 +62,58 @@ class MetastableMicrowaveRabiFlopping(QsimExperiment):
             #            [doppler_counts, detection_counts] = self.run_sequence(max_runs=500, num=2)
             #            errors = np.where(doppler_counts <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold)
             #            counts = np.delete(detection_counts, errors)
-            if self.p.MetastableStateDetection.herald_state_prep == "Off":
+            if self.p["MetastableStateDetection.herald_state_prep"] == "Off":
                 self.program_pulser(sequence)
                 [doppler_counts, detection_counts] = self.run_sequence(
                     max_runs=500, num=2
                 )
                 errors = np.where(
                     doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                    <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
                 )
                 counts = np.delete(detection_counts, errors)
+                print(
+                    "Percent failed to cool: ",
+                    len(errors[0]) / len(detection_counts) * 100,
+                    "%",
+                )
+                print("counts length", len(counts))
 
-            if self.p.MetastableStateDetection.herald_state_prep == "On":
+            if self.p["MetastableStateDetection.herald_state_prep"] == "On":
                 self.program_pulser(heralded_sequence)
                 [doppler_counts, herald_counts, detection_counts] = self.run_sequence(
                     max_runs=333, num=3
                 )
-                failed_heralding = np.where(
-                    herald_counts
-                    >= self.p.ShelvingStateDetection.state_readout_threshold
-                )
-                doppler_errors = np.where(
-                    doppler_counts
-                    <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
-                )
-                # this will combine all errors into one array and delete repeats (error on both doppler and herald)
-                all_errors = np.unique(
-                    np.concatenate((failed_heralding[0], doppler_errors[0]))
+                # failed_heralding = np.where(
+                #     herald_counts
+                #     >= self.p.ShelvingStateDetection.state_readout_threshold
+                # )
+                # doppler_errors = np.where(
+                #     doppler_counts
+                #     <= self.p.Shelving_Doppler_Cooling.doppler_counts_threshold
+                # )
+                # # this will combine all errors into one array and delete repeats (error on both doppler and herald)
+                # all_errors = np.unique(
+                #     np.concatenate((failed_heralding[0], doppler_errors[0]))
+                # )
+                all_errors = np.where(
+                    (
+                        doppler_counts
+                        <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
+                    )
+                    | (
+                        herald_counts
+                        >= self.p["ShelvingStateDetection.state_readout_threshold"]
+                    )
                 )
                 counts = np.delete(detection_counts, all_errors)
-                print
-                len(counts)
+                # print
+                # len(counts)
+                print(
+                    "Percent failed to state prep: ",
+                    len(all_errors[0]) / len(detection_counts) * 100,
+                    "%",
+                )
 
             hist = self.process_data(counts)
             self.plot_hist(hist)

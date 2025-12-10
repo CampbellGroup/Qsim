@@ -56,7 +56,7 @@ class MicrowaveRamseyPoint532(PulseSequence):
             self.add_sequence(OpticalPumping)
             self.add_sequence(RamseyMicrowaveInterrogation_532)
             self.add_sequence(StandardStateDetection)
-
+            # below is for control ramsey
             self.add_sequence(TurnOffAll)
             self.add_sequence(DopplerCooling)
             self.add_sequence(OpticalPumping)

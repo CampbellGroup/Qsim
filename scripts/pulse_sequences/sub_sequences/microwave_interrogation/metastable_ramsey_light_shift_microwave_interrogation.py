@@ -2,7 +2,7 @@ from common.lib.servers.Pulser2.pulse_sequences.pulse_sequence import PulseSeque
 from labrad.units import WithUnit as U
 
 
-class MetastableRamseyMicrowaveInterrogation(PulseSequence):
+class MetastableRamseyLightShiftMicrowaveInterrogation(PulseSequence):
     required_parameters = [
         ("MetastableMicrowaveRamsey", "detuning"),
         ("MetastableMicrowaveRamsey", "cooling_lasers_during_microwaves"),
@@ -17,9 +17,11 @@ class MetastableRamseyMicrowaveInterrogation(PulseSequence):
         ("ddsDefaults", "doppler_cooling_power"),
         ("ddsDefaults", "repump_935_freq"),
         ("ddsDefaults", "repump_935_power"),
+        ("ddsDefaults", "SP_532_freq"),
         ("EmptySequence", "duration"),
         ("Pi_times", "metastable_qubit"),
         ("Transitions", "main_cooling_369"),
+        ("LightShift", "power"),
     ]
 
     def sequence(self):
@@ -30,7 +32,7 @@ class MetastableRamseyMicrowaveInterrogation(PulseSequence):
 
         DDS_freq = p["ddsDefaults.metastable_qubit_dds_freq"] + (
             p["MetastableMicrowaveRamsey.detuning"] + center
-        )  # / 8.0
+        )
 
         self.add_dds(
             "3GHz_qubit",
@@ -42,12 +44,22 @@ class MetastableRamseyMicrowaveInterrogation(PulseSequence):
         )
 
         self.add_dds(
+            "532SP",
+            self.start + pi_time / 2.0,
+            p["EmptySequence.duration"],
+            p["ddsDefaults.SP_532_freq"],
+            p["LightShift.power"],
+            U(0.0, "deg"),
+        )
+
+        self.add_dds(
             "3GHz_qubit",
             self.start + pi_time / 2.0 + p["EmptySequence.duration"],
             pi_time / 2.0,
             DDS_freq,
             p["ddsDefaults.metastable_qubit_dds_power"],
-            p["Metastable_Microwave_Interrogation.microwave_phase"] / 8.0,
+            U(0.0, "deg"),
+            # p["Metastable_Microwave_Interrogation.microwave_phase"] / 8.0,
         )
 
         if p["MetastableMicrowaveRamsey.cooling_lasers_during_microwaves"] == "On":

@@ -7,10 +7,11 @@ class Shelving(PulseSequence):
         ("Modes", "shelving"),
         ("Transitions", "quadrupole"),
         ("Transitions", "main_cooling_369"),
+        ("Transitions", "shelving_411"),
+        ("OpticalPumping", "detuning"),
+        ("OpticalPumping", "power"),
         ("ddsDefaults", "DP1_411_freq"),
         ("ddsDefaults", "DP1_411_power"),
-        ("ddsDefaults", "DP2_411_freq"),
-        ("ddsDefaults", "DP2_411_power"),
         ("ddsDefaults", "repump_935_freq"),
         ("ddsDefaults", "repump_935_power"),
         ("ddsDefaults", "repump_976_freq"),
@@ -40,7 +41,7 @@ class Shelving(PulseSequence):
                 "411DP1",
                 self.start,
                 p["Shelving.duration"],
-                p["ddsDefaults.DP1_411_freq"],
+                p["Transitions.shelving_411"],
                 p["ddsDefaults.DP1_411_power"],
             )
 
@@ -67,7 +68,7 @@ class Shelving(PulseSequence):
                 "411DP1",
                 self.start,
                 p["Shelving.duration"],
-                p["ddsDefaults.DP1_411_freq"],
+                p["Transitions.shelving_411"],
                 p["ddsDefaults.DP1_411_power"],
             )
             self.add_dds(
@@ -90,8 +91,47 @@ class Shelving(PulseSequence):
                 "976SP",
                 self.start,
                 p["Shelving.duration"],
-                p.ddsDefaults.repump_976_freq,
-                p.ddsDefaults.repump_976_power,
+                p["ddsDefaults.repump_976_freq"],
+                p["ddsDefaults.repump_976_power"],
             )
 
-            self.end = self.start + p.Shelving.duration
+            self.end = self.start + p["Shelving.duration"]
+
+        if mode == "Optical_Pumping_On":
+            self.add_ttl("SynthNVTTL", self.start, p["Shelving.duration"])
+            self.add_ttl("SynthHDTTL", self.start, p["Shelving.duration"])
+            self.add_dds(
+                "369DP",
+                self.start,
+                p["Shelving.duration"],
+                p["Transitions.main_cooling_369"] / 2.0
+                + p["ddsDefaults.DP369_freq"]
+                + p["OpticalPumping.detuning"] / 2.0,
+                p["OpticalPumping.power"],
+            )
+
+            self.add_dds(
+                "411DP1",
+                self.start,
+                p["Shelving.duration"],
+                p["Transitions.shelving_411"],
+                p["ddsDefaults.DP1_411_power"],
+            )
+
+            self.add_dds(
+                "935SP",
+                self.start,
+                p["Shelving.duration"],
+                p["ddsDefaults.repump_935_freq"],
+                p["DopplerCooling.repump_power"],
+            )
+            # currently (April 2025) the "976" is a 935 diode
+            self.add_dds(
+                "976SP",
+                self.start,
+                p["Shelving.duration"],
+                p["ddsDefaults.repump_976_freq"],
+                p["ddsDefaults.repump_976_power"],
+            )
+
+            self.end = self.start + p["Shelving.duration"]

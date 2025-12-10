@@ -20,6 +20,7 @@ class ShelvingRate(QsimExperiment):
     exp_parameters.append(("ShelvingStateDetection", "repetitions"))
     exp_parameters.append(("ShelvingStateDetection", "state_readout_threshold"))
     exp_parameters.append(("Shelving_Doppler_Cooling", "doppler_counts_threshold"))
+    exp_parameters.append(("Transitions", "shelving_411"))
     exp_parameters.append(("Pi_times", "qubit_0"))
     exp_parameters.remove(("MicrowaveInterrogation", "detuning"))
     exp_parameters.remove(("MicrowaveInterrogation", "duration"))

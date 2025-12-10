@@ -82,39 +82,39 @@ class ShelvingDopplerCooling(PulseSequence):
                 self.start,
                 p["Shelving_Doppler_Cooling.duration"],
                 p["Transitions.main_cooling_369"] / 2.0
-                + p.ddsDefaults.DP369_freq
-                + p.DopplerCooling.detuning / 2.0,
-                p.DopplerCooling.cooling_power,
+                + p["ddsDefaults.DP369_freq"]
+                + p["DopplerCooling.detuning"] / 2.0,
+                p["DopplerCooling.cooling_power"],
             )
             self.add_dds(
                 "935SP",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.ddsDefaults.repump_935_freq,
-                p.DopplerCooling.repump_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["ddsDefaults.repump_935_freq"],
+                p["DopplerCooling.repump_power"],
             )
             self.add_dds(
                 "976SP",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.ddsDefaults.repump_976_freq,
-                p.ddsDefaults.repump_976_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["ddsDefaults.repump_976_freq"],
+                p["ddsDefaults.repump_976_power"],
             )
             self.add_dds(
                 "760SP",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.ddsDefaults.repump_760_1_freq,
-                p.ddsDefaults.repump_760_1_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["ddsDefaults.repump_760_1_freq"],
+                p["ddsDefaults.repump_760_1_power"],
             )
             self.add_dds(
                 "760SP2",
                 self.start,
-                p.Shelving_Doppler_Cooling.duration,
-                p.ddsDefaults.repump_760_2_freq,
-                p.ddsDefaults.repump_760_2_power,
+                p["Shelving_Doppler_Cooling.duration"],
+                p["ddsDefaults.repump_760_2_freq"],
+                p["ddsDefaults.repump_760_2_power"],
             )
             self.add_ttl(
-                "ReadoutCount", self.start, p.Shelving_Doppler_Cooling.duration
+                "ReadoutCount", self.start, p["Shelving_Doppler_Cooling.duration"]
             )
-            self.end = self.start + p.Shelving_Doppler_Cooling.duration
+            self.end = self.start + p["Shelving_Doppler_Cooling.duration"]

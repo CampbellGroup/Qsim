@@ -9,6 +9,9 @@ from Qsim.scripts.pulse_sequences.sub_sequences.turn_off_all import TurnOffAll
 from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.metastable_state_detection import (
     MetastableStateDetection,
 )
+from Qsim.scripts.pulse_sequences.sub_sequences.state_detection.post_selection_detection import (
+    PostSelectionDetection,
+)
 from Qsim.scripts.pulse_sequences.sub_sequences.shelving_doppler_cooling import (
     ShelvingDopplerCooling,
 )
@@ -37,6 +40,8 @@ class MetastableMicrowavePoint(PulseSequence):
         self.add_sequence(OpticalPumping)
         # self.addSequence(microwave_interrogation)
         self.add_sequence(Shelving)
+        # check metastable state prep:
+        # self.add_sequence(PostSelectionDetection)
         self.add_sequence(MetastableMicrowaveInterrogation)
         self.add_sequence(MetastableStateDetection)
         self.add_sequence(Deshelving)

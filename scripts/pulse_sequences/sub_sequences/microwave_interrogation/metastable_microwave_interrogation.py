@@ -26,8 +26,8 @@ class MetastableMicrowaveInterrogation(PulseSequence):
     def sequence(self):
         p = self.parameters
 
-        if p["Metastable_Microwave_Interrogation.PulseSequence"] == "Standard":
+        if p["Metastable_Microwave_Interrogation.pulse_sequence"] == "Standard":
             self.add_sequence(MetastableMicrowaveSequenceStandard)
 
-        if p["Metastable_Microwave_Interrogation.PulseSequence"] == "Knill":
+        if p["Metastable_Microwave_Interrogation.pulse_sequence"] == "Knill":
             self.add_sequence(MetastableMicrowaveKnillSequence)

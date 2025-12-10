@@ -7,6 +7,7 @@ class HeraldedFourPreparation(PulseSequence):
         ("MetastableStateDetection", "repump_power"),
         ("MetastableStateDetection", "detuning"),
         ("MetastableStateDetection", "CW_power"),
+        ("Metastable_Microwave_Interrogation", "detuning"),
         ("Deshelving", "power1"),
         ("Transitions", "main_cooling_369"),
         ("Transitions", "MetastableQubit"),
@@ -29,8 +30,9 @@ class HeraldedFourPreparation(PulseSequence):
     def sequence(self):
         p = self.parameters
         qubitFreq = (
-                p["ddsDefaults.metastable_qubit_dds_freq"]
-                + p["Transitions.MetastableQubit"] / 8.0
+            p["ddsDefaults.metastable_qubit_dds_freq"]
+            + p["Transitions.MetastableQubit"]
+            + p["Metastable_Microwave_Interrogation.detuning"]
         )
 
         self.add_ttl(
@@ -101,14 +103,14 @@ class HeraldedFourPreparation(PulseSequence):
             p["ddsDefaults.doppler_cooling_power"],
         )
 
-        self.add_dds(
-            "ProtectionBeam",
-            self.start + p["Pi_times.metastable_qubit"],
-            p["HeraldedStatePreparation.deshelving_duration"]
-            + p["MetastableStateDetection.duration"],
-            p["ddsDefaults.protection_beam_freq"],
-            p["ddsDefaults.protection_beam_power"],
-        )
+        # self.add_dds(
+        #     "ProtectionBeam",
+        #     self.start + p["Pi_times.metastable_qubit"],
+        #     p["HeraldedStatePreparation.deshelving_duration"]
+        #     + p["MetastableStateDetection.duration"],
+        #     p["ddsDefaults.protection_beam_freq"],
+        #     p["ddsDefaults.protection_beam_power"],
+        # )
 
         self.end = (
             self.start

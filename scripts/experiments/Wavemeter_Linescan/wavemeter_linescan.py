@@ -34,9 +34,10 @@ class WavemeterLinescan(QsimExperiment):
     exp_parameters.append(("wavemeterscan", "lasername"))
     exp_parameters.append(("wavemeterscan", "noise_floor"))
     exp_parameters.append(("wavemeterscan", "rail_wait_time"))
+    exp_parameters.append(("wavemeterscan", "frequency_bin_resolution"))
+
 
     def initialize(self, cxn, context, ident):
-
         print("initializing")
         self.ident = ident
         self.cxnwlm = labrad.connect("10.97.112.2", password="lab")
@@ -50,6 +51,13 @@ class WavemeterLinescan(QsimExperiment):
 
         self.setup_parameters()
         self.setup_datavault("Frequency (THz)", "kcounts/sec")
+        try:
+            if self.p["wavemeterscan.lasername"] in ["760", "760 (Repump)"]:
+                self.setup_grapher("760_linescan")
+            else:
+                self.setup_grapher(self.p["wavemeterscan.lasername"] + "_linescan")
+        except KeyError:
+            pass
         self.low_rail = self.centerfrequency["THz"] - self.scan_range["THz"] / 2.0
         self.high_rail = self.centerfrequency["THz"] + self.scan_range["THz"] / 2.0
         self.tempdata = []
@@ -77,33 +85,38 @@ class WavemeterLinescan(QsimExperiment):
         time.sleep(5 * delay)
 
         if len(self.tempdata) > 0:
-            self.tempdata.sort()
+            self.bin_average()
             self.dv.add(self.tempdata)
-            try:
-                if self.p["wavemeterscan.lasername"] in ["760", "760 (Repump)"]:
-                    self.setup_grapher("760_linescan")
-                else:
-                    self.setup_grapher(self.p["wavemeterscan.lasername"] + "_linescan")
-            except KeyError:
-                pass
 
     def take_data(self, progress, delay):
         init_time = time.time()
         while (time.time() - init_time) < delay:
             should_break = self.update_progress(progress)
             if should_break:
-                self.tempdata.sort()
+                self.bin_average()
                 self.dv.add(self.tempdata)
-                try:
-                    self.setup_grapher(self.p["wavemeterscan.lasername"] + "_linescan")
-                except KeyError:
-                    pass
                 return True
 
             counts = self.pmt.get_next_counts("ON", 1, False)[0]
             currentfreq = self.currentfrequency()
             if currentfreq and (counts > self.p["wavemeterscan.noise_floor"]):
                 self.tempdata.append([1e6 * currentfreq, counts])
+
+    def bin_average(self):
+        data = np.asarray(self.tempdata)
+        freqs, counts = data[:, 0], data[:, 1]
+        if self.p["wavemeterscan.frequency_bin_resolution"]["MHz"] == 0:
+            sort = np.argsort(freqs)
+            self.tempdata = np.stack((freqs[sort], counts[sort]), axis=-1).tolist()
+        else:
+            freq_range = np.max(freqs)-np.min(freqs)
+            N_bins = int(round(freq_range/self.p["wavemeterscan.frequency_bin_resolution"]["MHz"]))
+            if N_bins <2: N_bins = int(2.0)
+            bins = np.linspace(np.min(freqs), np.max(freqs), N_bins)
+            reduced_freqs = (bins[1:]+bins[:-1])/2
+            reduced_counts = np.histogram(freqs, bins, weights=counts)[0] / np.histogram(freqs, bins)[0]
+            self.tempdata = np.stack((reduced_freqs, reduced_counts), axis=-1).tolist()
+
 
     def setup_parameters(self):
 

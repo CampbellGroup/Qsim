@@ -141,3 +141,6 @@ class BrightStatePumping(PulseSequence):
             elif p["BrightStatePumping.microwave_phase_list"] == "random":
                 for i in range(int(p["MicrowaveInterrogation.repetitions"])):
                     self.add_sequence(MicrowaveSequenceStandardRandomPhase)
+
+        elif prep_method == "Prepare Dark":
+            self.add_sequence(OpticalPumping)

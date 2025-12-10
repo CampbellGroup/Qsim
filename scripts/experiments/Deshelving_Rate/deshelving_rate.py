@@ -37,11 +37,11 @@ class DeshelvingRate(QsimExperiment):
             self.p["VariableDeshelving.duration"] = U(duration, "ms")
             self.program_pulser(sequence)
             [doppler_counts, detection_counts] = self.run_sequence(num=2, max_runs=500)
-            deshelving_errors = np.where(
-                doppler_counts
-                <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
-            )
-            detection_counts = np.delete(detection_counts, deshelving_errors)
+            # deshelving_errors = np.where(
+            #     doppler_counts
+            #     <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
+            # )
+            # detection_counts = np.delete(detection_counts, deshelving_errors)
             hist = self.process_data(detection_counts)
             self.plot_hist(hist, folder_name="Shelving_Histogram")
             pop = self.get_pop(detection_counts)

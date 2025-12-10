@@ -2,7 +2,7 @@
 
 import labrad
 from Qsim.scripts.pulse_sequences.microwave_point.microwave_ramsey_light_shift import (
-    MicrowaveRamseyPoint532 as sequence,
+    MicrowaveRamseyPoint532 as ramsey_532_sequence,
 )
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
@@ -75,7 +75,7 @@ class MicrowaveRamseyLightShift(QsimExperiment):
     exp_parameters.append(("LightShift", "percent"))
     exp_parameters.append(("LightShift", "power"))
 
-    exp_parameters.extend(sequence.all_required_parameters())
+    exp_parameters.extend(ramsey_532_sequence.all_required_parameters())
 
     exp_parameters.remove(("EmptySequence", "duration"))
 
@@ -96,7 +96,7 @@ class MicrowaveRamseyLightShift(QsimExperiment):
         mode = self.p["Modes.state_detection_mode"]
 
         self.p["MicrowaveInterrogation.detuning"] = self.p["MicrowaveRamsey.detuning"]
-        self.init_line_center = None  #########
+        self.init_line_center = None
         if scan_parameter == "delay_time":
             self.cavity_voltage = self.pzt_server.get_voltage(self.cavity_chan)
             # self.init_line_center = self.run_interleaved_linescan()
@@ -117,7 +117,7 @@ class MicrowaveRamseyLightShift(QsimExperiment):
                 if should_break:
                     break
                 self.p["EmptySequence.duration"] = U(dark_time, "ms")
-                self.program_pulser(sequence)
+                self.program_pulser(ramsey_532_sequence)
                 if mode == "Shelving":
                     [doppler_counts, detection_counts] = self.run_sequence(
                         max_runs=500, num=2
@@ -128,22 +128,31 @@ class MicrowaveRamseyLightShift(QsimExperiment):
                     )
                     counts = np.delete(detection_counts, errors)
                 else:
-                    [counts, counts_control] = self.run_sequence(max_runs=500, num=2)
+                    [counts, counts_control] = self.run_sequence(
+                        max_runs=500, num=2
+                    )  # for running with a control
+                    # [counts] = self.run_sequence(max_runs=500, num=1)# for running without a control
                 if i % self.p["StandardStateDetection.points_per_histogram"] == 0:
                     hist = self.process_data(counts)
                     self.plot_hist(hist)
                 pop = self.get_pop(counts)
-                pop_control = self.get_pop(counts_control)
+                pop_control = self.get_pop(counts_control)  # for running with a control
                 self.dv.add(dark_time, pop, context=self.ls_context)
-                self.dv.add(dark_time, pop_control, context=self.control_context)
+                self.dv.add(
+                    dark_time, pop_control, context=self.control_context
+                )  # for running with a control
                 if (
-                    time.time() - last_scanned > 600
-                ):  # linescan if it has been more than 4 minutes
+                    time.time() - last_scanned > 300
+                ):  # linescan if it has been more than 10 minutes
                     print("Correcting Cavity Drift")
-                    if self.init_line_center is None:  #######
-                        self.init_line_center = self.run_interleaved_linescan()  #######
-                        continue  #######
-                    success = self.correct_cavity_drift()
+                    if self.init_line_center is None:
+                        continue  # dont do interleaved linescan
+                        self.init_line_center = self.run_interleaved_linescan()
+                        if self.init_line_center is True:
+                            break  # if interleaved linescan returned shouldbreak==True
+                        continue
+                    else:
+                        success = self.correct_cavity_drift()
                     last_scanned = time.time()  # update time
                     time.sleep(1)
 
@@ -204,7 +213,7 @@ class MicrowaveRamseyLightShift(QsimExperiment):
             self.init_line_center - center_before
         )  # cavity shift in MHz, no labrad units
 
-        while np.abs(delta) > 1.0:
+        while delta > 0:
 
             new_cavity_voltage = self.cavity_voltage + (
                 delta * 0.01

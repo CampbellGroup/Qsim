@@ -7,6 +7,7 @@ from .sub_sequences.shelving import Shelving
 from .sub_sequences.deshelving import Deshelving
 from .sub_sequences.variable_deshelving import VariableDeshelving
 from .sub_sequences.turn_off_all import TurnOffAll
+from .sub_sequences.bright_state_pumping import BrightStatePumping
 
 
 class DeshelvingPoint(PulseSequence):
@@ -17,11 +18,16 @@ class DeshelvingPoint(PulseSequence):
         Deshelving,
         VariableDeshelving,
         ShelvingStateDetection,
+        BrightStatePumping,
     ]
 
     def sequence(self):
         self.add_sequence(TurnOffAll)
         self.add_sequence(ShelvingDopplerCooling)
+        ## 4/3/25 Drew ##
+        self.add_sequence(TurnOffAll)
+        self.add_sequence(BrightStatePumping)
+        ### for dark state prep ###
         self.add_sequence(Shelving)
         self.add_sequence(
             VariableDeshelving

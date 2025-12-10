@@ -34,6 +34,7 @@ class WavemeterLinescanBadWM(QsimExperiment):
     exp_parameters.append(("wavemeterscan", "lasername"))
     exp_parameters.append(("wavemeterscan", "noise_floor"))
     exp_parameters.append(("wavemeterscan", "rail_wait_time"))
+    exp_parameters.append(("wavemeterscan", "frequency_bin_resolution"))
 
     def initialize(self, cxn, context, ident):
 
@@ -47,6 +48,15 @@ class WavemeterLinescanBadWM(QsimExperiment):
 
         self.setup_parameters()
         self.setup_datavault("Frequency (THz)", "kcounts/sec")
+        try:
+            if self.p["wavemeterscan.lasername"] in ["760", "760 (Repump)"]:
+                self.setup_grapher("760_linescan")
+                print("760")
+            else:
+                print("other")
+                self.setup_grapher(self.p["wavemeterscan.lasername"] + "_linescan")
+        except KeyError:
+            pass
         self.tempdata = []
         delay = self.wait_time["s"]
 
@@ -58,6 +68,7 @@ class WavemeterLinescanBadWM(QsimExperiment):
 
         if len(self.tempdata) > 0:
             self.tempdata.sort()
+            self.bin_average()
             self.dv.add(self.tempdata)
             try:
                 self.setup_grapher(self.grapher_tab)
@@ -70,6 +81,7 @@ class WavemeterLinescanBadWM(QsimExperiment):
             should_break = self.update_progress(progress)
             if should_break:
                 self.tempdata.sort()
+                self.bin_average()
                 self.dv.add(self.tempdata)
                 try:
                     self.setup_grapher(self.grapher_tab)
@@ -82,9 +94,11 @@ class WavemeterLinescanBadWM(QsimExperiment):
             if currentfreq:
                 self.tempdata.append([1e6 * currentfreq, counts])
 
+
     def setup_parameters(self):
         self.wait_time = self.p["wavemeterscan.rail_wait_time"]
-        self.centerfrequency = U(812.12787, "THz")
+        # self.centerfrequency = U(812.12787, "THz")
+        self.centerfrequency = U(394.42501, "THz")
         self.grapher_tab = "976_linescan"
 
     def currentfrequency(self):
@@ -97,6 +111,24 @@ class WavemeterLinescanBadWM(QsimExperiment):
         except:
             return None
 
+    def bin_average(self):
+        data = np.asarray(self.tempdata)
+        freqs, counts = data[:, 0], data[:, 1]
+        if self.p["wavemeterscan.frequency_bin_resolution"]["MHz"] == 0:
+            print("if triggered")
+            sort = np.argsort(freqs)
+            self.tempdata = np.stack((freqs[sort], counts[sort]), axis=-1).tolist()
+        else:
+            print("max", np.max(freqs))
+            print("min", np.min(freqs))
+            freq_range = np.max(freqs)-np.min(freqs)
+            N_bins = int(round(freq_range/self.p["wavemeterscan.frequency_bin_resolution"]["MHz"]))
+            if N_bins <2: N_bins = int(2.0)
+            print("N bins", N_bins)
+            bins = np.linspace(np.min(freqs), np.max(freqs), N_bins)
+            reduced_freqs = (bins[1:]+bins[:-1])/2
+            reduced_counts = np.histogram(freqs, bins, weights=counts)[0] / np.histogram(freqs, bins)[0]
+            self.tempdata = np.stack((reduced_freqs, reduced_counts), axis=-1).tolist()
 
 if __name__ == "__main__":
     cxn = labrad.connect()

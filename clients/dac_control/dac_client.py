@@ -49,7 +49,9 @@ class DACClient(QFrame):
 
         self.electrode_spinboxes = []
         length_of_column = 2
+
         for i, channel in enumerate(self.dac_channels):
+
             spinbox = QCustomSpinBox(
                 (channel.allowed_voltage_range[0], channel.allowed_voltage_range[1]),
                 title=channel.name, suffix="V"
@@ -113,7 +115,7 @@ class DACClient(QFrame):
         for multipole in self.multipole_spinboxes:
             mvector.append(multipole.spin_level.value())
         evector = yield self.multipole_server.set_multipoles(mvector)
-        if len(evector) == 8:
+        if len(evector) == 6:
             for i, voltage in enumerate(evector):
                 electrode = self.electrode_spinboxes[i]
                 dac_channel = self.dac_channels[i]
