@@ -94,7 +94,6 @@ class WavemeterLinescanBadWM(QsimExperiment):
             if currentfreq:
                 self.tempdata.append([1e6 * currentfreq, counts])
 
-
     def setup_parameters(self):
         self.wait_time = self.p["wavemeterscan.rail_wait_time"]
         # self.centerfrequency = U(812.12787, "THz")
@@ -121,14 +120,23 @@ class WavemeterLinescanBadWM(QsimExperiment):
         else:
             print("max", np.max(freqs))
             print("min", np.min(freqs))
-            freq_range = np.max(freqs)-np.min(freqs)
-            N_bins = int(round(freq_range/self.p["wavemeterscan.frequency_bin_resolution"]["MHz"]))
-            if N_bins <2: N_bins = int(2.0)
+            freq_range = np.max(freqs) - np.min(freqs)
+            N_bins = int(
+                round(
+                    freq_range / self.p["wavemeterscan.frequency_bin_resolution"]["MHz"]
+                )
+            )
+            if N_bins < 2:
+                N_bins = int(2.0)
             print("N bins", N_bins)
             bins = np.linspace(np.min(freqs), np.max(freqs), N_bins)
-            reduced_freqs = (bins[1:]+bins[:-1])/2
-            reduced_counts = np.histogram(freqs, bins, weights=counts)[0] / np.histogram(freqs, bins)[0]
+            reduced_freqs = (bins[1:] + bins[:-1]) / 2
+            reduced_counts = (
+                np.histogram(freqs, bins, weights=counts)[0]
+                / np.histogram(freqs, bins)[0]
+            )
             self.tempdata = np.stack((reduced_freqs, reduced_counts), axis=-1).tolist()
+
 
 if __name__ == "__main__":
     cxn = labrad.connect()

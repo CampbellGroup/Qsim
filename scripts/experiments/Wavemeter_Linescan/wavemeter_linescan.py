@@ -36,7 +36,6 @@ class WavemeterLinescan(QsimExperiment):
     exp_parameters.append(("wavemeterscan", "rail_wait_time"))
     exp_parameters.append(("wavemeterscan", "frequency_bin_resolution"))
 
-
     def initialize(self, cxn, context, ident):
         print("initializing")
         self.ident = ident
@@ -109,14 +108,21 @@ class WavemeterLinescan(QsimExperiment):
             sort = np.argsort(freqs)
             self.tempdata = np.stack((freqs[sort], counts[sort]), axis=-1).tolist()
         else:
-            freq_range = np.max(freqs)-np.min(freqs)
-            N_bins = int(round(freq_range/self.p["wavemeterscan.frequency_bin_resolution"]["MHz"]))
-            if N_bins <2: N_bins = int(2.0)
+            freq_range = np.max(freqs) - np.min(freqs)
+            N_bins = int(
+                round(
+                    freq_range / self.p["wavemeterscan.frequency_bin_resolution"]["MHz"]
+                )
+            )
+            if N_bins < 2:
+                N_bins = int(2.0)
             bins = np.linspace(np.min(freqs), np.max(freqs), N_bins)
-            reduced_freqs = (bins[1:]+bins[:-1])/2
-            reduced_counts = np.histogram(freqs, bins, weights=counts)[0] / np.histogram(freqs, bins)[0]
+            reduced_freqs = (bins[1:] + bins[:-1]) / 2
+            reduced_counts = (
+                np.histogram(freqs, bins, weights=counts)[0]
+                / np.histogram(freqs, bins)[0]
+            )
             self.tempdata = np.stack((reduced_freqs, reduced_counts), axis=-1).tolist()
-
 
     def setup_parameters(self):
 
