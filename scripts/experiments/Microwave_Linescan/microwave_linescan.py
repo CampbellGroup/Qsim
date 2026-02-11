@@ -73,8 +73,18 @@ class MicrowaveLineScan(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
+        #### 2/9/26 ###
+        self.AWG_inst = self.cxn.awg_server  # connect to DAC server
+        self.AWG_inst.select_device(0)
+        self.AWG_windows = self.cxn.awg_windows_server
+        ##############
 
     def run(self, cxn, context):
+        #### 2/9/26 ###
+        self.text_to_WF('long')
+        self.assign_WF(1,'long')
+
+        ##############
 
         data = self.setup_datavault(
             "frequency", "probability"
@@ -167,6 +177,15 @@ class MicrowaveLineScan(QsimExperiment):
             + offset
         )
 
+    ### 2/9/26 ###
+    @inlineCallbacks
+    def text_to_WF(self, file):
+        yield self.AWG_inst.text_to_waveform(file)
+
+    @inlineCallbacks
+    def assign_WF(self, channel, file):
+        yield self.AWG_inst.assign_waveform_to_channel(channel, file)
+    ##################
 
 if __name__ == "__main__":
     cxn = labrad.connect()

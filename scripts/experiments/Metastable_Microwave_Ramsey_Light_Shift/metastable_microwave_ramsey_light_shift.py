@@ -123,24 +123,24 @@ class MetastableMicrowaveRamseyLightShift(QsimExperiment):
                 self.dv.add(dark_time, pop_C, context=self.control_context)
                 self.dv.add(len(counts_LS), len(counts_C), context=self.herald_context)
 
-                # Correct Cavity Drift if "interleaved_period" time has passed #
-                if (
-                    time.time() - last_scanned
-                    > self.p["MetastableMicrowaveRamseyLightShift.interleaved_period"][
-                        "s"
-                    ]
-                ):
-                    print("Correcting Cavity Drift")
-                    if self.init_line_center is None:
-                        # continue # dont do interleaved linescan
-                        self.init_line_center = self.run_interleaved_linescan()
-                        if self.init_line_center is True:
-                            break  # if interleaved linescan returned shouldbreak==True
-                        continue
-                    else:
-                        success = self.correct_cavity_drift()
-                    last_scanned = time.time()  # update time
-                    time.sleep(1)
+                # # Correct Cavity Drift if "interleaved_period" time has passed #
+                # if (
+                #     time.time() - last_scanned
+                #     > self.p["MetastableMicrowaveRamseyLightShift.interleaved_period"][
+                #         "s"
+                #     ]
+                # ):
+                #     print("Correcting Cavity Drift")
+                #     if self.init_line_center is None:
+                #         # continue # dont do interleaved linescan
+                #         self.init_line_center = self.run_interleaved_linescan()
+                #         if self.init_line_center is True:
+                #             break  # if interleaved linescan returned shouldbreak==True
+                #         continue
+                #     else:
+                #         success = self.correct_cavity_drift()
+                #     last_scanned = time.time()  # update time
+                #     time.sleep(1)
 
     def run_interleaved_linescan(self):
         self.pulser.line_trigger_state(False)

@@ -13,8 +13,6 @@ from Qsim.scripts.pulse_sequences.shelving_point import ShelvingPoint as sequenc
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 
-## test ##
-
 class Linescan411(QsimExperiment):
     """
     Measure 411nm shelving rate to the F7/2. Center of the linescan is dds defaults for 411.
