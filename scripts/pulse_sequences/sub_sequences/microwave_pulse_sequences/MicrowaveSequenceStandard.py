@@ -31,6 +31,12 @@ class MicrowaveSequenceStandard(PulseSequence):
             center = p["Transitions.qubit_plus"]
         elif p["Line_Selection.qubit"] == "qubit_minus":
             center = p["Transitions.qubit_minus"]
+        elif p["Line_Selection.qubit"] == "minus_plus":
+            center = None
+        elif p["Line_Selection.qubit"] == "minus_zero":
+            center = None
+        elif p["Line_Selection.qubit"] == "plus_zero":
+            center = None
         else:
             return
 
@@ -78,3 +84,21 @@ class MicrowaveSequenceStandard(PulseSequence):
             )
 
             self.end = self.start + p["MicrowaveInterrogation.duration"] + pulse_delay
+
+        elif p["MicrowaveInterrogation.microwave_source"] == "AWG":
+
+            pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
+
+            self.add_ttl(
+                "MicrowaveTTL",
+                self.start,
+                p["MicrowaveInterrogation.duration"],
+            )
+
+            self.add_ttl(
+                "MicrowaveTTL2",
+                self.start,
+                p["MicrowaveInterrogation.duration"],
+            )
+
+            self.end = self.start + p["MicrowaveInterrogation.duration"]

@@ -11,6 +11,7 @@ from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 from labrad.units import WithUnit as U
 import numpy as np
 from scipy.optimize import curve_fit as fit
+from twisted.internet.defer import inlineCallbacks, returnValue
 
 
 class MicrowaveLineScan(QsimExperiment):
@@ -55,11 +56,18 @@ class MicrowaveLineScan(QsimExperiment):
     exp_parameters.append(("Pi_times", "qubit_0"))
     exp_parameters.append(("Pi_times", "qubit_plus"))
     exp_parameters.append(("Pi_times", "qubit_minus"))
+    exp_parameters.append(("Pi_times", "simultaneous"))
 
     exp_parameters.extend(sequence.all_required_parameters())
     exp_parameters.extend(ramsey_scan.all_required_parameters())
     exp_parameters.remove(("MicrowaveInterrogation", "detuning"))
     exp_parameters.remove(("MicrowaveInterrogation", "duration"))
+    exp_parameters.remove(("MicrowaveInterrogation", "microwave_source"))
+    exp_parameters.append(("MicrowaveInterrogation", "AWG_Channel"))
+    exp_parameters.append(("MicrowaveInterrogation", "AWG_Channel_1_Power"))
+    exp_parameters.append(("MicrowaveInterrogation", "AWG_Channel_2_Power"))
+    exp_parameters.append(("MicrowaveInterrogation", "AC_line_trigger"))
+    exp_parameters.append(("MicrowaveInterrogation", "delay_from_line_trigger"))
 
     exp_parameters.append(("bf_fluorescence", "crop_start_time"))
     exp_parameters.append(("bf_fluorescence", "crop_stop_time"))
@@ -74,29 +82,31 @@ class MicrowaveLineScan(QsimExperiment):
     def initialize(self, cxn, context, ident):
         self.ident = ident
         #### 2/9/26 ###
-        self.AWG_inst = self.cxn.awg_server  # connect to DAC server
-        self.AWG_inst.select_device(0)
-        self.AWG_windows = self.cxn.awg_windows_server
+        if self.p["MicrowaveInterrogation.microwave_source"] == "AWG":
+            self.AWG_inst = self.cxn.awg_server  # connect to DAC server
+            self.AWG_inst.select_device(0)
+            self.AWG_windows = self.cxn.awg_windows_server
         ##############
 
     def run(self, cxn, context):
-        #### 2/9/26 ###
-        self.text_to_WF('long')
-        self.assign_WF(1,'long')
-
-        ##############
 
         data = self.setup_datavault(
             "frequency", "probability"
         )  # gives the x and y names to Data Vault
         qubit = self.p["Line_Selection.qubit"]
-        print(qubit)
-        print(self.p["MicrowaveInterrogation.pulse_sequence"])
-        self.setup_grapher("Microwave Linescan " + qubit)
+
+        if qubit in ["qubit_0", "qubit_plus", "qubit_minus"]:
+            self.setup_grapher("Microwave Linescan " + qubit)
+        else:
+            self.setup_grapher("Microwave Linescan " + "qubit_0")
+
         self.detunings = self.get_scan_list(self.p["MicrowaveLinescan.scan"], "kHz")
         mode = self.p["Modes.state_detection_mode"]
         self.pulser.line_trigger_state(
             self.p["MicrowaveInterrogation.AC_line_trigger"] == "On"
+        )
+        self.pulser.line_trigger_duration(
+            self.p["MicrowaveInterrogation.delay_from_line_trigger"]
         )
 
         linescan_type = self.p["MicrowaveLinescan.linescan_type"]
@@ -113,6 +123,65 @@ class MicrowaveLineScan(QsimExperiment):
             center = self.p["Transitions.qubit_minus"]
             pi_time = self.p["Pi_times.qubit_minus"]
 
+        elif qubit == "minus_plus":
+            pi_time = self.p["Pi_times.simultaneous"]
+
+        #### 2/9/26 ###
+        # if self.p["MicrowaveInterrogation.microwave_source"] == "AWG":
+        #     print('AWG mode')
+        #     freq = self.p["ddsDefaults.qubit_dds_freq"] - ( self.p["MicrowaveInterrogation.detuning"] + center )
+        #     channel = self.p["MicrowaveInterrogation.AWG_Channel"]
+        #     AWG_power = self.p["MicrowaveInterrogation.AWG_Channel_" + channel + "_Power"]
+        #     print("power", AWG_power)
+        #     print("channel", channel)
+        #     self.init_AWG(channel=channel, power= AWG_power)
+        #     self.AWG_play_signals()
+
+        if self.p["MicrowaveInterrogation.microwave_source"] == "AWG":
+            print("AWG mode")
+            if qubit == "qubit_0":
+                center = self.p["Transitions.qubit_0"]
+            elif qubit == "qubit_plus":
+                center = self.p["Transitions.qubit_plus"]
+            elif qubit == "qubit_minus":
+                center = self.p["Transitions.qubit_minus"]
+
+            if qubit in ["qubit_0", "qubit_plus", "qubit_minus"]:
+                freq = self.p["ddsDefaults.qubit_dds_freq"] - (
+                    self.p["MicrowaveInterrogation.detuning"] + center
+                )
+                channel = self.p["MicrowaveInterrogation.AWG_Channel"]
+                AWG_power = self.p[
+                    "MicrowaveInterrogation.AWG_Channel_" + channel + "_Power"
+                ]
+                self.init_AWG(channel=channel, power=AWG_power)
+                self.AWG_load_waveform(
+                    channel=channel, frequency=freq, waveform="HP_microwave"
+                )
+
+            elif qubit == "minus_plus":
+                freq_minus = self.p["ddsDefaults.qubit_dds_freq"] - (
+                    self.p["MicrowaveInterrogation.detuning"]
+                    + self.p["Transitions.qubit_minus"]
+                )
+                freq_plus = self.p["ddsDefaults.qubit_dds_freq"] - (
+                    self.p["MicrowaveInterrogation.detuning"]
+                    + self.p["Transitions.qubit_plus"]
+                )
+                center = self.p["Transitions.qubit_plus"]
+                AWG_power_1 = self.p["MicrowaveInterrogation.AWG_Channel_1_Power"]
+                AWG_power_2 = self.p["MicrowaveInterrogation.AWG_Channel_2_Power"]
+                self.init_AWG(channel=1, power=AWG_power_1)
+                self.init_AWG(channel=2, power=AWG_power_2, other_channel_off=False)
+                self.AWG_load_waveform(
+                    channel=1, frequency=freq_minus, waveform="minus"
+                )
+                # self.AWG_load_waveform(channel=2, frequency=freq_plus, waveform='plus')
+
+            self.AWG_play_signals()
+
+        ##############
+
         self.p["MicrowaveInterrogation.duration"] = pi_time
         deltas, probs = [], []
         for i, detuning in enumerate(self.detunings):
@@ -121,6 +190,23 @@ class MicrowaveLineScan(QsimExperiment):
                 break
 
             self.p["MicrowaveInterrogation.detuning"] = U(detuning, "kHz")
+
+            # 2/13 #
+            if self.p["MicrowaveInterrogation.microwave_source"] == "AWG":
+                if qubit in ["qubit_0", "qubit_plus", "qubit_minus"]:
+                    self.AWG_load_waveform(
+                        channel=channel,
+                        frequency=freq - self.p["MicrowaveInterrogation.detuning"],
+                        waveform="HP_microwave",
+                    )
+                elif qubit == "minus_plus":
+                    self.AWG_load_waveform(
+                        channel=2,
+                        frequency=freq_plus - self.p["MicrowaveInterrogation.detuning"],
+                        waveform="plus",
+                    )
+            #########
+
             if linescan_type == "Rabi":
                 self.program_pulser(sequence)
             if linescan_type == "Ramsey":
@@ -157,8 +243,15 @@ class MicrowaveLineScan(QsimExperiment):
                 np.max(probs) - np.min(probs),
             ]
             popt, pcov = fit(self.sinc_fit, deltas, probs, p0=param_guess)
-            self.pv.set_parameter(("Transitions", qubit, U(popt[1], "kHz")))
-            print("Updated " + str(qubit) + " frequency to " + str(popt[1]) + " kHz")
+
+            if qubit in ["qubit_0", "qubit_plus", "qubit_minus"]:
+                self.pv.set_parameter(("Transitions", qubit, U(popt[1], "kHz")))
+                print(
+                    "Updated " + str(qubit) + " frequency to " + str(popt[1]) + " kHz"
+                )
+
+        if self.p["MicrowaveInterrogation.microwave_source"] == "AWG":
+            self.AWG_play_signals(False)
 
     def finalize(self, cxn, context):
         self.pulser.line_trigger_state(False)
@@ -177,14 +270,34 @@ class MicrowaveLineScan(QsimExperiment):
             + offset
         )
 
-    ### 2/9/26 ###
     @inlineCallbacks
-    def text_to_WF(self, file):
-        yield self.AWG_inst.text_to_waveform(file)
+    def init_AWG(self, channel, power, other_channel_off=True):
+        # yield self.AWG_inst.compile_basic_waveform(frequency["Hz"], waveform) # compile basic waveform
+        channel = int(channel)
+        yield self.AWG_inst.change_amplitude(
+            channel, power["dBm"]
+        )  # change power of waveform
+        yield self.AWG_inst.rf_channel_state(channel, True)
+        if other_channel_off:
+            yield self.AWG_inst.rf_channel_state(channel % 2 + 1, False)
+        yield self.AWG_inst.channel_run_mode(channel, "Continuous")
 
     @inlineCallbacks
-    def assign_WF(self, channel, file):
-        yield self.AWG_inst.assign_waveform_to_channel(channel, file)
+    def AWG_load_waveform(self, channel, frequency, waveform):
+        # yield self.AWG_inst.compile_basic_waveform(frequency["Hz"], waveform) # compile basic waveform
+        channel = int(channel)
+        yield self.AWG_windows.make_multitone_text(
+            [0], frequency["Hz"], 16000000000, waveform
+        )
+        yield self.AWG_inst.text_to_waveform(waveform)
+        yield self.AWG_inst.assign_waveform_to_channel(
+            channel, waveform
+        )  # load waveform to channel 1
+
+    @inlineCallbacks
+    def AWG_play_signals(self, play_state=True):
+        yield self.AWG_inst.play_signals(play_state)
+
     ##################
 
 if __name__ == "__main__":

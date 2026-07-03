@@ -117,3 +117,31 @@ class RamseyMicrowaveInterrogation(PulseSequence):
             )
 
             self.end = self.start + pi_time + p["EmptySequence.duration"] + pulse_delay
+
+        elif p["MicrowaveInterrogation.microwave_source"] == "AWG":
+
+            self.add_ttl(
+                "MicrowaveTTL",
+                self.start,
+                pi_time / 2,
+            )
+
+            self.add_ttl(
+                "MicrowaveTTL2",
+                self.start,
+                pi_time / 2,
+            )
+
+            self.add_ttl(
+                "MicrowaveTTL",
+                self.start + pi_time / 2 + p["EmptySequence.duration"],
+                pi_time / 2,
+            )
+
+            self.add_ttl(
+                "MicrowaveTTL2",
+                self.start + pi_time / 2 + p["EmptySequence.duration"],
+                pi_time / 2,
+            )
+
+            self.end = self.start + pi_time + p["EmptySequence.duration"]

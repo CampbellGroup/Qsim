@@ -5,6 +5,7 @@ from Qsim.scripts.pulse_sequences.fidelity_tweak_up import FidelityTweakUp as se
 from Qsim.scripts.experiments.qsimexperiment import QsimExperiment
 import numpy as np
 from labrad.units import WithUnit as U
+from twisted.internet.defer import inlineCallbacks, returnValue
 
 
 class FidelityTweakUp(QsimExperiment):
@@ -46,6 +47,11 @@ class FidelityTweakUp(QsimExperiment):
     exp_parameters.append(("Modes", "state_detection_mode"))
     exp_parameters.append(("Modes", "bright_state_pumping"))
     exp_parameters.append(("MicrowaveInterrogation", "repetitions"))
+    exp_parameters.append(("MicrowaveInterrogation", "AWG_Channel"))
+    exp_parameters.append(("MicrowaveInterrogation", "AC_line_trigger"))
+    exp_parameters.append(("MicrowaveInterrogation", "delay_from_line_trigger"))
+    exp_parameters.append(("MicrowaveInterrogation", "AWG_Channel_1_Power"))
+    exp_parameters.append(("MicrowaveInterrogation", "AWG_Channel_2_Power"))
     exp_parameters.append(("StandardStateDetection", "repetitions"))
     exp_parameters.append(("StandardStateDetection", "points_per_histogram"))
     exp_parameters.append(("StandardStateDetection", "state_readout_threshold"))
@@ -59,6 +65,12 @@ class FidelityTweakUp(QsimExperiment):
         self.ident = ident
         self.pulser = cxn.pulser
         self.context = context
+        #### 2/9/26 ###
+        if self.p["MicrowaveInterrogation.microwave_source"] == "AWG":
+            self.AWG_inst = self.cxn.awg_server  # connect to DAC server
+            self.AWG_inst.select_device(0)
+            self.AWG_windows = self.cxn.awg_windows_server
+        ##############
 
     def run(self, cxn, context):
 
@@ -67,15 +79,39 @@ class FidelityTweakUp(QsimExperiment):
 
         if qubit == "qubit_plus":
             pi_time = self.p["Pi_times.qubit_plus"]
+            center = self.p["Transitions.qubit_plus"]
         elif qubit == "qubit_minus":
             pi_time = self.p["Pi_times.qubit_minus"]
+            center = self.p["Transitions.qubit_minus"]
         else:
             pi_time = self.p["Pi_times.qubit_0"]
+            center = self.p["Transitions.qubit_0"]
 
         self.p["MicrowaveInterrogation.duration"] = reps * pi_time
         self.p["MicrowaveInterrogation.detuning"] = U(0.0, "kHz")
         self.p["Modes.state_detection_mode"] = "Standard"
 
+        #### 2/23/26 ###
+        if self.p["MicrowaveInterrogation.microwave_source"] == "AWG":
+            freq = self.p["ddsDefaults.qubit_dds_freq"] - (
+                self.p["MicrowaveInterrogation.detuning"] + center
+            )
+            channel = self.p["MicrowaveInterrogation.AWG_Channel"]
+            AWG_power = self.p[
+                "MicrowaveInterrogation.AWG_Channel_" + channel + "_Power"
+            ]
+            self.init_AWG(channel=channel, power=AWG_power)
+            self.AWG_load_waveform(
+                channel=channel, frequency=freq, waveform="HP_microwave"
+            )
+            self.AWG_play_signals()
+
+        self.pulser.line_trigger_state(
+            self.p["MicrowaveInterrogation.AC_line_trigger"] == "On"
+        )
+        self.pulser.line_trigger_duration(
+            self.p["MicrowaveInterrogation.delay_from_line_trigger"]
+        )
         self.setup_prob_datavault()
         i = 0
         self.program_pulser(sequence)
@@ -100,6 +136,9 @@ class FidelityTweakUp(QsimExperiment):
             if self.p != old_params:
                 self.program_pulser(sequence)
 
+        if self.p["MicrowaveInterrogation.microwave_source"] == "AWG":
+            self.AWG_play_signals(False)
+
     def setup_prob_datavault(self):
         self.dv.cd(["", "fidelity_tweak_up"], True)
 
@@ -120,6 +159,32 @@ class FidelityTweakUp(QsimExperiment):
         prob_dark = self.get_pop(counts_dark)
         prob_bright = self.get_pop(counts_bright)
         self.dv.add(num, prob_dark, prob_bright, prob_bright - prob_dark)
+
+    @inlineCallbacks
+    def init_AWG(self, channel, power, other_channel_off=True):
+        channel = int(channel)
+        yield self.AWG_inst.change_amplitude(
+            channel, power["dBm"]
+        )  # change power of waveform
+        yield self.AWG_inst.rf_channel_state(channel, True)
+        if other_channel_off:
+            yield self.AWG_inst.rf_channel_state(channel % 2 + 1, False)
+        yield self.AWG_inst.channel_run_mode(channel, "Continuous")
+
+    @inlineCallbacks
+    def AWG_load_waveform(self, channel, frequency, waveform):
+        channel = int(channel)
+        yield self.AWG_windows.make_multitone_text(
+            [0], frequency["Hz"], 16000000000, waveform
+        )
+        yield self.AWG_inst.text_to_waveform(waveform)
+        yield self.AWG_inst.assign_waveform_to_channel(
+            channel, waveform
+        )  # load waveform to channel 1
+
+    @inlineCallbacks
+    def AWG_play_signals(self, play_state=True):
+        yield self.AWG_inst.play_signals(play_state)
 
 
 if __name__ == "__main__":

@@ -41,7 +41,10 @@ class DeshelvingRate(QsimExperiment):
                 doppler_counts
                 <= self.p["Shelving_Doppler_Cooling.doppler_counts_threshold"]
             )
-            print(len(deshelving_errors[0])/len(detection_counts)*100,"% of experiments failed to deshelve")
+            print(
+                len(deshelving_errors[0]) / len(detection_counts) * 100,
+                "% of experiments failed to deshelve",
+            )
             detection_counts = np.delete(detection_counts, deshelving_errors)
             hist = self.process_data(detection_counts)
             self.plot_hist(hist, folder_name="Shelving_Histogram")

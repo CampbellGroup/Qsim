@@ -2,17 +2,17 @@
 ### BEGIN NODE INFO
 [info]
 name = DG1022 Rigol Server
-version = 1.0
+version = 1.3
 description =
 instancename = DG1022 Rigol Server
 
 [startup]
 cmdline = %PYTHON% %FILE%
-timeout = 20
+timeout = 5
 
 [shutdown]
 message = 987654321
-timeout = 20
+timeout = 5
 ### END NODE INFO
 """
 

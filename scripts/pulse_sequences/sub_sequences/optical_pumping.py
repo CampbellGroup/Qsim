@@ -138,18 +138,16 @@ class OpticalPumping(PulseSequence):
             )
 
         elif mode == "FiberEOM173":
-            self.add_ttl(
-                "SynthHDTTL", self.start, p["OpticalPumping.duration"]
-            )
+            # self.add_ttl("SynthHDTTL", self.start, p["OpticalPumping.duration"])
 
-            # Turn on microwave TTL to allow MAOP tones to drive population, for entire duration of optical pumping
-            # Assumes the AWG is running on continuous mode with all correct frequencies
-            pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
-            self.add_ttl(
-                "MicrowaveTTL",
-                self.start + pulse_delay,
-                p["OpticalPumping.duration"],
-                )
+            # # Turn on microwave TTL to allow MAOP tones to drive population, for entire duration of optical pumping
+            # # Assumes the AWG is running on continuous mode with all correct frequencies
+            # pulse_delay = p["MicrowaveInterrogation.ttl_switch_delay"]
+            # self.add_ttl(
+            #     "MicrowaveTTL",
+            #     self.start + pulse_delay,
+            #     p["OpticalPumping.duration"],
+            # )
 
             self.add_dds(
                 "369DP",

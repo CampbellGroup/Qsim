@@ -47,17 +47,24 @@ class InterleavedLinescan(QsimExperiment):
 
     def initialize(self, cxn, context, ident):
         self.ident = ident
+        print("ident")
         self.reg = cxn.registry
+        print("registry")
         self.pulser = cxn.pulser
+        print("pulser")
         self.fit_guess = [5.0, 27.0, 3500.0, 0.0]
-        self.reg.cd(["", "settings"])
+        # self.reg.cd(["", "settings"]) # not sure what this does, maybe read in AOM and other interleaved linescan params, but does not seem critical and caused faults
+        print("initialized")
 
     def run(self, cxn, context):
         self.pulser.line_trigger_state(False)
+        print("line trigger")
         self.setup_datavault(
             "frequency", "photons"
         )  # gives the x and y names to Data Vault
+        print("datavault")
         self.setup_grapher("Interleaved Linescan")
+        print("grapher")
         self.detunings = self.get_scan_list(
             self.p["InterleavedLinescan.line_scan"], "MHz"
         )

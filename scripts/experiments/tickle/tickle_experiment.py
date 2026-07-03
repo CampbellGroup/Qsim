@@ -10,7 +10,7 @@ class ticklescan(QsimExperiment):
     exp_parameters = []
     exp_parameters.append(("ticklescan", "amplitude"))
     exp_parameters.append(("ticklescan", "frequency_scan"))
-    exp_parameters.append(("ticklescan", "average"))
+    exp_parameters.append(("ticklescan", "repetitions"))
     exp_parameters.append(("ticklescan", "offset"))
     exp_parameters.append(("ticklescan", "waveform"))
 
@@ -48,7 +48,7 @@ class ticklescan(QsimExperiment):
                 break
 
             self.rg.frequency(self.chan, WithUnit(freq, "Hz"))
-            counts = self.pmt.get_next_counts("ON", self.average, True)
+            counts = self.pmt.get_next_counts("ON", self.repetitions, True)
             time.sleep(0.1)
             self.dv.add(freq, counts)
 
@@ -59,7 +59,7 @@ class ticklescan(QsimExperiment):
 
         self.amplitude = self.p["ticklescan.amplitude"]
         self.offset = self.p["ticklescan.offset"]
-        self.average = int(self.p["ticklescan.average"])
+        self.repetitions = int(self.p["ticklescan.repetitions"])
 
     def finalize(self, cxn, context):
         self.rg.set_output(self.chan, True)

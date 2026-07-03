@@ -54,7 +54,9 @@ class MetastableFidelityTweakUp(QsimExperiment):
 
             # programs and runs the bright state sequence, then creates an array with exp number, detection
             # counts, and doppler counts to be saved to datavault
-            self.program_pulser(metastable_bright_sequence)
+            self.program_pulser(
+                metastable_bright_sequence
+            )  # two step heralding with bright as F=3
             [
                 counts_doppler_bright,
                 counts_herald_bright_1,
@@ -83,6 +85,11 @@ class MetastableFidelityTweakUp(QsimExperiment):
                 )
             )
             counts_bright_fixed = np.delete(counts_bright, all_bright_errors)
+            print(
+                "Percent of bright failed to state prep: ",
+                len(all_bright_errors[0]) / len(counts_bright) * 100,
+                "%",
+            )
 
             self.program_pulser(metastable_dark_sequence)
             [counts_doppler_dark, counts_herald_dark, counts_dark] = self.run_sequence(
@@ -100,6 +107,12 @@ class MetastableFidelityTweakUp(QsimExperiment):
                 np.concatenate((failed_heralding_dark[0], doppler_errors_dark[0]))
             )
             counts_dark_fixed = np.delete(counts_dark, all_dark_errors)
+
+            print(
+                "Percent of dark failed to state prep: ",
+                len(all_dark_errors[0]) / len(counts_dark) * 100,
+                "%\n",
+            )
 
             # this processes the counts and calculates the fidelity and plots it on the bottom panel
             self.plot_prob(i, counts_dark_fixed, counts_bright_fixed)
